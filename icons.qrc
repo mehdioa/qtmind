@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/close-icon.png</file>
+        <file>icons/face-raspberry.png</file>
+        <file>icons/monkey-icon.png</file>
+        <file>icons/new-icon.png</file>
+        <file>icons/restart-icon.png</file>
+        <file>icons/same_color_0.png</file>
+        <file>icons/same_color_1.png</file>
+    </qresource>
+</RCC>
