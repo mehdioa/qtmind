@@ -1,3 +1,22 @@
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #include "board.h"
 #include "peg.h"
 #include "button.h"
@@ -225,12 +244,23 @@ void Board::onPinBoxPressed()
 		}
 	}
 }
+
+void Board::onChangeIndicators(const int &indicator_n)
+{
+	setIndicatorType(indicator_n);
+	emit changePegIndicator(mIndicator);
+}
+
+void Board::onChangeMode(const int &mode_n)
+{
+	mMode = (GAME_MODE) mode_n;
+}
 //-----------------------------------------------------------------------------
 
 void Board::onOkButtonPressed()
 {
-	int resp = mPinBoxes.first()->getValue();
 	/*	passing user inputed blacks and whites to mGame */
+	int resp = mPinBoxes.first()->getValue();
 	if(!mGame->setResponse(resp)){
 		mMessage->showMassage("Not Possible, Try Again...");
 		return;
@@ -259,17 +289,21 @@ void Board::onOkButtonPressed()
 		scene()->update();
 		return;
 	} else {
-
 		for(int i = 0; i < mPegNumber; ++i) {
 			createPegForBox(mCodeBoxes.first(), mGuess[i].digitValue());
 			mCodeBoxes.first()->setState(BOX_PAST);
 			mCodeBoxes.removeFirst();
 		}
+
 		mMessage->showMassage("Please Put Pins And Press OK");
 		mPinBoxes.first()->setState(BOX_NONE);
 		mOkButton->setEnabled(true);
 		mOkButton->setVisible(true);
 		mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
+	}
+
+	if (mSetPins) {
+		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -284,6 +318,7 @@ void Board::onDoneButtonPressed()
 	foreach (PegBox* box, mCurrentBoxes) {
 		box->setState(BOX_PAST);
 	}
+
 	//	freezing the peg boxes
 	foreach (PegBox* box, mPegBoxes) {
 		box->setState(BOX_FUTURE);
@@ -296,33 +331,34 @@ void Board::onDoneButtonPressed()
 		mMasterCode.append(str);
 	}
 
+	// getting the first guess and puting it in the current row
+	mGuess = mGame->getGuess();
+
+	//set the first row of current
 	mCurrentBoxes.clear();
-	// set the first row of current
 	for(int i = 0; i < mPegNumber; ++i) {
-//		createPegForBox(mCodeBoxes.first(), mGuess.at(i).digitValue());
+		createPegForBox(mCodeBoxes.first(), mGuess.at(i).digitValue());
 		mCodeBoxes.first()->setState(BOX_CURRENT);
 		mCurrentBoxes.append(mCodeBoxes.first());
 		mCodeBoxes.removeFirst();
 	}
+
 	// getting the first guess and puting it in the current row
 	mGuess = mGame->getGuess();
 	for(int i = 0; i < mPegNumber; ++i){
 		createPegForBox(mCurrentBoxes.at(i), mGuess.at(i).digitValue());
+		mCurrentBoxes.at(i)->setState(BOX_PAST);
 	}
-
 
 	mPinBoxes.first()->setState(BOX_NONE);
 	mMessage->showMassage("Please Put Pins And Press OK");
+	mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 	mOkButton->setEnabled(true);
 	mOkButton->setVisible(true);
-	mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 
-//	if (mSetPins) {
-//		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
-//	}
-
-//	onPegMouseRelease(mCurrentBoxes.first()->sceneBoundingRect().center().toPoint(), mCurrentBoxes.first()->getPegColor());
-
+	if (mSetPins) {//the program puts pins for the lazy ass user
+		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
+	}
 	/*	We are done here. The onOkButtonPressed is continuing the game from now on
 	 */
 }
@@ -342,6 +378,7 @@ void Board::generate()
 	scene()->addItem(mOkButton);
 	mOkButton->setZValue(2);
 	connect(mOkButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
+	mOkButton->setEnabled(false);
 	mOkButton->setVisible(false);
 
 	mDoneButton = new Button(160, "Done");
@@ -362,7 +399,8 @@ void Board::generate()
 }
 //-----------------------------------------------------------------------------
 
-void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const bool &samecolor, const int &algorithm, const bool &set_pins, const bool &close_row)
+void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const bool &samecolor,
+				  const int &algorithm_n, const bool &set_pins, const bool &close_row, const int &indicator_n)
 {
 
 	mPegNumber = peg_n;
@@ -370,18 +408,8 @@ void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const
 	mSetPins = set_pins;
 	mCloseRow = close_row;
 	mMode = (mode_n == 0) ? MODE_MASTER : MODE_BREAKER;
-
-	switch (algorithm) {
-	case 0:
-		mAlgorithm = WorstCase;
-		break;
-	case 1:
-		mAlgorithm = ExpectedSize;
-		break;
-	default:
-		mAlgorithm = MostParts;
-		break;
-	}
+	setIndicatorType(indicator_n);
+	setAlgorithmType(algorithm_n);
 
 	mSameColor = samecolor;
 
@@ -398,8 +426,9 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 	if (box->hasPeg()){
 		box->setPegColor(color);
 	} else {
-		auto peg = new Peg(pos, color);
+		auto peg = new Peg(pos, color, mIndicator);
 		scene()->addItem(peg);
+		connect(this, SIGNAL(changePegIndicator(INDICATOR_TYPE)), peg, SLOT(onChangeIndicators(INDICATOR_TYPE)));
 
 		if(backPeg)
 			peg->setMovable(false);
@@ -436,6 +465,37 @@ void Board::resizeEvent(QResizeEvent* event)
 {
 	fitInView(sceneRect(), Qt::KeepAspectRatio);
 	QGraphicsView::resizeEvent(event);
+}
+
+void Board::setIndicatorType(const int indicator_n)
+{
+	switch (indicator_n) {
+	case 1:
+		mIndicator = TYPE_CHAR;
+		break;
+	case 2:
+		mIndicator = TYPE_DIGIT;
+		break;
+	default:
+		mIndicator = TYPE_NONE;
+		break;
+	}
+	emit changePegIndicator(mIndicator);
+}
+
+void Board::setAlgorithmType(const int &algorithm_n)
+{
+	switch (algorithm_n) {
+	case 0:
+		mAlgorithm = WorstCase;
+		break;
+	case 1:
+		mAlgorithm = ExpectedSize;
+		break;
+	default:
+		mAlgorithm = MostParts;
+		break;
+	}
 }
 
 
@@ -584,32 +644,32 @@ void Board::drawBackground(QPainter* painter, const QRectF& rect)
 }
 //-----------------------------------------------------------------------------
 
-void Board::drawForeground(QPainter* painter, const QRectF&)
-{
-	if (mState == STATE_WON || mState == STATE_LOST) {
-		QString message((mState == STATE_WON) ? tr("Success") : tr("Game Over"));
-		QFontMetrics metrics(QFont("Sans", 24));
-		int w = metrics.width(message);
-		int h = metrics.height();
-		QPixmap pixmap(QSize(w + h, h * 2));
-		pixmap.fill(QColor(0, 0, 0, 0));
-		{
-			QPainter pixmap_painter(&pixmap);
+//void Board::drawForeground(QPainter* painter, const QRectF&)
+//{
+//	if (mState == STATE_WON || mState == STATE_LOST) {
+//		QString message((mState == STATE_WON) ? tr("Success") : tr("Game Over"));
+//		QFontMetrics metrics(QFont("Sans", 24));
+//		int w = metrics.width(message);
+//		int h = metrics.height();
+//		QPixmap pixmap(QSize(w + h, h * 2));
+//		pixmap.fill(QColor(0, 0, 0, 0));
+//		{
+//			QPainter pixmap_painter(&pixmap);
 
-			pixmap_painter.setPen(Qt::NoPen);
-			pixmap_painter.setBrush(QColor(0, 0, 0, 200));
-			pixmap_painter.setRenderHint(QPainter::Antialiasing, true);
-			pixmap_painter.drawRoundedRect(0, 0, w + h, h * 2, 10, 10);
+//			pixmap_painter.setPen(Qt::NoPen);
+//			pixmap_painter.setBrush(QColor(0, 0, 0, 200));
+//			pixmap_painter.setRenderHint(QPainter::Antialiasing, true);
+//			pixmap_painter.drawRoundedRect(0, 0, w + h, h * 2, 10, 10);
 
-			pixmap_painter.setFont(QFont("Sans", 24));
-			pixmap_painter.setPen(Qt::white);
-			pixmap_painter.setRenderHint(QPainter::TextAntialiasing, true);
-			pixmap_painter.drawText(h / 2, h / 2 + metrics.ascent(), message);
-		}
+//			pixmap_painter.setFont(QFont("Sans", 24));
+//			pixmap_painter.setPen(Qt::white);
+//			pixmap_painter.setRenderHint(QPainter::TextAntialiasing, true);
+//			pixmap_painter.drawText(h / 2, h / 2 + metrics.ascent(), message);
+//		}
 
-		painter->save();
-		painter->resetTransform();
-		painter->drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
-		painter->restore();
-	}
-}
+//		painter->save();
+//		painter->resetTransform();
+//		painter->drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
+//		painter->restore();
+//	}
+//}

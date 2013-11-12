@@ -1,3 +1,22 @@
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -24,54 +43,41 @@ protected:
 
 private slots:
 	void newGameSlot();
-//	void restartGameSlot();
 	void throwInTheTowelSlot();
 	void toggleAllowSameColorSlot();
 	void setPinsCloseRowAutomatically();
+	void changeIndicatorsSlot(QAction*);
 	void doItForMeSlot();
-	void codeMasterModeSlot();
-	void codeBreakModeSlot();
+	void changeGameModeSlot(QAction*);
 	void about();
 
+signals:
+	void changeIndicatorsSignal(const int&);
+	void changeModeSignal(const int&);
+
 private:
-//	void startGame();
 	void setPegsComboBox();
 	void setColorsComboBox();
 	void setSolvingAlgorithmsComboBox();
 
-
-private:
-	Board* gameBoard;
-	int m_mode;
-	int m_colors;
-	int m_pegs;
-	int m_algorithm;
-	bool m_allowSameColor ;
-	bool m_setPins;
-	bool m_closeRow;
+	Board* mBoard;
+	int mMode;
+	int mColors;
+	int mPegs;
+	int mAlgorithm;
+	int mIndicator;
+	bool mSameColorAllowed ;
+	bool mSetPins;
+	bool mCloseRow;
 
 	void createBoard();
 	void createMenuBar();
-//	void createToolBar();
 	void DrawBoardBackground();
 
-	/* Actions and Menus*/
-//	QMenu* gameMenu;
-//	QMenu* rowMenu;
-//	QMenu* settingsMenu;
-//	QMenu* helpMenu;
-
-//	QToolBar* mainToolbar;
-
-//	QAction* newGameAction;
-//	QAction* restartGameAction;
-//	QAction* throwInTheTowelAction;
-//	QAction* fillInTheRowAction;
-//	QAction* doItForMeAction;
-	QActionGroup* gameModeActions;
 	QAction* toggleAllowSameColorAction;
 	QAction* setPinsAutomaticallyAction;
 	QAction* closeRowAutomaticallyAction;
+	QAction* showIndicatorAction;
 
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;

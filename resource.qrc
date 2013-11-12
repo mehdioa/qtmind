@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/close-icon.png</file>
+        <file>icons/configure.png</file>
         <file>icons/face-raspberry.png</file>
         <file>icons/monkey-icon.png</file>
         <file>icons/new-icon.png</file>

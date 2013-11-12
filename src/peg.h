@@ -3,49 +3,52 @@
 
 #include <QGraphicsEllipseItem>
 
+enum INDICATOR_TYPE{
+	TYPE_NONE	= 0,
+	TYPE_CHAR	= 1,
+	TYPE_DIGIT	= 2
+};
+
 class QGraphicsDropShadowEffect;
+class QGraphicsSimpleTextItem;
 class PegBox;
 
 class Peg : public QObject, public QGraphicsEllipseItem
 {
-	Q_OBJECT
-	Q_INTERFACES(QGraphicsItem)
+		Q_OBJECT
+		Q_INTERFACES(QGraphicsItem)
 public:
-	const static QString color_rgb[10][2];
-	const static char ordered_chars[10];
-	const static char ordered_digits[10];
+		const static QString color_rgb[10][2];
+		const static QString ordered_chars[3];
 
-	Peg(const QPoint& position, int color_number = 0, const int &indicator_t = 0, QGraphicsItem* parent = 0);
-	~Peg();
-	void setColor(const int& color_number);
-	int getColor() const {return m_color;}
-	void move (QPoint);
-	void showIndicator();
-	void setMovable(bool );
-	void setPegBox(PegBox* box) {m_box = box;}
-
+		Peg(const QPoint& position, int color_number = 0,
+			const INDICATOR_TYPE &indicator_t = TYPE_NONE, QGraphicsItem* parent = 0);
+		void setColor(const int& color_number);
+		int getColor() const {return mColor;}
+		void setMovable(bool );
+		void setPegBox(PegBox* box) {mBox = box;}
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *);
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+		void mousePressEvent(QGraphicsSceneMouseEvent *);
+		void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
 
 signals:
-	void mouseReleasedSignal(QPoint position, int color);
+		void mouseReleasedSignal(QPoint position, int color);
 
 protected slots:
-	void onShowIndicators(bool enabled);
+		void onChangeIndicators(const INDICATOR_TYPE indicator_t);
 
 private:
-	QPointF m_position;// position of hole containing peg
-	PegBox* m_box;
-//	QFont m_font;
-//	QFont getIndicatorFont() const;
+		QPointF mPosition;// position of hole containing peg
+		PegBox* mBox;
+		INDICATOR_TYPE mIndicatorType;
 
-	QGraphicsDropShadowEffect* pressedEffect;
-	/* pressed shadow - the ellipse item takes ownership of
-	 *the effect, so no need to delete the pointer in the destructor*/
-	int m_color;
-	char m_indicator;
+		QGraphicsDropShadowEffect* pressedEffect;
+		QGraphicsSimpleTextItem* mIndicator;
+		/* pressed shadow - the ellipse item takes ownership of
+		 *the effect, so no need to delete the pointer in the destructor*/
+		int mColor;
+//		char mIndicator;
 };
 
 #endif // PEG_H

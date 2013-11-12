@@ -1,33 +1,50 @@
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #include "message.h"
 #include <QTextLayout>
 #include <QPainter>
+#include <QFont>
+
 
 Message::Message()
 {
-	m_font = QFont("Arial", 12, QFont::Bold, false);
-	m_font.setStyleHint(QFont::SansSerif);
-	m_font.setPixelSize(16);
-
-	m_layout.setFont(m_font);
-	m_layout.setTextOption(QTextOption(Qt::AlignHCenter));
-	m_updateRect = QRectF(0, 0, 10, 10);
+	mLayout.setFont(QFont("DejaVu", 12, QFont::Bold, false));
+	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
+	mUpdateRect = QRectF(0, 0, 10, 10);
 
 }
 
 void Message::showMassage(const QString str)
 {
-	m_updateRect = boundingRect();
-	m_layout.setText(str);
+	mUpdateRect = boundingRect();
+	mLayout.setText(str);
 
 	int leading = -3;
 	qreal h = 0;
 	qreal maxw = 0;
 	qreal maxh = 0;
-	m_layout.beginLayout();
+	mLayout.beginLayout();
 
 	while (true)
 	{
-		QTextLine line = m_layout.createLine();
+		QTextLine line = mLayout.createLine();
 		if (!line.isValid())
 		{
 			break;
@@ -39,27 +56,27 @@ void Message::showMassage(const QString str)
 		h += line.height();
 		maxw = qMax(maxw, line.naturalTextWidth());
 	}
-	m_layout.endLayout();
+	mLayout.endLayout();
 
-	float ypos = 4 + (70 - m_layout.boundingRect().height()) / 2;
+	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
 
-	maxw = qMax(m_updateRect.width(), m_layout.boundingRect().width());
-	maxh = qMax(m_updateRect.height(), m_layout.boundingRect().height() + ypos);
+	maxw = qMax(mUpdateRect.width(), mLayout.boundingRect().width());
+	maxh = qMax(mUpdateRect.height(), mLayout.boundingRect().height() + ypos);
 
-	m_updateRect = QRectF(0, 0, maxw, maxh + ypos);
+	mUpdateRect = QRectF(0, 0, maxw, maxh + ypos);
 
 	update(boundingRect());
 }
 
 QRectF Message::boundingRect() const
 {
-	return m_updateRect;
+	return mUpdateRect;
 }
 
 void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 	painter->setPen(QPen(QColor("#303133")));
-	float ypos = 4 + (70 - m_layout.boundingRect().height()) / 2;
-	m_layout.draw(painter, QPointF(0, ypos));
+	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
+	mLayout.draw(painter, QPointF(0, ypos));
 }

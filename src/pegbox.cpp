@@ -1,3 +1,22 @@
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #include "pegbox.h"
 #include "peg.h"
 #include "board.h"
@@ -16,7 +35,7 @@ PegBox::PegBox(const QPoint &position, Board *board, QGraphicsItem *parent):
 	lgrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
 
 	circle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
-	circle->setPen(QPen(QBrush(lgrad), 1.5));
+	circle->setPen(QPen(QBrush(lgrad), 2));
 	setState();
 }
 

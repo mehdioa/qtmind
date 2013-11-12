@@ -1,5 +1,23 @@
-#include "mainwindow.h"
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
 
+#include "mainwindow.h"
 #include <QApplication>
 #include <QComboBox>
 #include <QMenuBar>
@@ -11,6 +29,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QLinearGradient>
+#include <QString>
 
 #include "board.h"
 
@@ -19,18 +38,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	setWindowTitle(tr("CodeBreak"));
-	m_mode = QSettings().value("Mode", 0).toInt();
-	m_colors = QSettings().value("Colors", 8).toInt()-2;
-	m_pegs = QSettings().value("Pegs", 6).toInt()-2;
-	m_algorithm = QSettings().value("Algorithm", 0).toInt();
-	m_allowSameColor = QSettings().value("SameColor", true).toBool();
-	m_setPins = QSettings().value("SetPins", true).toBool();
-	m_closeRow = QSettings().value("CloseRow", true).toBool();
+	mMode = QSettings().value("Mode", 0).toInt();
+	mColors = QSettings().value("Colors", 6).toInt()-2;
+	mPegs = QSettings().value("Pegs", 4).toInt()-2;
+	mAlgorithm = QSettings().value("Algorithm", 0).toInt();
+	mSameColorAllowed = QSettings().value("SameColor", true).toBool();
+	mSetPins = QSettings().value("SetPins", true).toBool();
+	mCloseRow = QSettings().value("CloseRow", true).toBool();
+	mIndicator = QSettings().value("Indicator", 0).toInt();
 
 	createMenuBar();
 
-	gameBoard = new Board(this);
-	setCentralWidget(gameBoard);
+	mBoard = new Board(this);
+	setCentralWidget(mBoard);
+	connect(this, SIGNAL(changeIndicatorsSignal(int)), mBoard, SLOT(onChangeIndicators(int)));
+	connect(this, SIGNAL(changeModeSignal(int)), mBoard, SLOT(onChangeMode(int)));
 
 	resize(400,400);
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
@@ -46,13 +68,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-	QSettings().setValue("Mode", m_mode);
-	QSettings().setValue("Colors", m_colors+2);
-	QSettings().setValue("Pegs", m_pegs+2);
-	QSettings().setValue("Algorithm", m_algorithm);
-	QSettings().setValue("SameColor", m_allowSameColor);
-	QSettings().setValue("SetPins",	m_setPins);
-	QSettings().setValue("CloseRow", m_closeRow);
+	QSettings().setValue("Mode", mMode);
+	QSettings().setValue("Colors", mColors+2);
+	QSettings().setValue("Pegs", mPegs+2);
+	QSettings().setValue("Algorithm", mAlgorithm);
+	QSettings().setValue("SameColor", mSameColorAllowed);
+	QSettings().setValue("SetPins",	mSetPins);
+	QSettings().setValue("CloseRow", mCloseRow);
+	QSettings().setValue("Indicator", mIndicator);
 	QSettings().setValue("Geometry", saveGeometry());
 	QMainWindow::closeEvent(event);
 }
@@ -61,12 +84,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::newGameSlot()
 {
-	m_colors = colorsNumberComboBox->currentIndex();
-	m_algorithm = solvingAlgorithmsComboBox->currentIndex();
-	m_pegs = pegsNumberComboBox->currentIndex();
-	m_allowSameColor = toggleAllowSameColorAction->isChecked();
-	gameBoard->reset(m_pegs+2, m_colors+2, m_mode, m_allowSameColor, m_algorithm, m_setPins, m_closeRow);
-	gameBoard->play(m_mode);
+	mColors = colorsNumberComboBox->currentIndex();
+	mAlgorithm = solvingAlgorithmsComboBox->currentIndex();
+	mPegs = pegsNumberComboBox->currentIndex();
+	mSameColorAllowed = toggleAllowSameColorAction->isChecked();
+	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mIndicator);
+	mBoard->play(mMode);
 }
 
 //-----------------------------------------------------------------------------
@@ -79,14 +102,20 @@ void MainWindow::throwInTheTowelSlot()
 
 void MainWindow::toggleAllowSameColorSlot()
 {
-	m_allowSameColor = toggleAllowSameColorAction->isChecked();
+	mSameColorAllowed = toggleAllowSameColorAction->isChecked();
 }
 
 void MainWindow::setPinsCloseRowAutomatically()
 {
-	m_setPins = setPinsAutomaticallyAction->isChecked();
-	m_closeRow = closeRowAutomaticallyAction->isChecked();
-	gameBoard->setPinsRow(m_setPins, m_closeRow);
+	mSetPins = setPinsAutomaticallyAction->isChecked();
+	mCloseRow = closeRowAutomaticallyAction->isChecked();
+	mBoard->setPinsRow(mSetPins, mCloseRow);
+}
+
+void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
+{
+	mIndicator = selectedAction->data().toInt();
+	emit changeIndicatorsSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
@@ -95,15 +124,13 @@ void MainWindow::doItForMeSlot()
 
 }
 
-void MainWindow::codeMasterModeSlot()
+
+void MainWindow::changeGameModeSlot(QAction* selectedAction)
 {
-	m_mode = 0;
+	mMode = selectedAction->data().toInt();
+	emit changeModeSignal(mMode);
 }
 
-void MainWindow::codeBreakModeSlot()
-{
-	m_mode = 1;
-}
 //-----------------------------------------------------------------------------
 
 void MainWindow::about()
@@ -124,9 +151,9 @@ void MainWindow::about()
 //void MainWindow::startGame()
 //{
 //	QSettings settings;
-//	settings.setValue("Mode", m_mode);
-//	settings.setValue("Algorithm", m_algorithm);
-//	gameBoard->reset(m_pegs, m_colors, m_mode, m_allowSameColor);
+//	settings.setValue("Mode", mMode);
+//	settings.setValue("Algorithm", mAlgorithm);
+//	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed);
 
 //}
 
@@ -136,7 +163,7 @@ void MainWindow::setPegsComboBox()
 	pegsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
 		pegsNumberComboBox->addItem(QString::number(i)+" Slots");
-	pegsNumberComboBox->setCurrentIndex(m_pegs);
+	pegsNumberComboBox->setCurrentIndex(mPegs);
 	pegsNumberComboBox->setToolTip("Choose the numbe of pegs");
 }
 
@@ -145,7 +172,7 @@ void MainWindow::setColorsComboBox()
 	colorsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
 		colorsNumberComboBox->addItem(QString::number(i)+" Colors");
-	colorsNumberComboBox->setCurrentIndex(m_colors);
+	colorsNumberComboBox->setCurrentIndex(mColors);
 	colorsNumberComboBox->setToolTip("Choose the number of colors");
 }
 
@@ -156,7 +183,7 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 	solvingAlgorithmsComboBox->addItem("Worst Case");
 	solvingAlgorithmsComboBox->addItem("Expected Size");
 	solvingAlgorithmsComboBox->addItem("Most Parts");
-	solvingAlgorithmsComboBox->setCurrentIndex(m_algorithm);
+	solvingAlgorithmsComboBox->setCurrentIndex(mAlgorithm);
 }
 
 
@@ -187,32 +214,46 @@ void MainWindow::createMenuBar()
 
 	auto settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-	auto codeMasterModeAction = settingsMenu->addAction(tr("&Code Master"), this, SLOT(codeMasterModeSlot()), tr("Ctrl+M"));
-	codeMasterModeAction->setCheckable(true);
-	codeMasterModeAction->setChecked(m_mode == 0);
-	auto codeBreakModeAction = settingsMenu->addAction(tr("&Code Break"), this, SLOT(codeBreakModeSlot()), tr("Ctrl+B"));
-	codeBreakModeAction->setCheckable(true);
-	codeBreakModeAction->setChecked(m_mode == 1);
-
-	gameModeActions = new QActionGroup(this);
-	gameModeActions->addAction(codeMasterModeAction);
-	gameModeActions->addAction(codeBreakModeAction);
+	auto gameModeSubMenu = settingsMenu->addMenu(tr("Game Mode"));
+	auto gameModeActions = new QActionGroup(this);
+	char* gameModeNames[] = {"Code Master", "Code Break"};
+	for(int i = 0; i < 2; ++i){
+		auto gameModeAction = gameModeSubMenu->addAction(tr(gameModeNames[i]));
+		gameModeAction->setData(i);
+		gameModeAction->setCheckable(true);
+		gameModeAction->setChecked(mMode == i);
+		gameModeActions->addAction(gameModeAction);
+	}
 	gameModeActions->setExclusive(true);
+	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeGameModeSlot(QAction*)));
+
+	auto indicatorTypeSubMenu = settingsMenu->addMenu(tr("Indicator Type"));
+	auto indicatorTypeActions = new QActionGroup(this);
+	char* indicatorTypeNames[3] = {"No Indicator", "Character Indicator", "Digit Indicator"};
+	for(int i = 0; i < 3; ++i){
+		auto indicatorAction = indicatorTypeSubMenu->addAction(tr(indicatorTypeNames[i]));
+		indicatorAction->setData(i);
+		indicatorAction->setCheckable(true);
+		indicatorAction->setChecked(mIndicator == i);
+		indicatorTypeActions->addAction(indicatorAction);
+	}
+	indicatorTypeActions->setExclusive(true);
+	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeIndicatorsSlot(QAction*)));
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
 	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
 	toggleAllowSameColorAction = settingsMenu->addAction(double_icon, tr("&Toggle Allow Pegs Of The Same Color"), this, SLOT(toggleAllowSameColorSlot()), tr("F5"));
 	toggleAllowSameColorAction->setCheckable(true);
-	toggleAllowSameColorAction->setChecked(m_allowSameColor);
+	toggleAllowSameColorAction->setChecked(mSameColorAllowed);
 
 	setPinsAutomaticallyAction = settingsMenu->addAction(tr("&Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()), tr("Ctrl+P"));
 	setPinsAutomaticallyAction->setCheckable(true);
-	setPinsAutomaticallyAction->setChecked(m_setPins == 1);
+	setPinsAutomaticallyAction->setChecked(mSetPins == 1);
 
 	closeRowAutomaticallyAction = settingsMenu->addAction(tr("&Clost Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()), tr("Ctrl+R"));
 	closeRowAutomaticallyAction->setCheckable(true);
-	closeRowAutomaticallyAction->setChecked(m_closeRow == 1);
+	closeRowAutomaticallyAction->setChecked(mCloseRow == 1);
 
 	auto helpMenu = menuBar()->addMenu(tr("&Help"));
 	helpMenu->addAction(tr("&About"), this, SLOT(about()));
@@ -240,24 +281,3 @@ void MainWindow::createMenuBar()
 	addToolBar(mainToolbar);
 	setContextMenuPolicy(Qt::NoContextMenu);
 }
-
-
-//void MainWindow::createToolBar()
-//{
-//	mainToolbar = new QToolBar(this);
-//	mainToolbar->setIconSize(QSize(22, 22));
-//	mainToolbar->setFloatable(false);
-//	mainToolbar->setMovable(false);
-//	mainToolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-//	mainToolbar->addAction(newGameAction);
-//	mainToolbar->addAction(restartGameAction);
-//	mainToolbar->addAction(throwInTheTowelAction);
-//	mainToolbar->addAction(doItForMeAction);
-//	mainToolbar->addAction(toggleAllowSameColorAction);
-//	mainToolbar->addSeparator();
-//	mainToolbar->addWidget(pegsNumberComboBox);
-//	mainToolbar->addWidget(colorsNumberComboBox);
-//	mainToolbar->addWidget(solvingAlgorithmsComboBox);
-//	addToolBar(mainToolbar);
-//	setContextMenuPolicy(Qt::NoContextMenu);
-//}

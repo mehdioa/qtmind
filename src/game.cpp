@@ -1,3 +1,22 @@
+/***********************************************************************
+ *
+ * Copyright (C) 2013 Mehdi Omidal <mehdioa@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #include "game.h"
 #include <cmath>
 #include <QDebug>
@@ -79,7 +98,7 @@ bool Game::done() const {
 
 bool Game::setResponse(const int &response)
 {
-	QVector<int> tempPossibleCodes;
+	QList<int> tempPossibleCodes;
 	foreach (int possible, mPossibleCodes) {
 		if(compare(mGuess, mAllCodes[possible]) == response)
 			tempPossibleCodes.append(possible);
@@ -165,10 +184,6 @@ void Game::fillAllCodes()
 {
 	mAllCodes = new QString [mAllCodesSize];
 
-//	for (int i = 0; i < mAllCodesSize; ++i)
-//	{
-//		mAllCodes[i] = new char [mPegNumber];
-//	}
 	for(int i = 0; i < mAllCodesSize; ++i)
 		mAllCodes[i] = convertBase(i, mColorNumber, mPegNumber);
 }
@@ -176,14 +191,9 @@ void Game::fillAllCodes()
 
 void Game::clearAllCodes()
 {
-//	if(mAllCodes) {
-//		for (int i = 0; i < mAllCodesSize; ++i)
-//		{
-//			delete [] mAllCodes[i] ;
-//		}
+
 		delete [] mAllCodes;
 		mAllCodes = NULL;
-//	}
 }
 //-----------------------------------------------------------------------------
 
@@ -192,6 +202,9 @@ QString Game::mostPartsAlgorithm() const
 	QVector<int> parts(mAllCodesSize, 0);
 	QVector<int> responsesOfCodes(mResponeSpaceSize);
 
+	int answerIndex;
+	int max = 0;
+
 	for (int codeIndex = 0; codeIndex < mAllCodesSize; ++codeIndex) {
 		responsesOfCodes.fill(0);
 		foreach (int possible, mPossibleCodes) {
@@ -199,27 +212,31 @@ QString Game::mostPartsAlgorithm() const
 			responsesOfCodes.replace(compare(mAllCodes[codeIndex], mAllCodes[possible]), 1);
 		}
 		parts.insert(codeIndex, responsesOfCodes.count(1));// numbur of possible responses
-	}
-
-	int answerIndex = mPossibleCodes.first();
-	int maxParts = parts.at(answerIndex);
-	int testForMaxParts;
-
-	foreach (int index, mPossibleCodes) {//First we find the most parts between possibles
-		testForMaxParts = parts.at(index);
-		if (testForMaxParts > maxParts) {
-			answerIndex = index;
-			maxParts = testForMaxParts;
+		if (parts[codeIndex] > max || (parts[codeIndex] == max && mPossibleCodes.contains(codeIndex))){
+			answerIndex = codeIndex;
+			max = parts[codeIndex];
 		}
 	}
 
-	for(int index = 0; index < mAllCodesSize; ++index) {//Now we find the most parts between all possibles
-		testForMaxParts = parts.at(index);
-		if (testForMaxParts > maxParts) {
-			answerIndex = index;
-			maxParts = testForMaxParts;
-		}
-	}
+//	int answerIndex = mPossibleCodes.first();
+//	int maxParts = parts.at(answerIndex);
+//	int testForMaxParts;
+
+//	foreach (int index, mPossibleCodes) {//First we find the most parts between possibles
+//		testForMaxParts = parts.at(index);
+//		if (testForMaxParts > maxParts) {
+//			answerIndex = index;
+//			maxParts = testForMaxParts;
+//		}
+//	}
+
+//	for(int index = 0; index < mAllCodesSize; ++index) {//Now we find the most parts between all possibles
+//		testForMaxParts = parts.at(index);
+//		if (testForMaxParts > maxParts) {
+//			answerIndex = index;
+//			maxParts = testForMaxParts;
+//		}
+//	}
 	return mAllCodes[answerIndex];
 }
 //-----------------------------------------------------------------------------
@@ -311,7 +328,9 @@ QString Game::convertBase(int decimal, const int& base, const int& precision)
 {
 	QString result;
 	if(mAllowSameColor){
-		return result.setNum(decimal, base).leftJustified(precision, '0');
+		result.setNum(decimal, base);
+		result = result.rightJustified(precision, '0');
+		return result;
 	} else {
 		QString NUMS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Characters that may be used
 		int maxDigits = mAllCodesSize;
