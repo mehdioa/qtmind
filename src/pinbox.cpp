@@ -29,6 +29,7 @@ const int PinBox::pin_positions[5][5][2] = {
 	{{6, 6}, {22, 6}, {6, 22}, {22, 22}, {0, 0}},
 	{{4, 4}, {24, 4}, {14, 14}, {4, 24}, {24, 24}}
 };
+
 PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent):
 	EmptyBox(position, parent)
 {
@@ -38,9 +39,10 @@ PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* par
 		pins.append(pin);
 		pin->setPos(pin_positions[pin_number-2][i][0], pin_positions[pin_number-2][i][1]);
 	}
-	setState(BOX_FUTURE);
+	setBoxState(BOX_FUTURE);
 	setAcceptedMouseButtons(Qt::LeftButton);
 }
+//-----------------------------------------------------------------------------
 
 int PinBox::getValue(int &blacks, int &whites) const
 {
@@ -61,6 +63,7 @@ int PinBox::getValue(int &blacks, int &whites) const
 	}
 	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
 }
+//-----------------------------------------------------------------------------
 
 int PinBox::getValue() const
 {
@@ -68,7 +71,7 @@ int PinBox::getValue() const
 	int whites;
 	return getValue(blacks, whites);
 }
-
+//-----------------------------------------------------------------------------
 
 void PinBox::setPins(const int &blacks, const int &whites)
 {
@@ -77,6 +80,7 @@ void PinBox::setPins(const int &blacks, const int &whites)
 	for(int i = 0; i < whites; ++i)
 		pins.at(blacks + i)->setColor(-1);
 }
+//-----------------------------------------------------------------------------
 
 void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg, const int &color)
 {
@@ -100,13 +104,13 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg,
 
 	setPins(blacks, total-blacks);
 }
+//-----------------------------------------------------------------------------
 
 void PinBox::setState(const BOX_STATE &state)
 {
-	m_state = state;
-	setHighlight();
-
-	switch (m_state) {
+	mBoxState = state;
+	update();
+	switch (mBoxState) {
 	case BOX_PAST: // used for boxes that are done. No interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
@@ -134,8 +138,9 @@ void PinBox::setState(const BOX_STATE &state)
 		break;
 	}
 }
+//-----------------------------------------------------------------------------
 
-void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
 	emit pinBoxPushed();
 }

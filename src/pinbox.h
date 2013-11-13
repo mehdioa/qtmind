@@ -38,7 +38,7 @@ public:
 	void setState(const BOX_STATE& state = BOX_FUTURE);
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mousePressEvent(QGraphicsSceneMouseEvent *);
 
 signals:
 	void pinBoxPushed();

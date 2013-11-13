@@ -24,10 +24,11 @@
 Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color):
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
-	mAllowSameColor(allow_same_color)
+	mAllowSameColor(allow_same_color),
+	mFirstPossibleCodes(0)
 {
 	setAllCodesSize();
-	mResponeSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
+	mResponseSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
 	fillAllCodes();
 	reset(peg_no, color_no, mAllowSameColor);
 }
@@ -40,14 +41,21 @@ Game::~Game()
 
 void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_color)
 {
-	if(mColorNumber != color_no || mPegNumber != peg_no || mAllowSameColor != allow_same_color){
+	if(mColorNumber != color_no || mPegNumber != peg_no || mAllowSameColor != allow_same_color)
+	{
 		mColorNumber = color_no;
 		mPegNumber = peg_no;
 		mAllowSameColor = allow_same_color;
-		mResponeSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
+		mResponseSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
 		setAllCodesSize();
 		clearAllCodes();
 		fillAllCodes();
+	}
+
+	if(mFirstPossibleCodes)
+	{
+		delete[] mFirstPossibleCodes;
+		mFirstPossibleCodes = NULL;
 	}
 	mPossibleCodes.clear();
 	for(int i = 0; i < mAllCodesSize; ++i)
@@ -82,7 +90,8 @@ int Game::compare(const QString codeA, const QString codeB) const
 
 	int total = 0;		//	blacks + whites, since we don't need whites below
 
-	for (int i = 0; i < mColorNumber; ++i){
+	for (int i = 0; i < mColorNumber; ++i)
+	{
 		total += std::min(c[i],g[i]);
 	}
 
@@ -90,24 +99,49 @@ int Game::compare(const QString codeA, const QString codeB) const
 }
 //-----------------------------------------------------------------------------
 
-bool Game::done() const {
-	return (mResponse == mResponeSpaceSize - 1);
+bool Game::done() const
+{
+	return (mResponse == mResponseSpaceSize - 1);
 }
 
 //-----------------------------------------------------------------------------
 
 bool Game::setResponse(const int &response)
 {
+	/*	This function is responsible for puting the response and erase the impossibles
+	 *	it will return false if the response is not possible and do nothing
+	 */
 	QList<int> tempPossibleCodes;
-	foreach (int possible, mPossibleCodes) {
+
+	foreach (int possible, mPossibleCodes)
+	{
 		if(compare(mGuess, mAllCodes[possible]) == response)
 			tempPossibleCodes.append(possible);
 	}
-	if (tempPossibleCodes.isEmpty()) {
+
+	if (tempPossibleCodes.isEmpty())
 		return false;
-	}
+
 	mPossibleCodes = tempPossibleCodes;
 	mResponse = response;
+
+	if (!mFirstPossibleCodes)
+	{
+		if (mAllCodesSize > 10000)
+		{
+			mFirstPossibleCodes = new int[mPossibleCodes.size()];
+			mFirstPossibleCodesSize = mPossibleCodes.size();
+			for(int i = 0; i < mPossibleCodes.size(); ++i)
+				mFirstPossibleCodes[i] = mPossibleCodes.at(i);
+		}
+		else
+		{
+			mFirstPossibleCodes = new int[mAllCodesSize];
+			mFirstPossibleCodesSize = mAllCodesSize;
+			for(int i = 0; i < mAllCodesSize; ++i)
+				mFirstPossibleCodes[i] = i;
+		}
+	}
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -115,7 +149,8 @@ bool Game::setResponse(const int &response)
 QString Game::getGuess()
 {
 	/*	Used for first guess */
-	if (mAllowSameColor) {
+	if (mAllowSameColor)
+	{
 		switch (mPegNumber) {
 		case 2:
 			mGuess = (QString) "01";
@@ -124,7 +159,7 @@ QString Game::getGuess()
 			mGuess = (QString) "012";
 			break;
 		case 4:
-			mGuess = (QString) "0011";
+			mGuess = (QString) "1100";
 			break;
 		case 5:
 			mGuess = (QString) "00123";
@@ -134,7 +169,9 @@ QString Game::getGuess()
 			mGuess = str.left(mPegNumber);
 			break;
 		}
-	} else {
+	}
+	else
+	{
 		QString str = "0123456789";
 		mGuess = str.left(mPegNumber);
 	}
@@ -161,8 +198,10 @@ bool Game::hasDifferentSetup(const int &peg_no, const int color_no) const
 
 void Game::makeGuess(Algorithm alg)
 {
-	if (mPossibleCodes.size() == 1)
+	if (mPossibleCodes.size() == 1) {
 		mGuess =  mAllCodes[mPossibleCodes.first()];
+		return;
+	}
 
 	switch (alg) {
 	case WorstCase:
@@ -191,52 +230,43 @@ void Game::fillAllCodes()
 
 void Game::clearAllCodes()
 {
+	delete[] mAllCodes;
+	mAllCodes = NULL;
 
-		delete [] mAllCodes;
-		mAllCodes = NULL;
+	delete[] mFirstPossibleCodes;
+	mFirstPossibleCodes = NULL;
 }
 //-----------------------------------------------------------------------------
 
 QString Game::mostPartsAlgorithm() const
 {
-	QVector<int> parts(mAllCodesSize, 0);
-	QVector<int> responsesOfCodes(mResponeSpaceSize);
+//	if(mPossibleCodes.size()>1000){
+//		return (mAllCodes[mPossibleCodes.first()]);
+//	}
+	QVector<int> parts(mFirstPossibleCodesSize, 0);
+	QVector<int> responsesOfCodes(mResponseSpaceSize);
 
 	int answerIndex;
 	int max = 0;
+	bool isInPossibles(false);
 
-	for (int codeIndex = 0; codeIndex < mAllCodesSize; ++codeIndex) {
+	for (int codeIndex = 0; codeIndex < mFirstPossibleCodesSize; ++codeIndex)
+	{
 		responsesOfCodes.fill(0);
-		foreach (int possible, mPossibleCodes) {
 
-			responsesOfCodes.replace(compare(mAllCodes[codeIndex], mAllCodes[possible]), 1);
-		}
+		foreach (int possibleIndex, mPossibleCodes)
+			responsesOfCodes.replace(compare(mAllCodes[codeIndex], mAllCodes[possibleIndex]), 1);
+
 		parts.insert(codeIndex, responsesOfCodes.count(1));// numbur of possible responses
-		if (parts[codeIndex] > max || (parts[codeIndex] == max && mPossibleCodes.contains(codeIndex))){
+
+		if (parts[codeIndex] > max || (parts[codeIndex] == max && !isInPossibles))
+		{
 			answerIndex = codeIndex;
 			max = parts[codeIndex];
+			isInPossibles = mPossibleCodes.contains(codeIndex);
 		}
 	}
 
-//	int answerIndex = mPossibleCodes.first();
-//	int maxParts = parts.at(answerIndex);
-//	int testForMaxParts;
-
-//	foreach (int index, mPossibleCodes) {//First we find the most parts between possibles
-//		testForMaxParts = parts.at(index);
-//		if (testForMaxParts > maxParts) {
-//			answerIndex = index;
-//			maxParts = testForMaxParts;
-//		}
-//	}
-
-//	for(int index = 0; index < mAllCodesSize; ++index) {//Now we find the most parts between all possibles
-//		testForMaxParts = parts.at(index);
-//		if (testForMaxParts > maxParts) {
-//			answerIndex = index;
-//			maxParts = testForMaxParts;
-//		}
-//	}
 	return mAllCodes[answerIndex];
 }
 //-----------------------------------------------------------------------------
@@ -244,7 +274,7 @@ QString Game::mostPartsAlgorithm() const
 QString Game::expectedSizeAlgorithm() const
 {
 	QVector<double> expected(mAllCodesSize, 0);
-	QVector<unsigned short> responsesOfCodes(mResponeSpaceSize);
+	QVector<unsigned short> responsesOfCodes(mResponseSpaceSize);
 
 	for (int codeIndex = 0; codeIndex < mAllCodesSize; ++codeIndex) {
 		responsesOfCodes.fill(0);
@@ -253,7 +283,7 @@ QString Game::expectedSizeAlgorithm() const
 			int index = compare(mAllCodes[codeIndex], mAllCodes[possible]);
 			responsesOfCodes.replace(index, responsesOfCodes.at(index)+1);
 		}
-		for (int j = 0; j < mResponeSpaceSize; ++j) {
+		for (int j = 0; j < mResponseSpaceSize; ++j) {
 			double value = expected.at(codeIndex);
 			expected.replace(codeIndex, value + std::pow((double)responsesOfCodes.at(j), 2.295));
 		}
@@ -282,7 +312,7 @@ QString Game::expectedSizeAlgorithm() const
 QString Game::worstCaseAlgorithm() const
 {
 	QVector<int> worsts(mAllCodesSize, 0);
-	QVector<int> responsesOfCodes(mResponeSpaceSize);
+	QVector<int> responsesOfCodes(mResponseSpaceSize);
 
 	for (int codeIndex = 0; codeIndex < mAllCodesSize; ++codeIndex) {
 		responsesOfCodes.fill(0);

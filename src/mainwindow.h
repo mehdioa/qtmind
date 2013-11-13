@@ -44,7 +44,7 @@ protected:
 private slots:
 	void newGameSlot();
 	void throwInTheTowelSlot();
-	void toggleAllowSameColorSlot();
+	void allowSameColorSlot();
 	void setPinsCloseRowAutomatically();
 	void changeIndicatorsSlot(QAction*);
 	void doItForMeSlot();
@@ -74,10 +74,11 @@ private:
 	void createMenuBar();
 	void DrawBoardBackground();
 
-	QAction* toggleAllowSameColorAction;
+	QAction* allowSameColorAction;
 	QAction* setPinsAutomaticallyAction;
 	QAction* closeRowAutomaticallyAction;
 	QAction* showIndicatorAction;
+	QAction* doItForMeAction;
 
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;

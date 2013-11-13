@@ -12,14 +12,13 @@ const QString Peg::color_rgb[10][2] = {
 		{"#33CCFF", "#000080"}, {"#808080", "#000000"},
 		{"#FFFFFF", "#797979"},{"#FF9900", "#A82A00"},
 		{"#66FF33", "#385009"},{"#BA88FF", "#38005D"},
-		{"#00FFFF", "#004040"}, {"#FFC0FF", "#800080"},
+		{"#00FFFF", "#004040"}, {"#FFC0FF", "#800080"}
   };
 const QString Peg::ordered_chars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
 
-Peg::Peg(const QPoint& position, int color_number, const INDICATOR_TYPE &indicator_t, QGraphicsItem *parent):
+Peg::Peg(const QPoint& position, int color_number, const int &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
-		mIndicatorType(indicator_t),
 		mBox(0)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
@@ -45,7 +44,7 @@ Peg::Peg(const QPoint& position, int color_number, const INDICATOR_TYPE &indicat
 	mIndicator->setFont( QFont("DejaVu Sans Mono", 12, QFont::Bold, false));
 	mIndicator->setPos(12,6);
 	mIndicator->setScale(1.5);
-	onChangeIndicators(indicator_t);
+	onChangeIndicators(indicator_n);
 
 
 	setColor(mColor);
@@ -55,6 +54,7 @@ Peg::Peg(const QPoint& position, int color_number, const INDICATOR_TYPE &indicat
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptDrops(true);
 }
+//-----------------------------------------------------------------------------
 
 void Peg::setColor(const int &color_number)
 {
@@ -65,6 +65,7 @@ void Peg::setColor(const int &color_number)
 	setBrush(gradient);
 	onChangeIndicators(mIndicatorType);
 }
+//-----------------------------------------------------------------------------
 
 void Peg::setMovable(bool enabled)
 {
@@ -73,7 +74,7 @@ void Peg::setMovable(bool enabled)
 	setCursor(enabled ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setZValue(1);
 }
-
+//-----------------------------------------------------------------------------
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -85,6 +86,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	}
 	QGraphicsEllipseItem::mousePressEvent(event);
 }
+//-----------------------------------------------------------------------------
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -112,9 +114,10 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 	setPos(mBox->sceneBoundingRect().topLeft());
 }
+//-----------------------------------------------------------------------------
 
-void Peg::onChangeIndicators(const INDICATOR_TYPE indicator_t)
+void Peg::onChangeIndicators(const int indicator_n)
 {
-	mIndicatorType = indicator_t;
-	mIndicator->setText(ordered_chars[indicator_t][mColor]);
+	mIndicatorType = (INDICATOR_TYPE) indicator_n;
+	mIndicator->setText(ordered_chars[mIndicatorType][mColor]);
 }

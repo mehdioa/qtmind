@@ -18,10 +18,8 @@
  ***********************************************************************/
 
 #include "board.h"
-#include "peg.h"
 #include "button.h"
 #include "pegbox.h"
-#include "emptybox.h"
 #include "pinbox.h"
 #include "game.h"
 #include "message.h"
@@ -63,17 +61,23 @@ Board::~Board()
 void Board::onPegMouseRelease(QPoint position, int color)
 {
 	if(!mSameColor)//if same color is not allowed and there is already a color-peg visible, we just ignore drop
+	{
 		foreach (PegBox* box, mCurrentBoxes)
+		{
 			if(!box->sceneBoundingRect().contains(position) && box->isPegVisible() && box->getPegColor() == color)
 				return;
+		}
+	}
 
 	static bool rowFillState = false;
 	bool newRowFillState = true;
 
 	bool dropOnlyOnce = true; // conversion from float to integer may cause double drop on middle. Flag to do it just once
 
-	foreach (PegBox* box, mCurrentBoxes) {
-		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PEG_INITIAL && dropOnlyOnce) {
+	foreach (PegBox* box, mCurrentBoxes)
+	{
+		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PEG_INITIAL && dropOnlyOnce)
+		{
 			dropOnlyOnce = false;
 
 			if(box->hasPeg())
@@ -88,7 +92,8 @@ void Board::onPegMouseRelease(QPoint position, int color)
 			newRowFillState = false;
 	} //	end foreach
 
-	if (newRowFillState != rowFillState){//	if (master) code row state changed, emit appropriate signal
+	if (newRowFillState != rowFillState)//	if (master) code row state changed, emit appropriate signal
+	{
 		codeRowFilled(newRowFillState);
 	}
 	rowFillState = newRowFillState;
@@ -97,22 +102,26 @@ void Board::onPegMouseRelease(QPoint position, int color)
 
 void Board::codeRowFilled(bool filled)
 {
-	switch (mMode) {
+	switch (mMode)
+	{
 	case MODE_MASTER://-----------------------------------------
-		switch (filled) {
+		switch (filled)
+		{
 		case true:
 			mPinBoxes.first()->setState(BOX_CURRENT);
 			mMessage->showMassage("Press The Pin Box ...");
 			break;
 		default:
-			mPinBoxes.first()->setState(BOX_PAST);
+			mPinBoxes.first()->setState(BOX_FUTURE);
 			mMessage->showMassage("Place Your Pegs ... ");
 			break;
 		}
 		break;
 	default://MODE_BREAKER-------------------------------------
-		if (mDoneButton->isEnabled()){//the user is not done putting the master code
-			switch (filled) {
+		if (mDoneButton->isEnabled())//the user is not done putting the master code
+		{
+			switch (filled)
+			{
 			case true:
 				mDoneButton->setVisible(true);
 				mMessage->showMassage("Press Done ...");
@@ -137,16 +146,18 @@ void Board::playCodeBreaker()
 	mDoneButton->setVisible(false);
 	mDoneButton->setEnabled(true);
 
-	if (!mGame) {
+	if (!mGame)
+	{
 		mGame = new Game(mPegNumber, mColorNumber, mSameColor);
 	}
 	mGame->reset(mPegNumber, mColorNumber, mSameColor);
 
 	mMessage->showMassage("Place Your Pegs ... ");
 
-	for(int i = 0; i < mPegNumber; ++i) {//initializing currentrow
+	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
+	{
 		mCurrentBoxes.append(mMasterBoxes.first());
-		mMasterBoxes.first()->setState(BOX_CURRENT);
+		mMasterBoxes.first()->setBoxState(BOX_CURRENT);
 		mMasterBoxes.removeFirst();
 	}
 	/*	Nothing happening from here till the user fill the master code
@@ -161,16 +172,18 @@ void Board::playCodeMaster()
 	generate();
 	mState = STATE_RUNNING;
 
-	foreach (PegBox* box, mMasterBoxes) {//creating a master code to be guessed
+	foreach (PegBox* box, mMasterBoxes) //creating a master code to be guessed
+	{
 		int color = qrand() % mColorNumber;
 		createPegForBox(box, color);
 		box->setPegState(PEG_EMPTY);
-		box->setState(BOX_NONE);
+		box->setBoxState(BOX_NONE);
 	}
 
-	for(int i = 0; i < mPegNumber; ++i) {//initializing currentrow
+	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
+	{
 		mCurrentBoxes.append(mCodeBoxes.first());
-		mCodeBoxes.first()->setState(BOX_CURRENT);
+		mCodeBoxes.first()->setBoxState(BOX_CURRENT);
 		mCodeBoxes.removeFirst();
 	}
 
@@ -192,17 +205,20 @@ void Board::onPinBoxPressed()
 	int c[mColorNumber];
 	int g[mColorNumber];
 
-	for(int i = 0; i < mColorNumber; ++i) {
+	for(int i = 0; i < mColorNumber; ++i)
+	{
 		c[i] = g[i] = 0;
 	}
 
 	int blacks = 0;
 
-	for(int i = 0; i < mPegNumber; ++i){
+	for(int i = 0; i < mPegNumber; ++i)
+	{
 		int currentColor = mCurrentBoxes.at(i)->getPegColor();
 		int masterColor = mMasterBoxes.at(i)->getPegColor();
 
-		if ( currentColor == masterColor) {
+		if ( currentColor == masterColor)
+		{
 			++blacks;
 		}
 		++c[currentColor];
@@ -218,27 +234,33 @@ void Board::onPinBoxPressed()
 	mPinBoxes.first()->setState(BOX_PAST);
 	mPinBoxes.removeFirst();	// the pinbox goes to past
 
-	for(int i = 0; i < mPegNumber; ++i) {//old row of codes goes to past and are removed from current
-		mCurrentBoxes.first()->setState(BOX_PAST);
+	for(int i = 0; i < mPegNumber; ++i) //old row of codes goes to past and are removed from current
+	{
+		mCurrentBoxes.first()->setBoxState(BOX_PAST);
 		mCurrentBoxes.removeFirst();
 	}
 
-	if (blacks == mPegNumber) {//success here
+	if (blacks == mPegNumber) //success here
+	{
 		mState = STATE_WON;
 		mMessage->showMassage("Success! You Win");
-		foreach (PegBox* box, mMasterBoxes) {//show master code pegs
-			box->setState(BOX_PAST);
+		foreach (PegBox* box, mMasterBoxes) //show master code pegs
+		{
+			box->setBoxState(BOX_PAST);
 		}
 		scene()->update();
-	} else if (mCodeBoxes.isEmpty()) {//out of more row of codes, a fail
+	} else if (mCodeBoxes.isEmpty()) //out of more row of codes, a fail
+	{
 		mState = STATE_LOST;
 		mMessage->showMassage("Game Over! You Failed");
 		scene()->update();
-	} else {// continue the game
+	} else // continue the game
+	{
 		mMessage->showMassage("Place Your Pegs ... ");
-		for(int i = 0; i < mPegNumber; ++i) {//put the next codeboxes in action
+		for(int i = 0; i < mPegNumber; ++i) //put the next codeboxes in action
+		{
 			mCurrentBoxes.append(mCodeBoxes.first());
-			mCodeBoxes.first()->setState(BOX_CURRENT);
+			mCodeBoxes.first()->setBoxState(BOX_CURRENT);
 			mCodeBoxes.first()->setPegState(PEG_EMPTY);
 			mCodeBoxes.removeFirst();
 		}
@@ -261,7 +283,8 @@ void Board::onOkButtonPressed()
 {
 	/*	passing user inputed blacks and whites to mGame */
 	int resp = mPinBoxes.first()->getValue();
-	if(!mGame->setResponse(resp)){
+	if(!mGame->setResponse(resp))
+	{
 		mMessage->showMassage("Not Possible, Try Again...");
 		return;
 	}
@@ -273,7 +296,8 @@ void Board::onOkButtonPressed()
 	mPinBoxes.removeFirst();
 
 	/*	Here we check if user user input 4 blacks*/
-	if (mGame->done()){
+	if (mGame->done())
+	{
 		mMessage->showMassage("Yeah I found It");
 		mState = STATE_WON;
 		scene()->update();
@@ -283,15 +307,18 @@ void Board::onOkButtonPressed()
 	/* getting guess from mGame */
 	mGuess = mGame->getGuess(mAlgorithm);
 
-	if (mCodeBoxes.isEmpty()) {
+	if (mCodeBoxes.isEmpty())
+	{
 		mState = STATE_LOST; // Hehe, I can solve it always
 		mMessage->showMassage("I Lose");
 		scene()->update();
 		return;
-	} else {
-		for(int i = 0; i < mPegNumber; ++i) {
+	} else
+	{
+		for(int i = 0; i < mPegNumber; ++i)
+		{
 			createPegForBox(mCodeBoxes.first(), mGuess[i].digitValue());
-			mCodeBoxes.first()->setState(BOX_PAST);
+			mCodeBoxes.first()->setBoxState(BOX_PAST);
 			mCodeBoxes.removeFirst();
 		}
 
@@ -302,7 +329,8 @@ void Board::onOkButtonPressed()
 		mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 	}
 
-	if (mSetPins) {
+	if (mSetPins)
+	{
 		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
 	}
 }
@@ -315,17 +343,20 @@ void Board::onDoneButtonPressed()
 	mDoneButton->setEnabled(false);
 
 	//	first let the master code boxes become past for no interaction
-	foreach (PegBox* box, mCurrentBoxes) {
-		box->setState(BOX_PAST);
+	foreach (PegBox* box, mCurrentBoxes)
+	{
+		box->setBoxState(BOX_PAST);
 	}
 
 	//	freezing the peg boxes
-	foreach (PegBox* box, mPegBoxes) {
-		box->setState(BOX_FUTURE);
+	foreach (PegBox* box, mPegBoxes)
+	{
+		box->setBoxState(BOX_FUTURE);
 	}
 
 	mMasterCode = "";
-	foreach(PegBox* box, mCurrentBoxes){
+	foreach(PegBox* box, mCurrentBoxes)
+	{
 		QString str;
 		str.setNum(box->getPegColor());
 		mMasterCode.append(str);
@@ -336,18 +367,20 @@ void Board::onDoneButtonPressed()
 
 	//set the first row of current
 	mCurrentBoxes.clear();
-	for(int i = 0; i < mPegNumber; ++i) {
+	for(int i = 0; i < mPegNumber; ++i)
+	{
 		createPegForBox(mCodeBoxes.first(), mGuess.at(i).digitValue());
-		mCodeBoxes.first()->setState(BOX_CURRENT);
+		mCodeBoxes.first()->setBoxState(BOX_CURRENT);
 		mCurrentBoxes.append(mCodeBoxes.first());
 		mCodeBoxes.removeFirst();
 	}
 
 	// getting the first guess and puting it in the current row
 	mGuess = mGame->getGuess();
-	for(int i = 0; i < mPegNumber; ++i){
+	for(int i = 0; i < mPegNumber; ++i)
+	{
 		createPegForBox(mCurrentBoxes.at(i), mGuess.at(i).digitValue());
-		mCurrentBoxes.at(i)->setState(BOX_PAST);
+		mCurrentBoxes.at(i)->setBoxState(BOX_PAST);
 	}
 
 	mPinBoxes.first()->setState(BOX_NONE);
@@ -356,7 +389,8 @@ void Board::onDoneButtonPressed()
 	mOkButton->setEnabled(true);
 	mOkButton->setVisible(true);
 
-	if (mSetPins) {//the program puts pins for the lazy ass user
+	if (mSetPins) //the program puts pins for the lazy ass user
+	{
 		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
 	}
 	/*	We are done here. The onOkButtonPressed is continuing the game from now on
@@ -413,7 +447,8 @@ void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const
 
 	mSameColor = samecolor;
 
-	if (peg_n < 2 || peg_n > 6 || color_n < 2 || color_n > 10) {// for safety, fall back to standard in out-range inputs
+	if (peg_n < 2 || peg_n > 6 || color_n < 2 || color_n > 10) // for safety, fall back to standard in out-range inputs
+	{
 		mPegNumber = 4;
 		mColorNumber = 6;
 	}
@@ -423,23 +458,27 @@ void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const
 void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 {
 	QPoint pos = box->sceneBoundingRect().topLeft().toPoint();
-	if (box->hasPeg()){
+	if (box->hasPeg())
+	{
 		box->setPegColor(color);
-	} else {
+	} else
+	{
 		auto peg = new Peg(pos, color, mIndicator);
 		scene()->addItem(peg);
-		connect(this, SIGNAL(changePegIndicator(INDICATOR_TYPE)), peg, SLOT(onChangeIndicators(INDICATOR_TYPE)));
+		connect(this, SIGNAL(changePegIndicator(int)), peg, SLOT(onChangeIndicators(int)));
 
 		if(backPeg)
+		{
 			peg->setMovable(false);
-		else {
+		}
+		else
+		{
 			box->setPeg(peg);
 			connect(peg, SIGNAL(mouseReleasedSignal(QPoint, int)), this, SLOT(onPegMouseRelease(QPoint, int)));
 		}
 	}
 
 }
-
 //-----------------------------------------------------------------------------
 
 void Board::play(const int &mode)
@@ -453,6 +492,7 @@ void Board::play(const int &mode)
 		break;
 	}
 }
+//-----------------------------------------------------------------------------
 
 void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
 {
@@ -466,6 +506,7 @@ void Board::resizeEvent(QResizeEvent* event)
 	fitInView(sceneRect(), Qt::KeepAspectRatio);
 	QGraphicsView::resizeEvent(event);
 }
+//-----------------------------------------------------------------------------
 
 void Board::setIndicatorType(const int indicator_n)
 {
@@ -497,8 +538,6 @@ void Board::setAlgorithmType(const int &algorithm_n)
 		break;
 	}
 }
-
-
 //-----------------------------------------------------------------------------
 
 void Board::createBoxes()
@@ -514,7 +553,8 @@ void Board::createBoxes()
 
 	QPoint left_bottom_corner(4, 490);
 
-	for (int i = 0; i < MAX_COLOR_NUMBER; ++i){
+	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
+	{
 
 		QPoint position = left_bottom_corner - QPoint(0, i*40);
 
@@ -525,7 +565,8 @@ void Board::createBoxes()
 
 		position.setX(160-20*mPegNumber);
 
-		for (int j = 0; j < mPegNumber; ++j){
+		for (int j = 0; j < mPegNumber; ++j)
+		{
 			auto pegbox = new PegBox(position+QPoint(j*40, 0), this);
 			scene()->addItem(pegbox);
 			mCodeBoxes.append(pegbox);
@@ -536,7 +577,8 @@ void Board::createBoxes()
 
 		auto pegbox = new PegBox(position, this);
 		scene()->addItem(pegbox);
-		if (i < mColorNumber) {
+		if (i < mColorNumber)
+		{
 			createPegForBox(pegbox, i, true);//just a background peg
 			createPegForBox(pegbox, i);
 		}
@@ -544,7 +586,8 @@ void Board::createBoxes()
 		mPegBoxes.append(pegbox);
 	}
 
-	for (int i = 0; i < mPegNumber; ++i){// the last code boxes are for the master code
+	for (int i = 0; i < mPegNumber; ++i)// the last code boxes are for the master code
+	{
 		auto box = new PegBox(QPoint(160-20*mPegNumber+i*40, 70), this);
 		scene()->addItem(box);
 		box->setPegState(PEG_EMPTY);
@@ -642,34 +685,3 @@ void Board::drawBackground(QPainter* painter, const QRectF& rect)
 	painter->drawRoundedRect(mRectC, 20, 20);
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 }
-//-----------------------------------------------------------------------------
-
-//void Board::drawForeground(QPainter* painter, const QRectF&)
-//{
-//	if (mState == STATE_WON || mState == STATE_LOST) {
-//		QString message((mState == STATE_WON) ? tr("Success") : tr("Game Over"));
-//		QFontMetrics metrics(QFont("Sans", 24));
-//		int w = metrics.width(message);
-//		int h = metrics.height();
-//		QPixmap pixmap(QSize(w + h, h * 2));
-//		pixmap.fill(QColor(0, 0, 0, 0));
-//		{
-//			QPainter pixmap_painter(&pixmap);
-
-//			pixmap_painter.setPen(Qt::NoPen);
-//			pixmap_painter.setBrush(QColor(0, 0, 0, 200));
-//			pixmap_painter.setRenderHint(QPainter::Antialiasing, true);
-//			pixmap_painter.drawRoundedRect(0, 0, w + h, h * 2, 10, 10);
-
-//			pixmap_painter.setFont(QFont("Sans", 24));
-//			pixmap_painter.setPen(Qt::white);
-//			pixmap_painter.setRenderHint(QPainter::TextAntialiasing, true);
-//			pixmap_painter.drawText(h / 2, h / 2 + metrics.ascent(), message);
-//		}
-
-//		painter->save();
-//		painter->resetTransform();
-//		painter->drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
-//		painter->restore();
-//	}
-//}

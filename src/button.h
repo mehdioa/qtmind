@@ -32,7 +32,6 @@ class Button : public QObject, public QGraphicsItem
 
 public:
 	Button(int buttonWidth = 152, QString str = "");
-//	void setWidth
 	void setPushable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
 
@@ -50,7 +49,6 @@ signals:
 	void buttonPressed();
 
 private:
-	Board* gameBoard;
 	QString mLabel;
 	QFont mFont;
 	int mWidth;

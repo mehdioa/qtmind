@@ -30,9 +30,7 @@
 #include <QGraphicsScene>
 #include <QLinearGradient>
 #include <QString>
-
 #include "board.h"
-
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
@@ -59,11 +57,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	newGameSlot();
 }
+//-----------------------------------------------------------------------------
 
 MainWindow::~MainWindow()
 {
 }
-
 //-----------------------------------------------------------------------------
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -79,7 +77,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 	QSettings().setValue("Geometry", saveGeometry());
 	QMainWindow::closeEvent(event);
 }
-
 //-----------------------------------------------------------------------------
 
 void MainWindow::newGameSlot()
@@ -87,23 +84,27 @@ void MainWindow::newGameSlot()
 	mColors = colorsNumberComboBox->currentIndex();
 	mAlgorithm = solvingAlgorithmsComboBox->currentIndex();
 	mPegs = pegsNumberComboBox->currentIndex();
-	mSameColorAllowed = toggleAllowSameColorAction->isChecked();
+	mSameColorAllowed = allowSameColorAction->isChecked();
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mIndicator);
 	mBoard->play(mMode);
 }
-
 //-----------------------------------------------------------------------------
 
 void MainWindow::throwInTheTowelSlot()
 {
 }
-
 //-----------------------------------------------------------------------------
 
-void MainWindow::toggleAllowSameColorSlot()
+void MainWindow::allowSameColorSlot()
 {
-	mSameColorAllowed = toggleAllowSameColorAction->isChecked();
+	mSameColorAllowed = allowSameColorAction->isChecked();
+	if(mSameColorAllowed) {
+		allowSameColorAction->setText(tr("Same Color Allowed"));
+	} else {
+		allowSameColorAction->setText(tr("Same Color Not Allowed"));
+	}
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::setPinsCloseRowAutomatically()
 {
@@ -111,6 +112,7 @@ void MainWindow::setPinsCloseRowAutomatically()
 	mCloseRow = closeRowAutomaticallyAction->isChecked();
 	mBoard->setPinsRow(mSetPins, mCloseRow);
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
 {
@@ -121,43 +123,37 @@ void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
 
 void MainWindow::doItForMeSlot()
 {
-
+	if(mMode == MODE_MASTER) {
+		doItForMeAction->setText(tr("Put Pins For Me"));
+	} else {
+		doItForMeAction->setText(tr("Put Pegs For Me"));
+	}
 }
-
+//-----------------------------------------------------------------------------
 
 void MainWindow::changeGameModeSlot(QAction* selectedAction)
 {
 	mMode = selectedAction->data().toInt();
 	emit changeModeSignal(mMode);
 }
-
 //-----------------------------------------------------------------------------
 
 void MainWindow::about()
 {
-	QMessageBox::about(this, tr("About Peg-E"), QString(
+	QMessageBox::about(this, tr("About CodeBreak"), QString(
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>"
 		"<p align='center'>%6<br/><small>%7</small></p>")
-		.arg(tr("Peg-E"), QCoreApplication::applicationVersion(),
-			tr("Peg elimination game"),
-			tr("Copyright &copy; 2009-%1 Graeme Gott").arg("2013"),
+		.arg(tr("CodeBreak"), QCoreApplication::applicationVersion(),
+			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
+			tr("Copyright &copy; 2013-%1 Mehdi Omidali").arg("2013"),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""),
 			tr("Uses icons from the <a href=%1>Oxygen</a> icon theme").arg("\"http://www.oxygen-icons.org/\""),
 			tr("Used under the <a href=%1>LGPL 3</a> license").arg("\"http://www.gnu.org/licenses/lgpl.html\""))
 	);
 }
-//-----------------------------------------------------------------------------
-
-//void MainWindow::startGame()
-//{
-//	QSettings settings;
-//	settings.setValue("Mode", mMode);
-//	settings.setValue("Algorithm", mAlgorithm);
-//	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed);
-
-//}
 
 //-----------------------------------------------------------------------------
+
 void MainWindow::setPegsComboBox()
 {
 	pegsNumberComboBox = new QComboBox(this);
@@ -166,6 +162,7 @@ void MainWindow::setPegsComboBox()
 	pegsNumberComboBox->setCurrentIndex(mPegs);
 	pegsNumberComboBox->setToolTip("Choose the numbe of pegs");
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::setColorsComboBox()
 {
@@ -175,6 +172,7 @@ void MainWindow::setColorsComboBox()
 	colorsNumberComboBox->setCurrentIndex(mColors);
 	colorsNumberComboBox->setToolTip("Choose the number of colors");
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::setSolvingAlgorithmsComboBox()
 {
@@ -185,7 +183,7 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 	solvingAlgorithmsComboBox->addItem("Most Parts");
 	solvingAlgorithmsComboBox->setCurrentIndex(mAlgorithm);
 }
-
+//-----------------------------------------------------------------------------
 
 void MainWindow::createMenuBar()
 {
@@ -195,9 +193,6 @@ void MainWindow::createMenuBar()
 //	new_icon.addPixmap(QPixmap(":/16x16/document-new.png"));
 	auto newGameAction = gameMenu->addAction(new_icon, tr("&New"), this, SLOT(newGameSlot()), tr("Ctrl+N"));
 
-//	QIcon restart_icon(QPixmap(":/icons/restart-icon.png"));
-//	auto restartGameAction = gameMenu->addAction(restart_icon, tr("&Restart Game"), this, SLOT(restartGameSlot()), tr("F5"));
-
 	QIcon throwtowel_icon(QPixmap(":/icons/face-raspberry.png"));
 	auto throwInTheTowelAction = gameMenu->addAction(throwtowel_icon, tr("&Throw In The Towel"), this, SLOT(throwInTheTowelSlot()));
 
@@ -206,17 +201,11 @@ void MainWindow::createMenuBar()
 	QIcon close_icon(QPixmap(":/icons/close-icon.png"));
 	gameMenu->addAction(close_icon, tr("Quit"), this, SLOT(close()), tr("Ctrl+Q"));
 
-	auto rowMenu = menuBar()->addMenu(tr("&Row"));
-
-	QIcon do_icon;
-	do_icon.addPixmap(QPixmap(":/icons/monkey-icon.png"));
-	auto doItForMeAction = rowMenu->addAction(do_icon, tr("&Do It For Me"), this, SLOT(doItForMeSlot()), tr("F6"));
-
 	auto settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
 	auto gameModeSubMenu = settingsMenu->addMenu(tr("Game Mode"));
 	auto gameModeActions = new QActionGroup(this);
-	char* gameModeNames[] = {"Code Master", "Code Break"};
+	char* gameModeNames[] = {(char*)"Code Master", (char*)"Code Break"};
 	for(int i = 0; i < 2; ++i){
 		auto gameModeAction = gameModeSubMenu->addAction(tr(gameModeNames[i]));
 		gameModeAction->setData(i);
@@ -229,7 +218,7 @@ void MainWindow::createMenuBar()
 
 	auto indicatorTypeSubMenu = settingsMenu->addMenu(tr("Indicator Type"));
 	auto indicatorTypeActions = new QActionGroup(this);
-	char* indicatorTypeNames[3] = {"No Indicator", "Character Indicator", "Digit Indicator"};
+	char* indicatorTypeNames[3] = {(char*)"No Indicator", (char*)"Character Indicator", (char*)"Digit Indicator"};
 	for(int i = 0; i < 3; ++i){
 		auto indicatorAction = indicatorTypeSubMenu->addAction(tr(indicatorTypeNames[i]));
 		indicatorAction->setData(i);
@@ -239,13 +228,6 @@ void MainWindow::createMenuBar()
 	}
 	indicatorTypeActions->setExclusive(true);
 	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeIndicatorsSlot(QAction*)));
-
-	QIcon double_icon;
-	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
-	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
-	toggleAllowSameColorAction = settingsMenu->addAction(double_icon, tr("&Toggle Allow Pegs Of The Same Color"), this, SLOT(toggleAllowSameColorSlot()), tr("F5"));
-	toggleAllowSameColorAction->setCheckable(true);
-	toggleAllowSameColorAction->setChecked(mSameColorAllowed);
 
 	setPinsAutomaticallyAction = settingsMenu->addAction(tr("&Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()), tr("Ctrl+P"));
 	setPinsAutomaticallyAction->setCheckable(true);
@@ -272,8 +254,24 @@ void MainWindow::createMenuBar()
 	mainToolbar->addAction(newGameAction);
 //	mainToolbar->addAction(restartGameAction);
 	mainToolbar->addAction(throwInTheTowelAction);
+
+	QIcon do_icon;
+	do_icon.addPixmap(QPixmap(":/icons/monkey-icon.png"));
+	doItForMeAction = new QAction(do_icon, tr("&Put Pins For Me"), this);
 	mainToolbar->addAction(doItForMeAction);
-	mainToolbar->addAction(toggleAllowSameColorAction);
+	connect(doItForMeAction, SIGNAL(triggered()), this, SLOT(doItForMeSlot()));
+	doItForMeSlot();
+
+	QIcon double_icon;
+	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
+	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
+	allowSameColorAction = new QAction(double_icon, tr("Same Color Allowed"), this);
+	allowSameColorAction->setCheckable(true);
+	allowSameColorAction->setChecked(mSameColorAllowed);
+	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(allowSameColorSlot()));
+	allowSameColorSlot();
+
+	mainToolbar->addAction(allowSameColorAction);
 	mainToolbar->addSeparator();
 	mainToolbar->addWidget(pegsNumberComboBox);
 	mainToolbar->addWidget(colorsNumberComboBox);

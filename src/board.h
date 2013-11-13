@@ -44,17 +44,16 @@ public:
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int& peg_n, const int& color_n, const int &mode_n,
 			   const bool &samecolor, const int &algorithm_n, const bool &set_pins,
-			   const bool &close_row, const int& indicator_n = TYPE_NONE);
+			   const bool &close_row, const int& indicator_n = 0);
 
 protected:
 	void drawBackground(QPainter* painter, const QRectF& rect);
-//	void drawForeground(QPainter* painter, const QRectF& rect);
 	void resizeEvent(QResizeEvent* event);
 	void setIndicatorType(const int indicator_n);
 	void setAlgorithmType(const int& algorithm_n);
 
 signals:
-	void changePegIndicator(const INDICATOR_TYPE &indicator_t);
+	void changePegIndicator(const int &indicator_t);
 
 private slots:
 	void onPegMouseRelease(QPoint position, int color);
@@ -68,7 +67,6 @@ private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-//	void getCode();
 	void createPegForBox(PegBox* box, int color, bool backPeg = false);// backPeg should only be used to put an extra peg under initial pegs,
 	void codeRowFilled(bool filled);
 
@@ -88,15 +86,13 @@ private:
 	bool mSetPins;
 	bool mCloseRow;
 	bool mDone;
-	INDICATOR_TYPE mIndicator;
+	int mIndicator;
 	Game* mGame;
 	Button* mOkButton;
 	Button* mDoneButton;
 	Message* mMessage;
 	QString mMasterCode;
 	QString mGuess;
-
-//	bool rowFillState;
 };
 
 #endif // BOARD_H

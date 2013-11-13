@@ -18,17 +18,16 @@
  ***********************************************************************/
 
 #include "button.h"
-#include "board.h"
-
 #include <QGraphicsSceneEvent>
-
+#include <QCursor>
+#include <QPainter>
 
 Button::Button(int buttonWidth, QString str)
 {
 	mWidth = buttonWidth;
 	mLabel = str;
 	mYOffs = 0;
-	mFont = QFont("Arial", 11, QFont::Bold, false);
+	mFont = QFont("DejaVu", 11, QFont::Bold, false);
 	mFont.setStyleHint(QFont::SansSerif);
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 
@@ -52,7 +51,6 @@ Button::Button(int buttonWidth, QString str)
 	frameovergrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
 	mFrameOverBrush = QBrush(frameovergrad);
 
-
 	mFrameBrush = &mFrameOutBrush;
 	mFillBrush = &mFillOutBrush;
 
@@ -61,15 +59,15 @@ Button::Button(int buttonWidth, QString str)
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptHoverEvents (true);
 	setPushable(true);
-
 }
-
+//-----------------------------------------------------------------------------
 
 void Button::setPushable(bool enabled)
 {
 	setEnabled(enabled);
 	setCursor(enabled ? Qt::PointingHandCursor : Qt::ArrowCursor);
 }
+//-----------------------------------------------------------------------------
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
@@ -77,29 +75,31 @@ void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 	mYOffs = 1;
 	update(mRect);
 }
+//-----------------------------------------------------------------------------
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	mFrameBrush = &mFrameOutBrush;
 	mYOffs = 0;
 	update(mRect);
-	//must implement
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
 }
+//-----------------------------------------------------------------------------
 
 void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *)
 {
 	mFillBrush = &mFillOverBrush;
 	update(mRect);
 }
+//-----------------------------------------------------------------------------
 
 void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
 {
 	mFillBrush = &mFillOutBrush;
 	update(mRect);
 }
-
+//-----------------------------------------------------------------------------
 
 void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
@@ -118,6 +118,7 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 		painter->drawText(mRectFill.adjusted(0, mYOffs, 0, mYOffs), Qt::AlignCenter, mLabel);
 	}
 }
+//-----------------------------------------------------------------------------
 
 QRectF Button::boundingRect() const
 {

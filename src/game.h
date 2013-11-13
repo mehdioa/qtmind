@@ -25,14 +25,13 @@
 
 class Game
 {
-	/*	The class Game is the engine of the mastermid game. It contains all the solving
+	/*	The class Game is the engine of the mastermind game. It contains all the solving
 	 *	algorithms and auxiliary functions that provide efficient code guess and handling
 	 *	response and so on
 	 */
 public:
 	Game(const int& peg_no = 4, const int& color_no = 6, const bool& allow_same_color = true);
 	~Game();
-//	QString indexToCode(const int &index) const;
 	int compare (const QString codeA, const QString codeB) const;
 	bool done () const;
 	QString getGuess();
@@ -46,7 +45,6 @@ private:
 	QString expectedSizeAlgorithm () const;					//	expected size solving algorithm
 	QString worstCaseAlgorithm () const;					//	worst case solving algorithm
 	QString convertBase(int decimal, const int &base, const int &precision);
-//	QString convert(int decimal, int base, int precision);
 	void setAllCodesSize();
 
 	void makeGuess(Algorithm alg);						//	create a guess, based on the game algorithm and put it in mGuess
@@ -59,11 +57,13 @@ private:
 	bool mAllowSameColor;
 	QString mGuess;											//	the guess number, ?
 	int mResponse;										//	the black-white response code, [0..14]
-	int mResponeSpaceSize;
+	int mResponseSpaceSize;
 	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
 
-	QString* mAllCodes;									//	0..1295
+	QString* mAllCodes;									//	all indexes of codes (0...1295)
 	QList<int> mPossibleCodes;							//	list of all possibles
+	int* mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
+	int mFirstPossibleCodesSize;
 
 };
 

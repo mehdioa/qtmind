@@ -38,24 +38,24 @@ class PegBox : public EmptyBox
 {
 public:
 	PegBox(const QPoint& position, Board* board, QGraphicsItem* parent = 0);
-	bool hasPeg() const {return m_peg != 0;}
-	Peg* getPeg() const {return m_peg;}
+	bool hasPeg() const {return mPeg != 0;}
+	Peg* getPeg() const {return mPeg;}
 	void setPeg(Peg* peg);
-	void setBoard(Board* board) {m_board = board;}
+	void setBoard(Board* board) {mBoard = board;}
 	void setPegState(const PEG_STATE& state = PEG_EMPTY);
 	void setPegColor(int color_number);
 	int getPegColor();
-	void setState(const BOX_STATE& state = BOX_FUTURE);
+	void setBoxState(const BOX_STATE& state = BOX_FUTURE);
 	bool isPegVisible();
 
 
-	PEG_STATE getPegState() const {return p_state;}
+	PEG_STATE getPegState() const {return mPegState;}
 
 private:
-	PEG_STATE p_state;
-	QGraphicsEllipseItem* circle;
-	Board* m_board;
-	Peg* m_peg;
+	PEG_STATE mPegState;
+	QGraphicsEllipseItem* mCircle;
+	Board* mBoard;
+	Peg* mPeg;
 };
 
 #endif // PEGBOX_H

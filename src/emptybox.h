@@ -29,31 +29,18 @@ enum BOX_STATE {
 
 class EmptyBox : public QGraphicsItem
 {
-//	Q_OBJECT
-//	Q_INTERFACES(QGraphicsItem)
-
 public:
+	const static int colors_rgb[4][3];
+	const static int alphas[4];
 	EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
-
-	virtual void setState(const BOX_STATE& state = BOX_FUTURE);
-
-	BOX_STATE getState() const {return m_state;}
-
-	void setHighlight();
-
-//	virtual void handlePegMouseRelease(QPoint){}
-//	virtual bool hasPeg() const { return false;}
-//	virtual void setPegColor(int ){}
+	virtual void setBoxState(const BOX_STATE& state = BOX_FUTURE);
+	BOX_STATE getState() const {return mBoxState;}
 	QRectF boundingRect() const;
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
-	BOX_STATE m_state;
-	QColor mPend;
-	QColor mPenl;
-	QColor mGrad0;
-	QColor mGrad1;
+	BOX_STATE mBoxState;
 };
 
 #endif // EmptyBox_H
