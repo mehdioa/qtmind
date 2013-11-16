@@ -32,7 +32,7 @@ public:
 	QRectF boundingRect() const;
 
 protected:
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 private:
 	QTextLayout mLayout;

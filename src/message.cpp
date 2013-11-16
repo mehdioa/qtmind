@@ -73,7 +73,7 @@ QRectF Message::boundingRect() const
 	return mUpdateRect;
 }
 
-void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 	painter->setPen(QPen(QColor("#303133")));

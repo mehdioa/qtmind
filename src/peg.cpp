@@ -51,7 +51,7 @@ Peg::Peg(const QPoint& position, int color_number, const int &indicator_n, QGrap
 	pressedEffect->setEnabled(false);
 
 	auto gloss = new QGraphicsEllipseItem(5, 1.5, 25, 20, this);
-	gloss->rotate(-45);
+	gloss->setRotation(-45);
 	gloss->setPos(-5, 19);
 	QLinearGradient lgrad(25, 0, 25, 17);
 	lgrad.setColorAt(0, QColor(0xff, 0xff, 0xff, 120));

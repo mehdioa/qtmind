@@ -145,7 +145,7 @@ void MainWindow::about()
 		"<p align='center'>%6<br/><small>%7</small></p>")
 		.arg(tr("CodeBreak"), QCoreApplication::applicationVersion(),
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
-			tr("Copyright &copy; 2013-%1 Mehdi Omidali").arg("2013"),
+			tr("Copyright &copy; 2013-%1 Omid Nikta").arg("2013"),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""),
 			tr("Uses icons from the <a href=%1>Oxygen</a> icon theme").arg("\"http://www.oxygen-icons.org/\""),
 			tr("Used under the <a href=%1>LGPL 3</a> license").arg("\"http://www.gnu.org/licenses/lgpl.html\""))
