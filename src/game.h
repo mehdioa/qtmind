@@ -32,35 +32,31 @@ class Game
 public:
 	Game(const int& peg_no = 4, const int& color_no = 6, const bool& allow_same_color = true);
 	~Game();
-	int compare (const QString codeA, const QString codeB) const;
 	bool done () const;
 	QString getGuess();
 	QString getGuess(const Algorithm& alg);
 	bool setResponse(const int& response);
-	bool hasDifferentSetup(const int& peg_no, const int color_no) const;
 	void reset(const int& peg_no = 4, const int& color_no = 6, const bool& allow_same_color = true);
 
 private:
-	QString mostPartsAlgorithm() const;					//	most parts solving algorithm
-	QString expectedSizeAlgorithm () const;					//	expected size solving algorithm
-	QString worstCaseAlgorithm () const;					//	worst case solving algorithm
-	QString convertBase(int decimal, const int &base, const int &precision);
-	void setAllCodesSize();
-
-	void makeGuess(Algorithm alg);						//	create a guess, based on the game algorithm and put it in mGuess
-	void fillAllCodes();
-	void clearAllCodes();
+	void createTables();
+	void deleteTables();
+	int compare (const int *codeA, const int *codeB) const;
+	QString arrayToString(const int*) const;
+	void stringToArray(const QString& str, int* arr) const;
+	int computeWeight(int* responses, const Algorithm& alg) const;
+	void convertBase(int decimal, const int &base, const int &precision, int* convertedArray);
 
 
 	int mPegNumber;										//	pegs count, 4
 	int mColorNumber;									//	colors count, 6
 	bool mAllowSameColor;
-	QString mGuess;											//	the guess number, ?
+	QString mGuess;										//	the guess number, ?
 	int mResponse;										//	the black-white response code, [0..14]
 	int mResponseSpaceSize;
 	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
 
-	QString* mAllCodes;									//	all indexes of codes (0...1295)
+	int** mAllCodes;									//	all indexes of codes (0...1295)
 	QList<int> mPossibleCodes;							//	list of all possibles
 	int* mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 	int mFirstPossibleCodesSize;

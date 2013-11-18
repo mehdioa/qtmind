@@ -97,7 +97,8 @@ void MainWindow::throwInTheTowelSlot()
 
 void MainWindow::allowSameColorSlot()
 {
-	mSameColorAllowed = allowSameColorAction->isChecked();
+	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
+	allowSameColorAction->setChecked(mSameColorAllowed);
 	if(mSameColorAllowed) {
 		allowSameColorAction->setText(tr("Same Color Allowed"));
 	} else {
@@ -136,6 +137,25 @@ void MainWindow::changeGameModeSlot(QAction* selectedAction)
 	mMode = selectedAction->data().toInt();
 	emit changeModeSignal(mMode);
 }
+
+void MainWindow::updateNumbers()
+{
+	mColors = colorsNumberComboBox->currentIndex();
+	mPegs = pegsNumberComboBox->currentIndex();
+	mAlgorithm = solvingAlgorithmsComboBox->currentIndex();
+	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
+
+	allowSameColorSlot();
+
+	QSettings().setValue("Mode", mMode);
+	QSettings().setValue("Colors", mColors+2);
+	QSettings().setValue("Pegs", mPegs+2);
+	QSettings().setValue("Algorithm", mAlgorithm);
+	QSettings().setValue("SameColor", mSameColorAllowed);
+	QSettings().setValue("SetPins",	mSetPins);
+	QSettings().setValue("CloseRow", mCloseRow);
+	QSettings().setValue("Indicator", mIndicator);
+}
 //-----------------------------------------------------------------------------
 
 void MainWindow::about()
@@ -161,6 +181,8 @@ void MainWindow::setPegsComboBox()
 		pegsNumberComboBox->addItem(QString::number(i)+" Slots");
 	pegsNumberComboBox->setCurrentIndex(mPegs);
 	pegsNumberComboBox->setToolTip("Choose the numbe of pegs");
+
+	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
 }
 //-----------------------------------------------------------------------------
 
@@ -171,6 +193,9 @@ void MainWindow::setColorsComboBox()
 		colorsNumberComboBox->addItem(QString::number(i)+" Colors");
 	colorsNumberComboBox->setCurrentIndex(mColors);
 	colorsNumberComboBox->setToolTip("Choose the number of colors");
+
+	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
+
 }
 //-----------------------------------------------------------------------------
 
@@ -182,6 +207,9 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 	solvingAlgorithmsComboBox->addItem("Expected Size");
 	solvingAlgorithmsComboBox->addItem("Most Parts");
 	solvingAlgorithmsComboBox->setCurrentIndex(mAlgorithm);
+
+	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
+
 }
 //-----------------------------------------------------------------------------
 
@@ -241,11 +269,6 @@ void MainWindow::createMenuBar()
 	helpMenu->addAction(tr("&About"), this, SLOT(about()));
 	helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 
-	setPegsComboBox();
-	setColorsComboBox();
-	setSolvingAlgorithmsComboBox();
-
-
 	auto mainToolbar = new QToolBar(this);
 	mainToolbar->setIconSize(QSize(22, 22));
 	mainToolbar->setFloatable(false);
@@ -270,6 +293,11 @@ void MainWindow::createMenuBar()
 	allowSameColorAction->setChecked(mSameColorAllowed);
 	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(allowSameColorSlot()));
 	allowSameColorSlot();
+
+	setPegsComboBox();
+	setColorsComboBox();
+	setSolvingAlgorithmsComboBox();
+
 
 	mainToolbar->addAction(allowSameColorAction);
 	mainToolbar->addSeparator();

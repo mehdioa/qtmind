@@ -49,6 +49,7 @@ private slots:
 	void changeIndicatorsSlot(QAction*);
 	void doItForMeSlot();
 	void changeGameModeSlot(QAction*);
+	void updateNumbers();
 	void about();
 
 signals:
