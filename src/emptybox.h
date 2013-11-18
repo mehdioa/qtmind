@@ -30,16 +30,17 @@ enum BOX_STATE {
 class EmptyBox : public QGraphicsItem
 {
 public:
+
 	const static int colors_rgb[4][3];
 	const static int alphas[4];
+
 	EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
 	virtual void setBoxState(const BOX_STATE& state = BOX_FUTURE);
-	BOX_STATE getState() const {return mBoxState;}
 	QRectF boundingRect() const;
 
 protected:
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 	BOX_STATE mBoxState;
 };
 

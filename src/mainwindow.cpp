@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include "mainwindow.h"
+#include "board.h"
 #include <QApplication>
 #include <QComboBox>
 #include <QMenuBar>
@@ -30,7 +31,6 @@
 #include <QGraphicsScene>
 #include <QLinearGradient>
 #include <QString>
-#include "board.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)

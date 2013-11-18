@@ -27,16 +27,37 @@ class Game
 {
 	/*	The class Game is the engine of the mastermind game. It contains all the solving
 	 *	algorithms and auxiliary functions that provide efficient code guess and handling
-	 *	response and so on
+	 *	response and so on. The response is stored this way:
+	 *	example: p := peg number = 4
+	 *	(black, white)
+	 *
+	 *	(0, 4)
+	 *
+	 *	(0, 3)	(1, 3)
+	 *
+	 *	(0, 2)	(1, 2)	(2, 2)
+	 *
+	 *	(0, 1)	(1, 1)	(2, 1)	(3, 1)
+	 *
+	 *	(0, 0)	(1, 0)	(2, 0)	(3, 0)	(4, 0)
+	 *
+	 *	There are 1+2+...+(p+1) = (p+1)(p+2)/2 couples (including the impossible (3, 1)).
+	 *	The one-to-one function f: Set of possible couples (black, white) --> [0...(p+1)(p+2)/2 - 1]
+	 *	including (3, 1) is defined
+	 *
+	 *			f(b, w) = (b+w)(b+w+1)/2 + b;
 	 */
 public:
-	Game(const int& peg_no = 4, const int& color_no = 6, const bool& allow_same_color = true);
+	Game(const int& peg_no, const int& color_no,
+		 const bool& allow_same_color);
 	~Game();
-	bool done () const;
+	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
+	QString getInformation() const {return mInformation;}
 	QString getGuess();
 	QString getGuess(const Algorithm& alg);
 	bool setResponse(const int& response);
-	void reset(const int& peg_no = 4, const int& color_no = 6, const bool& allow_same_color = true);
+	void reset(const int& peg_no, const int& color_no,
+			   const bool& allow_same_color);
 
 private:
 	void createTables();
@@ -45,7 +66,8 @@ private:
 	QString arrayToString(const int*) const;
 	void stringToArray(const QString& str, int* arr) const;
 	int computeWeight(int* responses, const Algorithm& alg) const;
-	void convertBase(int decimal, const int &base, const int &precision, int* convertedArray);
+	void convertBase(int decimal, const int &base,
+					 const int &precision, int* convertedArray);
 
 
 	int mPegNumber;										//	pegs count, 4
@@ -55,6 +77,7 @@ private:
 	int mResponse;										//	the black-white response code, [0..14]
 	int mResponseSpaceSize;
 	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
+	QString mInformation;
 
 	int** mAllCodes;									//	all indexes of codes (0...1295)
 	QList<int> mPossibleCodes;							//	list of all possibles

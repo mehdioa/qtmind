@@ -27,7 +27,7 @@ Button::Button(int buttonWidth, QString str)
 	mWidth = buttonWidth;
 	mLabel = str;
 	mYOffs = 0;
-	mFont = QFont("DejaVu", 11, QFont::Bold, false);
+	mFont = QFont("Arial", 11, QFont::Bold, false);
 	mFont.setStyleHint(QFont::SansSerif);
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 

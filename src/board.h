@@ -91,6 +91,7 @@ private:
 	Button* mOkButton;
 	Button* mDoneButton;
 	Message* mMessage;
+	Message* mInformation;
 	QString mMasterCode;
 	QString mGuess;
 };

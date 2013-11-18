@@ -123,7 +123,7 @@ void PinBox::setState(const BOX_STATE &state)
 		foreach (Pin* pin, pins)
 			pin->setMouseEventHandling(MOUSE_TOBOX);
 		break;
-	case BOX_FUTURE: //BOX_FUTURE: used for boxes that they are done or it is not their time yet. no interaction allowed
+	case BOX_FUTURE: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin* pin, pins)

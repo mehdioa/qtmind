@@ -307,6 +307,9 @@ void Board::onOkButtonPressed()
 	/* getting guess from mGame */
 	mGuess = mGame->getGuess(mAlgorithm);
 
+	mInformation->showMassage(mGame->getInformation());
+
+
 	if (mCodeBoxes.isEmpty())
 	{
 		mState = STATE_LOST; // Hehe, I can solve it always
@@ -426,6 +429,10 @@ void Board::generate()
 	mMessage = new Message;
 	scene()->addItem(mMessage);
 	mMessage->setPos(20, 0);
+
+	mInformation = new Message("#808183");
+	scene()->addItem(mInformation);
+	mInformation->setPos(20, 506);
 
 	createBoxes();
 

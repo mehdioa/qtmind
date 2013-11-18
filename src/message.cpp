@@ -23,9 +23,10 @@
 #include <QFont>
 
 
-Message::Message()
+Message::Message(QString color_name):
+mColor(QColor(color_name))
 {
-	mLayout.setFont(QFont("DejaVu", 12, QFont::Bold, false));
+	mLayout.setFont(QFont("Linux Libertine", 12, QFont::Bold, false));
 	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);
 
@@ -76,7 +77,7 @@ QRectF Message::boundingRect() const
 void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
-	painter->setPen(QPen(QColor("#303133")));
+	painter->setPen(QPen(mColor));
 	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
 	mLayout.draw(painter, QPointF(0, ypos));
 }

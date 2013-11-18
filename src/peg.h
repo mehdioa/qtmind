@@ -61,10 +61,10 @@ private:
 	PegBox* mBox;
 	INDICATOR_TYPE mIndicatorType;
 
+	/*	pressed shadow - the ellipse item takes ownership of
+	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect* pressedEffect;
 	QGraphicsSimpleTextItem* mIndicator;
-	/* pressed shadow - the ellipse item takes ownership of
-	 *the effect, so no need to delete the pointer in the destructor*/
 	int mColor;
 };
 

@@ -39,7 +39,8 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color)
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
-	mFirstPossibleCodes(0)
+	mFirstPossibleCodes(0),
+	mInformation("")
 {
 	createTables();
 	reset(peg_no, color_no, mAllowSameColor);
@@ -110,6 +111,8 @@ void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_
 	mPossibleCodes.clear();
 	for(int i = 0; i < mAllCodesSize; ++i)
 		mPossibleCodes.append(i);//in case of not same color here must change
+
+	mInformation = "";
 }
 //-----------------------------------------------------------------------------
 
@@ -147,13 +150,6 @@ int Game::compare(const int* codeA, const int* codeB) const
 
 	return total*(total + 1)/2 + blacks;
 }
-//-----------------------------------------------------------------------------
-
-bool Game::done() const
-{
-	return (mResponse == mResponseSpaceSize - 1);
-}
-
 //-----------------------------------------------------------------------------
 
 bool Game::setResponse(const int &response)
@@ -246,12 +242,16 @@ QString Game::getGuess(const Algorithm& alg)
 	if (mPossibleCodes.size() == 1)
 	{
 		mGuess =  arrayToString(mAllCodes[mPossibleCodes.first()]);
+		mInformation = "The Code Is Cracked!";
 		return mGuess;
 	}
 
 	if(mPossibleCodes.size() >= 10000)
 	{
 		mGuess = arrayToString(mAllCodes[mPossibleCodes.at(mPossibleCodes.size() >> 1)]);
+		QString str;
+		str.setNum(mPossibleCodes.size());
+		mInformation = QString("Random Guess    Remaining: %1").arg(str);
 		return mGuess;
 	}
 
@@ -261,11 +261,9 @@ QString Game::getGuess(const Algorithm& alg)
 	int answerIndex;
 	int minWeight = 1000000000;
 	bool isInPossibles(false);
-	QElapsedTimer timer;
 
 	for (int codeIndex = 0; codeIndex < mFirstPossibleCodesSize; ++codeIndex)
 	{
-		timer.start();
 
 		foreach (int possibleIndex, mPossibleCodes)
 			++responsesOfCodes[compare(mAllCodes[mFirstPossibleCodes[codeIndex]], mAllCodes[possibleIndex])];
@@ -278,9 +276,28 @@ QString Game::getGuess(const Algorithm& alg)
 			minWeight = Weight;
 			isInPossibles = mPossibleCodes.contains(codeIndex);
 		}
-		qDebug() << "The compare operation took" << timer.elapsed() << "milliseconds";
-
 	}
+
+
+	if(alg == MostParts)
+		minWeight = mResponseSpaceSize - minWeight;
+
+	QString str[3];
+	switch (alg) {
+	case ExpectedSize:
+		str[0] = "Expected Size";
+		break;
+	case WorstCase:
+		str[0] = "Worst Case";
+		break;
+	default:	//MostParts
+		str[0] = "Most Parts";
+		break;
+	}
+
+	str[1].setNum(minWeight);
+	str[2].setNum(mPossibleCodes.size());
+	mInformation = QString("%1: %2    Remaining: %3").arg(str[0]).arg(str[1]).arg(str[2]);
 
 	mGuess = arrayToString(mAllCodes[mFirstPossibleCodes[answerIndex]]);
 
@@ -301,6 +318,7 @@ int Game::computeWeight(int *responses, const Algorithm &alg) const
 			break;
 		case WorstCase:
 			answer = qMax(responses[i], answer);
+			break;
 		default:	//	Most Parts
 			answer += (responses[i] == 0);
 			break;

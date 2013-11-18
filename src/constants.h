@@ -39,7 +39,7 @@ enum GAME_STATE {
 enum Algorithm {
 	MostParts		= 0,
 	WorstCase		= 1,
-	ExpectedSize	=2
+	ExpectedSize	= 2
 };
 
 

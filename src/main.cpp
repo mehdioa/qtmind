@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	app.setApplicationName("CodeBreak");
 	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("rasteha.com");
+	app.setOrganizationDomain("http://omidnikta.github.io/codebreak");
 	app.setOrganizationName("CodeBreak");
 
 	MainWindow w;

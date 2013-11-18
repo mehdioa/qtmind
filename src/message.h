@@ -27,7 +27,7 @@ class QTextLayout;
 class Message : public QGraphicsTextItem
 {
 public:
-	Message();
+	Message(QString color_name = "#303133");
 	void showMassage(const QString str);
 	QRectF boundingRect() const;
 
@@ -37,6 +37,7 @@ protected:
 private:
 	QTextLayout mLayout;
 	QRectF mUpdateRect;
+	QColor mColor;
 };
 
 #endif // MESSAGE_H
