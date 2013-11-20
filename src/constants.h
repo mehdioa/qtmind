@@ -20,30 +20,56 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-enum GAME_MODE {
-	MODE_MASTER		= 0,//HUMAN BREAKS THE CODE
-	MODE_BREAKER	= 1	//MACHINE BREAKS THE CODE
+enum class GameMode {
+	Master		= 0,//HUMAN BREAKS THE CODE
+	Breaker		= 1	//MACHINE BREAKS THE CODE
 };
 
-enum GAME_STATE {
-	STATE_NONE						= 0,
-	STATE_RUNNING					= 1,
-	STATE_PAUSED					= 2,
-	STATE_WON						= 3,
-	STATE_LOST						= 4,
-	STATE_GAVE_IN					= 5,
-	STATE_ERROR						= 6,
-	STATE_GUESSING					= 7,
-	STATE_WAITING_FOR_PINS			= 8,
-	STATE_WAITING_FOR_MASTER_CODE	= 9,
-	STATE_WAITING_FOR_CODE_ROW		=10
+enum class GameState {
+	None						= 0,
+	Running						= 1,
+	Paused						= 2,
+	Win							= 3,
+	Lose						= 4,
+	Resign						= 5,
+	Error						= 6,
+	Guessing					= 7,
+	WaittingPins				= 8,
+	WaittingMasterCode			= 9,
+	WaittingCodeRow				=10
 };
 
 
-enum Algorithm {
+enum class Algorithm {
 	MostParts		= 0,
 	WorstCase		= 1,
 	ExpectedSize	= 2
+};
+
+enum class PinMouse{
+	Ignore		= 0,
+	Accept		= 1,
+	Pass		= 2
+};
+
+enum class IndicatorType{
+	None	= 0,
+	Charactre	= 1,
+	Digit	= 2
+};
+
+enum class BoxState {
+	Past		= 0,
+	Current		= 1,
+	Future		= 2,
+	None		= 3
+};
+
+enum class PegState {
+	Initial		= 0,
+	Filled		= 1,
+	Empty		= 2,
+	Draged		= 3
 };
 
 

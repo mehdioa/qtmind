@@ -19,12 +19,8 @@
 
 #ifndef EmptyBox_H
 #define EmptyBox_H
-enum BOX_STATE {
-	BOX_PAST		= 0,
-	BOX_CURRENT		= 1,
-	BOX_FUTURE		= 2,
-	BOX_NONE		= 3
-};
+
+#include "constants.h"
 #include <QGraphicsItem>
 
 class EmptyBox : public QGraphicsItem
@@ -35,13 +31,13 @@ public:
 	const static int alphas[4];
 
 	EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
-	virtual void setBoxState(const BOX_STATE& state = BOX_FUTURE);
+	virtual void setBoxState(const BoxState& state = BoxState::Future);
 	QRectF boundingRect() const;
 
 protected:
 
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-	BOX_STATE mBoxState;
+	BoxState mBoxState;
 };
 
 #endif // EmptyBox_H

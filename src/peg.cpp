@@ -35,7 +35,7 @@ const QString Peg::color_rgb[10][2] = {
   };
 const QString Peg::ordered_chars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
 
-Peg::Peg(const QPoint& position, int color_number, const int &indicator_n, QGraphicsItem *parent):
+Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
 		mBox(0)
@@ -100,7 +100,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	if (isEnabled()){
 		pressedEffect->setEnabled(true);
 		setZValue(3);
-		if(mBox->getPegState() != PEG_INITIAL) mBox->setPegState(PEG_DRAGED);
+		if(mBox->getPegState() != PegState::Initial) mBox->setPegState(PegState::Draged);
 		setCursor(Qt::ClosedHandCursor);
 	}
 	QGraphicsEllipseItem::mousePressEvent(event);
@@ -121,12 +121,12 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 	switch (!mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint())) {
 	case 0: //	droped on its own box, no need to emit signal and set state to PEG_FILLED
-		if (mBox->getPegState() != PEG_INITIAL)
-			mBox->setPegState(PEG_FILLED);
+		if (mBox->getPegState() != PegState::Initial)
+			mBox->setPegState(PegState::Filled);
 		break;
 	default: //	droped out of its own box,
-		if (mBox->getPegState() != PEG_INITIAL)
-			mBox->setPegState(PEG_EMPTY);
+		if (mBox->getPegState() != PegState::Initial)
+			mBox->setPegState(PegState::Empty);
 		emit mouseReleasedSignal(sceneBoundingRect().center().toPoint(), mColor);
 		break;
 	}
@@ -135,8 +135,8 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
-void Peg::onChangeIndicators(const int indicator_n)
+void Peg::onChangeIndicators(const IndicatorType& indicator_n)
 {
-	mIndicatorType = (INDICATOR_TYPE) indicator_n;
-	mIndicator->setText(ordered_chars[mIndicatorType][mColor]);
+	mIndicatorType = indicator_n;
+	mIndicator->setText(ordered_chars[(int)mIndicatorType][mColor]);
 }

@@ -23,6 +23,7 @@
 #include <QGraphicsItem>
 #include <QFont>
 #include <QBrush>
+
 class Board;
 
 class Button : public QObject, public QGraphicsItem

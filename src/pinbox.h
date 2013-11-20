@@ -35,7 +35,7 @@ public:
 	int getValue() const;
 	void setPins(const int& b, const int& w);
 	void setPins(const QString& codeA, const QString& codeB, const int& peg, const int& color);
-	void setBoxState(const BOX_STATE& state = BOX_FUTURE);
+	void setBoxState(const BoxState& state = BoxState::Future);
 	void fakePress() {emit pinBoxPressed();}
 
 protected:

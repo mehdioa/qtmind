@@ -19,10 +19,9 @@
 
 #ifndef MESSAGE_H
 #define MESSAGE_H
+
 #include <QGraphicsTextItem>
 #include <QTextLayout>
-
-class QTextLayout;
 
 class Message : public QGraphicsTextItem
 {

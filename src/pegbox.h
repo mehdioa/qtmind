@@ -19,15 +19,8 @@
 
 #ifndef PEGBOX_H
 #define PEGBOX_H
+
 #include "emptybox.h"
-
-enum PEG_STATE {
-	PEG_INITIAL		= 0,
-	PEG_FILLED		= 1,
-	PEG_EMPTY		= 2,
-	PEG_DRAGED		= 3
-};
-
 #include <QGraphicsItem>
 
 class Peg;
@@ -42,17 +35,17 @@ public:
 	Peg* getPeg() const {return mPeg;}
 	void setPeg(Peg* peg);
 	void setBoard(Board* board) {mBoard = board;}
-	void setPegState(const PEG_STATE& state = PEG_EMPTY);
+	void setPegState(const PegState& state = PegState::Empty);
 	void setPegColor(int color_number);
 	int getPegColor();
-	void setBoxState(const BOX_STATE& state = BOX_FUTURE);
+	void setBoxState(const BoxState& state = BoxState::Future);
 	bool isPegVisible();
 
 
-	PEG_STATE getPegState() const {return mPegState;}
+	PegState getPegState() const {return mPegState;}
 
 private:
-	PEG_STATE mPegState;
+	PegState mPegState;
 	QGraphicsEllipseItem* mCircle;
 	Board* mBoard;
 	Peg* mPeg;

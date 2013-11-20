@@ -31,8 +31,9 @@ Pin::Pin(const int &color, QGraphicsItem* parent) :
 	lgrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
 	setPen(QPen(QBrush(lgrad), 1));
 
-	setMouseEventHandling(MOUSE_IGNORE);
+	setMouseEventHandling(PinMouse::Ignore);
 }
+//-----------------------------------------------------------------------------
 
 void Pin::setColor(const int &c)
 {
@@ -51,32 +52,32 @@ void Pin::setColor(const int &c)
 	}
 	update();
 }
+//-----------------------------------------------------------------------------
 
-void Pin::setMouseEventHandling(PIN_MOUSE event)
+void Pin::setMouseEventHandling(const PinMouse& event)
 {
 	switch (event) {
-	case MOUSE_IGNORE:
+	case PinMouse::Ignore:
 		setEnabled(false);
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::ArrowCursor);
 		break;
-	case MOUSE_ACCEPT:
+	case PinMouse::Accept:
 		setEnabled(true);
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 		break;
-	default: // MOUSE_TOBOX, let the keybox receive the mouse event
+	default: // PinMouse::Pass, let the keybox receive the mouse event
 		setEnabled(false);
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::PointingHandCursor);
 		break;
 	}
 }
+//-----------------------------------------------------------------------------
 
-
-void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void Pin::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
 	if (isEnabled())
 		setColor((m_color - 2) % 3 + 1);
 }
-

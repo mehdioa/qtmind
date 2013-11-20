@@ -18,8 +18,6 @@
  ***********************************************************************/
 
 #include "game.h"
-#include <QDebug>
-#include <QElapsedTimer>
 
 inline int ipow(int base, int exp)
 {
@@ -279,15 +277,15 @@ QString Game::getGuess(const Algorithm& alg)
 	}
 
 
-	if(alg == MostParts)
+	if(alg == Algorithm::MostParts)
 		minWeight = mResponseSpaceSize - minWeight;
 
 	QString str[3];
 	switch (alg) {
-	case ExpectedSize:
+	case Algorithm::ExpectedSize:
 		str[0] = "Expected Size";
 		break;
-	case WorstCase:
+	case Algorithm::WorstCase:
 		str[0] = "Worst Case";
 		break;
 	default:	//MostParts
@@ -313,10 +311,10 @@ int Game::computeWeight(int *responses, const Algorithm &alg) const
 	for(int i = 0; i < mResponseSpaceSize; ++i)
 	{
 		switch (alg) {
-		case ExpectedSize:
+		case Algorithm::ExpectedSize:
 			answer += ipow(responses[i], 2);
 			break;
-		case WorstCase:
+		case Algorithm::WorstCase:
 			answer = qMax(responses[i], answer);
 			break;
 		default:	//	Most Parts

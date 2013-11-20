@@ -21,6 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "constants.h"
 
 class Board;
 class QMenu;
@@ -52,7 +53,7 @@ private slots:
 	void about();
 
 signals:
-	void changeIndicatorsSignal(const int&);
+	void changeIndicatorsSignal(const IndicatorType&);
 
 private:
 	void setPegsComboBox();
@@ -60,11 +61,11 @@ private:
 	void setSolvingAlgorithmsComboBox();
 
 	Board* mBoard;
-	int mMode;
+	GameMode mMode;
 	int mColors;
 	int mPegs;
-	int mAlgorithm;
-	int mIndicator;
+	Algorithm mAlgorithm;
+	IndicatorType mIndicator;
 	bool mSameColorAllowed ;
 	bool mSetPins;
 	bool mCloseRow;

@@ -39,7 +39,7 @@ PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* par
 		pins.append(pin);
 		pin->setPos(pin_positions[pin_number-2][i][0], pin_positions[pin_number-2][i][1]);
 	}
-	setBoxState(BOX_FUTURE);
+	setBoxState(BoxState::Future);
 	setAcceptedMouseButtons(Qt::LeftButton);
 }
 //-----------------------------------------------------------------------------
@@ -106,34 +106,34 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg,
 }
 //-----------------------------------------------------------------------------
 
-void PinBox::setBoxState(const BOX_STATE &state)
+void PinBox::setBoxState(const BoxState &state)
 {
 	mBoxState = state;
 	switch (mBoxState) {
-	case BOX_PAST: // used for boxes that are done. No interaction allowed
+	case BoxState::Past: // used for boxes that are done. No interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin* pin, pins)
-			pin->setMouseEventHandling(MOUSE_IGNORE);
+			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
-	case BOX_CURRENT://	used for Master mode that the user press the box when he/she is satisfied with their guess
+	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		setEnabled(true);
 		setCursor(Qt::PointingHandCursor);
 		foreach (Pin* pin, pins)
-			pin->setMouseEventHandling(MOUSE_TOBOX);
+			pin->setMouseEventHandling(PinMouse::Pass);
 		break;
-	case BOX_FUTURE: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
+	case BoxState::Future: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin* pin, pins)
-			pin->setMouseEventHandling(MOUSE_IGNORE);
+			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
 
-	default: //BOX_NONE: used for entering keys in breaker mode, just keys are active
+	default: //BoxState::None: used for entering keys in breaker mode, just keys are active
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin* pin, pins)
-			pin->setMouseEventHandling(MOUSE_ACCEPT);
+			pin->setMouseEventHandling(PinMouse::Accept);
 		break;
 	}
 	update();

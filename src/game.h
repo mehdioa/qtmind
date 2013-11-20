@@ -19,6 +19,7 @@
 
 #ifndef GAME_H
 #define GAME_H
+
 #include <QList>
 #include <QString>
 #include "constants.h"
@@ -81,8 +82,8 @@ private:
 
 	int** mAllCodes;									//	all indexes of codes (0...1295)
 	QList<int> mPossibleCodes;							//	list of all possibles
-	int* mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 	int mFirstPossibleCodesSize;
+	int* mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 
 };
 

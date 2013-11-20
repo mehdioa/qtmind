@@ -19,13 +19,9 @@
 
 #ifndef PIN_H
 #define PIN_H
-#include <QGraphicsEllipseItem>
 
-enum PIN_MOUSE{
-	MOUSE_IGNORE	= 0,
-	MOUSE_ACCEPT	= 1,
-	MOUSE_TOBOX		= 2
-};
+#include <QGraphicsEllipseItem>
+#include "constants.h"
 
 class Pin : public QGraphicsEllipseItem
 {
@@ -33,10 +29,11 @@ public:
 	Pin(const int &color = 0, QGraphicsItem* parent = 0);
 	int getColor() const {return m_color;}
 	void setColor(const int& c);
-	void setMouseEventHandling(PIN_MOUSE event);
+	void setMouseEventHandling(const PinMouse& event);
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mousePressEvent(QGraphicsSceneMouseEvent *);
+
 	//	ignoring mouse double click by the following
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *){}
 private:

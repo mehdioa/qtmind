@@ -26,7 +26,7 @@
 
 PegBox::PegBox(const QPoint &position, Board *board, QGraphicsItem *parent):
 	EmptyBox(position, parent),
-	mPegState(PEG_EMPTY),
+	mPegState(PegState::Empty),
 	mBoard(board),
 	mPeg(0)
 {
@@ -48,19 +48,19 @@ void PegBox::setPeg(Peg *peg)
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setPegState(const PEG_STATE &state)
+void PegBox::setPegState(const PegState &state)
 {
 	mPegState = state;
 	switch (mPegState) {
-	case PEG_INITIAL:
+	case PegState::Initial:
 		if (mPeg) mPeg->setVisible(true);
 		mCircle->setVisible(true);
 		break;
-	case PEG_FILLED:
+	case PegState::Filled:
 		if (mPeg) mPeg->setVisible(true);
 		mCircle->setVisible(true);
 		break;
-	case PEG_EMPTY:
+	case PegState::Empty:
 		if (mPeg) mPeg->setVisible(false);
 		mCircle->setVisible(false);
 		break;
@@ -86,13 +86,13 @@ int PegBox::getPegColor()
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setBoxState(const BOX_STATE &state)
+void PegBox::setBoxState(const BoxState &state)
 {
 	mBoxState = state;
 
 	switch (mBoxState) {
-	case BOX_PAST:
-		setPegState(PEG_FILLED);
+	case BoxState::Past:
+		setPegState(PegState::Filled);
 		setEnabled(false);
 		if (mPeg) {
 			mPeg->setEnabled(false);
@@ -100,7 +100,7 @@ void PegBox::setBoxState(const BOX_STATE &state)
 			mPeg->setVisible(true);
 		}
 		break;
-	case BOX_CURRENT:
+	case BoxState::Current:
 		setEnabled(true);
 		if (mPeg) {
 			mPeg->setEnabled(true);
@@ -108,7 +108,7 @@ void PegBox::setBoxState(const BOX_STATE &state)
 			mPeg->setVisible(true);
 		}
 		break;
-	case BOX_FUTURE:
+	case BoxState::Future:
 		setEnabled(false);
 		if (mPeg) {
 			mPeg->setEnabled(false);
@@ -130,12 +130,3 @@ bool PegBox::isPegVisible()
 {
 	return mPeg && mPeg->isVisible();
 }
-//-----------------------------------------------------------------------------
-
-//int PegBox::handlePegMouseRelease(QPoint position)
-//{
-//	if (sceneBoundingRect().contains(position)) // do nothing if dropped on its own box
-//		return 0;
-//	else
-//		return mBoard->handlePegMouseRelease(position, mPeg->getColor());
-//}

@@ -21,12 +21,8 @@
 #define PEG_H
 
 #include <QGraphicsEllipseItem>
+#include "constants.h"
 
-enum INDICATOR_TYPE{
-	TYPE_NONE	= 0,
-	TYPE_CHAR	= 1,
-	TYPE_DIGIT	= 2
-};
 
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
@@ -40,7 +36,7 @@ public:
 	const static QString color_rgb[10][2];
 	const static QString ordered_chars[3];
 	Peg(const QPoint& position, int color_number = 0,
-	const int &indicator_n = 0, QGraphicsItem* parent = 0);
+	const IndicatorType &indicator_n = IndicatorType::None, QGraphicsItem* parent = 0);
 	void setColor(const int& color_number);
 	int getColor() const {return mColor;}
 	void setMovable(bool );
@@ -54,12 +50,12 @@ signals:
 	void mouseReleasedSignal(QPoint position, int color);
 
 protected slots:
-	void onChangeIndicators(const int indicator_n);
+	void onChangeIndicators(const IndicatorType &indicator_n);
 
 private:
 	QPointF mPosition;// position of hole containing peg
 	PegBox* mBox;
-	INDICATOR_TYPE mIndicatorType;
+	IndicatorType mIndicatorType;
 
 	/*	pressed shadow - the ellipse item takes ownership of
 	 *	the effect, so no need to delete the pointer in the destructor*/
