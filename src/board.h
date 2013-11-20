@@ -21,6 +21,7 @@
 #define BOARD_H
 #include "constants.h"
 #include "peg.h"
+#include "emptybox.h"
 #include <QGraphicsView>
 
 class Peg;
@@ -45,12 +46,14 @@ public:
 	void reset(const int& peg_n, const int& color_n, const int &mode_n,
 			   const bool &samecolor, const int &algorithm_n, const bool &set_pins,
 			   const bool &close_row, const int& indicator_n = 0);
+	GAME_STATE getState() const {return mState;}
+	void setAlgorithm(const int& algorithm_n);
+
 
 protected:
 	void drawBackground(QPainter* painter, const QRectF& rect);
 	void resizeEvent(QResizeEvent* event);
 	void setIndicatorType(const int indicator_n);
-	void setAlgorithmType(const int& algorithm_n);
 
 signals:
 	void changePegIndicator(const int &indicator_t);
@@ -61,7 +64,8 @@ private slots:
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
 	void onChangeIndicators(const int &indicator_n);
-	void onChangeMode(const int&);
+	void onThowInTheTowel();
+	void onDoItForMe();
 
 private:
 	void playCodeMaster();
@@ -69,6 +73,8 @@ private:
 	void createBoxes();
 	void createPegForBox(PegBox* box, int color, bool backPeg = false);// backPeg should only be used to put an extra peg under initial pegs,
 	void codeRowFilled(bool filled);
+	void setBoxStateOfList(QList<PegBox*> boxlist, const BOX_STATE state_t);
+	void setBoxStateOfList(QList<PinBox*> boxlist, const BOX_STATE state_t);
 
 
 	QList<PinBox*> mPinBoxes;
@@ -81,11 +87,11 @@ private:
 	GAME_MODE mMode;
 	int mPegNumber;
 	int mColorNumber;
-	Algorithm mAlgorithm;
 	bool mSameColor;
 	bool mSetPins;
 	bool mCloseRow;
 	bool mDone;
+	Algorithm mAlgorithm;
 	int mIndicator;
 	Game* mGame;
 	Button* mOkButton;

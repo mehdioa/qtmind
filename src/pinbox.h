@@ -35,13 +35,14 @@ public:
 	int getValue() const;
 	void setPins(const int& b, const int& w);
 	void setPins(const QString& codeA, const QString& codeB, const int& peg, const int& color);
-	void setState(const BOX_STATE& state = BOX_FUTURE);
+	void setBoxState(const BOX_STATE& state = BOX_FUTURE);
+	void fakePress() {emit pinBoxPressed();}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
 
 signals:
-	void pinBoxPushed();
+	void pinBoxPressed();
 
 private:
 	QVector<Pin*> pins;

@@ -42,19 +42,17 @@ protected:
 	void closeEvent(QCloseEvent* event); /** Override parent function to save window geometry. */
 
 private slots:
-	void newGameSlot();
-	void throwInTheTowelSlot();
 	void allowSameColorSlot();
 	void setPinsCloseRowAutomatically();
 	void changeIndicatorsSlot(QAction*);
 	void doItForMeSlot();
 	void changeGameModeSlot(QAction*);
-	void updateNumbers();
+	void updateNumbersSlot();
+	void newGameSlot();
 	void about();
 
 signals:
 	void changeIndicatorsSignal(const int&);
-	void changeModeSignal(const int&);
 
 private:
 	void setPegsComboBox();
@@ -80,6 +78,7 @@ private:
 	QAction* closeRowAutomaticallyAction;
 	QAction* showIndicatorAction;
 	QAction* doItForMeAction;
+	QAction* throwInTheTowelAction;
 
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;

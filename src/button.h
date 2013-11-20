@@ -32,7 +32,7 @@ class Button : public QObject, public QGraphicsItem
 
 public:
 	Button(int buttonWidth = 152, QString str = "");
-	void setPushable(bool);
+	void setPressable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
 
 protected:

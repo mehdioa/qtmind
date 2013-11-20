@@ -33,6 +33,7 @@ Board::Board(QWidget* parent):
 	mSameColor(true),
 	mSetPins(false),
 	mCloseRow(false),
+	mAlgorithm(MostParts),
 	mGame(0)
 {
 	auto scene = new QGraphicsScene(this);
@@ -108,11 +109,11 @@ void Board::codeRowFilled(bool filled)
 		switch (filled)
 		{
 		case true:
-			mPinBoxes.first()->setState(BOX_CURRENT);
+			mPinBoxes.first()->setBoxState(BOX_CURRENT);
 			mMessage->showMassage("Press The Pin Box ...");
 			break;
 		default:
-			mPinBoxes.first()->setState(BOX_FUTURE);
+			mPinBoxes.first()->setBoxState(BOX_FUTURE);
 			mMessage->showMassage("Place Your Pegs ... ");
 			break;
 		}
@@ -135,12 +136,41 @@ void Board::codeRowFilled(bool filled)
 		break;
 	}
 }
+
+void Board::setBoxStateOfList(QList<PegBox *> boxlist, const BOX_STATE state_t)
+{
+	foreach (PegBox* box, boxlist)
+	{
+		box->setBoxState(state_t);
+	}
+}
+
+void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BOX_STATE state_t)
+{
+	foreach (PinBox* box, boxlist)
+	{
+		box->setBoxState(state_t);
+	}
+}
+//-----------------------------------------------------------------------------
+
+void Board::play(const int &mode)
+{
+	generate();
+
+	switch (mode) {
+	case 0:
+		playCodeMaster();
+		break;
+	default:
+		playCodeBreaker();
+		break;
+	}
+}
 //-----------------------------------------------------------------------------
 
 void Board::playCodeBreaker()
 {
-	generate();
-	mState = STATE_RUNNING;
 	mMode = MODE_BREAKER;
 	mDoneButton->setZValue(2);
 	mDoneButton->setVisible(false);
@@ -160,6 +190,8 @@ void Board::playCodeBreaker()
 		mMasterBoxes.first()->setBoxState(BOX_CURRENT);
 		mMasterBoxes.removeFirst();
 	}
+
+	mState = STATE_WAITING_FOR_MASTER_CODE;
 	/*	Nothing happening from here till the user fill the master code
 	 *	row and press the done button. After the done button is pressed,
 	 *	the onDoneButtonPressed is continuing the game
@@ -169,15 +201,22 @@ void Board::playCodeBreaker()
 
 void Board::playCodeMaster()
 {
-	generate();
-	mState = STATE_RUNNING;
+
+	QString digits = "0123456789";
+	digits.left(mColorNumber);
+	int remainingNumbers = mColorNumber;
 
 	foreach (PegBox* box, mMasterBoxes) //creating a master code to be guessed
 	{
-		int color = qrand() % mColorNumber;
-		createPegForBox(box, color);
+		int color = qrand() % remainingNumbers;
+		createPegForBox(box, digits.at(color).digitValue());
 		box->setPegState(PEG_EMPTY);
 		box->setBoxState(BOX_NONE);
+		if(!mSameColor)
+		{
+			digits.remove(color, 1);
+			--remainingNumbers;
+		}
 	}
 
 	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
@@ -188,6 +227,7 @@ void Board::playCodeMaster()
 	}
 
 	mMessage->showMassage("Place Your Pegs ... ");
+	mState = STATE_WAITING_FOR_CODE_ROW;
 
 	// from now on the onPinBoxPushed function is continuing the game.
 }
@@ -202,6 +242,8 @@ void Board::onPinBoxPressed()
 	 *	appears in code/guess, and sum runs over all colors.
 	 *	http://mathworld.wolfram.com/Mastermind.html
 	 */
+	mState = STATE_RUNNING;
+
 	int c[mColorNumber];
 	int g[mColorNumber];
 
@@ -231,7 +273,7 @@ void Board::onPinBoxPressed()
 		total += std::min(c[i], g[i]);
 
 	mPinBoxes.first()->setPins(blacks, total - blacks);
-	mPinBoxes.first()->setState(BOX_PAST);
+	mPinBoxes.first()->setBoxState(BOX_PAST);
 	mPinBoxes.removeFirst();	// the pinbox goes to past
 
 	for(int i = 0; i < mPegNumber; ++i) //old row of codes goes to past and are removed from current
@@ -244,16 +286,17 @@ void Board::onPinBoxPressed()
 	{
 		mState = STATE_WON;
 		mMessage->showMassage("Success! You Win");
-		foreach (PegBox* box, mMasterBoxes) //show master code pegs
-		{
-			box->setBoxState(BOX_PAST);
-		}
-		scene()->update();
+
+		setBoxStateOfList(mMasterBoxes, BOX_PAST);
+		setBoxStateOfList(mCurrentBoxes, BOX_PAST);
+		setBoxStateOfList(mPinBoxes, BOX_FUTURE);
+		setBoxStateOfList(mPegBoxes, BOX_FUTURE);
+
 	} else if (mCodeBoxes.isEmpty()) //out of more row of codes, a fail
 	{
 		mState = STATE_LOST;
 		mMessage->showMassage("Game Over! You Failed");
-		scene()->update();
+		setBoxStateOfList(mPegBoxes, BOX_FUTURE);
 	} else // continue the game
 	{
 		mMessage->showMassage("Place Your Pegs ... ");
@@ -266,6 +309,7 @@ void Board::onPinBoxPressed()
 		}
 	}
 }
+//-----------------------------------------------------------------------------
 
 void Board::onChangeIndicators(const int &indicator_n)
 {
@@ -273,9 +317,53 @@ void Board::onChangeIndicators(const int &indicator_n)
 	emit changePegIndicator(mIndicator);
 }
 
-void Board::onChangeMode(const int &mode_n)
+void Board::onThowInTheTowel()
 {
-	mMode = (GAME_MODE) mode_n;
+	if (mMode == MODE_MASTER && mState == STATE_RUNNING)
+	{
+		mState = STATE_GAVE_IN;
+		mMessage->showMassage("You Gave In");
+
+		setBoxStateOfList(mMasterBoxes, BOX_PAST);
+		setBoxStateOfList(mCurrentBoxes, BOX_FUTURE);
+		setBoxStateOfList(mPinBoxes, BOX_FUTURE);
+		setBoxStateOfList(mPegBoxes, BOX_FUTURE);
+	}
+}
+//-----------------------------------------------------------------------------
+
+void Board::onDoItForMe()
+{
+	switch (mState) {
+	case STATE_WAITING_FOR_MASTER_CODE:
+
+		break;
+	case STATE_WAITING_FOR_CODE_ROW:
+
+		break;
+	case STATE_WAITING_FOR_PINS:
+
+		break;
+	default:
+		break;
+	}
+
+}
+//-----------------------------------------------------------------------------
+
+void Board::setAlgorithm(const int &algorithm_n)
+{
+	switch (algorithm_n) {
+	case 1:
+		mAlgorithm = WorstCase;
+		break;
+	case 2:
+		mAlgorithm = ExpectedSize;
+		break;
+	default:
+		mAlgorithm = MostParts;
+		break;
+	}
 }
 //-----------------------------------------------------------------------------
 
@@ -292,7 +380,7 @@ void Board::onOkButtonPressed()
 	mOkButton->setVisible(false);
 
 	/*	we are done with the pinbox. Make it past and remove it from mPinBoxes */
-	mPinBoxes.first()->setState(BOX_PAST);
+	mPinBoxes.first()->setBoxState(BOX_PAST);
 	mPinBoxes.removeFirst();
 
 	/*	Here we check if user user input 4 blacks*/
@@ -326,7 +414,7 @@ void Board::onOkButtonPressed()
 		}
 
 		mMessage->showMassage("Please Put Pins And Press OK");
-		mPinBoxes.first()->setState(BOX_NONE);
+		mPinBoxes.first()->setBoxState(BOX_NONE);
 		mOkButton->setEnabled(true);
 		mOkButton->setVisible(true);
 		mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
@@ -341,21 +429,13 @@ void Board::onOkButtonPressed()
 
 void Board::onDoneButtonPressed()
 {
+	mState = STATE_RUNNING;
 	//	we are done with the done button
 	mDoneButton->setVisible(false);
 	mDoneButton->setEnabled(false);
 
-	//	first let the master code boxes become past for no interaction
-	foreach (PegBox* box, mCurrentBoxes)
-	{
-		box->setBoxState(BOX_PAST);
-	}
-
-	//	freezing the peg boxes
-	foreach (PegBox* box, mPegBoxes)
-	{
-		box->setBoxState(BOX_FUTURE);
-	}
+	setBoxStateOfList(mCurrentBoxes, BOX_PAST);	//	first let the master code boxes become past for no interaction
+	setBoxStateOfList(mPegBoxes, BOX_FUTURE);	//	freezing the peg boxes
 
 	mMasterCode = "";
 	foreach(PegBox* box, mCurrentBoxes)
@@ -365,36 +445,33 @@ void Board::onDoneButtonPressed()
 		mMasterCode.append(str);
 	}
 
+	mState = STATE_GUESSING;
 	// getting the first guess and puting it in the current row
 	mGuess = mGame->getGuess();
+	mState = STATE_RUNNING;
 
 	//set the first row of current
 	mCurrentBoxes.clear();
 	for(int i = 0; i < mPegNumber; ++i)
 	{
 		createPegForBox(mCodeBoxes.first(), mGuess.at(i).digitValue());
-		mCodeBoxes.first()->setBoxState(BOX_CURRENT);
+		mCodeBoxes.first()->setBoxState(BOX_PAST);
 		mCurrentBoxes.append(mCodeBoxes.first());
 		mCodeBoxes.removeFirst();
 	}
 
-	// getting the first guess and puting it in the current row
-	mGuess = mGame->getGuess();
-	for(int i = 0; i < mPegNumber; ++i)
-	{
-		createPegForBox(mCurrentBoxes.at(i), mGuess.at(i).digitValue());
-		mCurrentBoxes.at(i)->setBoxState(BOX_PAST);
-	}
-
-	mPinBoxes.first()->setState(BOX_NONE);
+	mPinBoxes.first()->setBoxState(BOX_NONE);
 	mMessage->showMassage("Please Put Pins And Press OK");
 	mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 	mOkButton->setEnabled(true);
 	mOkButton->setVisible(true);
 
+	mState = STATE_WAITING_FOR_PINS;
+
 	if (mSetPins) //the program puts pins for the lazy ass user
 	{
 		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
+		mState = STATE_RUNNING;
 	}
 	/*	We are done here. The onOkButtonPressed is continuing the game from now on
 	 */
@@ -433,6 +510,10 @@ void Board::generate()
 	mInformation = new Message("#808183");
 	scene()->addItem(mInformation);
 	mInformation->setPos(20, 506);
+	mInformation->showMassage("Pegs: " + QString::number(mPegNumber) +
+							  "   Colors: " + QString::number(mColorNumber) +
+							  "   Same Color: " + (mSameColor ? "Yes": "No"));
+
 
 	createBoxes();
 
@@ -450,7 +531,7 @@ void Board::reset(const int& peg_n, const int& color_n, const int &mode_n, const
 	mCloseRow = close_row;
 	mMode = (mode_n == 0) ? MODE_MASTER : MODE_BREAKER;
 	setIndicatorType(indicator_n);
-	setAlgorithmType(algorithm_n);
+	setAlgorithm(algorithm_n);
 
 	mSameColor = samecolor;
 
@@ -486,19 +567,7 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 	}
 
 }
-//-----------------------------------------------------------------------------
 
-void Board::play(const int &mode)
-{
-	switch (mode) {
-	case 0:
-		playCodeMaster();
-		break;
-	default:
-		playCodeBreaker();
-		break;
-	}
-}
 //-----------------------------------------------------------------------------
 
 void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
@@ -530,21 +599,6 @@ void Board::setIndicatorType(const int indicator_n)
 	}
 	emit changePegIndicator(mIndicator);
 }
-
-void Board::setAlgorithmType(const int &algorithm_n)
-{
-	switch (algorithm_n) {
-	case 0:
-		mAlgorithm = WorstCase;
-		break;
-	case 1:
-		mAlgorithm = ExpectedSize;
-		break;
-	default:
-		mAlgorithm = MostParts;
-		break;
-	}
-}
 //-----------------------------------------------------------------------------
 
 void Board::createBoxes()
@@ -568,7 +622,7 @@ void Board::createBoxes()
 		auto pinbox = new PinBox(mPegNumber, position);
 		scene()->addItem(pinbox);
 		mPinBoxes.append(pinbox);
-		connect(pinbox, SIGNAL(pinBoxPushed()), this, SLOT(onPinBoxPressed()));
+		connect(pinbox, SIGNAL(pinBoxPressed()), this, SLOT(onPinBoxPressed()));
 
 		position.setX(160-20*mPegNumber);
 

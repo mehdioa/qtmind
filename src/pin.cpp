@@ -21,7 +21,6 @@
 #include <QPen>
 #include <QCursor>
 
-
 Pin::Pin(const int &color, QGraphicsItem* parent) :
 	QGraphicsEllipseItem(0, 0, 12, 12, parent),
 	m_color(color)
@@ -33,7 +32,6 @@ Pin::Pin(const int &color, QGraphicsItem* parent) :
 	setPen(QPen(QBrush(lgrad), 1));
 
 	setMouseEventHandling(MOUSE_IGNORE);
-
 }
 
 void Pin::setColor(const int &c)
@@ -78,7 +76,7 @@ void Pin::setMouseEventHandling(PIN_MOUSE event)
 
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (isEnabled())  setColor((m_color+2)%3 -1);
-
-	QGraphicsEllipseItem::mousePressEvent(event);
+	if (isEnabled())
+		setColor((m_color - 2) % 3 + 1);
 }
+

@@ -58,11 +58,11 @@ Button::Button(int buttonWidth, QString str)
 	mRectFill = QRectF(1, 1, mWidth - 2, 36);
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptHoverEvents (true);
-	setPushable(true);
+	setPressable(true);
 }
 //-----------------------------------------------------------------------------
 
-void Button::setPushable(bool enabled)
+void Button::setPressable(bool enabled)
 {
 	setEnabled(enabled);
 	setCursor(enabled ? Qt::PointingHandCursor : Qt::ArrowCursor);

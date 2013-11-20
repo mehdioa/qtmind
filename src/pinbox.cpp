@@ -106,10 +106,9 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg,
 }
 //-----------------------------------------------------------------------------
 
-void PinBox::setState(const BOX_STATE &state)
+void PinBox::setBoxState(const BOX_STATE &state)
 {
 	mBoxState = state;
-	update();
 	switch (mBoxState) {
 	case BOX_PAST: // used for boxes that are done. No interaction allowed
 		setEnabled(false);
@@ -137,10 +136,11 @@ void PinBox::setState(const BOX_STATE &state)
 			pin->setMouseEventHandling(MOUSE_ACCEPT);
 		break;
 	}
+	update();
 }
 //-----------------------------------------------------------------------------
 
 void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	emit pinBoxPushed();
+	emit pinBoxPressed();
 }

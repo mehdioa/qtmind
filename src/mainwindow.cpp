@@ -35,7 +35,7 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
-	setWindowTitle(tr("CodeBreak"));
+	mBoard = new Board(this);
 	mMode = QSettings().value("Mode", 0).toInt();
 	mColors = QSettings().value("Colors", 6).toInt()-2;
 	mPegs = QSettings().value("Pegs", 4).toInt()-2;
@@ -45,17 +45,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	mCloseRow = QSettings().value("CloseRow", true).toBool();
 	mIndicator = QSettings().value("Indicator", 0).toInt();
 
+	setWindowTitle(tr("CodeBreak"));
+	setCentralWidget(mBoard);
+
 	createMenuBar();
 
-	mBoard = new Board(this);
-	setCentralWidget(mBoard);
 	connect(this, SIGNAL(changeIndicatorsSignal(int)), mBoard, SLOT(onChangeIndicators(int)));
-	connect(this, SIGNAL(changeModeSignal(int)), mBoard, SLOT(onChangeMode(int)));
+	connect(doItForMeAction, SIGNAL(triggered()), mBoard, SLOT(onDoItForMe()));
+
+
 
 	resize(400,400);
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 
-	newGameSlot();
+	updateNumbersSlot();
 }
 //-----------------------------------------------------------------------------
 
@@ -81,17 +84,9 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::newGameSlot()
 {
-	mColors = colorsNumberComboBox->currentIndex();
-	mAlgorithm = solvingAlgorithmsComboBox->currentIndex();
-	mPegs = pegsNumberComboBox->currentIndex();
-	mSameColorAllowed = allowSameColorAction->isChecked();
+	throwInTheTowelAction->setVisible(mMode == MODE_MASTER);
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mIndicator);
 	mBoard->play(mMode);
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::throwInTheTowelSlot()
-{
 }
 //-----------------------------------------------------------------------------
 
@@ -124,37 +119,45 @@ void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
 
 void MainWindow::doItForMeSlot()
 {
-	if(mMode == MODE_MASTER) {
-		doItForMeAction->setText(tr("Put Pins For Me"));
-	} else {
-		doItForMeAction->setText(tr("Put Pegs For Me"));
-	}
 }
 //-----------------------------------------------------------------------------
 
 void MainWindow::changeGameModeSlot(QAction* selectedAction)
 {
 	mMode = selectedAction->data().toInt();
-	emit changeModeSignal(mMode);
+	updateNumbersSlot();
 }
 
-void MainWindow::updateNumbers()
+void MainWindow::updateNumbersSlot()
 {
 	mColors = colorsNumberComboBox->currentIndex();
-	mPegs = pegsNumberComboBox->currentIndex();
 	mAlgorithm = solvingAlgorithmsComboBox->currentIndex();
-	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
+	mPegs = pegsNumberComboBox->currentIndex();
+	mSameColorAllowed = allowSameColorAction->isChecked();
 
-	allowSameColorSlot();
+	if(mBoard)
+	{
+		mBoard->setAlgorithm(mAlgorithm);
+		if(mBoard->getState() != STATE_RUNNING)
+		{
+			newGameSlot();
+		}
+	}
+
+	if(mMode == MODE_MASTER) {
+		doItForMeAction->setText(tr("Put Pegs For Me"));
+	} else {
+		doItForMeAction->setText(tr("Put Pins For Me"));
+	}
 
 	QSettings().setValue("Mode", mMode);
 	QSettings().setValue("Colors", mColors+2);
 	QSettings().setValue("Pegs", mPegs+2);
 	QSettings().setValue("Algorithm", mAlgorithm);
-	QSettings().setValue("SameColor", mSameColorAllowed);
 	QSettings().setValue("SetPins",	mSetPins);
 	QSettings().setValue("CloseRow", mCloseRow);
 	QSettings().setValue("Indicator", mIndicator);
+	QSettings().setValue("SameColor", mSameColorAllowed);
 }
 //-----------------------------------------------------------------------------
 
@@ -182,7 +185,7 @@ void MainWindow::setPegsComboBox()
 	pegsNumberComboBox->setCurrentIndex(mPegs);
 	pegsNumberComboBox->setToolTip("Choose the numbe of pegs");
 
-	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
+	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 }
 //-----------------------------------------------------------------------------
 
@@ -194,7 +197,7 @@ void MainWindow::setColorsComboBox()
 	colorsNumberComboBox->setCurrentIndex(mColors);
 	colorsNumberComboBox->setToolTip("Choose the number of colors");
 
-	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
+	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 
 }
 //-----------------------------------------------------------------------------
@@ -203,12 +206,12 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 {
 	solvingAlgorithmsComboBox = new QComboBox(this);
 	solvingAlgorithmsComboBox->setToolTip("Choose the solving algorithm");
+	solvingAlgorithmsComboBox->addItem("Most Parts");
 	solvingAlgorithmsComboBox->addItem("Worst Case");
 	solvingAlgorithmsComboBox->addItem("Expected Size");
-	solvingAlgorithmsComboBox->addItem("Most Parts");
 	solvingAlgorithmsComboBox->setCurrentIndex(mAlgorithm);
 
-	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbers()));
+	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 
 }
 //-----------------------------------------------------------------------------
@@ -218,11 +221,11 @@ void MainWindow::createMenuBar()
 	auto gameMenu = menuBar()->addMenu(tr("&Game"));
 
 	QIcon new_icon(QPixmap(":icons/new-icon.png"));
-//	new_icon.addPixmap(QPixmap(":/16x16/document-new.png"));
 	auto newGameAction = gameMenu->addAction(new_icon, tr("&New"), this, SLOT(newGameSlot()), tr("Ctrl+N"));
 
 	QIcon throwtowel_icon(QPixmap(":/icons/face-raspberry.png"));
-	auto throwInTheTowelAction = gameMenu->addAction(throwtowel_icon, tr("&Throw In The Towel"), this, SLOT(throwInTheTowelSlot()));
+	throwInTheTowelAction = gameMenu->addAction(throwtowel_icon, tr("&Throw In The Towel"), mBoard, SLOT(onThowInTheTowel()));
+	throwInTheTowelAction->setVisible(mMode == MODE_MASTER);
 
 	gameMenu->addSeparator();
 
@@ -282,8 +285,6 @@ void MainWindow::createMenuBar()
 	do_icon.addPixmap(QPixmap(":/icons/monkey-icon.png"));
 	doItForMeAction = new QAction(do_icon, tr("&Put Pins For Me"), this);
 	mainToolbar->addAction(doItForMeAction);
-	connect(doItForMeAction, SIGNAL(triggered()), this, SLOT(doItForMeSlot()));
-	doItForMeSlot();
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
@@ -292,15 +293,16 @@ void MainWindow::createMenuBar()
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(allowSameColorSlot()));
+	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(updateNumbersSlot()));
 	allowSameColorSlot();
+
+	mainToolbar->addAction(allowSameColorAction);
+	mainToolbar->addSeparator();
 
 	setPegsComboBox();
 	setColorsComboBox();
 	setSolvingAlgorithmsComboBox();
 
-
-	mainToolbar->addAction(allowSameColorAction);
-	mainToolbar->addSeparator();
 	mainToolbar->addWidget(pegsNumberComboBox);
 	mainToolbar->addWidget(colorsNumberComboBox);
 	mainToolbar->addWidget(solvingAlgorithmsComboBox);
