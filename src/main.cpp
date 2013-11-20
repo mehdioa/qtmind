@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 	app.setOrganizationName("CodeBreak");
 
 	MainWindow w;
+	w.setWindowIcon(QIcon(":/icons/codebreak.png"));
 	w.show();
 
 	return app.exec();

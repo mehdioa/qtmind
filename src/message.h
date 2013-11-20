@@ -26,7 +26,7 @@
 class Message : public QGraphicsTextItem
 {
 public:
-	Message(QString color_name = "#303133");
+	explicit Message(const QString& color_name = "#303133", const int& font_size = 12);
 	void showMassage(const QString str);
 	QRectF boundingRect() const;
 

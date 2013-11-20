@@ -32,10 +32,9 @@ class Peg : public QObject, public QGraphicsEllipseItem
 {
 	Q_OBJECT
 	Q_INTERFACES(QGraphicsItem)
+
 public:
-	const static QString color_rgb[10][2];
-	const static QString ordered_chars[3];
-	Peg(const QPoint& position, int color_number = 0,
+	explicit Peg(const QPoint& position, int color_number = 0,
 	const IndicatorType &indicator_n = IndicatorType::None, QGraphicsItem* parent = 0);
 	void setColor(const int& color_number);
 	int getColor() const {return mColor;}

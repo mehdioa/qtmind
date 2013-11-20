@@ -49,7 +49,7 @@ class Game
 	 *			f(b, w) = (b+w)(b+w+1)/2 + b;
 	 */
 public:
-	Game(const int& peg_no, const int& color_no,
+	explicit Game(const int& peg_no, const int& color_no,
 		 const bool& allow_same_color);
 	~Game();
 	bool done () const {return (mResponse == mResponseSpaceSize - 1);}

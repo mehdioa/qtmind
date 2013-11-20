@@ -46,7 +46,6 @@ private slots:
 	void allowSameColorSlot();
 	void setPinsCloseRowAutomatically();
 	void changeIndicatorsSlot(QAction*);
-	void doItForMeSlot();
 	void changeGameModeSlot(QAction*);
 	void updateNumbersSlot();
 	void newGameSlot();
@@ -78,14 +77,11 @@ private:
 	QAction* setPinsAutomaticallyAction;
 	QAction* closeRowAutomaticallyAction;
 	QAction* showIndicatorAction;
-	QAction* doItForMeAction;
 	QAction* throwInTheTowelAction;
 
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;
 	QComboBox* solvingAlgorithmsComboBox;
-
-
 };
 
 #endif // MAINWINDOW_H

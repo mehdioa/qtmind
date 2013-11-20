@@ -47,17 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	setWindowTitle(tr("CodeBreak"));
 	setCentralWidget(mBoard);
+	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
 
 	createMenuBar();
-
-	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
-	connect(doItForMeAction, SIGNAL(triggered()), mBoard, SLOT(onDoItForMe()));
-
-
-
-	resize(400,400);
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
-
 	updateNumbersSlot();
 }
 //-----------------------------------------------------------------------------
@@ -117,11 +110,6 @@ void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::doItForMeSlot()
-{
-}
-//-----------------------------------------------------------------------------
-
 void MainWindow::changeGameModeSlot(QAction* selectedAction)
 {
 	mMode = (GameMode) selectedAction->data().toInt();
@@ -142,12 +130,6 @@ void MainWindow::updateNumbersSlot()
 		{
 			newGameSlot();
 		}
-	}
-
-	if(mMode == GameMode::Master) {
-		doItForMeAction->setText(tr("Put Pegs For Me"));
-	} else {
-		doItForMeAction->setText(tr("Put Pins For Me"));
 	}
 
 	QSettings().setValue("Mode", (int) mMode);
@@ -198,7 +180,6 @@ void MainWindow::setColorsComboBox()
 	colorsNumberComboBox->setToolTip("Choose the number of colors");
 
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
-
 }
 //-----------------------------------------------------------------------------
 
@@ -212,7 +193,6 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 	solvingAlgorithmsComboBox->setCurrentIndex((int) mAlgorithm);
 
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
-
 }
 //-----------------------------------------------------------------------------
 
@@ -260,31 +240,28 @@ void MainWindow::createMenuBar()
 	indicatorTypeActions->setExclusive(true);
 	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeIndicatorsSlot(QAction*)));
 
-	setPinsAutomaticallyAction = settingsMenu->addAction(tr("&Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()), tr("Ctrl+P"));
+	setPinsAutomaticallyAction = settingsMenu->addAction(tr("&Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
 	setPinsAutomaticallyAction->setCheckable(true);
 	setPinsAutomaticallyAction->setChecked(mSetPins == 1);
 
-	closeRowAutomaticallyAction = settingsMenu->addAction(tr("&Clost Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()), tr("Ctrl+R"));
+	closeRowAutomaticallyAction = settingsMenu->addAction(tr("&Clost Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
 	closeRowAutomaticallyAction->setCheckable(true);
 	closeRowAutomaticallyAction->setChecked(mCloseRow == 1);
 
 	auto helpMenu = menuBar()->addMenu(tr("&Help"));
-	helpMenu->addAction(tr("&About"), this, SLOT(about()));
-	helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+
+	QIcon information_icon(QPixmap(":/icons/information-icon.png"));
+	helpMenu->addAction(information_icon, tr("&About"), this, SLOT(about()));
+
+	QIcon qt_icon(QPixmap(":/icons/qt_icon.png"));
+	helpMenu->addAction(qt_icon, tr("About &Qt"), qApp, SLOT(aboutQt()));
 
 	auto mainToolbar = new QToolBar(this);
-	mainToolbar->setIconSize(QSize(22, 22));
 	mainToolbar->setFloatable(false);
 	mainToolbar->setMovable(false);
 	mainToolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	mainToolbar->addAction(newGameAction);
-//	mainToolbar->addAction(restartGameAction);
 	mainToolbar->addAction(throwInTheTowelAction);
-
-	QIcon do_icon;
-	do_icon.addPixmap(QPixmap(":/icons/monkey-icon.png"));
-	doItForMeAction = new QAction(do_icon, tr("&Put Pins For Me"), this);
-	mainToolbar->addAction(doItForMeAction);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);

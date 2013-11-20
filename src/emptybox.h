@@ -30,7 +30,7 @@ public:
 	const static int colors_rgb[4][3];
 	const static int alphas[4];
 
-	EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
+	explicit EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
 	virtual void setBoxState(const BoxState& state = BoxState::Future);
 	QRectF boundingRect() const;
 

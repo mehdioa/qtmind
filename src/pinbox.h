@@ -29,8 +29,8 @@ class PinBox : public QObject, public EmptyBox
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent = 0);
-	static const int pin_positions[5][5][2];
+	explicit PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent = 0);
+//	static const int pin_positions[5][5][2];
 	int getValue(int& blacks, int& whites) const;
 	int getValue() const;
 	void setPins(const int& b, const int& w);

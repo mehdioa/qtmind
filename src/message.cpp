@@ -23,10 +23,10 @@
 #include <QFont>
 
 
-Message::Message(QString color_name):
+Message::Message(const QString &color_name, const int &font_size):
 mColor(QColor(color_name))
 {
-	mLayout.setFont(QFont("Linux Libertine", 12, QFont::Bold, false));
+	mLayout.setFont(QFont("Linux Libertine", font_size, QFont::Bold, false));
 	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);
 

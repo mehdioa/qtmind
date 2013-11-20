@@ -23,13 +23,6 @@
 #include <QPen>
 #include <QCursor>
 
-const int PinBox::pin_positions[5][5][2] = {
-	{{5, 14}, {22, 14}, {0, 0}, {0, 0}, {0, 0}},
-	{{4, 7}, {22, 7}, {14, 21}, {0, 0}, {0, 0}},
-	{{6, 6}, {22, 6}, {6, 22}, {22, 22}, {0, 0}},
-	{{4, 4}, {24, 4}, {14, 14}, {4, 24}, {24, 24}}
-};
-
 PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent):
 	EmptyBox(position, parent)
 {
@@ -37,7 +30,7 @@ PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* par
 	{
 		auto pin = new Pin(0, this);
 		pins.append(pin);
-		pin->setPos(pin_positions[pin_number-2][i][0], pin_positions[pin_number-2][i][1]);
+		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
 	}
 	setBoxState(BoxState::Future);
 	setAcceptedMouseButtons(Qt::LeftButton);

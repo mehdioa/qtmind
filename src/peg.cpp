@@ -26,15 +26,6 @@
 #include <QGraphicsSimpleTextItem>
 #include <QFont>
 
-const QString Peg::color_rgb[10][2] = {
-		{"#FFFF80", "#C05800"}, {"#FF3300", "#400040"},
-		{"#33CCFF", "#000080"}, {"#808080", "#000000"},
-		{"#FFFFFF", "#797979"},{"#FF9900", "#A82A00"},
-		{"#66FF33", "#385009"},{"#BA88FF", "#38005D"},
-		{"#00FFFF", "#004040"}, {"#FFC0FF", "#800080"}
-  };
-const QString Peg::ordered_chars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
-
 Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
@@ -79,8 +70,8 @@ void Peg::setColor(const int &color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
 	QRadialGradient gradient(20,20, 40, 10, 10);
-	gradient.setColorAt(0, QColor(color_rgb[mColor][0]));
-	gradient.setColorAt(1, QColor(color_rgb[mColor][1]));
+	gradient.setColorAt(0, QColor(ColorsRGB[mColor][0]));
+	gradient.setColorAt(1, QColor(ColorsRGB[mColor][1]));
 	setBrush(gradient);
 	onChangeIndicators(mIndicatorType);
 }
@@ -138,5 +129,5 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void Peg::onChangeIndicators(const IndicatorType& indicator_n)
 {
 	mIndicatorType = indicator_n;
-	mIndicator->setText(ordered_chars[(int)mIndicatorType][mColor]);
+	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);
 }

@@ -36,7 +36,7 @@ class Board: public QGraphicsView
 	Q_OBJECT
 
 public:
-	Board(QWidget* parent = 0);
+	explicit Board(QWidget* parent = 0);
 	~Board();
 	void handleButtonRelease(const QString &);
 	void generate();
@@ -64,7 +64,7 @@ private slots:
 	void onPinBoxPressed();
 	void onChangeIndicators(const IndicatorType &indicator_n);
 	void onThowInTheTowel();
-	void onDoItForMe();
+//	void onDoItForMe();
 
 private:
 	void playCodeMaster();

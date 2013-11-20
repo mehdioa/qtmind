@@ -327,7 +327,7 @@ void Board::onThowInTheTowel()
 	if (mMode == GameMode::Master && mState == GameState::Running)
 	{
 		mState = GameState::Resign;
-		mMessage->showMassage("You Gave In");
+		mMessage->showMassage("You Resign");
 
 		setBoxStateOfList(mMasterBoxes, BoxState::Past);
 		setBoxStateOfList(mCurrentBoxes, BoxState::Future);
@@ -337,23 +337,23 @@ void Board::onThowInTheTowel()
 }
 //-----------------------------------------------------------------------------
 
-void Board::onDoItForMe()
-{
-	switch (mState) {
-	case GameState::WaittingMasterCode:
+//void Board::onDoItForMe()
+//{
+//	switch (mState) {
+//	case GameState::WaittingMasterCode:
 
-		break;
-	case GameState::WaittingCodeRow:
+//		break;
+//	case GameState::WaittingCodeRow:
 
-		break;
-	case GameState::WaittingPins:
+//		break;
+//	case GameState::WaittingPins:
 
-		break;
-	default:
-		break;
-	}
+//		break;
+//	default:
+//		break;
+//	}
 
-}
+//}
 //-----------------------------------------------------------------------------
 
 void Board::setAlgorithm(const Algorithm &algorithm_n)
@@ -502,7 +502,7 @@ void Board::generate()
 	scene()->addItem(mMessage);
 	mMessage->setPos(20, 0);
 
-	mInformation = new Message("#808183");
+	mInformation = new Message("#808183", 10);
 	scene()->addItem(mInformation);
 	mInformation->setPos(20, 506);
 	mInformation->showMassage("Pegs: " + QString::number(mPegNumber) +

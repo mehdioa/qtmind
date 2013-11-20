@@ -37,8 +37,8 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color)
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
-	mFirstPossibleCodes(0),
-	mInformation("")
+	mInformation(""),
+	mFirstPossibleCodes(0)
 {
 	createTables();
 	reset(peg_no, color_no, mAllowSameColor);

@@ -30,7 +30,7 @@ class Board;
 class PegBox : public EmptyBox
 {
 public:
-	PegBox(const QPoint& position, Board* board, QGraphicsItem* parent = 0);
+	explicit PegBox(const QPoint& position, Board* board, QGraphicsItem* parent = 0);
 	bool hasPeg() const {return mPeg != 0;}
 	Peg* getPeg() const {return mPeg;}
 	void setPeg(Peg* peg);

@@ -20,58 +20,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-enum class GameMode {
-	Master		= 0,//HUMAN BREAKS THE CODE
-	Breaker		= 1	//MACHINE BREAKS THE CODE
-};
-
-enum class GameState {
-	None						= 0,
-	Running						= 1,
-	Paused						= 2,
-	Win							= 3,
-	Lose						= 4,
-	Resign						= 5,
-	Error						= 6,
-	Guessing					= 7,
-	WaittingPins				= 8,
-	WaittingMasterCode			= 9,
-	WaittingCodeRow				=10
-};
-
-
-enum class Algorithm {
-	MostParts		= 0,
-	WorstCase		= 1,
-	ExpectedSize	= 2
-};
-
-enum class PinMouse{
-	Ignore		= 0,
-	Accept		= 1,
-	Pass		= 2
-};
-
-enum class IndicatorType{
-	None	= 0,
-	Charactre	= 1,
-	Digit	= 2
-};
-
-enum class BoxState {
-	Past		= 0,
-	Current		= 1,
-	Future		= 2,
-	None		= 3
-};
-
-enum class PegState {
-	Initial		= 0,
-	Filled		= 1,
-	Empty		= 2,
-	Draged		= 3
-};
-
+#include <QString>
 
 const int MIN_COLOR_NUMBER	= 2;
 const int MAX_COLOR_NUMBER	= 10;
@@ -79,8 +28,82 @@ const int MAX_COLOR_NUMBER	= 10;
 const int MIN_SLOT_NUMBER	= 2;
 const int MAX_SLOT_NUMBER	= 5;
 
-const int MAX_ROW_NUMBER	= 10;
+
+enum class GameMode {
+	Master,		//HUMAN BREAKS THE CODE
+	Breaker		//MACHINE BREAKS THE CODE
+};
+
+enum class GameState
+{
+	None,
+	Running,
+	Paused,
+	Win,
+	Lose,
+	Resign,
+	Error,
+	Guessing,
+	WaittingPins,
+	WaittingMasterCode,
+	WaittingCodeRow
+};
 
 
+enum class Algorithm
+{
+	MostParts,
+	WorstCase,
+	ExpectedSize
+};
+
+enum class PinMouse
+{
+	Ignore,
+	Accept,
+	Pass
+};
+
+enum class IndicatorType
+{
+	None,
+	Charactre,
+	Digit
+};
+
+enum class BoxState
+{
+	Past,
+	Current,
+	Future,
+	None
+};
+
+enum class PegState
+{
+	Initial,
+	Filled,
+	Empty,
+	Draged
+};
+
+
+const QString ColorsRGB[MAX_COLOR_NUMBER][2] = {
+		{"#FFFF80", "#C05800"}, {"#FF3300", "#400040"},
+		{"#33CCFF", "#000080"}, {"#808080", "#000000"},
+		{"#FFFFFF", "#797979"},{"#FF9900", "#A82A00"},
+		{"#66FF33", "#385009"},{"#BA88FF", "#38005D"},
+		{"#00FFFF", "#004040"}, {"#FFC0FF", "#800080"}
+  };
+
+const QString OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
+
+const int PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] =
+{
+	{{5, 14}, {22, 14}, {0, 0}, {0, 0}, {0, 0}},
+	{{4, 7}, {22, 7}, {14, 21}, {0, 0}, {0, 0}},
+	{{6, 6}, {22, 6}, {6, 22}, {22, 22}, {0, 0}},
+	{{4, 4}, {24, 4}, {14, 14}, {4, 24}, {24, 24}}
+};
 
 #endif // CONSTANTS_H
