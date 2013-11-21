@@ -58,48 +58,7 @@ Board::~Board()
 	scene()->clear();
 	if (mGame) delete mGame;
 }
-//-----------------------------------------------------------------------------
 
-void Board::onPegMouseRelease(QPoint position, int color)
-{
-	if(!mSameColor)//if same color is not allowed and there is already a color-peg visible, we just ignore drop
-	{
-		foreach (PegBox* box, mCurrentBoxes)
-		{
-			if(!box->sceneBoundingRect().contains(position) && box->isPegVisible() && box->getPegColor() == color)
-				return;
-		}
-	}
-
-	static bool rowFillState = false;
-	bool newRowFillState = true;
-
-	bool dropOnlyOnce = true; // conversion from float to integer may cause double drop on middle. Flag to do it just once
-
-	foreach (PegBox* box, mCurrentBoxes)
-	{
-		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PegState::Initial && dropOnlyOnce)
-		{
-			dropOnlyOnce = false;
-
-			if(box->hasPeg())
-				box->setPegColor(color);
-			else
-				createPegForBox(box, color);
-
-			box->setPegState(PegState::Filled);
-		}//	end if
-
-		if (box->getPegState() != PegState::Filled)
-			newRowFillState = false;
-	} //	end foreach
-
-	if (newRowFillState != rowFillState)//	if (master) code row state changed, emit appropriate signal
-	{
-		codeRowFilled(newRowFillState);
-	}
-	rowFillState = newRowFillState;
-}
 //-----------------------------------------------------------------------------
 
 void Board::codeRowFilled(bool filled)
@@ -141,100 +100,170 @@ void Board::codeRowFilled(bool filled)
 }
 //-----------------------------------------------------------------------------
 
-void Board::setBoxStateOfList(QList<PegBox *> boxlist, const BoxState state_t)
+void Board::createBoxes()
 {
-	foreach (PegBox* box, boxlist)
-	{
-		box->setBoxState(state_t);
-	}
-}
-//-----------------------------------------------------------------------------
-
-void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BoxState state_t)
-{
-	foreach (PinBox* box, boxlist)
-	{
-		box->setBoxState(state_t);
-	}
-}
-//-----------------------------------------------------------------------------
-
-void Board::play(const GameMode &mode)
-{
-	generate();
-
-	switch (mode) {
-	case GameMode::Master:
-		playCodeMaster();
-		break;
-	default:
-		playCodeBreaker();
-		break;
-	}
-}
-//-----------------------------------------------------------------------------
-
-void Board::playCodeBreaker()
-{
-	mMode = GameMode::Breaker;
-	mDoneButton->setZValue(2);
-	mDoneButton->setVisible(false);
-	mDoneButton->setEnabled(true);
-
-	if (!mGame)
-	{
-		mGame = new Game(mPegNumber, mColorNumber, mSameColor);
-	}
-	mGame->reset(mPegNumber, mColorNumber, mSameColor);
-
-	mMessage->showMassage("Place Your Pegs ... ");
-
-	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
-	{
-		mCurrentBoxes.append(mMasterBoxes.first());
-		mMasterBoxes.first()->setBoxState(BoxState::Current);
-		mMasterBoxes.removeFirst();
-	}
-
-	mState = GameState::WaittingMasterCode;
-	/*	Nothing happening from here till the user fill the master code
-	 *	row and press the done button. After the done button is pressed,
-	 *	the onDoneButtonPressed is continuing the game
+	/*	This function creates boxes and put them in QLists. They are
+	 *	stored in QList from bottom up and left to right.
 	 */
+	mCodeBoxes.clear();
+	mPinBoxes.clear();
+	mPegBoxes.clear();
+	mCurrentBoxes.clear();
+	mMasterBoxes.clear();
+
+	QPoint left_bottom_corner(4, 490);
+
+	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
+	{
+
+		QPoint position = left_bottom_corner - QPoint(0, i*40);
+
+		auto pinbox = new PinBox(mPegNumber, position);
+		scene()->addItem(pinbox);
+		mPinBoxes.append(pinbox);
+		connect(pinbox, SIGNAL(pinBoxPressed()), this, SLOT(onPinBoxPressed()));
+
+		position.setX(160-20*mPegNumber);
+
+		for (int j = 0; j < mPegNumber; ++j)
+		{
+			auto pegbox = new PegBox(position+QPoint(j*40, 0), this);
+			scene()->addItem(pegbox);
+			mCodeBoxes.append(pegbox);
+			pegbox->setPegState(PegState::Empty);
+		}
+
+		position.setX(276);	//go to right corner for the peg boxes
+
+		auto pegbox = new PegBox(position, this);
+		scene()->addItem(pegbox);
+		if (i < mColorNumber)
+		{
+			createPegForBox(pegbox, i, true);//just a background peg
+			createPegForBox(pegbox, i);
+		}
+		pegbox->setPegState(PegState::Initial);
+		mPegBoxes.append(pegbox);
+	}
+
+	for (int i = 0; i < mPegNumber; ++i)// the last code boxes are for the master code
+	{
+		auto box = new PegBox(QPoint(160-20*mPegNumber+i*40, 70), this);
+		scene()->addItem(box);
+		box->setPegState(PegState::Empty);
+		mMasterBoxes.append(box);
+	}
 }
 //-----------------------------------------------------------------------------
 
-void Board::playCodeMaster()
+void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 {
-
-	QString digits = "0123456789";
-	digits.left(mColorNumber);
-	int remainingNumbers = mColorNumber;
-
-	foreach (PegBox* box, mMasterBoxes) //creating a master code to be guessed
+	QPoint pos = box->sceneBoundingRect().topLeft().toPoint();
+	if (box->hasPeg())
 	{
-		int color = qrand() % remainingNumbers;
-		createPegForBox(box, digits.at(color).digitValue());
-		box->setPegState(PegState::Empty);
-		box->setBoxState(BoxState::None);
-		if(!mSameColor)
+		box->setPegColor(color);
+	} else
+	{
+		auto peg = new Peg(pos, color, mIndicator);
+		scene()->addItem(peg);
+		connect(this, SIGNAL(changePegIndicator(IndicatorType)), peg, SLOT(onChangeIndicators(IndicatorType)));
+
+		if(backPeg)
 		{
-			digits.remove(color, 1);
-			--remainingNumbers;
+			peg->setMovable(false);
+		}
+		else
+		{
+			box->setPeg(peg);
+			connect(peg, SIGNAL(mouseReleasedSignal(QPoint, int)), this, SLOT(onPegMouseRelease(QPoint, int)));
 		}
 	}
 
-	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
+}
+//-----------------------------------------------------------------------------
+
+void Board::initializeScene()
+{
+	mState = GameState::None;
+	mCodeBoxes.clear();
+	mPinBoxes.clear();
+	mPegBoxes.clear();
+
+	scene()->clear();
+	setInteractive(true);
+
+	mOkButton = new Button(38, "OK");
+	scene()->addItem(mOkButton);
+	mOkButton->setZValue(2);
+	connect(mOkButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
+	mOkButton->setEnabled(false);
+	mOkButton->setVisible(false);
+
+	mDoneButton = new Button(160, "Done");
+	mDoneButton->setPos(79, 118);
+	mDoneButton->setVisible(false);
+	mDoneButton->setZValue(2);
+	mDoneButton->setEnabled(false);
+	connect(mDoneButton, SIGNAL(buttonPressed()), this, SLOT(onDoneButtonPressed()));
+	scene()->addItem(mDoneButton);
+
+	mMessage = new Message;
+	scene()->addItem(mMessage);
+	mMessage->setPos(20, 0);
+
+	mInformation = new Message("#808183", 10);
+	scene()->addItem(mInformation);
+	mInformation->setPos(20, 506);
+	mInformation->showMassage("Slots: " + QString::number(mPegNumber) +
+							  "   Colors: " + QString::number(mColorNumber) +
+							  "   Same Color: " + (mSameColor ? "Yes": "No"));
+
+
+	createBoxes();
+
+	scene()->update();
+}
+//-----------------------------------------------------------------------------
+
+void Board::onPegMouseRelease(const QPoint &position, const int &color)
+{
+	if(!mSameColor)//if same color is not allowed and there is already a color-peg visible, we just ignore drop
 	{
-		mCurrentBoxes.append(mCodeBoxes.first());
-		mCodeBoxes.first()->setBoxState(BoxState::Current);
-		mCodeBoxes.removeFirst();
+		foreach (PegBox* box, mCurrentBoxes)
+		{
+			if(!box->sceneBoundingRect().contains(position) && box->isPegVisible() && box->getPegColor() == color)
+				return;
+		}
 	}
 
-	mMessage->showMassage("Place Your Pegs ... ");
-	mState = GameState::WaittingCodeRow;
+	static bool rowFillState = false;
+	bool newRowFillState = true;
 
-	// from now on the onPinBoxPushed function is continuing the game.
+	bool dropOnlyOnce = true; // conversion from float to integer may cause double drop on middle. Flag to do it just once
+
+	foreach (PegBox* box, mCurrentBoxes)
+	{
+		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PegState::Initial && dropOnlyOnce)
+		{
+			dropOnlyOnce = false;
+
+			if(box->hasPeg())
+				box->setPegColor(color);
+			else
+				createPegForBox(box, color);
+
+			box->setPegState(PegState::Filled);
+		}//	end if
+
+		if (box->getPegState() != PegState::Filled)
+			newRowFillState = false;
+	} //	end foreach
+
+	if (newRowFillState != rowFillState)//	if (master) code row state changed, emit appropriate signal
+	{
+		codeRowFilled(newRowFillState);
+	}
+	rowFillState = newRowFillState;
 }
 //-----------------------------------------------------------------------------
 
@@ -322,7 +351,7 @@ void Board::onChangeIndicators(const IndicatorType &indicator_n)
 	emit changePegIndicator(mIndicator);
 }
 
-void Board::onThowInTheTowel()
+void Board::onResign()
 {
 	if (mMode == GameMode::Master && mState == GameState::Running)
 	{
@@ -334,31 +363,6 @@ void Board::onThowInTheTowel()
 		setBoxStateOfList(mPinBoxes, BoxState::Future);
 		setBoxStateOfList(mPegBoxes, BoxState::Future);
 	}
-}
-//-----------------------------------------------------------------------------
-
-//void Board::onDoItForMe()
-//{
-//	switch (mState) {
-//	case GameState::WaittingMasterCode:
-
-//		break;
-//	case GameState::WaittingCodeRow:
-
-//		break;
-//	case GameState::WaittingPins:
-
-//		break;
-//	default:
-//		break;
-//	}
-
-//}
-//-----------------------------------------------------------------------------
-
-void Board::setAlgorithm(const Algorithm &algorithm_n)
-{
-	mAlgorithm = algorithm_n;
 }
 //-----------------------------------------------------------------------------
 
@@ -473,47 +477,84 @@ void Board::onDoneButtonPressed()
 }
 //-----------------------------------------------------------------------------
 
-void Board::generate()
+void Board::play(const GameMode &mode)
 {
-	mState = GameState::None;
-	mCodeBoxes.clear();
-	mPinBoxes.clear();
-	mPegBoxes.clear();
+	initializeScene();
 
-	scene()->clear();
-	setInteractive(true);
-
-	mOkButton = new Button(38, "OK");
-	scene()->addItem(mOkButton);
-	mOkButton->setZValue(2);
-	connect(mOkButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
-	mOkButton->setEnabled(false);
-	mOkButton->setVisible(false);
-
-	mDoneButton = new Button(160, "Done");
-	mDoneButton->setPos(79, 118);
-	mDoneButton->setVisible(false);
-	mDoneButton->setZValue(2);
-	mDoneButton->setEnabled(false);
-	connect(mDoneButton, SIGNAL(buttonPressed()), this, SLOT(onDoneButtonPressed()));
-	scene()->addItem(mDoneButton);
-
-	mMessage = new Message;
-	scene()->addItem(mMessage);
-	mMessage->setPos(20, 0);
-
-	mInformation = new Message("#808183", 10);
-	scene()->addItem(mInformation);
-	mInformation->setPos(20, 506);
-	mInformation->showMassage("Pegs: " + QString::number(mPegNumber) +
-							  "   Colors: " + QString::number(mColorNumber) +
-							  "   Same Color: " + (mSameColor ? "Yes": "No"));
-
-
-	createBoxes();
-
-	scene()->update();
+	switch (mode) {
+	case GameMode::Master:
+		playCodeMaster();
+		break;
+	default:
+		playCodeBreaker();
+		break;
+	}
 }
+//-----------------------------------------------------------------------------
+
+void Board::playCodeBreaker()
+{
+	mMode = GameMode::Breaker;
+	mDoneButton->setZValue(2);
+	mDoneButton->setVisible(false);
+	mDoneButton->setEnabled(true);
+
+	if (!mGame)
+	{
+		mGame = new Game(mPegNumber, mColorNumber, mSameColor);
+	}
+	mGame->reset(mPegNumber, mColorNumber, mSameColor);
+
+	mMessage->showMassage("Place Your Pegs ... ");
+
+	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
+	{
+		mCurrentBoxes.append(mMasterBoxes.first());
+		mMasterBoxes.first()->setBoxState(BoxState::Current);
+		mMasterBoxes.removeFirst();
+	}
+
+	mState = GameState::WaittingMasterCode;
+	/*	Nothing happening from here till the user fill the master code
+	 *	row and press the done button. After the done button is pressed,
+	 *	the onDoneButtonPressed is continuing the game
+	 */
+}
+//-----------------------------------------------------------------------------
+
+void Board::playCodeMaster()
+{
+
+	QString digits = "0123456789";
+	digits.left(mColorNumber);
+	int remainingNumbers = mColorNumber;
+
+	foreach (PegBox* box, mMasterBoxes) //creating a master code to be guessed
+	{
+		int color = qrand() % remainingNumbers;
+		createPegForBox(box, digits.at(color).digitValue());
+		box->setPegState(PegState::Empty);
+		box->setBoxState(BoxState::None);
+		if(!mSameColor)
+		{
+			digits.remove(color, 1);
+			--remainingNumbers;
+		}
+	}
+
+	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
+	{
+		mCurrentBoxes.append(mCodeBoxes.first());
+		mCodeBoxes.first()->setBoxState(BoxState::Current);
+		mCodeBoxes.removeFirst();
+	}
+
+	mMessage->showMassage("Place Your Pegs ... ");
+	mState = GameState::WaittingCodeRow;
+
+	// from now on the onPinBoxPushed function is continuing the game.
+}
+
 //-----------------------------------------------------------------------------
 
 void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, const bool &samecolor,
@@ -538,31 +579,36 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 }
 //-----------------------------------------------------------------------------
 
-void Board::createPegForBox(PegBox *box, int color, bool backPeg)
+void Board::resizeEvent(QResizeEvent* event)
 {
-	QPoint pos = box->sceneBoundingRect().topLeft().toPoint();
-	if (box->hasPeg())
-	{
-		box->setPegColor(color);
-	} else
-	{
-		auto peg = new Peg(pos, color, mIndicator);
-		scene()->addItem(peg);
-		connect(this, SIGNAL(changePegIndicator(IndicatorType)), peg, SLOT(onChangeIndicators(IndicatorType)));
-
-		if(backPeg)
-		{
-			peg->setMovable(false);
-		}
-		else
-		{
-			box->setPeg(peg);
-			connect(peg, SIGNAL(mouseReleasedSignal(QPoint, int)), this, SLOT(onPegMouseRelease(QPoint, int)));
-		}
-	}
-
+	fitInView(sceneRect(), Qt::KeepAspectRatio);
+	QGraphicsView::resizeEvent(event);
 }
 
+//-----------------------------------------------------------------------------
+
+void Board::setAlgorithm(const Algorithm &algorithm_n)
+{
+	mAlgorithm = algorithm_n;
+}
+//-----------------------------------------------------------------------------
+
+void Board::setBoxStateOfList(QList<PegBox *> boxlist, const BoxState state_t)
+{
+	foreach (PegBox* box, boxlist)
+	{
+		box->setBoxState(state_t);
+	}
+}
+//-----------------------------------------------------------------------------
+
+void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BoxState state_t)
+{
+	foreach (PinBox* box, boxlist)
+	{
+		box->setBoxState(state_t);
+	}
+}
 //-----------------------------------------------------------------------------
 
 void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
@@ -570,13 +616,7 @@ void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
 	mSetPins = set_pins;
 	mCloseRow = closeRow;
 }
-//-----------------------------------------------------------------------------
 
-void Board::resizeEvent(QResizeEvent* event)
-{
-	fitInView(sceneRect(), Qt::KeepAspectRatio);
-	QGraphicsView::resizeEvent(event);
-}
 //-----------------------------------------------------------------------------
 
 void Board::setIndicatorType(const IndicatorType &indicator_n)
@@ -584,63 +624,6 @@ void Board::setIndicatorType(const IndicatorType &indicator_n)
 	mIndicator = indicator_n;
 	emit changePegIndicator(mIndicator);
 }
-//-----------------------------------------------------------------------------
-
-void Board::createBoxes()
-{
-	/*	This function creates boxes and put them in QLists. They are
-	 *	stored in QList from bottom up and left to right.
-	 */
-	mCodeBoxes.clear();
-	mPinBoxes.clear();
-	mPegBoxes.clear();
-	mCurrentBoxes.clear();
-	mMasterBoxes.clear();
-
-	QPoint left_bottom_corner(4, 490);
-
-	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
-	{
-
-		QPoint position = left_bottom_corner - QPoint(0, i*40);
-
-		auto pinbox = new PinBox(mPegNumber, position);
-		scene()->addItem(pinbox);
-		mPinBoxes.append(pinbox);
-		connect(pinbox, SIGNAL(pinBoxPressed()), this, SLOT(onPinBoxPressed()));
-
-		position.setX(160-20*mPegNumber);
-
-		for (int j = 0; j < mPegNumber; ++j)
-		{
-			auto pegbox = new PegBox(position+QPoint(j*40, 0), this);
-			scene()->addItem(pegbox);
-			mCodeBoxes.append(pegbox);
-			pegbox->setPegState(PegState::Empty);
-		}
-
-		position.setX(276);	//go to right corner for the peg boxes
-
-		auto pegbox = new PegBox(position, this);
-		scene()->addItem(pegbox);
-		if (i < mColorNumber)
-		{
-			createPegForBox(pegbox, i, true);//just a background peg
-			createPegForBox(pegbox, i);
-		}
-		pegbox->setPegState(PegState::Initial);
-		mPegBoxes.append(pegbox);
-	}
-
-	for (int i = 0; i < mPegNumber; ++i)// the last code boxes are for the master code
-	{
-		auto box = new PegBox(QPoint(160-20*mPegNumber+i*40, 70), this);
-		scene()->addItem(box);
-		box->setPegState(PegState::Empty);
-		mMasterBoxes.append(box);
-	}
-}
-
 //-----------------------------------------------------------------------------
 
 void Board::drawBackground(QPainter* painter, const QRectF& rect)

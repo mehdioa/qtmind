@@ -39,7 +39,7 @@ public:
 	explicit Board(QWidget* parent = 0);
 	~Board();
 	void handleButtonRelease(const QString &);
-	void generate();
+	void initializeScene();
 	void play(const GameMode &mode);
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int& peg_n, const int& color_n, const GameMode &mode_n,
@@ -58,13 +58,12 @@ signals:
 	void changePegIndicator(const IndicatorType &indicator_t);
 
 private slots:
-	void onPegMouseRelease(QPoint position, int color);
+	void onPegMouseRelease(const QPoint& position, const int& color);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
 	void onChangeIndicators(const IndicatorType &indicator_n);
-	void onThowInTheTowel();
-//	void onDoItForMe();
+	void onResign();
 
 private:
 	void playCodeMaster();

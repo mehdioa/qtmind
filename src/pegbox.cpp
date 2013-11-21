@@ -40,49 +40,16 @@ PegBox::PegBox(const QPoint &position, Board *board, QGraphicsItem *parent):
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setPeg(Peg *peg)
-{
-	mPeg = peg;
-	mPeg->setPegBox(this);
-	mCircle->setVisible(hasPeg());
-}
-//-----------------------------------------------------------------------------
-
-void PegBox::setPegState(const PegState &state)
-{
-	mPegState = state;
-	switch (mPegState) {
-	case PegState::Initial:
-		if (mPeg) mPeg->setVisible(true);
-		mCircle->setVisible(true);
-		break;
-	case PegState::Filled:
-		if (mPeg) mPeg->setVisible(true);
-		mCircle->setVisible(true);
-		break;
-	case PegState::Empty:
-		if (mPeg) mPeg->setVisible(false);
-		mCircle->setVisible(false);
-		break;
-	default:// PEG_DRAGED
-		if (mPeg) mPeg->setVisible(true);
-		mCircle->setVisible(false);
-		break;
-	}
-}
-//-----------------------------------------------------------------------------
-
-void PegBox::setPegColor(int color_number)
-{
-	if (hasPeg())
-		mPeg->setColor(color_number);
-}
-//-----------------------------------------------------------------------------
-
 int PegBox::getPegColor()
 {
-	if (hasPeg()) return mPeg->getColor();
+	if (mPeg) return mPeg->getColor();
 	return -1;
+}
+//-----------------------------------------------------------------------------
+
+bool PegBox::isPegVisible()
+{
+	return mPeg && mPeg->isVisible();
 }
 //-----------------------------------------------------------------------------
 
@@ -126,7 +93,41 @@ void PegBox::setBoxState(const BoxState &state)
 }
 //-----------------------------------------------------------------------------
 
-bool PegBox::isPegVisible()
+void PegBox::setPeg(Peg *peg)
 {
-	return mPeg && mPeg->isVisible();
+	mPeg = peg;
+	mPeg->setPegBox(this);
+	mCircle->setVisible(hasPeg());
 }
+//-----------------------------------------------------------------------------
+
+void PegBox::setPegColor(int color_number)
+{
+	if (mPeg)
+		mPeg->setColor(color_number);
+}
+//-----------------------------------------------------------------------------
+
+void PegBox::setPegState(const PegState &state)
+{
+	mPegState = state;
+	switch (mPegState) {
+	case PegState::Initial:
+		if (mPeg) mPeg->setVisible(true);
+		mCircle->setVisible(true);
+		break;
+	case PegState::Filled:
+		if (mPeg) mPeg->setVisible(true);
+		mCircle->setVisible(true);
+		break;
+	case PegState::Empty:
+		if (mPeg) mPeg->setVisible(false);
+		mCircle->setVisible(false);
+		break;
+	default:// PegState::Draged
+		if (mPeg) mPeg->setVisible(true);
+		mCircle->setVisible(false);
+		break;
+	}
+}
+

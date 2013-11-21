@@ -51,9 +51,8 @@ Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicato
 	gloss->setPen(Qt::NoPen);
 
 	mIndicator = new QGraphicsSimpleTextItem(this);
-	mIndicator->setFont( QFont("DejaVu Sans Mono", 12, QFont::Bold, false));
-	mIndicator->setPos(12,6);
-	mIndicator->setScale(1.5);
+	mIndicator->setFont( QFont("DejaVu Sans Mono", 15, QFont::Bold, false));
+	mIndicator->setPos(14,7);
 	onChangeIndicators(indicator_n);
 
 

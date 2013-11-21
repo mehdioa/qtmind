@@ -77,7 +77,7 @@ private:
 	QAction* setPinsAutomaticallyAction;
 	QAction* closeRowAutomaticallyAction;
 	QAction* showIndicatorAction;
-	QAction* throwInTheTowelAction;
+	QAction* resignAction;
 
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;

@@ -45,10 +45,10 @@ int PinBox::getValue(int &blacks, int &whites) const
 	{
 		switch (pin->getColor()) {
 		case 1:
-			blacks++;
+			++blacks;
 			break;
 		case -1:
-			whites++;
+			++whites;
 			break;
 		default:
 			break;
@@ -70,6 +70,7 @@ void PinBox::setPins(const int &blacks, const int &whites)
 {
 	for(int i = 0; i < blacks; ++i)
 		pins.at(i)->setColor(1);
+
 	for(int i = 0; i < whites; ++i)
 		pins.at(blacks + i)->setColor(-1);
 }
@@ -83,16 +84,15 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg,
 	std::fill(g, g+color, 0);
 
 	int blacks = 0;
-	QString NUMS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (int i = 0; i < peg; ++i) {
 		blacks += (codeA[i] == codeB[i]);
-		++c[NUMS.indexOf(codeA[i])];
-		++g[NUMS.indexOf(codeB[i])];
+		++c[codeA[i].digitValue()];
+		++g[codeB[i].digitValue()];
 	}
 
 	int total = 0;		//	blacks + whites
 	for (int i = 0; i < color; ++i){
-		total += std::min(c[i],g[i]);
+		total += qMin(c[i],g[i]);
 	}
 
 	setPins(blacks, total-blacks);

@@ -77,7 +77,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::newGameSlot()
 {
-	throwInTheTowelAction->setVisible(mMode == GameMode::Master);
+	resignAction->setVisible(mMode == GameMode::Master);
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mIndicator);
 	mBoard->play(mMode);
 }
@@ -203,14 +203,14 @@ void MainWindow::createMenuBar()
 	QIcon new_icon(QPixmap(":icons/new-icon.png"));
 	auto newGameAction = gameMenu->addAction(new_icon, tr("&New"), this, SLOT(newGameSlot()), tr("Ctrl+N"));
 
-	QIcon throwtowel_icon(QPixmap(":/icons/face-raspberry.png"));
-	throwInTheTowelAction = gameMenu->addAction(throwtowel_icon, tr("&Throw In The Towel"), mBoard, SLOT(onThowInTheTowel()));
-	throwInTheTowelAction->setVisible(mMode == GameMode::Master);
+	QIcon resign_icon(QPixmap(":/icons/face-raspberry.png"));
+	resignAction = gameMenu->addAction(resign_icon, tr("&Resign"), mBoard, SLOT(onResign()), tr("Ctrl+R"));
+	resignAction->setVisible(mMode == GameMode::Master);
 
 	gameMenu->addSeparator();
 
 	QIcon close_icon(QPixmap(":/icons/close-icon.png"));
-	gameMenu->addAction(close_icon, tr("Quit"), this, SLOT(close()), tr("Ctrl+Q"));
+	gameMenu->addAction(close_icon, tr("&Quit"), this, SLOT(close()), tr("Ctrl+Q"));
 
 	auto settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
@@ -261,7 +261,6 @@ void MainWindow::createMenuBar()
 	mainToolbar->setMovable(false);
 	mainToolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	mainToolbar->addAction(newGameAction);
-	mainToolbar->addAction(throwInTheTowelAction);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
