@@ -43,9 +43,10 @@ img.img-right {
 
 img{
 	display: block;
-    border: solid 2px #555;
+/*    border: solid 2px #555;*/
     padding: 2px;
     margin: 3px 6pt 3px 5px;
+	draggable: false;
 }
 
 /* figure */
