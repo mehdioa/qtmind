@@ -22,6 +22,7 @@
 
 #include "constants.h"
 #include <QGraphicsView>
+#include <QLocale>
 
 class Peg;
 class EmptyBox;
@@ -30,6 +31,7 @@ class PegBox;
 class Button;
 class Game;
 class Message;
+class QLocale;
 
 class Board: public QGraphicsView
 {
@@ -44,7 +46,7 @@ public:
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int& peg_n, const int& color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n, const bool &set_pins,
-			   const bool &close_row, const IndicatorType& indicator_n = IndicatorType::None);
+			   const bool &close_row, QLocale locale_n, const IndicatorType& indicator_n = IndicatorType::None);
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm& algorithm_n);
 
@@ -73,6 +75,7 @@ private:
 	void codeRowFilled(bool filled);
 	void setBoxStateOfList(QList<PegBox*> boxlist, const BoxState state_t);
 	void setBoxStateOfList(QList<PinBox*> boxlist, const BoxState state_t);
+	void showTranslatedInformation();
 
 
 	QList<PinBox*> mPinBoxes;
@@ -98,6 +101,7 @@ private:
 	Message* mInformation;
 	QString mMasterCode;
 	QString mGuess;
+	QLocale mLocale;
 };
 
 #endif // BOARD_H

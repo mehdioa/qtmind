@@ -23,56 +23,56 @@
 #include <QFont>
 
 
-Message::Message(const QString &color_name, const int &font_size):
-mColor(QColor(color_name))
+Message::Message(const QString &color_name, const int &font_size, QGraphicsItem *parent):
+	QGraphicsSimpleTextItem(parent),
+	mColor(QColor(color_name))
 {
 	mLayout.setFont(QFont("Linux Libertine", font_size, QFont::Bold, false));
 	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);
 
 }
+//-----------------------------------------------------------------------------
 
-void Message::showMassage(const QString str)
+void Message::showMessage(const QString str)
 {
 	mUpdateRect = boundingRect();
 	mLayout.setText(str);
 
 	int leading = -3;
-	qreal h = 0;
-	qreal maxw = 0;
-	qreal maxh = 0;
+	qreal height = 0;
+	qreal max_width = 0;
+	qreal max_height = 0;
 	mLayout.beginLayout();
 
-	while (true)
+	QTextLine line = mLayout.createLine();
+	while (line.isValid())
 	{
-		QTextLine line = mLayout.createLine();
-		if (!line.isValid())
-		{
-			break;
-		}
-
 		line.setLineWidth(280);
-		h += leading;
-		line.setPosition(QPointF(0, h));
-		h += line.height();
-		maxw = qMax(maxw, line.naturalTextWidth());
+		height += leading;
+		line.setPosition(QPointF(0, height));
+		height += line.height();
+		max_width = qMax(max_width, line.naturalTextWidth());
+		line = mLayout.createLine();
 	}
 	mLayout.endLayout();
 
 	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
 
-	maxw = qMax(mUpdateRect.width(), mLayout.boundingRect().width());
-	maxh = qMax(mUpdateRect.height(), mLayout.boundingRect().height() + ypos);
+	max_width = qMax(mUpdateRect.width(), mLayout.boundingRect().width());
+	max_height = qMax(mUpdateRect.height(), mLayout.boundingRect().height() + ypos);
 
-	mUpdateRect = QRectF(0, 0, maxw, maxh + ypos);
+	mUpdateRect = QRectF(0, 0, max_width, max_height + ypos);
 
-	update(boundingRect());
+	update();
 }
+//-----------------------------------------------------------------------------
 
 QRectF Message::boundingRect() const
 {
 	return mUpdateRect;
 }
+//-----------------------------------------------------------------------------
 
 void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {

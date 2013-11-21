@@ -37,7 +37,7 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color)
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
-	mInformation(""),
+	mLastMinWeight(-1),
 	mFirstPossibleCodes(0)
 {
 	createTables();
@@ -110,7 +110,7 @@ void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_
 	for(int i = 0; i < mAllCodesSize; ++i)
 		mPossibleCodes.append(i);//in case of not same color here must change
 
-	mInformation = "";
+	mLastMinWeight = -1;
 }
 //-----------------------------------------------------------------------------
 
@@ -240,7 +240,6 @@ QString Game::getGuess(const Algorithm& alg)
 	if (mPossibleCodes.size() == 1)
 	{
 		mGuess =  arrayToString(mAllCodes[mPossibleCodes.first()]);
-		mInformation = "The Code Is Cracked!";
 		return mGuess;
 	}
 
@@ -249,7 +248,6 @@ QString Game::getGuess(const Algorithm& alg)
 		mGuess = arrayToString(mAllCodes[mPossibleCodes.at(mPossibleCodes.size() >> 1)]);
 		QString str;
 		str.setNum(mPossibleCodes.size());
-		mInformation = QString("Random Guess    Remaining: %1").arg(str);
 		return mGuess;
 	}
 
@@ -280,22 +278,7 @@ QString Game::getGuess(const Algorithm& alg)
 	if(alg == Algorithm::MostParts)
 		minWeight = mResponseSpaceSize - minWeight;
 
-	QString str[3];
-	switch (alg) {
-	case Algorithm::ExpectedSize:
-		str[0] = "Expected Size";
-		break;
-	case Algorithm::WorstCase:
-		str[0] = "Worst Case";
-		break;
-	default:	//MostParts
-		str[0] = "Most Parts";
-		break;
-	}
-
-	str[1].setNum(minWeight);
-	str[2].setNum(mPossibleCodes.size());
-	mInformation = QString("%1: %2    Remaining: %3").arg(str[0]).arg(str[1]).arg(str[2]);
+	mLastMinWeight = minWeight;
 
 	mGuess = arrayToString(mAllCodes[mFirstPossibleCodes[answerIndex]]);
 

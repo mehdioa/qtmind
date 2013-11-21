@@ -53,12 +53,13 @@ public:
 		 const bool& allow_same_color);
 	~Game();
 	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
-	QString getInformation() const {return mInformation;}
 	QString getGuess();
 	QString getGuess(const Algorithm& alg);
 	bool setResponse(const int& response);
 	void reset(const int& peg_no, const int& color_no,
 			   const bool& allow_same_color);
+	int getPossibleCodesSize() const {return mPossibleCodes.size();}
+	int getLastMinWeight() const {return mLastMinWeight;}
 
 private:
 	void createTables();
@@ -78,7 +79,7 @@ private:
 	int mResponse;										//	the black-white response code, [0..14]
 	int mResponseSpaceSize;
 	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
-	QString mInformation;
+	int mLastMinWeight;
 
 	int** mAllCodes;									//	all indexes of codes (0...1295)
 	QList<int> mPossibleCodes;							//	list of all possibles

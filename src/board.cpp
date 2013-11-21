@@ -70,13 +70,13 @@ void Board::codeRowFilled(bool filled)
 		{
 		case true:
 			mPinBoxes.first()->setBoxState(BoxState::Current);
-			mMessage->showMassage("Press The Pin Box ...");
+			mMessage->showMessage("Press The Pin Box ...");
 			if (mCloseRow)
 				mPinBoxes.first()->fakePress();
 			break;
 		default:
 			mPinBoxes.first()->setBoxState(BoxState::Future);
-			mMessage->showMassage("Place Your Pegs ... ");
+			mMessage->showMessage(tr("Place Your Pegs ... "));
 			break;
 		}
 		break;
@@ -87,11 +87,11 @@ void Board::codeRowFilled(bool filled)
 			{
 			case true:
 				mDoneButton->setVisible(true);
-				mMessage->showMassage("Press Done ...");
+				mMessage->showMessage(tr("Press Done ..."));
 				break;
 			default:
 				mDoneButton->setVisible(false);
-				mMessage->showMassage("Place Your Pegs ... ");
+				mMessage->showMessage(tr("Place Your Pegs ... "));
 				break;
 			}
 		}
@@ -192,14 +192,14 @@ void Board::initializeScene()
 	scene()->clear();
 	setInteractive(true);
 
-	mOkButton = new Button(38, "OK");
+	mOkButton = new Button(38, tr("OK"));
 	scene()->addItem(mOkButton);
 	mOkButton->setZValue(2);
 	connect(mOkButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
 	mOkButton->setEnabled(false);
 	mOkButton->setVisible(false);
 
-	mDoneButton = new Button(160, "Done");
+	mDoneButton = new Button(160, tr("Done"));
 	mDoneButton->setPos(79, 118);
 	mDoneButton->setVisible(false);
 	mDoneButton->setZValue(2);
@@ -214,10 +214,10 @@ void Board::initializeScene()
 	mInformation = new Message("#808183", 10);
 	scene()->addItem(mInformation);
 	mInformation->setPos(20, 506);
-	mInformation->showMassage("Slots: " + QString::number(mPegNumber) +
-							  "   Colors: " + QString::number(mColorNumber) +
-							  "   Same Color: " + (mSameColor ? "Yes": "No"));
-
+	mInformation->showMessage(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
+							  arg(mLocale.toString(mPegNumber)).arg(tr("Colors")).
+							  arg(mLocale.toString(mColorNumber)).arg(tr("Same Color")).
+							  arg(mSameColor ? tr("Yes"): tr("No")));
 
 	createBoxes();
 
@@ -319,7 +319,7 @@ void Board::onPinBoxPressed()
 	if (blacks == mPegNumber) //success here
 	{
 		mState = GameState::Win;
-		mMessage->showMassage("Success! You Win");
+		mMessage->showMessage("Success! You Win");
 
 		setBoxStateOfList(mMasterBoxes, BoxState::Past);
 		setBoxStateOfList(mCurrentBoxes, BoxState::Past);
@@ -329,11 +329,11 @@ void Board::onPinBoxPressed()
 	} else if (mCodeBoxes.isEmpty()) //out of more row of codes, a fail
 	{
 		mState = GameState::Lose;
-		mMessage->showMassage("Game Over! You Failed");
+		mMessage->showMessage(tr("Game Over! You Failed"));
 		setBoxStateOfList(mPegBoxes, BoxState::Future);
 	} else // continue the game
 	{
-		mMessage->showMassage("Place Your Pegs ... ");
+		mMessage->showMessage(tr("Place Your Pegs ... "));
 		for(int i = 0; i < mPegNumber; ++i) //put the next codeboxes in action
 		{
 			mCurrentBoxes.append(mCodeBoxes.first());
@@ -356,7 +356,7 @@ void Board::onResign()
 	if (mMode == GameMode::Master && mState == GameState::Running)
 	{
 		mState = GameState::Resign;
-		mMessage->showMassage("You Resign");
+		mMessage->showMessage(tr("You Resign"));
 
 		setBoxStateOfList(mMasterBoxes, BoxState::Past);
 		setBoxStateOfList(mCurrentBoxes, BoxState::Future);
@@ -372,7 +372,7 @@ void Board::onOkButtonPressed()
 	int resp = mPinBoxes.first()->getValue();
 	if(!mGame->setResponse(resp))
 	{
-		mMessage->showMassage("Not Possible, Try Again...");
+		mMessage->showMessage(tr("Not Possible, Try Again..."));
 		return;
 	}
 
@@ -385,7 +385,7 @@ void Board::onOkButtonPressed()
 	/*	Here we check if user user input 4 blacks*/
 	if (mGame->done())
 	{
-		mMessage->showMassage("Yeah I found It");
+		mMessage->showMessage(tr("Yeah I found It"));
 		mState = GameState::Win;
 		scene()->update();
 		return;
@@ -394,13 +394,12 @@ void Board::onOkButtonPressed()
 	/* getting guess from mGame */
 	mGuess = mGame->getGuess(mAlgorithm);
 
-	mInformation->showMassage(mGame->getInformation());
-
+	showTranslatedInformation();
 
 	if (mCodeBoxes.isEmpty())
 	{
 		mState = GameState::Lose; // Hehe, I can solve it always
-		mMessage->showMassage("I Lose");
+		mMessage->showMessage(tr("I Lose"));
 		scene()->update();
 		return;
 	} else
@@ -412,7 +411,7 @@ void Board::onOkButtonPressed()
 			mCodeBoxes.removeFirst();
 		}
 
-		mMessage->showMassage("Please Put Pins And Press OK");
+		mMessage->showMessage(tr("Please Put Pins And Press OK"));
 		mPinBoxes.first()->setBoxState(BoxState::None);
 		mOkButton->setEnabled(true);
 		mOkButton->setVisible(true);
@@ -460,7 +459,7 @@ void Board::onDoneButtonPressed()
 	}
 
 	mPinBoxes.first()->setBoxState(BoxState::None);
-	mMessage->showMassage("Please Put Pins And Press OK");
+	mMessage->showMessage(tr("Please Put Pins And Press OK"));
 	mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 	mOkButton->setEnabled(true);
 	mOkButton->setVisible(true);
@@ -505,7 +504,7 @@ void Board::playCodeBreaker()
 	}
 	mGame->reset(mPegNumber, mColorNumber, mSameColor);
 
-	mMessage->showMassage("Place Your Pegs ... ");
+	mMessage->showMessage(tr("Place Your Pegs ... "));
 
 	for(int i = 0; i < mPegNumber; ++i) //initializing currentrow
 	{
@@ -549,7 +548,7 @@ void Board::playCodeMaster()
 		mCodeBoxes.removeFirst();
 	}
 
-	mMessage->showMassage("Place Your Pegs ... ");
+	mMessage->showMessage(tr("Place Your Pegs ... "));
 	mState = GameState::WaittingCodeRow;
 
 	// from now on the onPinBoxPushed function is continuing the game.
@@ -558,7 +557,8 @@ void Board::playCodeMaster()
 //-----------------------------------------------------------------------------
 
 void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, const bool &samecolor,
-				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, const IndicatorType &indicator_n)
+				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale locale_n,
+				  const IndicatorType &indicator_n)
 {
 
 	mPegNumber = peg_n;
@@ -568,6 +568,7 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 	mMode = mode_n;
 	mIndicator = indicator_n;
 	mAlgorithm = algorithm_n;
+	mLocale = locale_n;
 
 	mSameColor = samecolor;
 
@@ -608,6 +609,45 @@ void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BoxState state_t)
 	{
 		box->setBoxState(state_t);
 	}
+}
+//-----------------------------------------------------------------------------
+
+void Board::showTranslatedInformation()
+{
+	int possibleSize = mGame->getPossibleCodesSize();
+
+	if (possibleSize == 1)
+	{
+		mInformation->showMessage(tr("The Code Is Cracked!"));
+	}
+	else if (possibleSize > 10000)
+	{
+		mInformation->showMessage(QString("%1    %2: %3").arg(tr("Random Guess")).
+							  arg(tr("Remaining")).arg(mLocale.toString(possibleSize)));
+	}
+	else
+	{
+		int minWeight = mGame->getLastMinWeight();
+		switch (mAlgorithm) {
+		case Algorithm::MostParts:
+			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
+									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale.toString(possibleSize)));
+			break;
+		case Algorithm::WorstCase:
+			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
+									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale.toString(possibleSize)));
+			break;
+		default:
+			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
+									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale.toString(possibleSize)));
+			break;
+		}
+
+	}
+
 }
 //-----------------------------------------------------------------------------
 

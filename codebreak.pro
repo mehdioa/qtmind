@@ -38,7 +38,8 @@ SOURCES += src/main.cpp\
     src/message.cpp \
     src/game.cpp \
     src/pinbox.cpp \
-    src/pin.cpp
+    src/pin.cpp \
+    src/locale_dialog.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -50,7 +51,8 @@ HEADERS  += src/mainwindow.h \
     src/message.h \
     src/game.h \
     src/pinbox.h \
-    src/pin.h
+    src/pin.h \
+    src/locale_dialog.h
 
 FORMS    +=
 
@@ -58,4 +60,7 @@ RESOURCES += \
     resource.qrc
 
 TRANSLATIONS = translations/codebreak_en.ts \
-	translations/codebreak_fa.ts
+	translations/codebreak_es.ts \
+	translations/codebreak_fa.ts \
+	translations/codebreak_fr.ts \
+	translations/codebreak_de.ts

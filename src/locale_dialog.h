@@ -17,26 +17,33 @@
  *
  ***********************************************************************/
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef LOCALE_DIALOG_H
+#define LOCALE_DIALOG_H
 
-#include <QGraphicsSimpleTextItem>
-#include <QTextLayout>
+#include <QDialog>
+class QComboBox;
 
-class Message : public QGraphicsSimpleTextItem
+class LocaleDialog : public QDialog
 {
-public:
-	explicit Message(const QString& color_name = "#303133", const int& font_size = 12, QGraphicsItem* parent = 0);
-	void showMessage(const QString str);
-	QRectF boundingRect() const;
+	Q_OBJECT
 
-protected:
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+public:
+	LocaleDialog(QWidget* parent = 0);
+	static void loadTranslation(const QString& appname);
+	static QString languageName(const QString& language);
+
+public slots:
+	void accept();
 
 private:
-	QTextLayout mLayout;
-	QRectF mUpdateRect;
-	QColor mColor;
+	static QStringList findTranslations();
+
+private:
+	QComboBox* mTranslations; /**< list of found translations */
+
+	static QString mCurrent; /**< stored application language */
+	static QString mPath; /**< location of translations; found in loadTranslator() */
+	static QString mAppName; /**< application name passed to loadTranslator() */
 };
 
-#endif // MESSAGE_H
+#endif // LOCALE_DIALOG_H

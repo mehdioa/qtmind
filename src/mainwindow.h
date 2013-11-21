@@ -21,6 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLocale>
 #include "constants.h"
 
 class Board;
@@ -49,6 +50,7 @@ private slots:
 	void changeGameModeSlot(QAction*);
 	void updateNumbersSlot();
 	void newGameSlot();
+	void onSetLocale();
 	void about();
 
 signals:
@@ -68,6 +70,7 @@ private:
 	bool mSameColorAllowed ;
 	bool mSetPins;
 	bool mCloseRow;
+	QLocale mLocale;
 
 	void createBoard();
 	void createMenuBar();

@@ -67,7 +67,7 @@ enum class PinMouse
 enum class IndicatorType
 {
 	None,
-	Charactre,
+	Character,
 	Digit
 };
 

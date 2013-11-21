@@ -19,6 +19,7 @@
 
 #include "mainwindow.h"
 #include "board.h"
+#include "locale_dialog.h"
 #include <QApplication>
 #include <QComboBox>
 #include <QMenuBar>
@@ -31,6 +32,7 @@
 #include <QGraphicsScene>
 #include <QLinearGradient>
 #include <QString>
+#include <QStyleOption>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
@@ -44,10 +46,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	mSetPins = QSettings().value("SetPins", true).toBool();
 	mCloseRow = QSettings().value("CloseRow", true).toBool();
 	mIndicator = (IndicatorType) QSettings().value("Indicator", 0).toInt();
+	mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
 
+	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("CodeBreak"));
 	setCentralWidget(mBoard);
 	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
+
+	LocaleDialog::loadTranslation("codebreak_");
 
 	createMenuBar();
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
@@ -78,8 +84,14 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::newGameSlot()
 {
 	resignAction->setVisible(mMode == GameMode::Master);
-	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mIndicator);
+	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mLocale, mIndicator);
 	mBoard->play(mMode);
+}
+
+void MainWindow::onSetLocale()
+{
+	LocaleDialog dialog;
+	dialog.exec();
 }
 //-----------------------------------------------------------------------------
 
@@ -112,7 +124,7 @@ void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
 
 void MainWindow::changeGameModeSlot(QAction* selectedAction)
 {
-	mMode = (GameMode) selectedAction->data().toInt();
+	mMode =  (GameMode) selectedAction->data().toInt();
 	updateNumbersSlot();
 }
 
@@ -163,9 +175,12 @@ void MainWindow::setPegsComboBox()
 {
 	pegsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
-		pegsNumberComboBox->addItem(QString::number(i)+" Slots");
+	{
+		pegsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Slots")));
+	}
 	pegsNumberComboBox->setCurrentIndex(mPegs);
-	pegsNumberComboBox->setToolTip("Choose the numbe of pegs");
+	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
+	pegsNumberComboBox->setLocale(mLocale);
 
 	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 }
@@ -175,9 +190,11 @@ void MainWindow::setColorsComboBox()
 {
 	colorsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
-		colorsNumberComboBox->addItem(QString::number(i)+" Colors");
+	{
+		colorsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Colors")));
+	}
 	colorsNumberComboBox->setCurrentIndex(mColors);
-	colorsNumberComboBox->setToolTip("Choose the number of colors");
+	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 }
@@ -186,10 +203,10 @@ void MainWindow::setColorsComboBox()
 void MainWindow::setSolvingAlgorithmsComboBox()
 {
 	solvingAlgorithmsComboBox = new QComboBox(this);
-	solvingAlgorithmsComboBox->setToolTip("Choose the solving algorithm");
-	solvingAlgorithmsComboBox->addItem("Most Parts");
-	solvingAlgorithmsComboBox->addItem("Worst Case");
-	solvingAlgorithmsComboBox->addItem("Expected Size");
+	solvingAlgorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
+	solvingAlgorithmsComboBox->addItem(tr("Most Parts"));
+	solvingAlgorithmsComboBox->addItem(tr("Worst Case"));
+	solvingAlgorithmsComboBox->addItem(tr("Expected Size"));
 	solvingAlgorithmsComboBox->setCurrentIndex((int) mAlgorithm);
 
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
@@ -216,45 +233,63 @@ void MainWindow::createMenuBar()
 
 	auto gameModeSubMenu = settingsMenu->addMenu(tr("Game Mode"));
 	auto gameModeActions = new QActionGroup(this);
-	char* gameModeNames[] = {(char*)"Code Master", (char*)"Code Break"};
-	for(int i = 0; i < 2; ++i){
-		auto gameModeAction = gameModeSubMenu->addAction(tr(gameModeNames[i]));
-		gameModeAction->setData(i);
-		gameModeAction->setCheckable(true);
-		gameModeAction->setChecked((int) mMode == i);
-		gameModeActions->addAction(gameModeAction);
-	}
+
+	auto masterModeAction = gameModeSubMenu->addAction(tr("Code Master"));
+	masterModeAction->setData(0);
+	masterModeAction->setCheckable(true);
+	masterModeAction->setChecked(mMode == GameMode::Master);
+	gameModeActions->addAction(masterModeAction);
+
+	auto breakerModeAction = gameModeSubMenu->addAction(tr("Code Breaker"));
+	breakerModeAction->setData(1);
+	breakerModeAction->setCheckable(true);
+	breakerModeAction->setChecked(mMode == GameMode::Breaker);
+	gameModeActions->addAction(breakerModeAction);
+
 	gameModeActions->setExclusive(true);
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeGameModeSlot(QAction*)));
 
 	auto indicatorTypeSubMenu = settingsMenu->addMenu(tr("Indicator Type"));
 	auto indicatorTypeActions = new QActionGroup(this);
-	char* indicatorTypeNames[3] = {(char*)"No Indicator", (char*)"Character Indicator", (char*)"Digit Indicator"};
-	for(int i = 0; i < 3; ++i){
-		auto indicatorAction = indicatorTypeSubMenu->addAction(tr(indicatorTypeNames[i]));
-		indicatorAction->setData(i);
-		indicatorAction->setCheckable(true);
-		indicatorAction->setChecked((int) mIndicator == i);
-		indicatorTypeActions->addAction(indicatorAction);
-	}
+
+	auto noIndicatorAction = indicatorTypeSubMenu->addAction(tr("None"));
+	noIndicatorAction->setData(0);
+	noIndicatorAction->setCheckable(true);
+	noIndicatorAction->setChecked(mIndicator == IndicatorType::None);
+	indicatorTypeActions->addAction(noIndicatorAction);
+
+	auto charIndicatorAction = indicatorTypeSubMenu->addAction(tr("Characters"));
+	charIndicatorAction->setData(1);
+	charIndicatorAction->setCheckable(true);
+	charIndicatorAction->setChecked(mIndicator == IndicatorType::Character);
+	indicatorTypeActions->addAction(charIndicatorAction);
+
+	auto digitIndicatorAction = indicatorTypeSubMenu->addAction(tr("Digits"));
+	digitIndicatorAction->setData(2);
+	digitIndicatorAction->setCheckable(true);
+	digitIndicatorAction->setChecked(mIndicator == IndicatorType::Digit);
+	indicatorTypeActions->addAction(digitIndicatorAction);
+
 	indicatorTypeActions->setExclusive(true);
 	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeIndicatorsSlot(QAction*)));
 
-	setPinsAutomaticallyAction = settingsMenu->addAction(tr("&Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
+	setPinsAutomaticallyAction = settingsMenu->addAction(tr("Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
 	setPinsAutomaticallyAction->setCheckable(true);
 	setPinsAutomaticallyAction->setChecked(mSetPins == 1);
 
-	closeRowAutomaticallyAction = settingsMenu->addAction(tr("&Clost Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
+	closeRowAutomaticallyAction = settingsMenu->addAction(tr("Close Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
 	closeRowAutomaticallyAction->setCheckable(true);
 	closeRowAutomaticallyAction->setChecked(mCloseRow == 1);
+
+	settingsMenu->addAction(tr("Application Language..."), this, SLOT(onSetLocale()));
 
 	auto helpMenu = menuBar()->addMenu(tr("&Help"));
 
 	QIcon information_icon(QPixmap(":/icons/information-icon.png"));
-	helpMenu->addAction(information_icon, tr("&About"), this, SLOT(about()));
+	helpMenu->addAction(information_icon, tr("About"), this, SLOT(about()));
 
 	QIcon qt_icon(QPixmap(":/icons/qt_icon.png"));
-	helpMenu->addAction(qt_icon, tr("About &Qt"), qApp, SLOT(aboutQt()));
+	helpMenu->addAction(qt_icon, tr("About Qt"), qApp, SLOT(aboutQt()));
 
 	auto mainToolbar = new QToolBar(this);
 	mainToolbar->setFloatable(false);
