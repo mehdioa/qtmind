@@ -1,55 +1,37 @@
-/***********************************************************************
- *
- * Copyright (C) 2013 Omid Nikta <omidnikta@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- ***********************************************************************/
+#include "preferences.h"
+#include "ui_preferences.h"
 
-#include "locale_dialog.h"
-
-#include <QComboBox>
-#include <QCoreApplication>
-#include <QDialogButtonBox>
-#include <QDir>
 #include <QFile>
-#include <QLabel>
-#include <QLibraryInfo>
-#include <QLocale>
-#include <QMessageBox>
 #include <QSettings>
+#include <QLibraryInfo>
+#include <QDir>
 #include <QTranslator>
-#include <QVBoxLayout>
+#include <QMessageBox>
+//-----------------------------------------------------------------------------
+
+QString Preferences::mCurrent;
+QString Preferences::mPath;
+QString Preferences::mAppName;
 
 //-----------------------------------------------------------------------------
 
-QString LocaleDialog::mCurrent;
-QString LocaleDialog::mPath;
-QString LocaleDialog::mAppName;
-
-//-----------------------------------------------------------------------------
-
-LocaleDialog::LocaleDialog(QWidget* parent) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint)
+Preferences::Preferences(QLocale *locale_n, QWidget *parent) :
+	QDialog(parent),
+	ui(new Ui::Preferences)
 {
-	QString title = parent ? parent->window()->windowTitle() : QString();
-	setWindowTitle(!title.isEmpty() ? title : QCoreApplication::applicationName());
+	ui->setupUi(this);
+	setLayoutDirection(locale_n->textDirection());
 
-	QLabel* text = new QLabel(tr("Select application language:"), this);
+	for(int i = 1; i < 21; ++i)
+	{
+		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(locale_n->toString(i)).arg(tr("Points")));
+	}
+	ui->fontSizeComboBox->setCurrentIndex(QSettings().value("FontSize", 12).toInt());
 
-	mTranslations = new QComboBox(this);
-	mTranslations->addItem(tr("<System Language>"));
+	ui->fontComboBox->setCurrentFont(QFont(QSettings().value("FontName", "Sans Serif").toString()));
+
+	ui->languageComboBox->addItem(tr("<System Language>"));
+
 	QString translation;
 	QStringList translations = findTranslations();
 	foreach (translation, translations) {
@@ -57,25 +39,25 @@ LocaleDialog::LocaleDialog(QWidget* parent) :
 			continue;
 		}
 		translation.remove(mAppName);
-		mTranslations->addItem(languageName(translation), translation);
+		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
-	int index = qMax(0, mTranslations->findData(mCurrent));
-	mTranslations->setCurrentIndex(index);
+	int index = qMax(0, ui->languageComboBox->findData(mCurrent));
+	ui->languageComboBox->setCurrentIndex(index);
 
-	QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
-	connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
+	connect(ui->acceptRejectButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	layout->setSizeConstraint(QLayout::SetFixedSize);
-	layout->addWidget(text);
-	layout->addWidget(mTranslations);
-	layout->addWidget(buttons);
+}
+//-----------------------------------------------------------------------------
+
+Preferences::~Preferences()
+{
+	delete ui;
 }
 
 //-----------------------------------------------------------------------------
 
-void LocaleDialog::loadTranslation(const QString& name)
+void Preferences::loadTranslation(const QString& name)
 {
 	QString appdir = QCoreApplication::applicationDirPath();
 	mAppName = name;
@@ -124,7 +106,7 @@ void LocaleDialog::loadTranslation(const QString& name)
 
 //-----------------------------------------------------------------------------
 
-QString LocaleDialog::languageName(const QString& language)
+QString Preferences::languageName(const QString& language)
 {
 	QString lang_code = language.left(5);
 	QLocale locale(lang_code);
@@ -158,7 +140,7 @@ QString LocaleDialog::languageName(const QString& language)
 
 //-----------------------------------------------------------------------------
 
-QStringList LocaleDialog::findTranslations()
+QStringList Preferences::findTranslations()
 {
 	QStringList result = QDir(mPath, "*.qm").entryList(QDir::Files);
 	result.replaceInStrings(".qm", "");
@@ -167,17 +149,15 @@ QStringList LocaleDialog::findTranslations()
 
 //-----------------------------------------------------------------------------
 
-void LocaleDialog::accept()
+void Preferences::accept()
 {
-	int current = mTranslations->findData(mCurrent);
-	if (current == mTranslations->currentIndex()) {
-		return reject();
-	}
 	QDialog::accept();
 
-	mCurrent = mTranslations->itemData(mTranslations->currentIndex()).toString();
+	mCurrent = ui->languageComboBox->itemData(ui->languageComboBox->currentIndex()).toString();
 	QSettings().setValue("Locale/Language", mCurrent);
-	QMessageBox::information(this, tr("Note"), tr("Please restart this application for the change in language to take effect."), QMessageBox::Ok);
+	QSettings().setValue("FontName", ui->fontComboBox->currentText());
+	QSettings().setValue("FontSize", ui->fontSizeComboBox->currentIndex());
+	QMessageBox::information(this, tr("Note"), tr("Changes will take effect next time."), QMessageBox::Ok);
 }
 
 //-----------------------------------------------------------------------------

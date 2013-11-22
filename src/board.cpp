@@ -25,7 +25,7 @@
 #include "game.h"
 #include "message.h"
 
-Board::Board(QWidget* parent):
+Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
 	QGraphicsView(parent),
 	mState(GameState::None),
 	mMode(GameMode::Master),
@@ -35,6 +35,8 @@ Board::Board(QWidget* parent):
 	mSetPins(false),
 	mCloseRow(false),
 	mAlgorithm(Algorithm::MostParts),
+	mFontName(font_name),
+	mFontSize(font_size),
 	mGame(0)
 {
 	auto scene = new QGraphicsScene(this);
@@ -192,14 +194,14 @@ void Board::initializeScene()
 	scene()->clear();
 	setInteractive(true);
 
-	mOkButton = new Button(38, tr("OK"));
+	mOkButton = new Button(38, tr("OK"), mFontName, mFontSize);
 	scene()->addItem(mOkButton);
 	mOkButton->setZValue(2);
 	connect(mOkButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
 	mOkButton->setEnabled(false);
 	mOkButton->setVisible(false);
 
-	mDoneButton = new Button(160, tr("Done"));
+	mDoneButton = new Button(160, tr("Done"), mFontName, mFontSize);
 	mDoneButton->setPos(79, 118);
 	mDoneButton->setVisible(false);
 	mDoneButton->setZValue(2);
@@ -207,11 +209,11 @@ void Board::initializeScene()
 	connect(mDoneButton, SIGNAL(buttonPressed()), this, SLOT(onDoneButtonPressed()));
 	scene()->addItem(mDoneButton);
 
-	mMessage = new Message;
+	mMessage = new Message("#303133", mFontName, mFontSize);
 	scene()->addItem(mMessage);
 	mMessage->setPos(20, 0);
 
-	mInformation = new Message("#808183", 10);
+	mInformation = new Message("#808183", mFontName, qMax(mFontSize - 2, 1));
 	scene()->addItem(mInformation);
 	mInformation->setPos(20, 506);
 	mInformation->showMessage(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
@@ -319,7 +321,7 @@ void Board::onPinBoxPressed()
 	if (blacks == mPegNumber) //success here
 	{
 		mState = GameState::Win;
-		mMessage->showMessage("Success! You Win");
+		mMessage->showMessage(tr("Success! You Win"));
 
 		setBoxStateOfList(mMasterBoxes, BoxState::Past);
 		setBoxStateOfList(mCurrentBoxes, BoxState::Past);

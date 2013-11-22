@@ -32,7 +32,8 @@ class Button : public QObject, public QGraphicsItem
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit Button(int buttonWidth = 152, QString str = "");
+	explicit Button(const int& buttonWidth = 152, const QString& str = "",
+					const QString& font_name = "Sans Serif", const int& font_size = 12);
 	void setPressable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
 

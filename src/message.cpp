@@ -23,14 +23,13 @@
 #include <QFont>
 
 
-Message::Message(const QString &color_name, const int &font_size, QGraphicsItem *parent):
+Message::Message(const QString &color_name, const QString &font_name, const int &font_size, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
 	mColor(QColor(color_name))
 {
-	mLayout.setFont(QFont("Linux Libertine", font_size, QFont::Bold, false));
+	mLayout.setFont(QFont(font_name, font_size, QFont::Bold, false));
 	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);
-
 }
 //-----------------------------------------------------------------------------
 

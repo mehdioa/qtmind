@@ -22,12 +22,12 @@
 #include <QCursor>
 #include <QPainter>
 
-Button::Button(int buttonWidth, QString str)
+Button::Button(const int &buttonWidth, const QString &str, const QString &font_name, const int &font_size)
 {
 	mWidth = buttonWidth;
 	mLabel = str;
 	mYOffs = 0;
-	mFont = QFont("Arial", 11, QFont::Bold, false);
+	mFont = QFont(font_name, qMax(font_size - 1, 1), QFont::Bold, false);
 	mFont.setStyleHint(QFont::SansSerif);
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 

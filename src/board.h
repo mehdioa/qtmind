@@ -38,7 +38,7 @@ class Board: public QGraphicsView
 	Q_OBJECT
 
 public:
-	explicit Board(QWidget* parent = 0);
+	explicit Board(const QString& font_name = "Sans Serif", const int& font_size = 12, QWidget* parent = 0);
 	~Board();
 	void handleButtonRelease(const QString &);
 	void initializeScene();
@@ -77,7 +77,7 @@ private:
 	void setBoxStateOfList(QList<PinBox*> boxlist, const BoxState state_t);
 	void showTranslatedInformation();
 
-
+private:
 	QList<PinBox*> mPinBoxes;
 	QList<PegBox*> mPegBoxes;
 	QList<PegBox*> mCodeBoxes;
@@ -94,6 +94,10 @@ private:
 	bool mDone;
 	Algorithm mAlgorithm;
 	IndicatorType mIndicator;
+
+	QString mFontName;
+	int mFontSize;
+
 	Game* mGame;
 	Button* mOkButton;
 	Button* mDoneButton;

@@ -50,7 +50,7 @@ private slots:
 	void changeGameModeSlot(QAction*);
 	void updateNumbersSlot();
 	void newGameSlot();
-	void onSetLocale();
+	void onPreferences();
 	void about();
 
 signals:
@@ -60,6 +60,11 @@ private:
 	void setPegsComboBox();
 	void setColorsComboBox();
 	void setSolvingAlgorithmsComboBox();
+	void createBoard();
+	void createMenuBar();
+	void DrawBoardBackground();
+
+private:
 
 	Board* mBoard;
 	GameMode mMode;
@@ -71,10 +76,8 @@ private:
 	bool mSetPins;
 	bool mCloseRow;
 	QLocale mLocale;
-
-	void createBoard();
-	void createMenuBar();
-	void DrawBoardBackground();
+	QString mFontName;
+	int mFontSize;
 
 	QAction* allowSameColorAction;
 	QAction* setPinsAutomaticallyAction;

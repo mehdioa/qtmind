@@ -39,7 +39,7 @@ SOURCES += src/main.cpp\
     src/game.cpp \
     src/pinbox.cpp \
     src/pin.cpp \
-    src/locale_dialog.cpp
+    src/preferences.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -52,9 +52,10 @@ HEADERS  += src/mainwindow.h \
     src/game.h \
     src/pinbox.h \
     src/pin.h \
-    src/locale_dialog.h
+    src/preferences.h
 
-FORMS    +=
+FORMS    += \
+    src/preferences.ui
 
 RESOURCES += \
     resource.qrc

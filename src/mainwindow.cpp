@@ -19,7 +19,7 @@
 
 #include "mainwindow.h"
 #include "board.h"
-#include "locale_dialog.h"
+#include "preferences.h"
 #include <QApplication>
 #include <QComboBox>
 #include <QMenuBar>
@@ -37,7 +37,6 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
-	mBoard = new Board(this);
 	mMode = (GameMode) QSettings().value("Mode", 0).toInt();
 	mColors = QSettings().value("Colors", 6).toInt()-2;
 	mPegs = QSettings().value("Pegs", 4).toInt()-2;
@@ -47,13 +46,17 @@ MainWindow::MainWindow(QWidget *parent) :
 	mCloseRow = QSettings().value("CloseRow", true).toBool();
 	mIndicator = (IndicatorType) QSettings().value("Indicator", 0).toInt();
 	mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
+	mFontName = QSettings().value("FontName", "SansSerif").toString();
+	mFontSize = QSettings().value("FontSize", 12).toInt();
+
+	mBoard = new Board(mFontName, mFontSize, this);
 
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("CodeBreak"));
 	setCentralWidget(mBoard);
 	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
 
-	LocaleDialog::loadTranslation("codebreak_");
+	Preferences::loadTranslation("codebreak_");
 
 	createMenuBar();
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
@@ -87,11 +90,13 @@ void MainWindow::newGameSlot()
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mLocale, mIndicator);
 	mBoard->play(mMode);
 }
+//-----------------------------------------------------------------------------
 
-void MainWindow::onSetLocale()
+void MainWindow::onPreferences()
 {
-	LocaleDialog dialog;
-	dialog.exec();
+	auto preferencesWidget = new Preferences(&mLocale, this);
+	preferencesWidget->setWindowTitle(tr("Preferences"));
+	preferencesWidget->exec();
 }
 //-----------------------------------------------------------------------------
 
@@ -281,7 +286,7 @@ void MainWindow::createMenuBar()
 	closeRowAutomaticallyAction->setCheckable(true);
 	closeRowAutomaticallyAction->setChecked(mCloseRow == 1);
 
-	settingsMenu->addAction(tr("Application Language..."), this, SLOT(onSetLocale()));
+	settingsMenu->addAction(tr("Preferences"), this, SLOT(onPreferences()));
 
 	auto helpMenu = menuBar()->addMenu(tr("&Help"));
 
