@@ -62,6 +62,8 @@ public:
 	int getLastMinWeight() const {return mLastMinWeight;}
 
 private:
+	QString randomPermutation(QString str) const;
+	void permute(QString& code) const;
 	void createTables();
 	void deleteTables();
 	int compare (const int *codeA, const int *codeB) const;
@@ -71,7 +73,7 @@ private:
 	void convertBase(int decimal, const int &base,
 					 const int &precision, int* convertedArray);
 
-
+private:
 	int mPegNumber;										//	pegs count, 4
 	int mColorNumber;									//	colors count, 6
 	bool mAllowSameColor;

@@ -51,7 +51,6 @@ Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setMinimumSize(320, 560);
-
 }
 //-----------------------------------------------------------------------------
 
@@ -60,7 +59,6 @@ Board::~Board()
 	scene()->clear();
 	if (mGame) delete mGame;
 }
-
 //-----------------------------------------------------------------------------
 
 void Board::codeRowFilled(bool filled)
@@ -180,7 +178,6 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 			connect(peg, SIGNAL(mouseReleasedSignal(QPoint, int)), this, SLOT(onPegMouseRelease(QPoint, int)));
 		}
 	}
-
 }
 //-----------------------------------------------------------------------------
 
@@ -220,9 +217,7 @@ void Board::initializeScene()
 							  arg(mLocale.toString(mPegNumber)).arg(tr("Colors")).
 							  arg(mLocale.toString(mColorNumber)).arg(tr("Same Color")).
 							  arg(mSameColor ? tr("Yes"): tr("No")));
-
 	createBoxes();
-
 	scene()->update();
 }
 //-----------------------------------------------------------------------------
@@ -271,7 +266,7 @@ void Board::onPegMouseRelease(const QPoint &position, const int &color)
 
 void Board::onPinBoxPressed()
 {
-	/*	This function is the running engine of the CODEMASTER mode.
+	/*	This function is the running engine of the Master mode.
 	 *	If b and c are the number of blacks and whites, then
 	 *			w = sum(min(c[i], g[i]) -b
 	 *	where c[i] and g[i] are the number of times that the color i
@@ -553,7 +548,7 @@ void Board::playCodeMaster()
 	mMessage->showMessage(tr("Place Your Pegs ... "));
 	mState = GameState::WaittingCodeRow;
 
-	// from now on the onPinBoxPushed function is continuing the game.
+	// from now on the onPinBoxPushed function continue the game.
 }
 
 //-----------------------------------------------------------------------------
@@ -562,7 +557,6 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale locale_n,
 				  const IndicatorType &indicator_n)
 {
-
 	mPegNumber = peg_n;
 	mColorNumber = color_n;
 	mSetPins = set_pins;
@@ -571,10 +565,9 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 	mIndicator = indicator_n;
 	mAlgorithm = algorithm_n;
 	mLocale = locale_n;
-
 	mSameColor = samecolor;
 
-	if (peg_n < 2 || peg_n > 6 || color_n < 2 || color_n > 10) // for safety, fall back to standard in out-range inputs
+	if (peg_n < 2 || peg_n > 6 || color_n < 2 || color_n > 10) // for safety, fallback to standard in out-range inputs
 	{
 		mPegNumber = 4;
 		mColorNumber = 6;
@@ -716,17 +709,22 @@ void Board::drawBackground(QPainter* painter, const QRectF& rect)
 
 	painter->setPen(Qt::NoPen);
 
-	QLinearGradient rowgrad(0, 129, 0, 169);
+	QLinearGradient rowgrad(4, 129, 4, 169);
 	rowgrad.setColorAt(0.0, QColor("#9a9b9d"));
 	rowgrad.setColorAt(1.0, QColor("#8f8f8f"));
 	rowgrad.setSpread(QGradient::RepeatSpread);
 	painter->setBrush(QBrush(rowgrad));
-	painter->drawRect(QRectF(1, 129, 318, 400));
+	painter->drawRect(QRectF(4, 129, 318, 400));
+
+	painter->setPen(QColor("#9a9b9d").dark(120));
+	for(int i = 0; i < 11; ++i)
+	{
+		painter->drawLine(5, 129+i*40, 321, 129+i*40);
+	}
 
 	painter->setBrush(mBotGrad);
 	painter->drawRect(QRect(1, 530, 318, 27));
 	painter->setBrush(QBrush(QColor("#eff0f2")));
-	painter->drawRect(QRect(1, 530, 318, 1));
 
 	painter->setClipping(false);
 

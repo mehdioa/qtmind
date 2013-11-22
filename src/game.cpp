@@ -114,6 +114,32 @@ void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_
 }
 //-----------------------------------------------------------------------------
 
+QString Game::randomPermutation(QString str) const
+{
+	QString answer = "";
+	int n = str.length();
+	for(int i = 0; i < n; ++i)
+	{
+		int j = qrand() % (n - i);
+		answer.append(str.at(j));
+		str.remove(j, 1);
+	}
+	return answer;
+}
+//-----------------------------------------------------------------------------
+
+void Game::permute(QString &code) const
+{
+	QString permutatedColors = randomPermutation(QString("0123456789").left(mColorNumber));
+	code = randomPermutation(code);
+
+	for(int i = 0; i < code.length(); ++i)
+	{
+		code.replace(i, 1, permutatedColors.at(code.at(i).digitValue()));
+	}
+}
+//-----------------------------------------------------------------------------
+
 int Game::compare(const int* codeA, const int* codeB) const
 {
 	/*	Compare codeA to codeB and return the black-white code response.
@@ -208,13 +234,23 @@ QString Game::getGuess()
 			mGuess = (QString) "01";
 			break;
 		case 3:
-			mGuess = (QString) "012";
+			mGuess = (QString) "011";
 			break;
 		case 4:
 			mGuess = (QString) "1100";
 			break;
 		case 5:
-			mGuess = (QString) "00123";
+			switch (mColorNumber) {
+			case 2:
+				mGuess = (QString) "00111";
+				break;
+			case 3:
+				mGuess = (QString) "00112";
+				break;
+			default:
+				mGuess = (QString) "00123";
+				break;
+			}
 			break;
 		default:
 			QString str = "01010101010101010101010101";
@@ -227,6 +263,8 @@ QString Game::getGuess()
 		QString str = "0123456789";
 		mGuess = str.left(mPegNumber);
 	}
+
+	permute(mGuess);
 	return mGuess;
 }
 //-----------------------------------------------------------------------------
