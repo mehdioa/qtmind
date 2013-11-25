@@ -45,8 +45,8 @@ Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicato
 	gloss->setRotation(-45);
 	gloss->setPos(-5, 19);
 	QLinearGradient lgrad(25, 0, 25, 17);
-	lgrad.setColorAt(0, QColor(0xff, 0xff, 0xff, 120));
-	lgrad.setColorAt(1, QColor(0xff, 0xff, 0xff, 0x00));
+	lgrad.setColorAt(0, QColor(255, 255, 255, 120));
+	lgrad.setColorAt(1, QColor(255, 255, 255, 0));
 	gloss->setBrush(lgrad);
 	gloss->setPen(Qt::NoPen);
 

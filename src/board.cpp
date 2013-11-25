@@ -24,6 +24,8 @@
 #include "pinbox.h"
 #include "game.h"
 #include "message.h"
+#include <QThread>
+#include <QMetaType>
 
 Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
 	QGraphicsView(parent),
@@ -37,13 +39,14 @@ Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
 	mAlgorithm(Algorithm::MostParts),
 	mFontName(font_name),
 	mFontSize(font_size),
-	mGame(0)
+	mGame(0),
+	mGameThread(0)
 {
+	qRegisterMetaType<Algorithm>("Algorithm");
 	auto scene = new QGraphicsScene(this);
 	setScene(scene);
 	scene->setSceneRect(0, 0, 320, 560);
 	fitInView(sceneRect(), Qt::KeepAspectRatio);
-	scene->setBackgroundBrush(QColor("#B6B6B6"));
 	setScene(scene);
 	setCacheMode(QGraphicsView::CacheNone);
 	setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -56,8 +59,20 @@ Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
 
 Board::~Board()
 {
+	if (mGame)
+	{
+		mGame->interupt();
+		mGame->deleteLater();
+	}
+
+	if (mGameThread && mGameThread->isRunning())
+	{
+		mGameThread->quit();
+		mGameThread->wait();
+	}
+
 	scene()->clear();
-	if (mGame) delete mGame;
+
 }
 //-----------------------------------------------------------------------------
 
@@ -70,6 +85,7 @@ void Board::codeRowFilled(bool filled)
 		{
 		case true:
 			mPinBoxes.first()->setBoxState(BoxState::Current);
+			mState = GameState::WaittingPinBoxPress;
 			mMessage->showMessage("Press The Pin Box ...");
 			if (mCloseRow)
 				mPinBoxes.first()->fakePress();
@@ -88,6 +104,7 @@ void Board::codeRowFilled(bool filled)
 			case true:
 				mDoneButton->setVisible(true);
 				mMessage->showMessage(tr("Press Done ..."));
+				mState = GameState::WaittingDoneButtonPress;
 				break;
 			default:
 				mDoneButton->setVisible(false);
@@ -111,7 +128,7 @@ void Board::createBoxes()
 	mCurrentBoxes.clear();
 	mMasterBoxes.clear();
 
-	QPoint left_bottom_corner(4, 490);
+	QPoint left_bottom_corner(4, 489);
 
 	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
 	{
@@ -337,6 +354,7 @@ void Board::onPinBoxPressed()
 			mCodeBoxes.first()->setBoxState(BoxState::Current);
 			mCodeBoxes.first()->setPegState(PegState::Empty);
 			mCodeBoxes.removeFirst();
+			mState = GameState::WaittingPinBoxPress;
 		}
 	}
 }
@@ -347,6 +365,7 @@ void Board::onChangeIndicators(const IndicatorType &indicator_n)
 	setIndicatorType(indicator_n);
 	emit changePegIndicator(mIndicator);
 }
+//-----------------------------------------------------------------------------
 
 void Board::onResign()
 {
@@ -388,10 +407,47 @@ void Board::onOkButtonPressed()
 		return;
 	}
 
-	/* getting guess from mGame */
-	mGuess = mGame->getGuess(mAlgorithm);
+	mMessage->showMessage(tr("Let Me Think..."));
+	mState = GameState::Guessing;
 
-	showTranslatedInformation();
+	emit startGuessing(mAlgorithm);
+}
+//-----------------------------------------------------------------------------
+
+void Board::onDoneButtonPressed()
+{
+	mState = GameState::Running;
+	//	we are done with the done button
+	mDoneButton->setVisible(false);
+	mDoneButton->setEnabled(false);
+
+	setBoxStateOfList(mCurrentBoxes, BoxState::Past);	//	first let the master code boxes become past for no interaction
+	setBoxStateOfList(mPegBoxes, BoxState::Future);	//	freezing the peg boxes
+
+	mMasterCode = "";
+	foreach(PegBox* box, mCurrentBoxes)
+	{
+		QString str;
+		str.setNum(box->getPegColor());
+		mMasterCode.append(str);
+	}
+
+	mCurrentBoxes.clear();
+
+	mMessage->showMessage(tr("Let Me Think..."));
+	mState = GameState::Guessing;
+
+	emit startGuessing(mAlgorithm);
+}
+//-----------------------------------------------------------------------------
+
+void Board::onGuessReady(const Algorithm &alg)
+{
+	mState = GameState::Running;
+	/* getting guess from mGame */
+	mGuess = mGame->getGuess();
+
+	showTranslatedInformation(alg);
 
 	if (mCodeBoxes.isEmpty())
 	{
@@ -414,69 +470,20 @@ void Board::onOkButtonPressed()
 		mOkButton->setVisible(true);
 		mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
 	}
-
+	mState = GameState::WaittingOkButtonPress;
 	if (mSetPins)
 	{
 		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
 	}
 }
-//-----------------------------------------------------------------------------
 
-void Board::onDoneButtonPressed()
-{
-	mState = GameState::Running;
-	//	we are done with the done button
-	mDoneButton->setVisible(false);
-	mDoneButton->setEnabled(false);
-
-	setBoxStateOfList(mCurrentBoxes, BoxState::Past);	//	first let the master code boxes become past for no interaction
-	setBoxStateOfList(mPegBoxes, BoxState::Future);	//	freezing the peg boxes
-
-	mMasterCode = "";
-	foreach(PegBox* box, mCurrentBoxes)
-	{
-		QString str;
-		str.setNum(box->getPegColor());
-		mMasterCode.append(str);
-	}
-
-	mState = GameState::Guessing;
-	// getting the first guess and puting it in the current row
-	mGuess = mGame->getGuess();
-	mState = GameState::Running;
-
-	//set the first row of current
-	mCurrentBoxes.clear();
-	for(int i = 0; i < mPegNumber; ++i)
-	{
-		createPegForBox(mCodeBoxes.first(), mGuess.at(i).digitValue());
-		mCodeBoxes.first()->setBoxState(BoxState::Past);
-		mCurrentBoxes.append(mCodeBoxes.first());
-		mCodeBoxes.removeFirst();
-	}
-
-	mPinBoxes.first()->setBoxState(BoxState::None);
-	mMessage->showMessage(tr("Please Put Pins And Press OK"));
-	mOkButton->setPos(mPinBoxes.first()->pos()-QPoint(0, 39));
-	mOkButton->setEnabled(true);
-	mOkButton->setVisible(true);
-
-	mState = GameState::WaittingPins;
-
-	if (mSetPins) //the program puts pins for the lazy ass user
-	{
-		mPinBoxes.first()->setPins(mMasterCode, mGuess, mPegNumber, mColorNumber);
-		mState = GameState::Running;
-	}
-	/*	We are done here. The onOkButtonPressed is continuing the game from now on
-	 */
-}
 //-----------------------------------------------------------------------------
 
 void Board::play(const GameMode &mode)
 {
 	initializeScene();
-
+	mMode = mode;
+	mState = GameState::None;
 	switch (mode) {
 	case GameMode::Master:
 		playCodeMaster();
@@ -490,7 +497,6 @@ void Board::play(const GameMode &mode)
 
 void Board::playCodeBreaker()
 {
-	mMode = GameMode::Breaker;
 	mDoneButton->setZValue(2);
 	mDoneButton->setVisible(false);
 	mDoneButton->setEnabled(true);
@@ -498,6 +504,11 @@ void Board::playCodeBreaker()
 	if (!mGame)
 	{
 		mGame = new Game(mPegNumber, mColorNumber, mSameColor);
+		mGameThread = new QThread(this);
+		mGame->moveToThread(mGameThread);
+		connect(mGame, SIGNAL(guessDoneSignal(Algorithm)), this, SLOT(onGuessReady(Algorithm)));
+		connect(this, SIGNAL(startGuessing(Algorithm)), mGame, SLOT(startGuessing(Algorithm)));
+		mGameThread->start(QThread::NormalPriority);
 	}
 	mGame->reset(mPegNumber, mColorNumber, mSameColor);
 
@@ -510,7 +521,7 @@ void Board::playCodeBreaker()
 		mMasterBoxes.removeFirst();
 	}
 
-	mState = GameState::WaittingMasterCode;
+	mState = GameState::WaittingFirstRowFill;
 	/*	Nothing happening from here till the user fill the master code
 	 *	row and press the done button. After the done button is pressed,
 	 *	the onDoneButtonPressed is continuing the game
@@ -520,7 +531,6 @@ void Board::playCodeBreaker()
 
 void Board::playCodeMaster()
 {
-
 	QString digits = "0123456789";
 	digits.left(mColorNumber);
 	int remainingNumbers = mColorNumber;
@@ -546,7 +556,7 @@ void Board::playCodeMaster()
 	}
 
 	mMessage->showMessage(tr("Place Your Pegs ... "));
-	mState = GameState::WaittingCodeRow;
+	mState = GameState::WaittingFirstRowFill;
 
 	// from now on the onPinBoxPushed function continue the game.
 }
@@ -566,6 +576,7 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 	mAlgorithm = algorithm_n;
 	mLocale = locale_n;
 	mSameColor = samecolor;
+	mState = GameState::None;
 
 	if (peg_n < 2 || peg_n > 6 || color_n < 2 || color_n > 10) // for safety, fallback to standard in out-range inputs
 	{
@@ -607,7 +618,7 @@ void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BoxState state_t)
 }
 //-----------------------------------------------------------------------------
 
-void Board::showTranslatedInformation()
+void Board::showTranslatedInformation(const Algorithm &alg)
 {
 	int possibleSize = mGame->getPossibleCodesSize();
 
@@ -622,8 +633,8 @@ void Board::showTranslatedInformation()
 	}
 	else
 	{
-		int minWeight = mGame->getLastMinWeight();
-		switch (mAlgorithm) {
+		qreal minWeight = mGame->getLastMinWeight();
+		switch (alg) {
 		case Algorithm::MostParts:
 			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
 									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
@@ -646,6 +657,13 @@ void Board::showTranslatedInformation()
 }
 //-----------------------------------------------------------------------------
 
+void Board::interupt()
+{
+	if (mGame)
+		mGame->interupt();
+}
+//-----------------------------------------------------------------------------
+
 void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
 {
 	mSetPins = set_pins;
@@ -663,36 +681,36 @@ void Board::setIndicatorType(const IndicatorType &indicator_n)
 
 void Board::drawBackground(QPainter* painter, const QRectF& rect)
 {
-	painter->fillRect(rect, QColor("#B6B6B6"));// set scene background color
+	painter->fillRect(rect, QColor(182, 182, 182));// set scene background color
 
 	QLinearGradient topgrad(0, 16, 0, 129);
-	topgrad.setColorAt(0.0, QColor(0xf8, 0xf8, 0xf8));
-	topgrad.setColorAt(0.6, QColor(0xb8, 0xb9, 0xbb));
-	topgrad.setColorAt(1, QColor(0xd4, 0xd5, 0xd7));
+	topgrad.setColorAt(0.0, QColor(248, 248, 248));
+	topgrad.setColorAt(0.6, QColor(184, 184, 184));
+	topgrad.setColorAt(1, QColor(212, 212, 212));
 	QBrush mTopGrad(topgrad);
 
 	QLinearGradient botgrad(0, 530, 0, 557);
-	botgrad.setColorAt(0.0, QColor("#d4d5d7"));
-	botgrad.setColorAt(0.3, QColor("#cecfd1"));
-	botgrad.setColorAt(1.0, QColor("#b0b1b3"));
+	botgrad.setColorAt(0.0, QColor(204, 204, 204));
+	botgrad.setColorAt(0.3, QColor(206, 206, 206));
+	botgrad.setColorAt(1.0, QColor(180, 180, 180));
 	QBrush mBotGrad(botgrad);
 
 	QLinearGradient lgrad(0, 190, 320, 370);
-	lgrad.setColorAt(0.0, QColor(0xff, 0xff, 0xff, 0xa0));
-	lgrad.setColorAt(0.49, QColor(0xff, 0xff, 0xff, 0xa0));
-	lgrad.setColorAt(0.50, QColor(0, 0, 0, 0x80));
-	lgrad.setColorAt(1.0, QColor(0, 0, 0, 0x80));
+	lgrad.setColorAt(0.0, QColor(255, 255, 255, 160));
+	lgrad.setColorAt(0.49, QColor(255, 255, 255, 160));
+	lgrad.setColorAt(0.50, QColor(0, 0, 0, 128));
+	lgrad.setColorAt(1.0, QColor(0, 0, 0, 128));
 	QPen mFramePen = QPen(QBrush(lgrad), 1);
 
-	QColor mPend("#646568");
-	QColor mPenl("#ecedef");
-	QColor mGrad0("#cccdcf");
-	QColor mGrad1("#fcfdff");
+	QColor mPend(100, 100, 100);
+	QColor mPenl(236, 236, 236);
+	QColor mGrad0(204, 204, 204);
+	QColor mGrad1(252, 252, 252);
 
-	mPend.setAlpha(0x32);
-	mPenl.setAlpha(0x50);
-	mGrad0.setAlpha(0x32);
-	mGrad1.setAlpha(0x32);
+	mPend.setAlpha(50);
+	mPenl.setAlpha(80);
+	mGrad0.setAlpha(50);
+	mGrad1.setAlpha(50);
 
 	painter->setPen(Qt::NoPen);
 
@@ -704,27 +722,27 @@ void Board::drawBackground(QPainter* painter, const QRectF& rect)
 
 	painter->setBrush(mTopGrad);
 	painter->drawRect(QRect(4, 4, 312, 125));
-	painter->setBrush(QBrush(QColor("#707173")));
+	painter->setBrush(QBrush(QColor(112, 112, 112)));
 	painter->drawRect(QRect(4, 128, 318, 1));
 
 	painter->setPen(Qt::NoPen);
 
 	QLinearGradient rowgrad(4, 129, 4, 169);
-	rowgrad.setColorAt(0.0, QColor("#9a9b9d"));
-	rowgrad.setColorAt(1.0, QColor("#8f8f8f"));
+	rowgrad.setColorAt(0.0, QColor(154, 154, 154));
+	rowgrad.setColorAt(1.0, QColor(143, 143, 143));
 	rowgrad.setSpread(QGradient::RepeatSpread);
 	painter->setBrush(QBrush(rowgrad));
 	painter->drawRect(QRectF(4, 129, 318, 400));
 
-	painter->setPen(QColor("#9a9b9d").dark(120));
+	painter->setPen(QColor(154, 154, 154).darker(115));
 	for(int i = 0; i < 11; ++i)
 	{
-		painter->drawLine(5, 129+i*40, 321, 129+i*40);
+		painter->drawLine(5, 128+i*40, 321, 128+i*40);
 	}
 
 	painter->setBrush(mBotGrad);
-	painter->drawRect(QRect(1, 530, 318, 27));
-	painter->setBrush(QBrush(QColor("#eff0f2")));
+	painter->drawRect(QRect(1, 528, 318, 28));
+	painter->setBrush(QBrush(QColor(239, 239, 239)));
 
 	painter->setClipping(false);
 
@@ -734,20 +752,20 @@ void Board::drawBackground(QPainter* painter, const QRectF& rect)
 	painter->drawRoundedRect(rightShadow, 9.8, 9.8);
 
 	QLinearGradient solgrad(50, 70, 50, 108);
-	solgrad.setColorAt(0.0, QColor("#9a9b9d"));
-	solgrad.setColorAt(1.0, QColor("#949597"));
+	solgrad.setColorAt(0.0, QColor(154, 154, 154));
+	solgrad.setColorAt(1.0, QColor(148, 148, 148));
 	QBrush solBgBrush(solgrad);
 
 	QLinearGradient framegrad = QLinearGradient(50, 70, 50, 110);
-	framegrad.setColorAt(0.0, QColor("#4e4f51"));
-	framegrad.setColorAt(1.0, QColor("#ebecee"));
+	framegrad.setColorAt(0.0, QColor(78, 78, 78));
+	framegrad.setColorAt(1.0, QColor(235, 235, 235));
 	QPen solFramePen(QBrush(framegrad), 1);
 
 	painter->setBrush(solBgBrush);
 	painter->setPen(solFramePen);
 
 	QRectF codeRowContainer(41, 68, 235, 42);
-	QRectF mRectC(42, 69, 235, 41);
+	QRectF mRectC(42, 69, 235, 41.5);
 
 	painter->drawRoundedRect(codeRowContainer, 21,21);
 	painter->setBrush(solgrad);

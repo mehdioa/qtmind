@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.0" language="nl_NL">
 <context>
     <name>Board</name>
+    <message>
+        <location filename="../src/board.cpp" line="88"/>
+        <location filename="../src/board.cpp" line="103"/>
+        <location filename="../src/board.cpp" line="342"/>
+        <location filename="../src/board.cpp" line="506"/>
+        <location filename="../src/board.cpp" line="550"/>
+        <source>Place Your Pegs ... </source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../src/board.cpp" line="99"/>
         <source>Press Done ...</source>
@@ -54,6 +63,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/board.cpp" line="365"/>
+        <source>You Resign</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/board.cpp" line="383"/>
+        <source>Not Possible, Try Again...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/board.cpp" line="396"/>
         <source>Yeah I found It</source>
         <translation type="unfinished"></translation>
@@ -62,6 +81,16 @@
         <location filename="../src/board.cpp" line="402"/>
         <location filename="../src/board.cpp" line="429"/>
         <source>Let Me Think...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/board.cpp" line="446"/>
+        <source>I Lose</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/board.cpp" line="458"/>
+        <source>Please Put Pins And Press OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -97,35 +126,6 @@
         <source>Expected Size</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/board.cpp" line="88"/>
-        <location filename="../src/board.cpp" line="103"/>
-        <location filename="../src/board.cpp" line="342"/>
-        <location filename="../src/board.cpp" line="506"/>
-        <location filename="../src/board.cpp" line="550"/>
-        <source>Place Your Pegs ... </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="365"/>
-        <source>You Resign</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="383"/>
-        <source>Not Possible, Try Again...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="446"/>
-        <source>I Lose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="458"/>
-        <source>Please Put Pins And Press OK</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -133,6 +133,12 @@
         <location filename="../src/mainwindow.cpp" line="57"/>
         <location filename="../src/mainwindow.cpp" line="172"/>
         <source>CodeBreak</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="100"/>
+        <location filename="../src/mainwindow.cpp" line="293"/>
+        <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -177,6 +183,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.cpp" line="188"/>
+        <source>Slots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.cpp" line="191"/>
         <source>Choose the numbe of slots</source>
         <translation type="unfinished"></translation>
@@ -184,17 +195,6 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="203"/>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="188"/>
-        <source>Slots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="100"/>
-        <location filename="../src/mainwindow.cpp" line="293"/>
-        <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -308,6 +308,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.cpp" line="295"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.cpp" line="298"/>
         <source>About</source>
         <translation type="unfinished"></translation>
@@ -315,11 +320,6 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="301"/>
         <source>About Qt</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="295"/>
-        <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

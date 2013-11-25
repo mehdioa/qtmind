@@ -22,21 +22,21 @@
 #include <QBrush>
 #include <QPainter>
 
-const int EmptyBox::colors_rgb[4][3] =
+const int EmptyBox::colors_rgb[4] =
 {
-	{204, 205, 207}, {252, 253, 255},  //left-bottom, right-top colors
-	{236, 237, 239}, {100, 101, 104}  // left-bottom, right-top gradient
+	204, 252,  //left-bottom, right-top colors
+	236, 100  // left-bottom, right-top gradient
 };
 //-----------------------------------------------------------------------------
 
 const int EmptyBox::alphas[4] =
 {
-	0xa0, 0xff, 0x32, 0xa0
+	160, 255, 50, 160
 };
 //-----------------------------------------------------------------------------
 
 EmptyBox::EmptyBox(const QPoint &position, QGraphicsItem *parent):
-	QGraphicsItem(parent),
+	QGraphicsRectItem(0, 0, 39, 39, parent),
 	mBoxState(BoxState::Future)
 {
 	setZValue(1);
@@ -51,27 +51,25 @@ void EmptyBox::setBoxState(const BoxState &state)
 }
 //-----------------------------------------------------------------------------
 
-QRectF EmptyBox::boundingRect() const
-{
-	return QRect(0, 0, 40, 40);
-}
-//-----------------------------------------------------------------------------
-
 void EmptyBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
 
 	QRadialGradient grad(QPoint(10, 10), 100);
-	grad.setColorAt(0, QColor(colors_rgb[0][0], colors_rgb[0][1], colors_rgb[0][2], alphas[(int)mBoxState]));
-	grad.setColorAt(1, QColor(colors_rgb[1][0], colors_rgb[1][1], colors_rgb[1][2], alphas[(int)mBoxState]));
+	grad.setColorAt(0, QColor(colors_rgb[0], colors_rgb[0], colors_rgb[0], alphas[(int)mBoxState]));
+	grad.setColorAt(1, QColor(colors_rgb[1], colors_rgb[1], colors_rgb[1], alphas[(int)mBoxState]));
 	painter->setBrush(QBrush(grad));
 	painter->drawRect(0, 0, 39, 39);
 
-	painter->setPen(QPen(QBrush(QColor(colors_rgb[2][0], colors_rgb[2][1], colors_rgb[2][2], alphas[(int)mBoxState])),1));
+	painter->setPen(QPen(QBrush(QColor(colors_rgb[2], colors_rgb[2], colors_rgb[2], alphas[(int)mBoxState])),1));
 	painter->drawLine(0, 0, 0, 39);
 	painter->drawLine(0, 0, 39, 0);
+	painter->drawLine(0, .5, 39, .5);
+	painter->drawLine(.5, 0, .5, 39);
 
-	painter->setPen(QPen(QBrush(QColor(colors_rgb[3][0], colors_rgb[3][1], colors_rgb[3][2], alphas[(int)mBoxState])),1));
+	painter->setPen(QPen(QBrush(QColor(colors_rgb[3], colors_rgb[3], colors_rgb[3], alphas[(int)mBoxState])),1));
 	painter->drawLine(39, 0, 39, 39);
 	painter->drawLine(0, 39, 39, 39);
+	painter->drawLine(39.5, 0, 39.5, 39);
+	painter->drawLine(0, 39.5, 39, 39.5);
 }

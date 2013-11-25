@@ -27,8 +27,8 @@ Pin::Pin(const int &color, QGraphicsItem* parent) :
 {
 	setPen(Qt::NoPen);
 	QLinearGradient lgrad(0, 0, 12, 12);
-	lgrad.setColorAt(0.0, QColor(0, 0, 0, 0x80));
-	lgrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
+	lgrad.setColorAt(0.0, QColor(0, 0, 0, 128));
+	lgrad.setColorAt(1.0, QColor(255, 255, 255, 160));
 	setPen(QPen(QBrush(lgrad), 1));
 
 	setMouseEventHandling(PinMouse::Ignore);

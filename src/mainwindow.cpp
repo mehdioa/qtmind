@@ -145,7 +145,11 @@ void MainWindow::updateNumbersSlot()
 	if(mBoard)
 	{
 		mBoard->setAlgorithm(mAlgorithm);
-		if(mBoard->getState() != GameState::Running)
+		if(mBoard->getState() == GameState::Lose ||
+				mBoard->getState() == GameState::Win ||
+				mBoard->getState() == GameState::None ||
+				mBoard->getState() == GameState::WaittingDoneButtonPress ||
+				mBoard->getState() == GameState::WaittingFirstRowFill)
 		{
 			newGameSlot();
 		}

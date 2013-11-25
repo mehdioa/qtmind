@@ -32,7 +32,7 @@ PegBox::PegBox(const QPoint &position, Board *board, QGraphicsItem *parent):
 {
 	QLinearGradient lgrad(2, 2, 35, 35);
 	lgrad.setColorAt(0.0, QColor(0, 0, 0, 150));
-	lgrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
+	lgrad.setColorAt(1.0, QColor(255, 255, 255, 160));
 
 	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
 	mCircle->setPen(QPen(QBrush(lgrad), 2));
@@ -90,6 +90,7 @@ void PegBox::setBoxState(const BoxState &state)
 		}
 		break;
 	}
+
 }
 //-----------------------------------------------------------------------------
 

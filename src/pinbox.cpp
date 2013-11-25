@@ -60,6 +60,9 @@ int PinBox::getValue(int &blacks, int &whites) const
 
 int PinBox::getValue() const
 {
+	if (mBoxState != BoxState::None)
+		return -1;
+
 	int blacks;
 	int whites;
 	return getValue(blacks, whites);

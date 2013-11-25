@@ -60,8 +60,11 @@ FORMS    += \
 RESOURCES += \
     resource.qrc
 
-TRANSLATIONS = translations/codebreak_en.ts \
+TRANSLATIONS = translations/codebreak_ara.ts \
+	translations/codebreak_cz.ts \
+	translations/codebreak_de.ts \
+	translations/codebreak_en.ts \
 	translations/codebreak_es.ts \
 	translations/codebreak_fa.ts \
 	translations/codebreak_fr.ts \
-	translations/codebreak_de.ts
+	translations/codebreak_nl.ts

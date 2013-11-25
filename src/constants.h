@@ -44,9 +44,10 @@ enum class GameState
 	Resign,
 	Error,
 	Guessing,
-	WaittingPins,
-	WaittingMasterCode,
-	WaittingCodeRow
+	WaittingOkButtonPress,
+	WaittingDoneButtonPress,
+	WaittingFirstRowFill,
+	WaittingPinBoxPress
 };
 
 

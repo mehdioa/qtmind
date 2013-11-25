@@ -50,7 +50,6 @@ public:
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm& algorithm_n);
 
-
 protected:
 	void drawBackground(QPainter* painter, const QRectF& rect);
 	void resizeEvent(QResizeEvent* event);
@@ -58,6 +57,7 @@ protected:
 
 signals:
 	void changePegIndicator(const IndicatorType &indicator_t);
+	void startGuessing(const Algorithm& alg);
 
 private slots:
 	void onPegMouseRelease(const QPoint& position, const int& color);
@@ -66,6 +66,7 @@ private slots:
 	void onPinBoxPressed();
 	void onChangeIndicators(const IndicatorType &indicator_n);
 	void onResign();
+	void onGuessReady(const Algorithm& alg);
 
 private:
 	void playCodeMaster();
@@ -75,7 +76,8 @@ private:
 	void codeRowFilled(bool filled);
 	void setBoxStateOfList(QList<PegBox*> boxlist, const BoxState state_t);
 	void setBoxStateOfList(QList<PinBox*> boxlist, const BoxState state_t);
-	void showTranslatedInformation();
+	void showTranslatedInformation(const Algorithm& alg);
+	void interupt();
 
 private:
 	QList<PinBox*> mPinBoxes;
@@ -106,6 +108,8 @@ private:
 	QString mMasterCode;
 	QString mGuess;
 	QLocale mLocale;
+
+	QThread* mGameThread;
 };
 
 #endif // BOARD_H

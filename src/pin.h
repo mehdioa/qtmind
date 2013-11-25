@@ -34,8 +34,8 @@ public:
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
 
-	//	ignoring mouse double click by the following
-	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *){}
+	//	ignoring mouse double click by the following apparently on Qt >= 5
+//	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *){}
 private:
 	int m_color;//  -1 = white, 0 = none, 1 = black
 };
