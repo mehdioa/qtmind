@@ -369,7 +369,7 @@ void Board::onChangeIndicators(const IndicatorType &indicator_n)
 
 void Board::onResign()
 {
-	if (mMode == GameMode::Breaker && mState == GameState::Running)
+	if (mMode == GameMode::Breaker && (mState == GameState::Running || mState == GameState::WaittingPinBoxPress))
 	{
 		mState = GameState::Resign;
 		mMessage->showMessage(tr("You Resign"));

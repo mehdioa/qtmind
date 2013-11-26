@@ -114,6 +114,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 
+	ui->actionAuto_Set_Pins->setChecked(mSetPins);
+	ui->actionAuto_Close_Rows->setChecked(mCloseRow);
+
 	setPegsComboBox();
 	setColorsComboBox();
 	setSolvingAlgorithmsComboBox();
@@ -139,10 +142,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
+	connect(this, SIGNAL(newGame()), this, SLOT(onNewGame()));
+	connect(this, SIGNAL(updateNumbers()), this, SLOT(onUpdateNumbers()));
 
 	setContextMenuPolicy(Qt::NoContextMenu);
 
-	onUpdateNumbers();
+	emit updateNumbers();
 
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 }
@@ -171,7 +176,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::onNewGame()
 {
-	ui->actionResign->setEnabled(mMode == GameMode::Master);
+	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mLocale, mIndicator);
 	mBoard->play(mMode);
 }
@@ -203,8 +208,9 @@ void MainWindow::onChangeIndicators(QAction* selectedAction)
 void MainWindow::onChangeGameMode(QAction* selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
-	onUpdateNumbers();
+	emit updateNumbers();
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::onUpdateNumbers()
 {
@@ -223,7 +229,7 @@ void MainWindow::onUpdateNumbers()
 				mBoard->getState() == GameState::WaittingDoneButtonPress ||
 				mBoard->getState() == GameState::WaittingFirstRowFill)
 		{
-			onNewGame();
+			emit newGame();
 		}
 	}
 
@@ -251,7 +257,6 @@ void MainWindow::onAbout()
 			tr("Used under the <a href=%1>LGPL 3</a> license").arg("\"http://www.gnu.org/licenses/lgpl.html\""))
 	);
 }
-
 //-----------------------------------------------------------------------------
 
 void MainWindow::setPegsComboBox()
