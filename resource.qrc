@@ -9,7 +9,6 @@
         <file>icons/codebreak16.png</file>
         <file>icons/codebreak32.png</file>
         <file>icons/codebreak64.png</file>
-        <file>icons/codebreak128.png</file>
         <file>icons/codebreak256.png</file>
         <file>icons/codebreak512.png</file>
         <file>icons/modebreaker.png</file>
@@ -18,5 +17,6 @@
         <file>icons/char_indicator.png</file>
         <file>icons/digit_indicator.png</file>
         <file>icons/resign.png</file>
+        <file>icons/codebreak.png</file>
     </qresource>
 </RCC>
