@@ -19,15 +19,13 @@
 
 #include "pegbox.h"
 #include "peg.h"
-#include "board.h"
 #include "QGraphicsEllipseItem"
 #include <QPen>
 #include <QLinearGradient>
 
-PegBox::PegBox(const QPoint &position, Board *board, QGraphicsItem *parent):
+PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
 	EmptyBox(position, parent),
 	mPegState(PegState::Empty),
-	mBoard(board),
 	mPeg(0)
 {
 	QLinearGradient lgrad(2, 2, 35, 35);

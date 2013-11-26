@@ -30,24 +30,20 @@ class Board;
 class PegBox : public EmptyBox
 {
 public:
-	explicit PegBox(const QPoint& position, Board* board, QGraphicsItem* parent = 0);
+	explicit PegBox(const QPoint& position, QGraphicsItem* parent = 0);
 	bool hasPeg() const {return mPeg != 0;}
-	Peg* getPeg() const {return mPeg;}
 	void setPeg(Peg* peg);
-	void setBoard(Board* board) {mBoard = board;}
 	void setPegState(const PegState& state = PegState::Empty);
 	void setPegColor(int color_number);
 	int getPegColor();
 	void setBoxState(const BoxState& state = BoxState::Future);
 	bool isPegVisible();
 
-
 	PegState getPegState() const {return mPegState;}
 
 private:
 	PegState mPegState;
 	QGraphicsEllipseItem* mCircle;
-	Board* mBoard;
 	Peg* mPeg;
 };
 

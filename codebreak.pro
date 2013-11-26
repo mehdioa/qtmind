@@ -8,6 +8,7 @@ QT       += core gui
 
 QMAKE_CXXFLAGS += -std=c++11
 
+
 TEMPLATE = app
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -55,7 +56,8 @@ HEADERS  += src/mainwindow.h \
     src/preferences.h
 
 FORMS    += \
-    src/preferences.ui
+    src/preferences.ui \
+    src/mainwindow.ui
 
 RESOURCES += \
     resource.qrc

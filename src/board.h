@@ -45,8 +45,9 @@ public:
 	void play(const GameMode &mode);
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int& peg_n, const int& color_n, const GameMode &mode_n,
-			   const bool &samecolor, const Algorithm &algorithm_n, const bool &set_pins,
-			   const bool &close_row, QLocale locale_n, const IndicatorType& indicator_n = IndicatorType::None);
+			   const bool &samecolor, const Algorithm &algorithm_n,
+			   const bool &set_pins, const bool &close_row, QLocale locale_n,
+			   const IndicatorType& indicator_n = IndicatorType::None);
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm& algorithm_n);
 
@@ -96,6 +97,9 @@ private:
 	bool mDone;
 	Algorithm mAlgorithm;
 	IndicatorType mIndicator;
+	QString mMasterCode;
+	QString mGuess;
+	QLocale mLocale;
 
 	QString mFontName;
 	int mFontSize;
@@ -105,10 +109,6 @@ private:
 	Button* mDoneButton;
 	Message* mMessage;
 	Message* mInformation;
-	QString mMasterCode;
-	QString mGuess;
-	QLocale mLocale;
-
 	QThread* mGameThread;
 };
 

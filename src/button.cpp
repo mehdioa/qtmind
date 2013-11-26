@@ -32,13 +32,13 @@ Button::Button(const int &buttonWidth, const QString &str, const QString &font_n
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 
 	QLinearGradient fillgrad(0, 0, 10, 36);
-	fillgrad.setColorAt(0.0, QColor("#f7f8fa"));
-	fillgrad.setColorAt(0.5, QColor("#b9babc"));
+	fillgrad.setColorAt(0.0, QColor("#f7f7f7"));
+	fillgrad.setColorAt(0.5, QColor("#b9b9b9"));
 	mFillOutBrush = QBrush(fillgrad);
 
 	QLinearGradient fillovergrad(0, 0, 10, 36);
-	fillovergrad.setColorAt(0.0, QColor("#f7f8fa"));
-	fillovergrad.setColorAt(1.0, QColor("#b9babc"));
+	fillovergrad.setColorAt(0.0, QColor("#f7f7f7"));
+	fillovergrad.setColorAt(1.0, QColor("#b9b9b9"));
 	mFillOverBrush = QBrush(fillovergrad);
 
 	QLinearGradient framegrad(0, 0, 0, 40);
@@ -113,7 +113,7 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 	if (mLabel != "")
 	{
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
-		painter->setPen(QPen(QColor("#303133")));
+		painter->setPen(QPen(QColor("#303030")));
 		painter->setFont(mFont);
 		painter->drawText(mRectFill.adjusted(0, mYOffs, 0, mYOffs), Qt::AlignCenter, mLabel);
 	}

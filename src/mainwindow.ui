@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>320</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuGame">
+    <property name="title">
+     <string>Game</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionResign"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <widget class="QMenu" name="menuGame_Mode">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Game Mode</string>
+     </property>
+     <addaction name="actionCode_Master"/>
+     <addaction name="actionCode_Breaker"/>
+    </widget>
+    <widget class="QMenu" name="menuIndicator_Type">
+     <property name="title">
+      <string>Indicator Type</string>
+     </property>
+     <addaction name="actionNo_Indicators"/>
+     <addaction name="actionCharacters"/>
+     <addaction name="actionDigits"/>
+    </widget>
+    <addaction name="menuGame_Mode"/>
+    <addaction name="menuIndicator_Type"/>
+    <addaction name="separator"/>
+    <addaction name="actionAuto_Set_Pins"/>
+    <addaction name="actionAuto_Close_Rows"/>
+    <addaction name="separator"/>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_Codebreak"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <addaction name="menuGame"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string notr="true"/>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/new-icon.png</normaloff>:/icons/new-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionResign">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resign.png</normaloff>:/icons/resign.png</iconset>
+   </property>
+   <property name="text">
+    <string>Resign</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/close-icon.png</normaloff>:/icons/close-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionAuto_Set_Pins">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto Set Pins</string>
+   </property>
+  </action>
+  <action name="actionAuto_Close_Rows">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto Close Rows</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionAbout_Codebreak">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/codebreak16.png</normaloff>:/icons/codebreak16.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Codebreak</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/qt_icon.png</normaloff>:/icons/qt_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionCode_Master">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/modemaster.png</normaloff>:/icons/modemaster.png</iconset>
+   </property>
+   <property name="text">
+    <string>Code Master</string>
+   </property>
+  </action>
+  <action name="actionCode_Breaker">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/modebreaker.png</normaloff>:/icons/modebreaker.png</iconset>
+   </property>
+   <property name="text">
+    <string>Code Breaker</string>
+   </property>
+  </action>
+  <action name="actionNo_Indicators">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/no_indicator.png</normaloff>:/icons/no_indicator.png</iconset>
+   </property>
+   <property name="text">
+    <string>No Indicators</string>
+   </property>
+  </action>
+  <action name="actionCharacters">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/char_indicator.png</normaloff>:/icons/char_indicator.png</iconset>
+   </property>
+   <property name="text">
+    <string>Characters</string>
+   </property>
+  </action>
+  <action name="actionDigits">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/digit_indicator.png</normaloff>:/icons/digit_indicator.png</iconset>
+   </property>
+   <property name="text">
+    <string>Digits</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

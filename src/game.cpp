@@ -41,6 +41,7 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color)
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
 	mLastMinWeight(-1),
+	mAllCodes(0),
 	mFirstPossibleCodes(0),
 	mInterupt(false)
 {
@@ -234,14 +235,14 @@ bool Game::setResponse(const int &response)
 	 */
 	if (!mFirstPossibleCodes)
 	{
-		if (mAllCodesSize < 10000)
+		if (mAllCodesSize <= 10000)
 		{
 			mFirstPossibleCodesSize = mAllCodesSize;
 			mFirstPossibleCodes = new int[mFirstPossibleCodesSize];
 			for(int i = 0; i < mFirstPossibleCodesSize; ++i)
 				mFirstPossibleCodes[i] = i;
 		}
-		else if (mPossibleCodes.size() < 10000)
+		else if (mPossibleCodes.size() <= 10000)
 		{
 			mFirstPossibleCodesSize = mPossibleCodes.size();
 			mFirstPossibleCodes = new int[mFirstPossibleCodesSize];
@@ -311,7 +312,7 @@ void Game::makeGuess(const Algorithm& alg, const bool&)
 		return;
 	}
 
-	if(mPossibleCodes.size() >= 10000)
+	if(mPossibleCodes.size() > 10000)
 	{
 		mGuess = arrayToString(mAllCodes[mPossibleCodes.at(mPossibleCodes.size() >> 1)]);
 		return;
@@ -321,11 +322,9 @@ void Game::makeGuess(const Algorithm& alg, const bool&)
 	for(int i = 0; i < mResponseSpaceSize; ++i)
 		responsesOfCodes[i] = 0;
 
-	int answerIndex;
+	int answerIndex = 0;
 	qreal minWeight = 1000000000;
 	qreal weight;
-	QElapsedTimer timer;
-	timer.start();
 
 	for (int codeIndex = 0; codeIndex < mFirstPossibleCodesSize; ++codeIndex)
 	{
@@ -344,7 +343,7 @@ void Game::makeGuess(const Algorithm& alg, const bool&)
 			minWeight = weight;
 		}
 	}
-	qDebug("%d took %d miliseconds", mFirstPossibleCodesSize, timer.elapsed());
+
 	if(alg == Algorithm::MostParts)
 		minWeight = mResponseSpaceSize - 2 - minWeight;
 
@@ -390,7 +389,7 @@ qreal Game::computeWeight(int *responses, const Algorithm &alg) const
 		answer -= 0.5;
 		if (alg == Algorithm::MostParts)
 			--answer;
-		else if (alg == Algorithm::ExpectedSize)
+		else
 			++answer;
 
 		responses[mResponseSpaceSize - 1] = 0;

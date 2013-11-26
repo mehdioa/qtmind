@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/close-icon.png</file>
-        <file>icons/face-raspberry.png</file>
         <file>icons/same_color_0.png</file>
         <file>icons/same_color_1.png</file>
         <file>icons/information-icon.png</file>
@@ -13,5 +12,11 @@
         <file>icons/codebreak128.png</file>
         <file>icons/codebreak256.png</file>
         <file>icons/codebreak512.png</file>
+        <file>icons/modebreaker.png</file>
+        <file>icons/modemaster.png</file>
+        <file>icons/no_indicator.png</file>
+        <file>icons/char_indicator.png</file>
+        <file>icons/digit_indicator.png</file>
+        <file>icons/resign.png</file>
     </qresource>
 </RCC>

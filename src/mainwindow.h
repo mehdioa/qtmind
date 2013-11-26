@@ -32,6 +32,10 @@ class QActionGroup;
 class QComboBox;
 class Board;
 
+namespace Ui {
+class MainWindow;
+}
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -44,14 +48,13 @@ protected:
 	void closeEvent(QCloseEvent* event); /** Override parent function to save window geometry. */
 
 private slots:
-	void allowSameColorSlot();
-	void setPinsCloseRowAutomatically();
-	void changeIndicatorsSlot(QAction*);
-	void changeGameModeSlot(QAction*);
-	void updateNumbersSlot();
-	void newGameSlot();
+	void onSetPinsCloseRowAutomatically();
+	void onChangeIndicators(QAction*);
+	void onChangeGameMode(QAction*);
+	void onUpdateNumbers();
+	void onNewGame();
 	void onPreferences();
-	void about();
+	void onAbout();
 
 signals:
 	void changeIndicatorsSignal(const IndicatorType&);
@@ -60,11 +63,9 @@ private:
 	void setPegsComboBox();
 	void setColorsComboBox();
 	void setSolvingAlgorithmsComboBox();
-	void createBoard();
-	void createMenuBar();
-	void DrawBoardBackground();
 
 private:
+	Ui::MainWindow *ui;
 
 	Board* mBoard;
 	GameMode mMode;
@@ -79,15 +80,10 @@ private:
 	QString mFontName;
 	int mFontSize;
 
-	QAction* allowSameColorAction;
-	QAction* setPinsAutomaticallyAction;
-	QAction* closeRowAutomaticallyAction;
-	QAction* showIndicatorAction;
-	QAction* resignAction;
-
 	QComboBox* pegsNumberComboBox;
 	QComboBox* colorsNumberComboBox;
 	QComboBox* solvingAlgorithmsComboBox;
+	QAction* allowSameColorAction;
 };
 
 #endif // MAINWINDOW_H

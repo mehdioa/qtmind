@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include "board.h"
 #include "preferences.h"
 #include <QApplication>
@@ -35,8 +36,12 @@
 #include <QStyleOption>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent)
+	QMainWindow(parent),
+	ui(new Ui::MainWindow)
+
 {
+	ui->setupUi(this);
+
 	mMode = (GameMode) QSettings().value("Mode", 0).toInt();
 	mColors = QSettings().value("Colors", 6).toInt()-2;
 	mPegs = QSettings().value("Pegs", 4).toInt()-2;
@@ -60,14 +65,92 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	Preferences::loadTranslation("codebreak_");
 
-	createMenuBar();
+	ui->menuGame->setTitle(tr("Game"));
+	ui->actionNew->setText(tr("New"));
+	ui->actionResign->setText(tr("Resign"));
+	ui->actionQuit->setText(tr("Quit"));
+
+	ui->menuTools->setTitle(tr("Tools"));
+	ui->menuGame_Mode->setTitle(tr("Game Mode"));
+	ui->actionCode_Breaker->setText(tr("Code Breaker"));
+	ui->actionCode_Master->setText(tr("Code Master"));
+	ui->menuIndicator_Type->setTitle(tr("Indicator Type"));
+	ui->actionNo_Indicators->setText(tr("No Indicatro"));
+	ui->actionCharacters->setText(tr("Character"));
+	ui->actionDigits->setText(tr("Digit"));
+	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
+	ui->actionAuto_Close_Rows->setText(tr("Auto Close Rows"));
+	ui->actionOptions->setText(tr("Options"));
+
+	ui->menuHelp->setTitle(tr("Help"));
+	ui->actionAbout_Codebreak->setText(tr("About Codebreak"));
+	ui->actionAbout_Qt->setText(tr("About Qt"));
+
+	auto indicatorTypeActions = new QActionGroup(this);
+	indicatorTypeActions->addAction(ui->actionNo_Indicators);
+	indicatorTypeActions->addAction(ui->actionCharacters);
+	indicatorTypeActions->addAction(ui->actionDigits);
+	indicatorTypeActions->setExclusive(true);
+	ui->actionNo_Indicators->setData((int) IndicatorType::None);
+	ui->actionCharacters->setData((int) IndicatorType::Character);
+	ui->actionDigits->setData((int) IndicatorType::Digit);
+	ui->actionNo_Indicators->setChecked(mIndicator == IndicatorType::None);
+	ui->actionCharacters->setChecked(mIndicator == IndicatorType::Character);
+	ui->actionDigits->setChecked(mIndicator == IndicatorType::Digit);
+
+	auto gameModeActions = new QActionGroup(this);
+	gameModeActions->addAction(ui->actionCode_Master);
+	gameModeActions->addAction(ui->actionCode_Breaker);
+	gameModeActions->setExclusive(true);
+	ui->actionCode_Master->setData((int) GameMode::Master);
+	ui->actionCode_Breaker->setData((int) GameMode::Breaker);
+	ui->actionCode_Master->setChecked(mMode == GameMode::Master);
+	ui->actionCode_Breaker->setChecked(mMode == GameMode::Breaker);
+
+	QIcon double_icon;
+	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
+	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
+	allowSameColorAction = new QAction(double_icon, tr("Allow Same Color"), this);
+	allowSameColorAction->setCheckable(true);
+	allowSameColorAction->setChecked(mSameColorAllowed);
+
+	setPegsComboBox();
+	setColorsComboBox();
+	setSolvingAlgorithmsComboBox();
+
+	ui->toolBar->addAction(ui->actionNew);
+	ui->toolBar->addAction(allowSameColorAction);
+	ui->toolBar->addSeparator();
+	ui->toolBar->addWidget(pegsNumberComboBox);
+	ui->toolBar->addWidget(colorsNumberComboBox);
+	ui->toolBar->addWidget(solvingAlgorithmsComboBox);
+
+	connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNewGame()));
+	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResign()));
+	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onChangeGameMode(QAction*)));
+	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), SLOT(onChangeIndicators(QAction*)));
+	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onUpdateNumbers()));
+	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
+	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
+	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
+	connect(ui->actionAbout_Codebreak, SIGNAL(triggered()), this, SLOT(onAbout()));
+	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
+	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
+	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
+
+	setContextMenuPolicy(Qt::NoContextMenu);
+
+	onUpdateNumbers();
+
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
-	updateNumbersSlot();
 }
 //-----------------------------------------------------------------------------
 
 MainWindow::~MainWindow()
 {
+	delete ui;
 }
 //-----------------------------------------------------------------------------
 
@@ -86,9 +169,9 @@ void MainWindow::closeEvent(QCloseEvent* event)
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::newGameSlot()
+void MainWindow::onNewGame()
 {
-	resignAction->setVisible(mMode == GameMode::Master);
+	ui->actionResign->setEnabled(mMode == GameMode::Master);
 	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mLocale, mIndicator);
 	mBoard->play(mMode);
 }
@@ -97,50 +180,39 @@ void MainWindow::newGameSlot()
 void MainWindow::onPreferences()
 {
 	auto preferencesWidget = new Preferences(&mLocale, this);
-	preferencesWidget->setWindowTitle(tr("Preferences"));
+	preferencesWidget->setWindowTitle(tr("Options"));
 	preferencesWidget->exec();
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::allowSameColorSlot()
+void MainWindow::onSetPinsCloseRowAutomatically()
 {
-	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
-	allowSameColorAction->setChecked(mSameColorAllowed);
-	if(mSameColorAllowed) {
-		allowSameColorAction->setText(tr("Same Color Allowed"));
-	} else {
-		allowSameColorAction->setText(tr("Same Color Not Allowed"));
-	}
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::setPinsCloseRowAutomatically()
-{
-	mSetPins = setPinsAutomaticallyAction->isChecked();
-	mCloseRow = closeRowAutomaticallyAction->isChecked();
+	mSetPins = ui->actionAuto_Set_Pins->isChecked();
+	mCloseRow = ui->actionAuto_Close_Rows->isChecked();
 	mBoard->setPinsRow(mSetPins, mCloseRow);
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::changeIndicatorsSlot(QAction* selectedAction)
+void MainWindow::onChangeIndicators(QAction* selectedAction)
 {
 	mIndicator = (IndicatorType) selectedAction->data().toInt();
 	emit changeIndicatorsSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::changeGameModeSlot(QAction* selectedAction)
+void MainWindow::onChangeGameMode(QAction* selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
-	updateNumbersSlot();
+	onUpdateNumbers();
 }
 
-void MainWindow::updateNumbersSlot()
+void MainWindow::onUpdateNumbers()
 {
 	mColors = colorsNumberComboBox->currentIndex();
 	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
 	mPegs = pegsNumberComboBox->currentIndex();
-	mSameColorAllowed = allowSameColorAction->isChecked();
+	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
+	allowSameColorAction->setChecked(mSameColorAllowed);
 
 	if(mBoard)
 	{
@@ -151,7 +223,7 @@ void MainWindow::updateNumbersSlot()
 				mBoard->getState() == GameState::WaittingDoneButtonPress ||
 				mBoard->getState() == GameState::WaittingFirstRowFill)
 		{
-			newGameSlot();
+			onNewGame();
 		}
 	}
 
@@ -166,7 +238,7 @@ void MainWindow::updateNumbersSlot()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::about()
+void MainWindow::onAbout()
 {
 	QMessageBox::about(this, tr("About CodeBreak"), QString(
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>"
@@ -192,8 +264,6 @@ void MainWindow::setPegsComboBox()
 	pegsNumberComboBox->setCurrentIndex(mPegs);
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
 	pegsNumberComboBox->setLocale(mLocale);
-
-	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 }
 //-----------------------------------------------------------------------------
 
@@ -206,8 +276,6 @@ void MainWindow::setColorsComboBox()
 	}
 	colorsNumberComboBox->setCurrentIndex(mColors);
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
-
-	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
 }
 //-----------------------------------------------------------------------------
 
@@ -219,115 +287,4 @@ void MainWindow::setSolvingAlgorithmsComboBox()
 	solvingAlgorithmsComboBox->addItem(tr("Worst Case"));
 	solvingAlgorithmsComboBox->addItem(tr("Expected Size"));
 	solvingAlgorithmsComboBox->setCurrentIndex((int) mAlgorithm);
-
-	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateNumbersSlot()));
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::createMenuBar()
-{
-	auto gameMenu = menuBar()->addMenu(tr("&Game"));
-
-	QIcon new_icon(QPixmap(":icons/new-icon.png"));
-	auto newGameAction = gameMenu->addAction(new_icon, tr("&New"), this, SLOT(newGameSlot()), tr("Ctrl+N"));
-
-	QIcon resign_icon(QPixmap(":/icons/face-raspberry.png"));
-	resignAction = gameMenu->addAction(resign_icon, tr("&Resign"), mBoard, SLOT(onResign()), tr("Ctrl+R"));
-	resignAction->setVisible(mMode == GameMode::Master);
-
-	gameMenu->addSeparator();
-
-	QIcon close_icon(QPixmap(":/icons/close-icon.png"));
-	gameMenu->addAction(close_icon, tr("&Quit"), this, SLOT(close()), tr("Ctrl+Q"));
-
-	auto settingsMenu = menuBar()->addMenu(tr("&Settings"));
-
-	auto gameModeSubMenu = settingsMenu->addMenu(tr("Game Mode"));
-	auto gameModeActions = new QActionGroup(this);
-
-	auto masterModeAction = gameModeSubMenu->addAction(tr("Code Master"));
-	masterModeAction->setData(0);
-	masterModeAction->setCheckable(true);
-	masterModeAction->setChecked(mMode == GameMode::Master);
-	gameModeActions->addAction(masterModeAction);
-
-	auto breakerModeAction = gameModeSubMenu->addAction(tr("Code Breaker"));
-	breakerModeAction->setData(1);
-	breakerModeAction->setCheckable(true);
-	breakerModeAction->setChecked(mMode == GameMode::Breaker);
-	gameModeActions->addAction(breakerModeAction);
-
-	gameModeActions->setExclusive(true);
-	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeGameModeSlot(QAction*)));
-
-	auto indicatorTypeSubMenu = settingsMenu->addMenu(tr("Indicator Type"));
-	auto indicatorTypeActions = new QActionGroup(this);
-
-	auto noIndicatorAction = indicatorTypeSubMenu->addAction(tr("None"));
-	noIndicatorAction->setData(0);
-	noIndicatorAction->setCheckable(true);
-	noIndicatorAction->setChecked(mIndicator == IndicatorType::None);
-	indicatorTypeActions->addAction(noIndicatorAction);
-
-	auto charIndicatorAction = indicatorTypeSubMenu->addAction(tr("Characters"));
-	charIndicatorAction->setData(1);
-	charIndicatorAction->setCheckable(true);
-	charIndicatorAction->setChecked(mIndicator == IndicatorType::Character);
-	indicatorTypeActions->addAction(charIndicatorAction);
-
-	auto digitIndicatorAction = indicatorTypeSubMenu->addAction(tr("Digits"));
-	digitIndicatorAction->setData(2);
-	digitIndicatorAction->setCheckable(true);
-	digitIndicatorAction->setChecked(mIndicator == IndicatorType::Digit);
-	indicatorTypeActions->addAction(digitIndicatorAction);
-
-	indicatorTypeActions->setExclusive(true);
-	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), this, SLOT(changeIndicatorsSlot(QAction*)));
-
-	setPinsAutomaticallyAction = settingsMenu->addAction(tr("Set Pins Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
-	setPinsAutomaticallyAction->setCheckable(true);
-	setPinsAutomaticallyAction->setChecked(mSetPins == 1);
-
-	closeRowAutomaticallyAction = settingsMenu->addAction(tr("Close Row Automatically"), this, SLOT(setPinsCloseRowAutomatically()));
-	closeRowAutomaticallyAction->setCheckable(true);
-	closeRowAutomaticallyAction->setChecked(mCloseRow == 1);
-
-	settingsMenu->addAction(tr("Preferences"), this, SLOT(onPreferences()));
-
-	auto helpMenu = menuBar()->addMenu(tr("&Help"));
-
-	QIcon information_icon(QPixmap(":/icons/information-icon.png"));
-	helpMenu->addAction(information_icon, tr("About"), this, SLOT(about()));
-
-	QIcon qt_icon(QPixmap(":/icons/qt_icon.png"));
-	helpMenu->addAction(qt_icon, tr("About Qt"), qApp, SLOT(aboutQt()));
-
-	auto mainToolbar = new QToolBar(this);
-	mainToolbar->setFloatable(false);
-	mainToolbar->setMovable(false);
-	mainToolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	mainToolbar->addAction(newGameAction);
-
-	QIcon double_icon;
-	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
-	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
-	allowSameColorAction = new QAction(double_icon, tr("Same Color Allowed"), this);
-	allowSameColorAction->setCheckable(true);
-	allowSameColorAction->setChecked(mSameColorAllowed);
-	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(allowSameColorSlot()));
-	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(updateNumbersSlot()));
-	allowSameColorSlot();
-
-	mainToolbar->addAction(allowSameColorAction);
-	mainToolbar->addSeparator();
-
-	setPegsComboBox();
-	setColorsComboBox();
-	setSolvingAlgorithmsComboBox();
-
-	mainToolbar->addWidget(pegsNumberComboBox);
-	mainToolbar->addWidget(colorsNumberComboBox);
-	mainToolbar->addWidget(solvingAlgorithmsComboBox);
-	addToolBar(mainToolbar);
-	setContextMenuPolicy(Qt::NoContextMenu);
 }
