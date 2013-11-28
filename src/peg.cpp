@@ -26,12 +26,12 @@
 #include <QGraphicsSimpleTextItem>
 #include <QFont>
 
-Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
+Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
 		mBox(0)
 {
-	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
+	mColor = (-1 < color_number &&color_number < 10) ? color_number : 0;
 
 	setPen(Qt::NoPen);
 
@@ -57,7 +57,6 @@ Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicato
 	mIndicator->setPos(13.5,7);
 	onChangeIndicators(indicator_n);
 
-
 	setColor(mColor);
 	setZValue(2);
 	setPos(mPosition);
@@ -70,9 +69,9 @@ Peg::Peg(const QPoint& position, int color_number, const IndicatorType &indicato
 void Peg::setColor(const int &color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
-	QRadialGradient gradient(20,20, 40, 10, 10);
-	gradient.setColorAt(0, QColor(ColorsRGB[mColor][0]));
-	gradient.setColorAt(1, QColor(ColorsRGB[mColor][1]));
+	QRadialGradient gradient(7,7, 40, 15, 15);
+	gradient.setColorAt(0, PegColors[mColor][0]);
+	gradient.setColorAt(1, PegColors[mColor][1]);
 	setBrush(gradient);
 	onChangeIndicators(mIndicatorType);
 }
@@ -89,10 +88,14 @@ void Peg::setMovable(bool enabled)
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (isEnabled()){
+	if (isEnabled())
+	{
 		pressedEffect->setEnabled(true);
 		setZValue(3);
-		if(mBox->getPegState() != PegState::Initial) mBox->setPegState(PegState::Draged);
+
+		if(mBox->getPegState() != PegState::Initial)
+			mBox->setPegState(PegState::Draged);
+
 		setCursor(Qt::ClosedHandCursor);
 	}
 	QGraphicsEllipseItem::mousePressEvent(event);
@@ -101,33 +104,32 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-
 	if (isEnabled())
 	{
-			pressedEffect->setEnabled(false);
-			setZValue(2);
-			setCursor(Qt::OpenHandCursor);
+		pressedEffect->setEnabled(false);
+		setZValue(2);
+		setCursor(Qt::OpenHandCursor);
 	}
 
 	QGraphicsEllipseItem::mouseReleaseEvent(event);
 
-	switch (!mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint())) {
-	case 0: //	droped on its own box, no need to emit signal and set state to PEG_FILLED
+	if (mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint()))//	droped on its own box
+	{
 		if (mBox->getPegState() != PegState::Initial)
 			mBox->setPegState(PegState::Filled);
-		break;
-	default: //	droped out of its own box,
+	}
+	else //	droped out of its own box,
+	{
 		if (mBox->getPegState() != PegState::Initial)
 			mBox->setPegState(PegState::Empty);
 		emit mouseReleasedSignal(sceneBoundingRect().center().toPoint(), mColor);
-		break;
 	}
 
 	setPos(mBox->sceneBoundingRect().topLeft());
 }
 //-----------------------------------------------------------------------------
 
-void Peg::onChangeIndicators(const IndicatorType& indicator_n)
+void Peg::onChangeIndicators(const IndicatorType &indicator_n)
 {
 	mIndicatorType = indicator_n;
 	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);

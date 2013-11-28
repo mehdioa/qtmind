@@ -21,6 +21,7 @@
 #define CONSTANTS_H
 
 #include <QString>
+#include <QColor>
 
 const int MIN_COLOR_NUMBER	= 2;
 const int MAX_COLOR_NUMBER	= 10;
@@ -88,13 +89,23 @@ enum class PegState
 	Draged
 };
 
+const int BoxAlphas[4] =
+{
+	160, 255, 50, 160
+};
 
-const QString ColorsRGB[MAX_COLOR_NUMBER][2] = {
-		{"#FFFF80", "#C05800"}, {"#FF3300", "#400040"},
-		{"#33CCFF", "#000080"}, {"#808080", "#000000"},
-		{"#FFFFFF", "#797979"},{"#FF9900", "#A82A00"},
-		{"#66FF33", "#385009"},{"#BA88FF", "#38005D"},
-		{"#00FFFF", "#004040"}, {"#FFC0FF", "#800080"}
+
+const QColor PegColors[MAX_COLOR_NUMBER][2] = {
+	{QColor("#FFFFBB"), QColor("#FFAA00")},
+	{QColor("#FF0000"), QColor("#400040")},
+	{QColor("#33CCFF"), QColor("#000080")},
+	{QColor("#7F7F7F"), QColor("#000000")},
+	{QColor("#FFFFFF"), QColor("#7F7F7F")},
+	{QColor("#FF9900"), QColor("#A82A00")},
+	{QColor("#66FF33"), QColor("#385009")},
+	{QColor("#BA88FF"), QColor("#38005D")},
+	{QColor("#00FFFF"), QColor("#004040")},
+	{QColor("#FF82F3"), QColor("#800080")}
   };
 
 const QString OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};

@@ -76,7 +76,7 @@ Preferences::~Preferences()
 
 //-----------------------------------------------------------------------------
 
-void Preferences::loadTranslation(const QString& name)
+void Preferences::loadTranslation(const QString &name)
 {
 	QString appdir = QCoreApplication::applicationDirPath();
 	mAppName = name;
@@ -86,7 +86,7 @@ void Preferences::loadTranslation(const QString& name)
 	paths.append(appdir + "/translations/");
 	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");
 	paths.append(appdir + "/../Resources/translations");
-	foreach (const QString& path, paths) {
+	foreach (const QString &path, paths) {
 		if (QFile::exists(path)) {
 			mPath = path;
 			break;
@@ -122,10 +122,9 @@ void Preferences::loadTranslation(const QString& name)
 	translator.load(mAppName + current, mPath);
 	QCoreApplication::installTranslator(&translator);
 }
-
 //-----------------------------------------------------------------------------
 
-QString Preferences::languageName(const QString& language)
+QString Preferences::languageName(const QString &language)
 {
 	QString lang_code = language.left(5);
 	QLocale locale(lang_code);
@@ -156,7 +155,6 @@ QString Preferences::languageName(const QString& language)
 #endif
 	return name;
 }
-
 //-----------------------------------------------------------------------------
 
 QStringList Preferences::findTranslations()
@@ -165,7 +163,6 @@ QStringList Preferences::findTranslations()
 	result.replaceInStrings(".qm", "");
 	return result;
 }
-
 //-----------------------------------------------------------------------------
 
 void Preferences::accept()
@@ -178,5 +175,3 @@ void Preferences::accept()
 	QSettings().setValue("FontSize", ui->fontSizeComboBox->currentIndex());
 	QMessageBox::information(this, tr("Note"), tr("Changes will take effect next time."), QMessageBox::Ok);
 }
-
-//-----------------------------------------------------------------------------

@@ -53,37 +53,37 @@ class Game : public QObject
 	Q_OBJECT
 
 public:
-	explicit Game(const int& peg_no, const int& color_no,
-		 const bool& allow_same_color);
+	explicit Game(const int &peg_no, const int &color_no,
+		 const bool &allow_same_color);
 	~Game();
 	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
-	bool setResponse(const int& response);
-	void reset(const int& peg_no, const int& color_no,
-			   const bool& allow_same_color);
+	bool setResponse(const int &response);
+	void reset(const int &peg_no, const int &color_no,
+			   const bool &allow_same_color);
 	int getPossibleCodesSize() const {return mPossibleCodes.size();}
 	qreal getLastMinWeight() const {return mLastMinWeight;}
 	QString getGuess() {return mGuess;}
 	void interupt() {mInterupt = true;}
 
 protected slots:
-	void startGuessing(const Algorithm& alg);
+	void startGuessing(const Algorithm &alg);
 
 signals:
 	void guessDoneSignal(Algorithm);
 
 private:
-	void makeGuess(const Algorithm& alg, const bool& fixedFirstGuess = false);
-	QString getFirstGuess(const Algorithm& alg) const;
+	void makeGuess(const Algorithm &alg, const bool &fixedFirstGuess = false);
+	QString getFirstGuess(const Algorithm &alg) const;
 	QString randomPermutation(QString str) const;
-	void permute(QString& code) const;
+	void permute(QString &code) const;
 	void createTables();
 	void deleteTables();
 	int compare (const int *codeA, const int *codeB) const;
 	QString arrayToString(const int*) const;
-	void stringToArray(const QString& str, int* arr) const;
-	qreal computeWeight(int* responses, const Algorithm& alg) const;
+	void stringToArray(const QString &str, int *arr) const;
+	qreal computeWeight(int *responses, const Algorithm &alg) const;
 	void convertBase(int decimal, const int &base,
-					 const int &precision, int* convertedArray);
+					 const int &precision, int *convertedArray);
 
 private:
 	int mPegNumber;										//	pegs count, 4
@@ -96,10 +96,10 @@ private:
 	qreal mLastMinWeight;
 	bool mInterupt;
 
-	int** mAllCodes;									//	all indexes of codes (0...1295)
-	QList<int> mPossibleCodes;							//	list of all possibles
+	int **mAllCodes;									//	all indexes of codes (0...1295)
+	int *mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 	int mFirstPossibleCodesSize;
-	int* mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
+	QList<int> mPossibleCodes;							//	list of all possibles
 
 };
 

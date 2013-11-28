@@ -26,8 +26,8 @@
 class Message : public QGraphicsSimpleTextItem
 {
 public:
-	explicit Message(const QString& color_name = "#303133",const QString& font_name = "Sans Serif",
-					 const int& font_size = 12, QGraphicsItem* parent = 0);
+	explicit Message(const QString &color_name = "#303133",const QString &font_name = "Sans Serif",
+					 const int &font_size = 12, QGraphicsItem *parent = 0);
 	void showMessage(const QString str);
 	QRectF boundingRect() const;
 

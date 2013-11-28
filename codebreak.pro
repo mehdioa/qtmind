@@ -70,3 +70,6 @@ TRANSLATIONS = translations/codebreak_ara.ts \
 	translations/codebreak_fa.ts \
 	translations/codebreak_fr.ts \
 	translations/codebreak_nl.ts
+
+OTHER_FILES += \
+    codebreak.desktop

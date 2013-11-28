@@ -29,12 +29,12 @@ class PinBox : public QObject, public EmptyBox
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent = 0);
-	int getValue(int& blacks, int& whites) const;
+	explicit PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *parent = 0);
+	int getValue(int &blacks, int &whites) const;
 	int getValue() const;
-	void setPins(const int& b, const int& w);
-	void setPins(const QString& codeA, const QString& codeB, const int& peg, const int& color);
-	void setBoxState(const BoxState& state = BoxState::Future);
+	void setPins(const int &b, const int &w);
+	void setPins(const QString &codeA, const QString &codeB, const int &peg, const int &color);
+	void setBoxState(const BoxState &state = BoxState::Future);
 	void fakePress() {emit pinBoxPressed();}
 
 protected:

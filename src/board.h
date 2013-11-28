@@ -31,61 +31,59 @@ class PegBox;
 class Button;
 class Game;
 class Message;
-class QLocale;
 
 class Board: public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	explicit Board(const QString& font_name = "Sans Serif", const int& font_size = 12, QWidget* parent = 0);
+	explicit Board(const QString &font_name = "Sans Serif", const int &font_size = 12, QWidget *parent = 0);
 	~Board();
-	void handleButtonRelease(const QString &);
-	void initializeScene();
 	void play(const GameMode &mode);
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
-	void reset(const int& peg_n, const int& color_n, const GameMode &mode_n,
+	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
 			   const bool &set_pins, const bool &close_row, QLocale locale_n,
-			   const IndicatorType& indicator_n = IndicatorType::None);
+			   const IndicatorType &indicator_n = IndicatorType::None);
 	GameState getState() const {return mState;}
-	void setAlgorithm(const Algorithm& algorithm_n);
+	void setAlgorithm(const Algorithm &algorithm_n);
 
 protected:
-	void drawBackground(QPainter* painter, const QRectF& rect);
-	void resizeEvent(QResizeEvent* event);
-	void setIndicatorType(const IndicatorType& indicator_n);
+	void drawBackground(QPainter *painter, const QRectF &rect);
+	void resizeEvent(QResizeEvent *event);
 
 signals:
 	void changePegIndicator(const IndicatorType &indicator_t);
-	void startGuessing(const Algorithm& alg);
+	void startGuessing(const Algorithm &alg);
 
 private slots:
-	void onPegMouseRelease(const QPoint& position, const int& color);
+	void onPegMouseRelease(const QPoint &position, const int &color);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
 	void onChangeIndicators(const IndicatorType &indicator_n);
 	void onResign();
-	void onGuessReady(const Algorithm& alg);
+	void onGuessReady(const Algorithm &alg);
 
 private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-	void createPegForBox(PegBox* box, int color, bool backPeg = false);// backPeg should only be used to put an extra peg under initial pegs,
-	void codeRowFilled(bool filled);
-	void setBoxStateOfList(QList<PegBox*> boxlist, const BoxState state_t);
-	void setBoxStateOfList(QList<PinBox*> boxlist, const BoxState state_t);
-	void showTranslatedInformation(const Algorithm& alg);
+	void createPegForBox(PegBox *box, int color, bool backPeg = false);// backPeg is used to put an extra peg under initial pegs,
+	void codeRowFilled(const bool &filled);
+	void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t);
+	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);
+	void showTranslatedInformation(const Algorithm &alg);
 	void interupt();
+	void initializeScene();
+	void setIndicatorType(const IndicatorType &indicator_n);
 
 private:
-	QList<PinBox*> mPinBoxes;
-	QList<PegBox*> mPegBoxes;
-	QList<PegBox*> mCodeBoxes;
-	QList<PegBox*> mCurrentBoxes;	//	boxes that can be filled by player
-	QList<PegBox*> mMasterBoxes;
+	QList<PinBox *> mPinBoxes;
+	QList<PegBox *> mPegBoxes;
+	QList<PegBox *> mCodeBoxes;
+	QList<PegBox *> mCurrentBoxes;	//	boxes that can be filled by player
+	QList<PegBox *> mMasterBoxes;
 
 	GameState mState;
 	GameMode mMode;
@@ -104,12 +102,12 @@ private:
 	QString mFontName;
 	int mFontSize;
 
-	Game* mGame;
-	Button* mOkButton;
-	Button* mDoneButton;
-	Message* mMessage;
-	Message* mInformation;
-	QThread* mGameThread;
+	Game *mGame;
+	Button *mOkButton;
+	Button *mDoneButton;
+	Message *mMessage;
+	Message *mInformation;
+	QThread *mGameThread;
 };
 
 #endif // BOARD_H

@@ -26,11 +26,8 @@
 class EmptyBox : public QGraphicsRectItem
 {
 public:
-	const static int colors_rgb[4];
-	const static int alphas[4];
-
-	explicit EmptyBox(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
-	virtual void setBoxState(const BoxState& state = BoxState::Future);
+	explicit EmptyBox(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
+	virtual void setBoxState(const BoxState &state = BoxState::Future);
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);

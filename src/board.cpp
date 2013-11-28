@@ -27,7 +27,7 @@
 #include <QThread>
 #include <QMetaType>
 
-Board::Board(const QString &font_name, const int &font_size, QWidget* parent):
+Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
 	QGraphicsView(parent),
 	mState(GameState::None),
 	mMode(GameMode::Master),
@@ -76,7 +76,7 @@ Board::~Board()
 }
 //-----------------------------------------------------------------------------
 
-void Board::codeRowFilled(bool filled)
+void Board::codeRowFilled(const bool &filled)
 {
 	switch (mMode)
 	{
@@ -241,11 +241,13 @@ void Board::initializeScene()
 
 void Board::onPegMouseRelease(const QPoint &position, const int &color)
 {
-	if(!mSameColor)//if same color is not allowed and there is already a color-peg visible, we just ignore drop
+	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
+	if(!mSameColor)
 	{
-		foreach (PegBox* box, mCurrentBoxes)
+		foreach (PegBox *box, mCurrentBoxes)
 		{
-			if(!box->sceneBoundingRect().contains(position) && box->isPegVisible() && box->getPegColor() == color)
+			if(!box->sceneBoundingRect().contains(position) &&
+					box->isPegVisible() && box->getPegColor() == color)
 				return;
 		}
 	}
@@ -253,9 +255,10 @@ void Board::onPegMouseRelease(const QPoint &position, const int &color)
 	static bool rowFillState = false;
 	bool newRowFillState = true;
 
-	bool dropOnlyOnce = true; // conversion from float to integer may cause double drop on middle. Flag to do it just once
+	// conversion from float to integer may cause double drop on middle. Flag to do it just once
+	bool dropOnlyOnce = true;
 
-	foreach (PegBox* box, mCurrentBoxes)
+	foreach (PegBox *box, mCurrentBoxes)
 	{
 		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PegState::Initial && dropOnlyOnce)
 		{
@@ -273,17 +276,18 @@ void Board::onPegMouseRelease(const QPoint &position, const int &color)
 			newRowFillState = false;
 	} //	end foreach
 
-	if (newRowFillState != rowFillState)//	if (master) code row state changed, emit appropriate signal
+	//	if (master) code row state changed, go to codeRowFilled
+	if (newRowFillState != rowFillState)
 	{
-		codeRowFilled(newRowFillState);
+		rowFillState = newRowFillState;
+		codeRowFilled(rowFillState);
 	}
-	rowFillState = newRowFillState;
 }
 //-----------------------------------------------------------------------------
 
 void Board::onPinBoxPressed()
 {
-	/*	This function is the running engine of the Master mode.
+	/*	This function is the running engine of the Breaker mode.
 	 *	If b and c are the number of blacks and whites, then
 	 *			w = sum(min(c[i], g[i]) -b
 	 *	where c[i] and g[i] are the number of times that the color i
@@ -295,10 +299,8 @@ void Board::onPinBoxPressed()
 	int c[mColorNumber];
 	int g[mColorNumber];
 
-	for(int i = 0; i < mColorNumber; ++i)
-	{
-		c[i] = g[i] = 0;
-	}
+	std::fill(c, c + mColorNumber, 0);
+	std::fill(g, g + mColorNumber, 0);
 
 	int blacks = 0;
 
@@ -308,11 +310,12 @@ void Board::onPinBoxPressed()
 		int masterColor = mMasterBoxes.at(i)->getPegColor();
 
 		if ( currentColor == masterColor)
-		{
 			++blacks;
+		else
+		{
+			++c[currentColor];
+			++g[masterColor];
 		}
-		++c[currentColor];
-		++g[masterColor];
 	}
 
 	int total = 0;
@@ -324,7 +327,8 @@ void Board::onPinBoxPressed()
 	mPinBoxes.first()->setBoxState(BoxState::Past);
 	mPinBoxes.removeFirst();	// the pinbox goes to past
 
-	for(int i = 0; i < mPegNumber; ++i) //old row of codes goes to past and are removed from current
+	//old row of codes goes to past and are removed from current
+	for(int i = 0; i < mPegNumber; ++i)
 	{
 		mCurrentBoxes.first()->setBoxState(BoxState::Past);
 		mCurrentBoxes.removeFirst();
@@ -335,17 +339,19 @@ void Board::onPinBoxPressed()
 		mState = GameState::Win;
 		mMessage->showMessage(tr("Success! You Win"));
 
-		setBoxStateOfList(mMasterBoxes, BoxState::Past);
-		setBoxStateOfList(mCurrentBoxes, BoxState::Past);
-		setBoxStateOfList(mPinBoxes, BoxState::Future);
-		setBoxStateOfList(mPegBoxes, BoxState::Future);
+		setBoxStateOfList(&mMasterBoxes, BoxState::Past);
+		setBoxStateOfList(&mCurrentBoxes, BoxState::Past);
+		setBoxStateOfList(&mPinBoxes, BoxState::Future);
+		setBoxStateOfList(&mPegBoxes, BoxState::Future);
 
-	} else if (mCodeBoxes.isEmpty()) //out of more row of codes, a fail
+	}
+	else if (mCodeBoxes.isEmpty()) //out of more row of codes, a fail
 	{
 		mState = GameState::Lose;
 		mMessage->showMessage(tr("Game Over! You Failed"));
-		setBoxStateOfList(mPegBoxes, BoxState::Future);
-	} else // continue the game
+		setBoxStateOfList(&mPegBoxes, BoxState::Future);
+	}
+	else // continue the game
 	{
 		mMessage->showMessage(tr("Place Your Pegs ... "));
 		for(int i = 0; i < mPegNumber; ++i) //put the next codeboxes in action
@@ -374,10 +380,10 @@ void Board::onResign()
 		mState = GameState::Resign;
 		mMessage->showMessage(tr("You Resign"));
 
-		setBoxStateOfList(mMasterBoxes, BoxState::Past);
-		setBoxStateOfList(mCurrentBoxes, BoxState::Future);
-		setBoxStateOfList(mPinBoxes, BoxState::Future);
-		setBoxStateOfList(mPegBoxes, BoxState::Future);
+		setBoxStateOfList(&mMasterBoxes, BoxState::Past);
+		setBoxStateOfList(&mCurrentBoxes, BoxState::Future);
+		setBoxStateOfList(&mPinBoxes, BoxState::Future);
+		setBoxStateOfList(&mPegBoxes, BoxState::Future);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -398,7 +404,7 @@ void Board::onOkButtonPressed()
 	mPinBoxes.first()->setBoxState(BoxState::Past);
 	mPinBoxes.removeFirst();
 
-	/*	Here we check if user user input 4 blacks*/
+	/*	Here we check if the user inputs 4 blacks*/
 	if (mGame->done())
 	{
 		mMessage->showMessage(tr("Ready To Play"));
@@ -421,11 +427,11 @@ void Board::onDoneButtonPressed()
 	mDoneButton->setVisible(false);
 	mDoneButton->setEnabled(false);
 
-	setBoxStateOfList(mCurrentBoxes, BoxState::Past);	//	master code boxes become past for no interaction
-	setBoxStateOfList(mPegBoxes, BoxState::Future);	//	freezing the peg boxes
+	setBoxStateOfList(&mCurrentBoxes, BoxState::Past);	//	master code boxes become past for no interaction
+	setBoxStateOfList(&mPegBoxes, BoxState::Future);	//	freezing the peg boxes
 
 	mMasterCode = "";
-	foreach(PegBox* box, mCurrentBoxes)
+	foreach(PegBox *box, mCurrentBoxes)
 	{
 		QString str;
 		str.setNum(box->getPegColor());
@@ -533,7 +539,7 @@ void Board::playCodeBreaker()
 	digits.left(mColorNumber);
 	int remainingNumbers = mColorNumber;
 
-	foreach (PegBox* box, mMasterBoxes) //creating a master code to be guessed
+	foreach (PegBox *box, mMasterBoxes) //creating a master code to be guessed
 	{
 		int color = qrand() % remainingNumbers;
 		createPegForBox(box, digits.at(color).digitValue());
@@ -556,12 +562,11 @@ void Board::playCodeBreaker()
 	mMessage->showMessage(tr("Place Your Pegs ... "));
 	mState = GameState::WaittingFirstRowFill;
 
-	// from now on the onPinBoxPushed function continue the game.
+	// from now on the onPinBoxPushed function continue the game, after the code row is filled
 }
-
 //-----------------------------------------------------------------------------
 
-void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, const bool &samecolor,
+void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, const bool &samecolor,
 				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale locale_n,
 				  const IndicatorType &indicator_n)
 {
@@ -586,7 +591,7 @@ void Board::reset(const int& peg_n, const int& color_n, const GameMode &mode_n, 
 }
 //-----------------------------------------------------------------------------
 
-void Board::resizeEvent(QResizeEvent* event)
+void Board::resizeEvent(QResizeEvent *event)
 {
 	fitInView(sceneRect(), Qt::KeepAspectRatio);
 	QGraphicsView::resizeEvent(event);
@@ -600,18 +605,18 @@ void Board::setAlgorithm(const Algorithm &algorithm_n)
 }
 //-----------------------------------------------------------------------------
 
-void Board::setBoxStateOfList(QList<PegBox *> boxlist, const BoxState state_t)
+void Board::setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
-	foreach (PegBox* box, boxlist)
+	foreach (PegBox *box, *boxlist)
 	{
 		box->setBoxState(state_t);
 	}
 }
 //-----------------------------------------------------------------------------
 
-void Board::setBoxStateOfList(QList<PinBox *> boxlist, const BoxState state_t)
+void Board::setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 {
-	foreach (PinBox* box, boxlist)
+	foreach (PinBox *box, *boxlist)
 	{
 		box->setBoxState(state_t);
 	}
@@ -682,7 +687,7 @@ void Board::setIndicatorType(const IndicatorType &indicator_n)
 }
 //-----------------------------------------------------------------------------
 
-void Board::drawBackground(QPainter* painter, const QRectF& rect)
+void Board::drawBackground(QPainter *painter, const QRectF &rect)
 {
 	painter->fillRect(rect, QColor(182, 182, 182));// set scene background color
 

@@ -1,21 +1,19 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;Game;BoardGame;
-Comment[en_US]=
+Comment[en_US]=Mastermind Clone With Built-in Solver
 Comment=
 Exec=codebreak %F
-GenericName[en_US]=Mastermind Game
-GenericName=Mastermind Game
 Icon=codebreak.png
 MimeType=
 Name[en_US]=CodeBreak
-Name=CodeBreak
+Name[fa_IR]=کدشکن
 Path=
 StartupNotify=true
 Terminal=false
 TerminalOptions=
 Type=Application
-Version=0.1
+Version=0.3
 X-DBUS-ServiceName=
 X-DBUS-StartupType=
 X-KDE-SubstituteUID=false

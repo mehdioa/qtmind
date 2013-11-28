@@ -22,7 +22,6 @@
 #include <QPainter>
 #include <QFont>
 
-
 Message::Message(const QString &color_name, const QString &font_name, const int &font_size, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
 	mColor(QColor(color_name))

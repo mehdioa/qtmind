@@ -26,10 +26,10 @@
 class Pin : public QGraphicsEllipseItem
 {
 public:
-	explicit Pin(const int &color = 0, QGraphicsItem* parent = 0);
+	explicit Pin(const int &color = 0, QGraphicsItem *parent = 0);
 	int getColor() const {return m_color;}
-	void setColor(const int& c);
-	void setMouseEventHandling(const PinMouse& event);
+	void setColor(const int &c);
+	void setMouseEventHandling(const PinMouse &event);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);

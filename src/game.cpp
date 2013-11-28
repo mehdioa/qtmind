@@ -41,9 +41,9 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color)
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
 	mLastMinWeight(-1),
+	mInterupt(false),
 	mAllCodes(0),
-	mFirstPossibleCodes(0),
-	mInterupt(false)
+	mFirstPossibleCodes(0)
 {
 	createTables();
 	reset(peg_no, color_no, mAllowSameColor);
@@ -68,7 +68,7 @@ void Game::createTables()
 
 	mResponseSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
 
-	mAllCodes = new int* [mAllCodesSize];
+	mAllCodes = new int *[mAllCodesSize];
 
 	for(int i = 0; i < mAllCodesSize; ++i)
 	{
@@ -294,7 +294,7 @@ QString Game::getFirstGuess(const Algorithm &alg) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::makeGuess(const Algorithm& alg, const bool&)
+void Game::makeGuess(const Algorithm &alg, const bool&)
 {
 	/*	This function create a guess based on the algorithm. The first guess
 	 *	and guess when there are at least 10000 codes possibles are treated
@@ -399,7 +399,7 @@ qreal Game::computeWeight(int *responses, const Algorithm &alg) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::convertBase(int decimal, const int& base, const int& precision, int *convertedArray)
+void Game::convertBase(int decimal, const int &base, const int &precision, int *convertedArray)
 {
 
 	if(mAllowSameColor)

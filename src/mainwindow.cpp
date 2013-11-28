@@ -159,7 +159,7 @@ MainWindow::~MainWindow()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::closeEvent(QCloseEvent* event)
+void MainWindow::closeEvent(QCloseEvent *event)
 {
 	QSettings().setValue("Mode", (int) mMode);
 	QSettings().setValue("Colors", mColors+2);
@@ -198,14 +198,14 @@ void MainWindow::onSetPinsCloseRowAutomatically()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onChangeIndicators(QAction* selectedAction)
+void MainWindow::onChangeIndicators(QAction *selectedAction)
 {
 	mIndicator = (IndicatorType) selectedAction->data().toInt();
 	emit changeIndicatorsSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onChangeGameMode(QAction* selectedAction)
+void MainWindow::onChangeGameMode(QAction *selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
 	emit updateNumbers();

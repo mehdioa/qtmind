@@ -45,7 +45,7 @@ public:
 	~MainWindow();
 
 protected:
-	void closeEvent(QCloseEvent* event); /** Override parent function to save window geometry. */
+	void closeEvent(QCloseEvent *event); /** Override parent function to save window geometry. */
 
 private slots:
 	void onSetPinsCloseRowAutomatically();
@@ -69,7 +69,7 @@ private:
 private:
 	Ui::MainWindow *ui;
 
-	Board* mBoard;
+	Board *mBoard;
 	GameMode mMode;
 	int mColors;
 	int mPegs;
@@ -82,10 +82,10 @@ private:
 	QString mFontName;
 	int mFontSize;
 
-	QComboBox* pegsNumberComboBox;
-	QComboBox* colorsNumberComboBox;
-	QComboBox* solvingAlgorithmsComboBox;
-	QAction* allowSameColorAction;
+	QComboBox *pegsNumberComboBox;
+	QComboBox *colorsNumberComboBox;
+	QComboBox *solvingAlgorithmsComboBox;
+	QAction *allowSameColorAction;
 };
 
 #endif // MAINWINDOW_H

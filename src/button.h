@@ -32,18 +32,18 @@ class Button : public QObject, public QGraphicsItem
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit Button(const int& buttonWidth = 152, const QString& str = "",
-					const QString& font_name = "Sans Serif", const int& font_size = 12);
+	explicit Button(const int &buttonWidth = 152, const QString &str = "",
+					const QString &font_name = "Sans Serif", const int &font_size = 12);
 	void setPressable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent*);
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
-	void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-	void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+	void mousePressEvent(QGraphicsSceneMouseEvent *);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+	void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
-	void paint(QPainter* painter, const QStyleOptionGraphicsItem*,
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem*,
 			   QWidget*);
 	QRectF boundingRect() const;
 
@@ -58,11 +58,11 @@ private:
 
 	QBrush mFillOutBrush;
 	QBrush mFillOverBrush;
-	QBrush* mFillBrush;
+	QBrush *mFillBrush;
 
 	QBrush mFrameOutBrush;
 	QBrush mFrameOverBrush;
-	QBrush* mFrameBrush;
+	QBrush *mFrameBrush;
 
 	QRectF mRect;
 	QRectF mRectFill;

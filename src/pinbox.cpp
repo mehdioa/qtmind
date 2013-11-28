@@ -23,7 +23,7 @@
 #include <QPen>
 #include <QCursor>
 
-PinBox::PinBox(const int& pin_number, const QPoint& position, QGraphicsItem* parent):
+PinBox::PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *parent):
 	EmptyBox(position, parent)
 {
 	for(int i = 0; i < pin_number; ++i)
@@ -41,7 +41,7 @@ int PinBox::getValue(int &blacks, int &whites) const
 {
 	blacks = 0;
 	whites = 0;
-	foreach(Pin* pin, pins)
+	foreach(Pin *pin, pins)
 	{
 		switch (pin->getColor()) {
 		case 1:
@@ -109,26 +109,26 @@ void PinBox::setBoxState(const BoxState &state)
 	case BoxState::Past: // used for boxes that are done. No interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
-		foreach (Pin* pin, pins)
+		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		setEnabled(true);
 		setCursor(Qt::PointingHandCursor);
-		foreach (Pin* pin, pins)
+		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Pass);
 		break;
 	case BoxState::Future: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
-		foreach (Pin* pin, pins)
+		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
 
 	default: //BoxState::None: used for entering keys in breaker mode, just keys are active
 		setEnabled(false);
 		setCursor(Qt::ArrowCursor);
-		foreach (Pin* pin, pins)
+		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Accept);
 		break;
 	}

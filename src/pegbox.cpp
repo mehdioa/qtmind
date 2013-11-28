@@ -34,13 +34,14 @@ PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
 
 	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
 	mCircle->setPen(QPen(QBrush(lgrad), 2));
-	setBoxState();
+	setBoxState(BoxState::Future);
 }
 //-----------------------------------------------------------------------------
 
 int PegBox::getPegColor()
 {
-	if (mPeg) return mPeg->getColor();
+	if (mPeg)
+		return mPeg->getColor();
 	return -1;
 }
 //-----------------------------------------------------------------------------
@@ -95,7 +96,7 @@ void PegBox::setBoxState(const BoxState &state)
 void PegBox::setPeg(Peg *peg)
 {
 	mPeg = peg;
-	mPeg->setPegBox(this);
+	mPeg->setBox(this);
 	mCircle->setVisible(hasPeg());
 }
 //-----------------------------------------------------------------------------
@@ -112,19 +113,23 @@ void PegBox::setPegState(const PegState &state)
 	mPegState = state;
 	switch (mPegState) {
 	case PegState::Initial:
-		if (mPeg) mPeg->setVisible(true);
+		if (mPeg)
+			mPeg->setVisible(true);
 		mCircle->setVisible(true);
 		break;
 	case PegState::Filled:
-		if (mPeg) mPeg->setVisible(true);
+		if (mPeg)
+			mPeg->setVisible(true);
 		mCircle->setVisible(true);
 		break;
 	case PegState::Empty:
-		if (mPeg) mPeg->setVisible(false);
+		if (mPeg)
+			mPeg->setVisible(false);
 		mCircle->setVisible(false);
 		break;
 	default:// PegState::Draged
-		if (mPeg) mPeg->setVisible(true);
+		if (mPeg)
+			mPeg->setVisible(true);
 		mCircle->setVisible(false);
 		break;
 	}

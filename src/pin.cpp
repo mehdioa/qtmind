@@ -21,7 +21,7 @@
 #include <QPen>
 #include <QCursor>
 
-Pin::Pin(const int &color, QGraphicsItem* parent) :
+Pin::Pin(const int &color, QGraphicsItem *parent) :
 	QGraphicsEllipseItem(0, 0, 12, 12, parent),
 	m_color(color)
 {
@@ -61,7 +61,7 @@ void Pin::setColor(const int &c)
 }
 //-----------------------------------------------------------------------------
 
-void Pin::setMouseEventHandling(const PinMouse& event)
+void Pin::setMouseEventHandling(const PinMouse &event)
 {
 	switch (event) {
 	case PinMouse::Ignore:

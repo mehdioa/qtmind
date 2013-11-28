@@ -31,11 +31,11 @@ class Preferences : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Preferences(QLocale* locale_n, QWidget *parent = 0);
+	explicit Preferences(QLocale *locale_n, QWidget *parent = 0);
 	~Preferences();
 
-	static void loadTranslation(const QString& appname);
-	static QString languageName(const QString& language);
+	static void loadTranslation(const QString &appname);
+	static QString languageName(const QString &language);
 
 public slots:
 	void accept();
