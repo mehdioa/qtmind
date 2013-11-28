@@ -31,12 +31,12 @@ Button::Button(const int &buttonWidth, const QString &str, const QString &font_n
 	mFont.setStyleHint(QFont::SansSerif);
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 
-	QLinearGradient fillgrad(0, 0, 10, 36);
+	QLinearGradient fillgrad(0, 0, 0, 36);
 	fillgrad.setColorAt(0.0, QColor("#f7f7f7"));
 	fillgrad.setColorAt(0.5, QColor("#b9b9b9"));
 	mFillOutBrush = QBrush(fillgrad);
 
-	QLinearGradient fillovergrad(0, 0, 10, 36);
+	QLinearGradient fillovergrad(0, 0, 0, 36);
 	fillovergrad.setColorAt(0.0, QColor("#f7f7f7"));
 	fillovergrad.setColorAt(1.0, QColor("#b9b9b9"));
 	mFillOverBrush = QBrush(fillovergrad);
