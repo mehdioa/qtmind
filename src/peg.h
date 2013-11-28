@@ -23,6 +23,15 @@
 #include <QGraphicsEllipseItem>
 #include "constants.h"
 
+enum class PegState
+{
+	Initial,
+	Filled,
+	Empty,
+	Draged
+};
+
+
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
 class PegBox;
@@ -33,6 +42,9 @@ class Peg : public QObject, public QGraphicsEllipseItem
 	Q_INTERFACES(QGraphicsItem)
 
 public:
+	static const QColor PegColors[MAX_COLOR_NUMBER];
+	static const QString OrderedChars[3];
+
 	explicit Peg(const QPoint &position, int color_number = 0,
 	const IndicatorType &indicator_n = IndicatorType::None, QGraphicsItem *parent = 0);
 	void setColor(const int &color_number);

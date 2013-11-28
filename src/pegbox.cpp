@@ -18,7 +18,6 @@
  ***********************************************************************/
 
 #include "pegbox.h"
-#include "peg.h"
 #include "QGraphicsEllipseItem"
 #include <QPen>
 #include <QLinearGradient>

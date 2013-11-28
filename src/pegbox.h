@@ -21,9 +21,9 @@
 #define PEGBOX_H
 
 #include "emptybox.h"
+#include "peg.h"
 #include <QGraphicsItem>
 
-class Peg;
 class QGraphicsEllipseItem;
 class Board;
 

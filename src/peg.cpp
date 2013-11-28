@@ -26,6 +26,21 @@
 #include <QGraphicsSimpleTextItem>
 #include <QFont>
 
+const QColor Peg::PegColors[MAX_COLOR_NUMBER] = {
+	Qt::yellow,
+	Qt::red,
+	Qt::blue,
+	Qt::darkGray,
+	Qt::white,
+	Qt::green,
+	Qt::cyan,
+	Qt::magenta,
+	QColor("#FF7F00"),//brown
+	QColor("#7f00FF")//purple
+};
+
+const QString Peg::OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
+
 Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
@@ -70,8 +85,8 @@ void Peg::setColor(const int &color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
 	QRadialGradient gradient(7,7, 40, 15, 15);
-	gradient.setColorAt(0, PegColors[mColor][0]);
-	gradient.setColorAt(1, PegColors[mColor][1]);
+	gradient.setColorAt(0, PegColors[mColor]);
+	gradient.setColorAt(1, PegColors[mColor].darker(300));
 	setBrush(gradient);
 	onChangeIndicators(mIndicatorType);
 }

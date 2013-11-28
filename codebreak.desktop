@@ -1,12 +1,14 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;Game;BoardGame;
 Comment[en_US]=Mastermind Clone With Built-in Solver
-Comment=
+Comment=Mastermind Clone With Built-in Solver
 Exec=codebreak %F
-Icon=codebreak.png
+GenericName[en_US]=
+GenericName=
+Icon=/usr/share/pixmaps/codebreak.png
 MimeType=
 Name[en_US]=CodeBreak
+Name=CodeBreak
 Name[fa_IR]=کدشکن
 Path=
 StartupNotify=true

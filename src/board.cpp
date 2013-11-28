@@ -19,7 +19,6 @@
 
 #include "board.h"
 #include "button.h"
-#include "peg.h"
 #include "pegbox.h"
 #include "pinbox.h"
 #include "game.h"
@@ -580,14 +579,6 @@ void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, 
 	mLocale = locale_n;
 	mSameColor = samecolor;
 	mState = GameState::None;
-
-	// for safety, fallback to standard in out-range inputs
-	if (peg_n < MIN_SLOT_NUMBER || peg_n > MAX_SLOT_NUMBER ||
-			color_n < MIN_COLOR_NUMBER || color_n > MAX_COLOR_NUMBER)
-	{
-		mPegNumber = 4;
-		mColorNumber = 6;
-	}
 }
 //-----------------------------------------------------------------------------
 

@@ -26,6 +26,8 @@
 class EmptyBox : public QGraphicsRectItem
 {
 public:
+	static const int BoxAlphas[4];
+
 	explicit EmptyBox(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
 	virtual void setBoxState(const BoxState &state = BoxState::Future);
 

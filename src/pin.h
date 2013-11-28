@@ -21,11 +21,18 @@
 #define PIN_H
 
 #include <QGraphicsEllipseItem>
-#include "constants.h"
+
+enum class PinMouse
+{
+	Ignore,
+	Accept,
+	Pass
+};
 
 class Pin : public QGraphicsEllipseItem
 {
 public:
+
 	explicit Pin(const int &color = 0, QGraphicsItem *parent = 0);
 	int getColor() const {return m_color;}
 	void setColor(const int &c);

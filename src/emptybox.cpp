@@ -22,6 +22,11 @@
 #include <QBrush>
 #include <QPainter>
 
+const int EmptyBox::BoxAlphas[4] =
+{
+	160, 255, 50, 160
+};
+
 EmptyBox::EmptyBox(const QPoint &position, QGraphicsItem *parent):
 	QGraphicsRectItem(0, 0, 39, 39, parent),
 	mBoxState(BoxState::Future)

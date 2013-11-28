@@ -19,7 +19,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "board.h"
 #include "preferences.h"
 #include <QApplication>
 #include <QComboBox>
@@ -215,10 +214,18 @@ void MainWindow::onChangeGameMode(QAction *selectedAction)
 void MainWindow::onUpdateNumbers()
 {
 	mColors = colorsNumberComboBox->currentIndex();
-	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
 	mPegs = pegsNumberComboBox->currentIndex();
+	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
 	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
 	allowSameColorAction->setChecked(mSameColorAllowed);
+
+	// for safety, fallback to standard in out-range inputs
+	if (mColors < MIN_SLOT_NUMBER || mPegs > MAX_SLOT_NUMBER ||
+			mColors < MIN_COLOR_NUMBER || mPegs > MAX_COLOR_NUMBER)
+	{
+		mPegs = 4;
+		mColors = 6;
+	}
 
 	if(mBoard)
 	{

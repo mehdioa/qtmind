@@ -23,8 +23,8 @@
 #include <QMainWindow>
 #include <QLocale>
 #include "constants.h"
+#include "board.h"
 
-class Board;
 class QMenu;
 class QAction;
 class QToolBar;

@@ -24,6 +24,11 @@
 #include <QGraphicsView>
 #include <QLocale>
 
+enum class GameMode {
+	Master,		//HUMAN BREAKS THE CODE
+	Breaker		//MACHINE BREAKS THE CODE
+};
+
 class Peg;
 class EmptyBox;
 class PinBox;
@@ -31,6 +36,22 @@ class PegBox;
 class Button;
 class Game;
 class Message;
+
+enum class GameState
+{
+	None,
+	Running,
+	Paused,
+	Win,
+	Lose,
+	Resign,
+	Error,
+	Guessing,
+	WaittingOkButtonPress,
+	WaittingDoneButtonPress,
+	WaittingFirstRowFill,
+	WaittingPinBoxPress
+};
 
 class Board: public QGraphicsView
 {
