@@ -26,17 +26,17 @@
 #include <QGraphicsSimpleTextItem>
 #include <QFont>
 
-const QColor Peg::PegColors[MAX_COLOR_NUMBER] = {
-	Qt::yellow,
-	Qt::red,
-	Qt::blue,
-	Qt::darkGray,
-	Qt::white,
-	Qt::green,
-	Qt::cyan,
-	Qt::magenta,
-	QColor("#FF7F00"),//brown
-	QColor("#7f00FF")//purple
+const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
+	{QColor("#FFFF80"), QColor("#C05800")},
+	{QColor("#FF3300"), QColor("#400040")},
+	{QColor("#33CCFF"), QColor("#000080")},
+	{QColor("#ffffff"), QColor("#666666")},
+	{QColor("#808080"), Qt::black},
+	{QColor("#66FF33"), QColor("#385009")},
+	{QColor("#FF9900"), QColor("#A82A00")},
+	{QColor("#BA88FF"), QColor("#38005D")},
+	{QColor("#00FFFF"), QColor("#004040")},
+	{QColor("#FFC0FF"), QColor("#800080")}
 };
 
 const QString Peg::OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
@@ -52,15 +52,13 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 
 	pressedEffect = new QGraphicsDropShadowEffect;
 	pressedEffect->setBlurRadius(10);
-	pressedEffect->setXOffset(8);
+	pressedEffect->setXOffset(5);
 	setGraphicsEffect(pressedEffect);
 	pressedEffect->setEnabled(false);
 
-	auto gloss = new QGraphicsEllipseItem(5, 1.5, 25, 20, this);
-	gloss->setRotation(-45);
-	gloss->setPos(-5, 19);
-	QLinearGradient lgrad(25, 0, 25, 17);
-	lgrad.setColorAt(0, QColor(255, 255, 255, 120));
+	auto gloss = new QGraphicsEllipseItem(7, 4, 24, 20, this);
+	QLinearGradient lgrad(25, 0, 25, 21);
+	lgrad.setColorAt(0, QColor(255, 255, 255, 150));
 	lgrad.setColorAt(1, QColor(255, 255, 255, 0));
 	gloss->setBrush(lgrad);
 	gloss->setPen(Qt::NoPen);
@@ -84,9 +82,9 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 void Peg::setColor(const int &color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
-	QRadialGradient gradient(7,7, 40, 15, 15);
-	gradient.setColorAt(0, PegColors[mColor]);
-	gradient.setColorAt(1, PegColors[mColor].darker(300));
+	QRadialGradient gradient(20, 0, 60, 20, 0);
+	gradient.setColorAt(0, PegColors[mColor][0]);
+	gradient.setColorAt(1, PegColors[mColor][1]);
 	setBrush(gradient);
 	onChangeIndicators(mIndicatorType);
 }

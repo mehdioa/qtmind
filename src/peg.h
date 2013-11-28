@@ -42,7 +42,7 @@ class Peg : public QObject, public QGraphicsEllipseItem
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	static const QColor PegColors[MAX_COLOR_NUMBER];
+	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
 
 	explicit Peg(const QPoint &position, int color_number = 0,
