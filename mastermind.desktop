@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories=Qt;Game;LogicGame;
+Comment= Mastermind Board Game
+Exec=mastermind %F
+GenericName=Mastermind Board Game
+Icon=/usr/share/pixmaps/mastermind.png
+MimeType=
+Name=Mastermind
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=0.3
