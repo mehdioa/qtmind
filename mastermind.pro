@@ -21,9 +21,9 @@ VERSION = 0.3
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
-	TARGET = codebreak
+	TARGET = mastermind
 } else {
-	TARGET = CodeBreak
+	TARGET = Mastermind
 }
 
 TEMPLATE = app
@@ -62,14 +62,14 @@ FORMS    += \
 RESOURCES += \
     resource.qrc
 
-TRANSLATIONS = translations/codebreak_ara.ts \
-	translations/codebreak_cz.ts \
-	translations/codebreak_de.ts \
-	translations/codebreak_en.ts \
-	translations/codebreak_es.ts \
-	translations/codebreak_fa.ts \
-	translations/codebreak_fr.ts \
-	translations/codebreak_nl.ts
+TRANSLATIONS = translations/mastermind_ara.ts \
+	translations/mastermind_cz.ts \
+	translations/mastermind_de.ts \
+	translations/mastermind_en.ts \
+	translations/mastermind_es.ts \
+	translations/mastermind_fa.ts \
+	translations/mastermind_fr.ts \
+	translations/mastermindk_nl.ts
 
 OTHER_FILES += \
-    codebreak.desktop
+	mastermind.desktop

@@ -11,8 +11,8 @@
         <file>icons/char_indicator.png</file>
         <file>icons/digit_indicator.png</file>
         <file>icons/resign.png</file>
-        <file>icons/codebreak.png</file>
         <file>icons/modebreaker.png</file>
-        <file>icons/codebreak64.png</file>
+        <file>icons/mastermind64.png</file>
+        <file>icons/mastermind.png</file>
     </qresource>
 </RCC>

@@ -58,11 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	mBoard = new Board(mFontName, mFontSize, this);
 
 	setLayoutDirection(mLocale.textDirection());
-	setWindowTitle(tr("CodeBreak"));
+	setWindowTitle(tr("Mastermind"));
 	setCentralWidget(mBoard);
 	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
 
-	Preferences::loadTranslation("codebreak_");
+	Preferences::loadTranslation("mastermind_");
 
 	ui->menuGame->setTitle(tr("Game"));
 	ui->actionNew->setText(tr("New"));
@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionOptions->setText(tr("Options"));
 
 	ui->menuHelp->setTitle(tr("Help"));
-	ui->actionAbout_Codebreak->setText(tr("About Codebreak"));
+	ui->actionAbout_Mastermind->setText(tr("About Mastermind"));
 	ui->actionAbout_Qt->setText(tr("About Qt"));
 
 	auto indicatorTypeActions = new QActionGroup(this);
@@ -136,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
-	connect(ui->actionAbout_Codebreak, SIGNAL(triggered()), this, SLOT(onAbout()));
+	connect(ui->actionAbout_Mastermind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
@@ -253,10 +253,10 @@ void MainWindow::onUpdateNumbers()
 
 void MainWindow::onAbout()
 {
-	QMessageBox::about(this, tr("About CodeBreak"), QString(
+	QMessageBox::about(this, tr("About Mastermind"), QString(
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>"
 		"<p align='center'>%6<br/><small>%7</small></p>")
-		.arg(tr("CodeBreak"), QCoreApplication::applicationVersion(),
+		.arg(tr("Mastermind"), QCoreApplication::applicationVersion(),
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
 			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(mLocale.toString(2013)),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""),

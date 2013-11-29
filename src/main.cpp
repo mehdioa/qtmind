@@ -23,13 +23,13 @@
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("CodeBreak");
+	app.setApplicationName("Mastermind");
 	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("http://omidnikta.github.io/codebreak");
-	app.setOrganizationName("CodeBreak");
+	app.setOrganizationDomain("http://omidnikta.github.io/mastermind");
+	app.setOrganizationName("Mastermind");
 
 	MainWindow w;
-	w.setWindowIcon(QIcon(":/icons/codebreak.png"));
+	w.setWindowIcon(QIcon(":/icons/mastermind.png"));
 	w.show();
 
 	return app.exec();

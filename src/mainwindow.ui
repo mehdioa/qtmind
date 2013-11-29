@@ -66,7 +66,7 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_Codebreak"/>
+    <addaction name="actionAbout_Mastermind"/>
     <addaction name="actionAbout_Qt"/>
     <addaction name="separator"/>
    </widget>
@@ -148,13 +148,16 @@
     <string>Options</string>
    </property>
   </action>
-  <action name="actionAbout_Codebreak">
+  <action name="actionAbout_Mastermind">
    <property name="icon">
     <iconset resource="../resource.qrc">
-     <normaloff>:/icons/codebreak64.png</normaloff>:/icons/codebreak64.png</iconset>
+     <normaloff>:/icons/mastermind64.png</normaloff>:/icons/mastermind64.png</iconset>
    </property>
    <property name="text">
-    <string>About Codebreak</string>
+    <string>About Mastermind</string>
+   </property>
+   <property name="toolTip">
+    <string>About Mastermind</string>
    </property>
   </action>
   <action name="actionAbout_Qt">
