@@ -55,6 +55,7 @@ private slots:
 	void onNewGame();
 	void onPreferences();
 	void onAbout();
+	void onShowContextMenu(const QPoint& position);
 
 signals:
 	void changeIndicatorsSignal(const IndicatorType&);

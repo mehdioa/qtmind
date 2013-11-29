@@ -58,37 +58,30 @@ void PegBox::setBoxState(const BoxState &state)
 	switch (mBoxState) {
 	case BoxState::Past:
 		setPegState(PegState::Filled);
-		setEnabled(false);
 		if (mPeg) {
-			mPeg->setEnabled(false);
 			mPeg->setMovable(false);
 			mPeg->setVisible(true);
 		}
 		break;
 	case BoxState::Current:
-		setEnabled(true);
 		if (mPeg) {
-			mPeg->setEnabled(true);
 			mPeg->setMovable(true);
 			mPeg->setVisible(true);
 		}
 		break;
 	case BoxState::Future:
-		setEnabled(false);
 		if (mPeg) {
-			mPeg->setEnabled(false);
 			mPeg->setMovable(false);
 			mPeg->setVisible(true);
 		}
 		break;
 	default: //BOX_NONE
-		setEnabled(false);
 		if (mPeg) {
 			mPeg->setVisible(false);
 		}
 		break;
 	}
-
+	update();
 }
 //-----------------------------------------------------------------------------
 

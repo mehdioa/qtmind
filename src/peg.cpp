@@ -44,7 +44,8 @@ const QString Peg::OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
 Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
-		mBox(0)
+		mBox(0),
+		onDemand(false)
 {
 	mColor = (-1 < color_number &&color_number < 10) ? color_number : 0;
 
@@ -74,7 +75,7 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 	setZValue(2);
 	setPos(mPosition);
 	setMovable(true);
-	setAcceptedMouseButtons(Qt::LeftButton);
+//	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptDrops(true);
 }
 //-----------------------------------------------------------------------------
@@ -93,7 +94,8 @@ void Peg::setColor(const int &color_number)
 void Peg::setMovable(bool enabled)
 {
 	setFlag(QGraphicsItem::ItemIsMovable, enabled);
-	setEnabled(enabled);
+//	setEnabled(enabled);
+	onDemand = enabled;
 	setCursor(enabled ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setZValue(1);
 }
@@ -101,44 +103,50 @@ void Peg::setMovable(bool enabled)
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (isEnabled())
+	if (event->button() == Qt::LeftButton)
 	{
-		pressedEffect->setEnabled(true);
-		setZValue(3);
+		if (onDemand)
+		{
+			pressedEffect->setEnabled(true);
+			setZValue(3);
 
-		if(mBox->getPegState() != PegState::Initial)
-			mBox->setPegState(PegState::Draged);
+			if(mBox->getPegState() != PegState::Initial)
+				mBox->setPegState(PegState::Draged);
 
-		setCursor(Qt::ClosedHandCursor);
+			setCursor(Qt::ClosedHandCursor);
+		}
+		QGraphicsEllipseItem::mousePressEvent(event);
 	}
-	QGraphicsEllipseItem::mousePressEvent(event);
 }
 //-----------------------------------------------------------------------------
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (isEnabled())
+	if (event->button() == Qt::LeftButton)
 	{
-		pressedEffect->setEnabled(false);
-		setZValue(2);
-		setCursor(Qt::OpenHandCursor);
-	}
+		if (onDemand)
+		{
+			pressedEffect->setEnabled(false);
+			setZValue(2);
+			setCursor(Qt::OpenHandCursor);
+		}
 
-	QGraphicsEllipseItem::mouseReleaseEvent(event);
+		QGraphicsEllipseItem::mouseReleaseEvent(event);
 
-	if (mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint()))//	droped on its own box
-	{
-		if (mBox->getPegState() != PegState::Initial)
-			mBox->setPegState(PegState::Filled);
-	}
-	else //	droped out of its own box,
-	{
-		if (mBox->getPegState() != PegState::Initial)
-			mBox->setPegState(PegState::Empty);
-		emit mouseReleasedSignal(sceneBoundingRect().center().toPoint(), mColor);
-	}
+		if (mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint()))//	droped on its own box
+		{
+			if (mBox->getPegState() != PegState::Initial)
+				mBox->setPegState(PegState::Filled);
+		}
+		else //	droped out of its own box,
+		{
+			if (mBox->getPegState() != PegState::Initial)
+				mBox->setPegState(PegState::Empty);
+			emit mouseReleasedSignal(sceneBoundingRect().center().toPoint(), mColor);
+		}
 
-	setPos(mBox->sceneBoundingRect().topLeft());
+		setPos(mBox->sceneBoundingRect().topLeft());
+	}
 }
 //-----------------------------------------------------------------------------
 

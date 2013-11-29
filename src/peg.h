@@ -51,6 +51,7 @@ public:
 	int getColor() const {return mColor;}
 	void setMovable(bool );
 	void setBox(PegBox *box) {mBox = box;}
+	void setOnDemand(bool b) {onDemand = b;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
@@ -72,6 +73,7 @@ private:
 	QGraphicsDropShadowEffect *pressedEffect;
 	QGraphicsSimpleTextItem *mIndicator;
 	int mColor;
+	bool onDemand;
 };
 
 #endif // PEG_H

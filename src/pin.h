@@ -46,6 +46,7 @@ protected:
 
 private:
 	int m_color;//  -1 = white, 0 = none, 1 = black
+	bool onDemand;
 };
 
 #endif // PIN_H

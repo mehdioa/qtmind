@@ -45,6 +45,7 @@ signals:
 
 private:
 	QVector<Pin*> pins;
+	bool onDemand;
 };
 
 #endif // PINBOX_H
