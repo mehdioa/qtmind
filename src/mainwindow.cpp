@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionCode_Breaker->setText(tr("Code Breaker"));
 	ui->actionCode_Master->setText(tr("Code Master"));
 	ui->menuIndicator_Type->setTitle(tr("Indicator Type"));
-	ui->actionNo_Indicators->setText(tr("No Indicatro"));
+	ui->actionNo_Indicators->setText(tr("No Indicator"));
 	ui->actionCharacters->setText(tr("Character"));
 	ui->actionDigits->setText(tr("Digit"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
@@ -144,7 +144,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(this, SIGNAL(newGame()), this, SLOT(onNewGame()));
 	connect(this, SIGNAL(updateNumbers()), this, SLOT(onUpdateNumbers()));
 
-	setContextMenuPolicy(Qt::NoContextMenu);
+	setContextMenuPolicy(Qt::CustomContextMenu);
 
 	emit updateNumbers();
 

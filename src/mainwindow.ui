@@ -151,7 +151,7 @@
   <action name="actionAbout_Mastermind">
    <property name="icon">
     <iconset resource="../resource.qrc">
-     <normaloff>:/icons/mastermind64.png</normaloff>:/icons/mastermind64.png</iconset>
+     <normaloff>:/icons/hicolor/64x64/mastermind.png</normaloff>:/icons/hicolor/64x64/mastermind.png</iconset>
    </property>
    <property name="text">
     <string>About Mastermind</string>

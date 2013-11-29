@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	app.setOrganizationName("Mastermind");
 
 	MainWindow w;
-	w.setWindowIcon(QIcon(":/icons/mastermind.png"));
+	w.setWindowIcon(QIcon(":/icons/hicolor/64x64/mastermind.png"));
 	w.show();
 
 	return app.exec();

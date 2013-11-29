@@ -206,40 +206,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="157"/>
-        <source>About Codebreak</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="166"/>
+        <location filename="../src/mainwindow.ui" line="169"/>
         <location filename="../src/mainwindow.cpp" line="86"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="178"/>
+        <location filename="../src/mainwindow.ui" line="181"/>
         <location filename="../src/mainwindow.cpp" line="75"/>
         <source>Code Master</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="190"/>
+        <location filename="../src/mainwindow.ui" line="193"/>
         <location filename="../src/mainwindow.cpp" line="74"/>
         <source>Code Breaker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="205"/>
+        <location filename="../src/mainwindow.ui" line="208"/>
         <source>No Indicators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="217"/>
+        <location filename="../src/mainwindow.ui" line="220"/>
         <source>Characters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="229"/>
+        <location filename="../src/mainwindow.ui" line="232"/>
         <source>Digits</source>
         <translation type="unfinished"></translation>
     </message>
@@ -247,11 +242,6 @@
         <location filename="../src/mainwindow.cpp" line="61"/>
         <location filename="../src/mainwindow.cpp" line="259"/>
         <source>Mastermind</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="77"/>
-        <source>No Indicatro</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -270,9 +260,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.ui" line="157"/>
+        <location filename="../src/mainwindow.ui" line="160"/>
         <location filename="../src/mainwindow.cpp" line="85"/>
         <location filename="../src/mainwindow.cpp" line="256"/>
         <source>About Mastermind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="77"/>
+        <source>No Indicator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

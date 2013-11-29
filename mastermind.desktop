@@ -1,13 +1,21 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;Game;LogicGame;
-Comment= Mastermind Board Game
+Comment=Mastermind Board Game
+comment[fa]=بازی فکر بکر
 Exec=mastermind %F
 GenericName=Mastermind Board Game
 Icon=/usr/share/pixmaps/mastermind.png
 MimeType=
 Name=Mastermind
+Name[fa]=فکر بکر
+Path=
 StartupNotify=true
 Terminal=false
 TerminalOptions=
 Type=Application
 Version=0.3
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
