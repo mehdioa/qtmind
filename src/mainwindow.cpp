@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	mMode = (GameMode) QSettings().value("Mode", 0).toInt();
-	mColors = QSettings().value("Colors", 6).toInt()-MIN_COLOR_NUMBER;
-	mPegs = QSettings().value("Pegs", 4).toInt()-MIN_SLOT_NUMBER;
+	mColors = QSettings().value("Colors", 6).toInt();
+	mPegs = QSettings().value("Pegs", 4).toInt();
 	mAlgorithm = (Algorithm) QSettings().value("Algorithm", 0).toInt();
 	mSameColorAllowed = QSettings().value("SameColor", true).toBool();
 	mSetPins = QSettings().value("SetPins", true).toBool();
@@ -161,8 +161,8 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	QSettings().setValue("Mode", (int) mMode);
-	QSettings().setValue("Colors", mColors + MIN_COLOR_NUMBER);
-	QSettings().setValue("Pegs", mPegs + MIN_SLOT_NUMBER);
+	QSettings().setValue("Colors", mColors);
+	QSettings().setValue("Pegs", mPegs);
 	QSettings().setValue("Algorithm", (int) mAlgorithm);
 	QSettings().setValue("SameColor", mSameColorAllowed);
 	QSettings().setValue("SetPins",	mSetPins);
@@ -176,7 +176,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
-	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm,
+	qDebug("Pegs: %d  Colors: %d", mPegs, mColors);
+	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
 				  mSetPins, mCloseRow, mLocale, mIndicator);
 
 	if(mBoard->getState() != GameState::None)
@@ -229,14 +230,14 @@ void MainWindow::onChangeGameMode(QAction *selectedAction)
 
 void MainWindow::onUpdateNumbers()
 {
-	mColors = colorsNumberComboBox->currentIndex();
-	mPegs = pegsNumberComboBox->currentIndex();
+	mColors = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
+	mPegs = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
 	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
 	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 
 	// for safety, fallback to standard in out-range inputs
-	if (mColors < MIN_SLOT_NUMBER || mPegs > MAX_SLOT_NUMBER ||
+	if (mPegs < MIN_SLOT_NUMBER || mPegs > MAX_SLOT_NUMBER ||
 			mColors < MIN_COLOR_NUMBER || mPegs > MAX_COLOR_NUMBER)
 	{
 		mPegs = 4;
@@ -255,15 +256,6 @@ void MainWindow::onUpdateNumbers()
 			emit newGameSignal();
 		}
 	}
-
-	QSettings().setValue("Mode", (int) mMode);
-	QSettings().setValue("Colors", mColors + MIN_COLOR_NUMBER);
-	QSettings().setValue("Pegs", mPegs + MIN_SLOT_NUMBER);
-	QSettings().setValue("Algorithm", (int) mAlgorithm);
-	QSettings().setValue("SetPins",	mSetPins);
-	QSettings().setValue("CloseRow", mCloseRow);
-	QSettings().setValue("Indicator", (int) mIndicator);
-	QSettings().setValue("SameColor", mSameColorAllowed);
 }
 //-----------------------------------------------------------------------------
 
@@ -299,7 +291,7 @@ void MainWindow::setPegsComboBox()
 	{
 		pegsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Slots")));
 	}
-	pegsNumberComboBox->setCurrentIndex(mPegs);
+	pegsNumberComboBox->setCurrentIndex(mPegs-MIN_SLOT_NUMBER);
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
 	pegsNumberComboBox->setLocale(mLocale);
 }
@@ -312,7 +304,7 @@ void MainWindow::setColorsComboBox()
 	{
 		colorsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Colors")));
 	}
-	colorsNumberComboBox->setCurrentIndex(mColors);
+	colorsNumberComboBox->setCurrentIndex(mColors-MIN_COLOR_NUMBER);
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 }
 //-----------------------------------------------------------------------------
