@@ -318,11 +318,8 @@ void Board::onPinBoxPressed()
 
 		if ( currentColor == masterColor)
 			++blacks;
-		else
-		{
-			++c[currentColor];
-			++g[masterColor];
-		}
+		++c[currentColor];
+		++g[masterColor];
 	}
 
 	int total = 0;
