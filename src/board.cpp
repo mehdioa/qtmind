@@ -185,6 +185,7 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 		{
 			box->setPeg(peg);
 			connect(peg, SIGNAL(mouseReleasedSignal(QPoint, int)), this, SLOT(onPegMouseRelease(QPoint, int)));
+			connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClick(Peg*)));
 		}
 	}
 }
@@ -195,6 +196,8 @@ void Board::initializeScene()
 	mCodeBoxes.clear();
 	mPinBoxes.clear();
 	mPegBoxes.clear();
+	mMasterBoxes.clear();
+	mCurrentBoxes.clear();
 
 	scene()->clear();
 	setInteractive(true);
@@ -276,6 +279,19 @@ void Board::onPegMouseRelease(const QPoint &position, const int &color)
 }
 //-----------------------------------------------------------------------------
 
+void Board::onPegMouseDoubleClick(Peg *peg)
+{
+	foreach (PegBox *box, mCurrentBoxes)
+	{
+		if (!box->hasPeg() || box->getPegState() == PegState::Empty)
+		{
+			peg->setPos(box->sceneBoundingRect().topLeft().toPoint());
+			break;
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+
 void Board::onPinBoxPressed()
 {
 	/*	This function is the running engine of the Breaker mode.
@@ -340,6 +356,9 @@ void Board::onPinBoxPressed()
 	{
 		mState = GameState::Lose;
 		mMessage->showMessage(tr("Game Over! You Failed"));
+		setBoxStateOfList(&mMasterBoxes, BoxState::Past);
+		setBoxStateOfList(&mCurrentBoxes, BoxState::Past);
+		setBoxStateOfList(&mPinBoxes, BoxState::Future);
 		setBoxStateOfList(&mPegBoxes, BoxState::Future);
 	}
 	else // continue the game

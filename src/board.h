@@ -80,6 +80,7 @@ signals:
 
 private slots:
 	void onPegMouseRelease(const QPoint &position, const int &color);
+	void onPegMouseDoubleClick(Peg *);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();

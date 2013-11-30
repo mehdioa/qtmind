@@ -50,14 +50,17 @@ public:
 	void setColor(const int &color_number);
 	int getColor() const {return mColor;}
 	void setMovable(bool );
+	bool isMovable() const {return isActive;}
 	void setBox(PegBox *box) {mBox = box;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 signals:
 	void mouseReleasedSignal(QPoint position, int color);
+	void mouseDoubleClickSignal(Peg *);
 
 protected slots:
 	void onChangeIndicators(const IndicatorType &indicator_n);

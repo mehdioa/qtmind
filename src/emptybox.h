@@ -30,6 +30,7 @@ public:
 
 	explicit EmptyBox(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
 	virtual void setBoxState(const BoxState &state = BoxState::Future);
+	BoxState getBoxState() const {return mBoxState;}
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);

@@ -101,35 +101,30 @@ void Peg::setMovable(bool enabled)
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (event->button() == Qt::LeftButton)
+	QGraphicsEllipseItem::mousePressEvent(event);
+
+	if (event->button() == Qt::LeftButton && isActive)
 	{
-		if (isActive)
-		{
-			pressedEffect->setEnabled(true);
-			setZValue(3);
+		pressedEffect->setEnabled(true);
+		setZValue(3);
 
-			if(mBox->getPegState() != PegState::Initial)
-				mBox->setPegState(PegState::Draged);
+		if(mBox->getPegState() != PegState::Initial)
+			mBox->setPegState(PegState::Draged);
 
-			setCursor(Qt::ClosedHandCursor);
-		}
-		QGraphicsEllipseItem::mousePressEvent(event);
+		setCursor(Qt::ClosedHandCursor);
 	}
 }
 //-----------------------------------------------------------------------------
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (event->button() == Qt::LeftButton)
-	{
-		if (isActive)
-		{
-			pressedEffect->setEnabled(false);
-			setZValue(2);
-			setCursor(Qt::OpenHandCursor);
-		}
+	QGraphicsEllipseItem::mouseReleaseEvent(event);
 
-		QGraphicsEllipseItem::mouseReleaseEvent(event);
+	if (event->button() == Qt::LeftButton && isActive)
+	{
+		pressedEffect->setEnabled(false);
+		setZValue(2);
+		setCursor(Qt::OpenHandCursor);
 
 		if (mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint()))//	droped on its own box
 		{
@@ -144,6 +139,21 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		}
 
 		setPos(mBox->sceneBoundingRect().topLeft());
+	}
+}
+//-----------------------------------------------------------------------------
+
+void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+	if (isActive)
+	{
+		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
+		if (mBox->getPegState() == PegState::Initial)
+			emit mouseDoubleClickSignal(this);
+		else if (mBox->getBoxState() == BoxState::Current)
+		{
+			setPos(sceneBoundingRect().center().toPoint() - QPoint(20, 60));
+		}
 	}
 }
 //-----------------------------------------------------------------------------
