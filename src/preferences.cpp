@@ -54,9 +54,6 @@ Preferences::Preferences(QLocale *locale_n, QWidget *parent) :
 	QString translation;
 	QStringList translations = findTranslations();
 	foreach (translation, translations) {
-		if (translation.startsWith("qt")) {
-			continue;
-		}
 		translation.remove(mAppName);
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
@@ -73,7 +70,6 @@ Preferences::~Preferences()
 {
 	delete ui;
 }
-
 //-----------------------------------------------------------------------------
 
 void Preferences::loadTranslation(const QString &name)

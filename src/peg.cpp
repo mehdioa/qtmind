@@ -45,7 +45,7 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 		QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 		mPosition(position),
 		mBox(0),
-		onDemand(false)
+		isActive(false)
 {
 	mColor = (-1 < color_number &&color_number < 10) ? color_number : 0;
 
@@ -75,7 +75,6 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 	setZValue(2);
 	setPos(mPosition);
 	setMovable(true);
-//	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptDrops(true);
 }
 //-----------------------------------------------------------------------------
@@ -94,8 +93,7 @@ void Peg::setColor(const int &color_number)
 void Peg::setMovable(bool enabled)
 {
 	setFlag(QGraphicsItem::ItemIsMovable, enabled);
-//	setEnabled(enabled);
-	onDemand = enabled;
+	isActive = enabled;
 	setCursor(enabled ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setZValue(1);
 }
@@ -105,7 +103,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		if (onDemand)
+		if (isActive)
 		{
 			pressedEffect->setEnabled(true);
 			setZValue(3);
@@ -124,7 +122,7 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		if (onDemand)
+		if (isActive)
 		{
 			pressedEffect->setEnabled(false);
 			setZValue(2);

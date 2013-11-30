@@ -25,7 +25,7 @@
 
 PinBox::PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *parent):
 	EmptyBox(position, parent),
-	onDemand(false)
+	isActive(false)
 {
 	for(int i = 0; i < pin_number; ++i)
 	{
@@ -107,26 +107,26 @@ void PinBox::setBoxState(const BoxState &state)
 	mBoxState = state;
 	switch (mBoxState) {
 	case BoxState::Past: // used for boxes that are done. No interaction allowed
-		onDemand = false;
+		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
-		onDemand = true;
+		isActive = true;
 		setCursor(Qt::PointingHandCursor);
 		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Pass);
 		break;
 	case BoxState::Future: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
-		onDemand = false;
+		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Ignore);
 		break;
 
 	default: //BoxState::None: used for entering keys in breaker mode, just keys are active
-		onDemand = false;
+		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin *pin, pins)
 			pin->setMouseEventHandling(PinMouse::Accept);
@@ -138,6 +138,6 @@ void PinBox::setBoxState(const BoxState &state)
 
 void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	if (onDemand)
+	if (isActive)
 		emit pinBoxPressed();
 }

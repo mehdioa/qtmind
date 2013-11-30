@@ -23,7 +23,6 @@
 #include "pinbox.h"
 #include "game.h"
 #include "message.h"
-#include <QThread>
 #include <QMetaType>
 
 Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
@@ -38,8 +37,7 @@ Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
 	mAlgorithm(Algorithm::MostParts),
 	mFontName(font_name),
 	mFontSize(font_size),
-	mGame(0),
-	mGameThread(0)
+	mGame(0)
 {
 	qRegisterMetaType<Algorithm>("Algorithm");
 	auto scene = new QGraphicsScene(this);
@@ -60,16 +58,11 @@ Board::~Board()
 {
 	if (mGame)
 	{
-		mGame->interupt();
+		emit interuptSignal();
+		mGame->quit();
+		mGame->wait();
 		mGame->deleteLater();
 	}
-
-	if (mGameThread && mGameThread->isRunning())
-	{
-		mGameThread->quit();
-		mGameThread->wait();
-	}
-
 	scene()->clear();
 
 }
@@ -182,7 +175,7 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 	{
 		auto peg = new Peg(pos, color, mIndicator);
 		scene()->addItem(peg);
-		connect(this, SIGNAL(changePegIndicator(IndicatorType)), peg, SLOT(onChangeIndicators(IndicatorType)));
+		connect(this, SIGNAL(changePegIndicatorSignal(IndicatorType)), peg, SLOT(onChangeIndicators(IndicatorType)));
 
 		if(backPeg)
 		{
@@ -199,7 +192,6 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 
 void Board::initializeScene()
 {
-	mState = GameState::None;
 	mCodeBoxes.clear();
 	mPinBoxes.clear();
 	mPegBoxes.clear();
@@ -368,7 +360,7 @@ void Board::onPinBoxPressed()
 void Board::onChangeIndicators(const IndicatorType &indicator_n)
 {
 	setIndicatorType(indicator_n);
-	emit changePegIndicator(mIndicator);
+	emit changePegIndicatorSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
@@ -414,7 +406,7 @@ void Board::onOkButtonPressed()
 	mMessage->showMessage(tr("Let Me Think..."));
 	mState = GameState::Guessing;
 
-	emit startGuessing(mAlgorithm);
+	emit startGuessingSignal(mAlgorithm);
 }
 //-----------------------------------------------------------------------------
 
@@ -441,15 +433,16 @@ void Board::onDoneButtonPressed()
 	mMessage->showMessage(tr("Let Me Think..."));
 
 	mState = GameState::Guessing;
-	emit startGuessing(mAlgorithm);
+	emit startGuessingSignal(mAlgorithm);
 }
 //-----------------------------------------------------------------------------
 
-void Board::onGuessReady(const Algorithm &alg)
+void Board::onGuessReady(const Algorithm &alg, const QString &guess,
+						 const int &possibleSize, const qreal &lastWeight)
 {
 	mState = GameState::Running;
-	mGuess = mGame->getGuess();
-	showTranslatedInformation(alg);
+	mGuess = guess;
+	showTranslatedInformation(alg, possibleSize, lastWeight);
 
 	if (mCodeBoxes.isEmpty())
 	{
@@ -482,12 +475,17 @@ void Board::onGuessReady(const Algorithm &alg)
 
 //-----------------------------------------------------------------------------
 
-void Board::play(const GameMode &mode)
+void Board::play()
 {
+	if (mGame)
+	{
+		emit interuptSignal();
+		mGame->quit();
+		mGame->wait();
+	}
 	initializeScene();
-	mMode = mode;
 	mState = GameState::None;
-	switch (mode) {
+	switch (mMode) {
 	case GameMode::Master:
 		playCodeMaster();
 		break;
@@ -506,14 +504,15 @@ void Board::playCodeMaster()
 
 	if (!mGame)
 	{
-		mGame = new Game(mPegNumber, mColorNumber, mSameColor);
-		mGameThread = new QThread(this);
-		mGame->moveToThread(mGameThread);
-		connect(mGame, SIGNAL(guessDoneSignal(Algorithm)), this, SLOT(onGuessReady(Algorithm)));
-		connect(this, SIGNAL(startGuessing(Algorithm)), mGame, SLOT(startGuessing(Algorithm)));
-		mGameThread->start(QThread::NormalPriority);
+		mGame = new Game(mPegNumber, mColorNumber, mSameColor, this);
+		connect(mGame, SIGNAL(guessDoneSignal(Algorithm, QString, int, qreal)),
+				this, SLOT(onGuessReady(Algorithm, QString, int, qreal)));
+		connect(this, SIGNAL(startGuessingSignal(Algorithm)), mGame, SLOT(onStartGuessing(Algorithm)));
+		connect(this, SIGNAL(resetGameSignal(int,int,bool)), mGame, SLOT(onReset(int,int,bool)));
+		connect(this, SIGNAL(interuptSignal()), mGame, SLOT(onInterupt()));
 	}
-	mGame->reset(mPegNumber, mColorNumber, mSameColor);
+	emit interuptSignal();
+	emit resetGameSignal(mPegNumber, mColorNumber, mSameColor);
 
 	mMessage->showMessage(tr("Place Your Pegs ... "));
 
@@ -578,7 +577,6 @@ void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, 
 	mAlgorithm = algorithm_n;
 	mLocale = locale_n;
 	mSameColor = samecolor;
-	mState = GameState::None;
 }
 //-----------------------------------------------------------------------------
 
@@ -614,9 +612,8 @@ void Board::setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 }
 //-----------------------------------------------------------------------------
 
-void Board::showTranslatedInformation(const Algorithm &alg)
+void Board::showTranslatedInformation(const Algorithm &alg, const int &possibleSize, const qreal &minWeight)
 {
-	int possibleSize = mGame->getPossibleCodesSize();
 
 	if (possibleSize == 1)
 	{
@@ -629,7 +626,6 @@ void Board::showTranslatedInformation(const Algorithm &alg)
 	}
 	else
 	{
-		qreal minWeight = mGame->getLastMinWeight();
 		switch (alg) {
 		case Algorithm::MostParts:
 			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
@@ -653,19 +649,11 @@ void Board::showTranslatedInformation(const Algorithm &alg)
 }
 //-----------------------------------------------------------------------------
 
-void Board::interupt()
-{
-	if (mGame)
-		mGame->interupt();
-}
-//-----------------------------------------------------------------------------
-
 void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
 {
 	mSetPins = set_pins;
 	mCloseRow = closeRow;
 }
-
 //-----------------------------------------------------------------------------
 
 void Board::setIndicatorType(const IndicatorType &indicator_n)
@@ -673,7 +661,7 @@ void Board::setIndicatorType(const IndicatorType &indicator_n)
 	if(mIndicator != indicator_n)
 	{
 		mIndicator = indicator_n;
-		emit changePegIndicator(mIndicator);
+		emit changePegIndicatorSignal(mIndicator);
 	}
 }
 //-----------------------------------------------------------------------------

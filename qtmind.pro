@@ -21,9 +21,9 @@ VERSION = 0.4
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
-	TARGET = mastermind
+	TARGET = qtmind
 } else {
-	TARGET = Mastermind
+	TARGET = QtMind
 }
 
 TEMPLATE = app
@@ -62,14 +62,14 @@ FORMS    += \
 RESOURCES += \
     resource.qrc
 
-TRANSLATIONS = translations/mastermind_ara.ts \
-	translations/mastermind_cz.ts \
-	translations/mastermind_de.ts \
-	translations/mastermind_en.ts \
-	translations/mastermind_es.ts \
-	translations/mastermind_fa.ts \
-	translations/mastermind_fr.ts \
-	translations/mastermindk_nl.ts
+TRANSLATIONS = translations/qtmind_ara.ts \
+	translations/qtmind_cz.ts \
+	translations/qtmind_de.ts \
+	translations/qtmind_en.ts \
+	translations/qtmind_es.ts \
+	translations/qtmind_fa.ts \
+	translations/qtmind_fr.ts \
+	translations/qtmindk_nl.ts
 
 OTHER_FILES += \
-	mastermind.desktop
+	qtmind.desktop

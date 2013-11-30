@@ -1,13 +1,13 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;Game;LogicGame;
-Comment=Mastermind Board Game
+Comment=Mastermind Game
 comment[fa]=بازی فکر بکر
-Exec=mastermind %F
-GenericName=Mastermind Board Game
-Icon=/usr/share/pixmaps/mastermind.png
+Exec=qtmind %F
+GenericName=Mastermind Game
+Icon=/usr/share/pixmaps/qtmind.png
 MimeType=
-Name=Mastermind
+Name=QtMind
 Name[fa]=فکر بکر
 Path=
 StartupNotify=true

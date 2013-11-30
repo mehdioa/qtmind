@@ -23,13 +23,13 @@
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("Mastermind");
+	app.setApplicationName("QtMind");
 	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("http://omidnikta.github.io/mastermind");
-	app.setOrganizationName("Mastermind");
+	app.setOrganizationDomain("http://omidnikta.github.io/qtmind");
+	app.setOrganizationName("QtMind");
 
 	MainWindow w;
-	w.setWindowIcon(QIcon(":/icons/hicolor/64x64/mastermind.png"));
+	w.setWindowIcon(QIcon(":/icons/hicolor/64x64/qtmind.png"));
 	w.show();
 
 	return app.exec();

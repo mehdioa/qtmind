@@ -12,11 +12,11 @@
         <file>icons/digit_indicator.png</file>
         <file>icons/resign.png</file>
         <file>icons/modebreaker.png</file>
-        <file>icons/hicolor/16x16/mastermind.png</file>
-        <file>icons/hicolor/32x32/mastermind.png</file>
-        <file>icons/hicolor/64x64/mastermind.png</file>
-        <file>icons/hicolor/128x128/mastermind.png</file>
-        <file>icons/hicolor/256x256/mastermind.png</file>
-        <file>icons/hicolor/512x512/mastermind.png</file>
+        <file>icons/hicolor/16x16/qtmind.png</file>
+        <file>icons/hicolor/32x32/qtmind.png</file>
+        <file>icons/hicolor/64x64/qtmind.png</file>
+        <file>icons/hicolor/128x128/qtmind.png</file>
+        <file>icons/hicolor/256x256/qtmind.png</file>
+        <file>icons/hicolor/512x512/qtmind.png</file>
     </qresource>
 </RCC>

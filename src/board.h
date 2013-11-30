@@ -60,7 +60,7 @@ class Board: public QGraphicsView
 public:
 	explicit Board(const QString &font_name = "Sans Serif", const int &font_size = 12, QWidget *parent = 0);
 	~Board();
-	void play(const GameMode &mode);
+	void play();
 	void setPinsRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
@@ -74,8 +74,11 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 
 signals:
-	void changePegIndicator(const IndicatorType &indicator_t);
-	void startGuessing(const Algorithm &alg);
+	void changePegIndicatorSignal(IndicatorType);
+	void startGuessingSignal(Algorithm);
+	void resetGameSignal(int peg_no, int color_no,
+					bool allow_same_color);
+	void interuptSignal();
 
 private slots:
 	void onPegMouseRelease(const QPoint &position, const int &color);
@@ -84,7 +87,8 @@ private slots:
 	void onPinBoxPressed();
 	void onChangeIndicators(const IndicatorType &indicator_n);
 	void onResign();
-	void onGuessReady(const Algorithm &alg);
+	void onGuessReady(const Algorithm &alg, const QString &guess,
+					  const int &possibleSize, const qreal &lastWeight);
 
 private:
 	void playCodeMaster();
@@ -94,8 +98,7 @@ private:
 	void codeRowFilled(const bool &filled);
 	void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t);
 	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);
-	void showTranslatedInformation(const Algorithm &alg);
-	void interupt();
+	void showTranslatedInformation(const Algorithm &alg, const int &possibleSize, const qreal &minWeight);
 	void initializeScene();
 	void setIndicatorType(const IndicatorType &indicator_n);
 
@@ -128,7 +131,6 @@ private:
 	Button *mDoneButton;
 	Message *mMessage;
 	Message *mInformation;
-	QThread *mGameThread;
 };
 
 #endif // BOARD_H

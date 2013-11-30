@@ -24,7 +24,7 @@
 Pin::Pin(const int &color, QGraphicsItem *parent) :
 	QGraphicsEllipseItem(0, 0, 12, 12, parent),
 	m_color(color),
-	onDemand(false)
+	isActive(false)
 {
 	setPen(Qt::NoPen);
 	QLinearGradient lgrad(0, 0, 12, 12);
@@ -38,7 +38,7 @@ Pin::Pin(const int &color, QGraphicsItem *parent) :
 
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	if (onDemand)
+	if (isActive)
 		setColor((m_color - 2) % 3 + 1);
 }
 //-----------------------------------------------------------------------------
@@ -66,17 +66,17 @@ void Pin::setMouseEventHandling(const PinMouse &event)
 {
 	switch (event) {
 	case PinMouse::Ignore:
-		onDemand = false;
+		isActive = false;
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::ArrowCursor);
 		break;
 	case PinMouse::Accept:
-		onDemand = true;
+		isActive = true;
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 		break;
 	default: // PinMouse::Pass, let the pinbox receive the mouse event
-		onDemand = false;
+		isActive = false;
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::PointingHandCursor);
 		break;

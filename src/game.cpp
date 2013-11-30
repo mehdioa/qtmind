@@ -35,18 +35,18 @@ inline int ipow(int base, int exp)
 }
 //-----------------------------------------------------------------------------
 
-Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color):
-	QObject(0),
+Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color, QObject *parent):
+	QThread(parent),
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
 	mAllowSameColor(allow_same_color),
 	mLastMinWeight(-1),
-	mInterupt(false),
+	mInterupt(true),
 	mAllCodes(0),
 	mFirstPossibleCodes(0)
 {
 	createTables();
-	reset(peg_no, color_no, mAllowSameColor);
+	onReset(peg_no, color_no, mAllowSameColor);
 }
 //-----------------------------------------------------------------------------
 
@@ -94,7 +94,7 @@ void Game::deleteTables()
 }
 //-----------------------------------------------------------------------------
 
-void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_color)
+void Game::onReset(const int &peg_no, const int &color_no, const bool &allow_same_color)
 {
 	if(mColorNumber != color_no || mPegNumber != peg_no || mAllowSameColor != allow_same_color)
 	{
@@ -118,11 +118,13 @@ void Game::reset(const int &peg_no, const int &color_no, const bool &allow_same_
 	mLastMinWeight = -1;
 	mGuess = "";
 }
+//-----------------------------------------------------------------------------
 
-void Game::startGuessing(const Algorithm &alg)
+void Game::onStartGuessing(const Algorithm &alg)
 {
-	makeGuess(alg);
-	emit guessDoneSignal(alg);
+	mInterupt = false;
+	mAlgorithm = alg;
+	start(QThread::NormalPriority);
 }
 //-----------------------------------------------------------------------------
 
@@ -255,7 +257,16 @@ bool Game::setResponse(const int &response)
 }
 //-----------------------------------------------------------------------------
 
-QString Game::getFirstGuess(const Algorithm &alg) const
+void Game::run()
+{
+	makeGuess();
+	emit finished();
+	if (!mInterupt)
+		emit guessDoneSignal(mAlgorithm, mGuess, mPossibleCodes.size(), mLastMinWeight);
+}
+//-----------------------------------------------------------------------------
+
+QString Game::getFirstGuess() const
 {
 	QString answer;
 	QString str;
@@ -280,7 +291,7 @@ QString Game::getFirstGuess(const Algorithm &alg) const
 			break;
 		}
 
-		if(mColorNumber == 6 && mPegNumber == 4 && alg == Algorithm::WorstCase) // the classic game is best with this first guess
+		if(mColorNumber == 6 && mPegNumber == 4 && mAlgorithm == Algorithm::WorstCase) // the classic game is best with this first guess
 			answer = (QString ) "0011";
 	}
 	else
@@ -294,7 +305,7 @@ QString Game::getFirstGuess(const Algorithm &alg) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::makeGuess(const Algorithm &alg, const bool&)
+void Game::makeGuess()
 {
 	/*	This function create a guess based on the algorithm. The first guess
 	 *	and guess when there are at least 10000 codes possibles are treated
@@ -302,7 +313,7 @@ void Game::makeGuess(const Algorithm &alg, const bool&)
 	 */
 	if (mGuess == "")	// The first guess here
 	{
-		mGuess = getFirstGuess(alg);
+		mGuess = getFirstGuess();
 		return;
 	}
 
@@ -335,7 +346,7 @@ void Game::makeGuess(const Algorithm &alg, const bool&)
 		{
 			++responsesOfCodes[compare(mAllCodes[mFirstPossibleCodes[codeIndex]], mAllCodes[possibleIndex])];
 		}
-		weight = computeWeight(responsesOfCodes, alg);
+		weight = computeWeight(responsesOfCodes);
 
 		if (weight < minWeight)
 		{
@@ -344,7 +355,7 @@ void Game::makeGuess(const Algorithm &alg, const bool&)
 		}
 	}
 
-	if(alg == Algorithm::MostParts)
+	if(mAlgorithm == Algorithm::MostParts)
 		minWeight = mResponseSpaceSize - 2 - minWeight;
 
 	mLastMinWeight = qFloor(minWeight);
@@ -353,11 +364,11 @@ void Game::makeGuess(const Algorithm &alg, const bool&)
 }
 //-----------------------------------------------------------------------------
 
-qreal Game::computeWeight(int *responses, const Algorithm &alg) const
+qreal Game::computeWeight(int *responses) const
 {
 	qreal answer = 0;
 
-	switch (alg) {
+	switch (mAlgorithm) {
 	case Algorithm::ExpectedSize:
 		for(int i = 0; i < mResponseSpaceSize-2; ++i)
 		{
@@ -387,7 +398,7 @@ qreal Game::computeWeight(int *responses, const Algorithm &alg) const
 	if (responses[mResponseSpaceSize - 1] != 0)
 	{
 		answer -= 0.5;
-		if (alg == Algorithm::MostParts)
+		if (mAlgorithm == Algorithm::MostParts)
 			--answer;
 		else
 			++answer;

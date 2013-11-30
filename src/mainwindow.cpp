@@ -37,13 +37,12 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
-
 {
 	ui->setupUi(this);
 
 	mMode = (GameMode) QSettings().value("Mode", 0).toInt();
-	mColors = QSettings().value("Colors", 6).toInt()-2;
-	mPegs = QSettings().value("Pegs", 4).toInt()-2;
+	mColors = QSettings().value("Colors", 6).toInt()-MIN_COLOR_NUMBER;
+	mPegs = QSettings().value("Pegs", 4).toInt()-MIN_SLOT_NUMBER;
 	mAlgorithm = (Algorithm) QSettings().value("Algorithm", 0).toInt();
 	mSameColorAllowed = QSettings().value("SameColor", true).toBool();
 	mSetPins = QSettings().value("SetPins", true).toBool();
@@ -58,11 +57,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	mBoard = new Board(mFontName, mFontSize, this);
 
 	setLayoutDirection(mLocale.textDirection());
-	setWindowTitle(tr("Mastermind"));
+	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
 	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
 
-	Preferences::loadTranslation("mastermind_");
+	Preferences::loadTranslation("qtmind_");
 
 	ui->menuGame->setTitle(tr("Game"));
 	ui->actionNew->setText(tr("New"));
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionOptions->setText(tr("Options"));
 
 	ui->menuHelp->setTitle(tr("Help"));
-	ui->actionAbout_Mastermind->setText(tr("About Mastermind"));
+	ui->actionAbout_QtMind->setText(tr("About QtMind"));
 	ui->actionAbout_Qt->setText(tr("About Qt"));
 
 	auto indicatorTypeActions = new QActionGroup(this);
@@ -136,18 +135,18 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
-	connect(ui->actionAbout_Mastermind, SIGNAL(triggered()), this, SLOT(onAbout()));
+	connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
-	connect(this, SIGNAL(newGame()), this, SLOT(onNewGame()));
-	connect(this, SIGNAL(updateNumbers()), this, SLOT(onUpdateNumbers()));
+	connect(this, SIGNAL(newGameSignal()), this, SLOT(onNewGame()));
+	connect(this, SIGNAL(updateNumbersSignal()), this, SLOT(onUpdateNumbers()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContextMenu(QPoint)));
 
-	emit updateNumbers();
+	emit updateNumbersSignal();
 
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 }
@@ -162,8 +161,8 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	QSettings().setValue("Mode", (int) mMode);
-	QSettings().setValue("Colors", mColors+2);
-	QSettings().setValue("Pegs", mPegs+2);
+	QSettings().setValue("Colors", mColors + MIN_COLOR_NUMBER);
+	QSettings().setValue("Pegs", mPegs + MIN_SLOT_NUMBER);
 	QSettings().setValue("Algorithm", (int) mAlgorithm);
 	QSettings().setValue("SameColor", mSameColorAllowed);
 	QSettings().setValue("SetPins",	mSetPins);
@@ -177,8 +176,24 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
-	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm, mSetPins, mCloseRow, mLocale, mIndicator);
-	mBoard->play(mMode);
+	mBoard->reset(mPegs+2, mColors+2, mMode, mSameColorAllowed, mAlgorithm,
+				  mSetPins, mCloseRow, mLocale, mIndicator);
+
+	if(mBoard->getState() != GameState::None)
+	{
+		int new_game_accept = QMessageBox::warning( this,
+									  tr("New Game"), QString("<p align='center'>%1</p>"
+														"<p align='center'>%2</p>")
+													.arg(tr("An unfinished game is in progress."))
+													.arg(tr("Do you want to start a new game?")),
+									  QMessageBox::Yes | QMessageBox::No);
+		if (new_game_accept == QMessageBox::Yes)
+		{
+			mBoard->play();
+		}
+	}
+	else
+		mBoard->play();
 }
 //-----------------------------------------------------------------------------
 
@@ -208,7 +223,7 @@ void MainWindow::onChangeIndicators(QAction *selectedAction)
 void MainWindow::onChangeGameMode(QAction *selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
-	emit updateNumbers();
+	emit updateNumbersSignal();
 }
 //-----------------------------------------------------------------------------
 
@@ -237,13 +252,13 @@ void MainWindow::onUpdateNumbers()
 				mBoard->getState() == GameState::WaittingDoneButtonPress ||
 				mBoard->getState() == GameState::WaittingFirstRowFill)
 		{
-			emit newGame();
+			emit newGameSignal();
 		}
 	}
 
 	QSettings().setValue("Mode", (int) mMode);
-	QSettings().setValue("Colors", mColors+2);
-	QSettings().setValue("Pegs", mPegs+2);
+	QSettings().setValue("Colors", mColors + MIN_COLOR_NUMBER);
+	QSettings().setValue("Pegs", mPegs + MIN_SLOT_NUMBER);
 	QSettings().setValue("Algorithm", (int) mAlgorithm);
 	QSettings().setValue("SetPins",	mSetPins);
 	QSettings().setValue("CloseRow", mCloseRow);
@@ -254,10 +269,10 @@ void MainWindow::onUpdateNumbers()
 
 void MainWindow::onAbout()
 {
-	QMessageBox::about(this, tr("About Mastermind"), QString(
+	QMessageBox::about(this, tr("About QtMind"), QString(
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>"
 		"<p align='center'>%6<br/><small>%7</small></p>")
-		.arg(tr("Mastermind"), QCoreApplication::applicationVersion(),
+		.arg(tr("QtMind"), QCoreApplication::applicationVersion(),
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
 			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(mLocale.toString(2013)),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""),
@@ -268,9 +283,10 @@ void MainWindow::onAbout()
 
 void MainWindow::onShowContextMenu(const QPoint &position)
 {
-	QMenu contextMenu(tr("Context menu"), this);
+	QMenu contextMenu(this);
 	contextMenu.addAction(ui->actionNew);
 	contextMenu.addAction(ui->actionResign);
+	contextMenu.addSeparator();
 	contextMenu.addMenu(ui->menuGame_Mode);
 	contextMenu.exec(mapToGlobal(position));
 }

@@ -59,8 +59,8 @@ private slots:
 
 signals:
 	void changeIndicatorsSignal(const IndicatorType&);
-	void updateNumbers();
-	void newGame();
+	void updateNumbersSignal();
+	void newGameSignal();
 
 private:
 	void setPegsComboBox();

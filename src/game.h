@@ -23,7 +23,7 @@
 #include "constants.h"
 #include <QList>
 #include <QString>
-#include <QObject>
+#include <QThread>
 
 /*	The class Game is the engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
@@ -48,32 +48,30 @@
  *			f(b, w) = (b+w)(b+w+1)/2 + b;
  */
 
-class Game : public QObject
+class Game : public QThread
 {
 	Q_OBJECT
 
 public:
 	explicit Game(const int &peg_no, const int &color_no,
-		 const bool &allow_same_color);
+		 const bool &allow_same_color, QObject *parent = 0);
 	~Game();
 	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
 	bool setResponse(const int &response);
-	void reset(const int &peg_no, const int &color_no,
-			   const bool &allow_same_color);
-	int getPossibleCodesSize() const {return mPossibleCodes.size();}
-	qreal getLastMinWeight() const {return mLastMinWeight;}
-	QString getGuess() {return mGuess;}
-	void interupt() {mInterupt = true;}
+	void run();
 
 protected slots:
-	void startGuessing(const Algorithm &alg);
+	void onInterupt() {mInterupt = true;}
+	void onStartGuessing(const Algorithm &alg);
+	void onReset(const int &peg_no, const int &color_no,
+			   const bool &allow_same_color);
 
 signals:
-	void guessDoneSignal(Algorithm);
+	void guessDoneSignal(Algorithm, QString, int, qreal);
 
 private:
-	void makeGuess(const Algorithm &alg, const bool &fixedFirstGuess = false);
-	QString getFirstGuess(const Algorithm &alg) const;
+	void makeGuess();
+	QString getFirstGuess() const;
 	QString randomPermutation(QString str) const;
 	void permute(QString &code) const;
 	void createTables();
@@ -81,7 +79,7 @@ private:
 	int compare (const int *codeA, const int *codeB) const;
 	QString arrayToString(const int*) const;
 	void stringToArray(const QString &str, int *arr) const;
-	qreal computeWeight(int *responses, const Algorithm &alg) const;
+	qreal computeWeight(int *responses) const;
 	void convertBase(int decimal, const int &base,
 					 const int &precision, int *convertedArray);
 
@@ -89,12 +87,13 @@ private:
 	int mPegNumber;										//	pegs count, 4
 	int mColorNumber;									//	colors count, 6
 	bool mAllowSameColor;
+	Algorithm mAlgorithm;
 	QString mGuess;										//	the guess number, ?
 	int mResponse;										//	the black-white response code, [0..14]
 	int mResponseSpaceSize;
 	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
 	qreal mLastMinWeight;
-	bool mInterupt;
+	volatile bool mInterupt;
 
 	int **mAllCodes;									//	all indexes of codes (0...1295)
 	int *mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
