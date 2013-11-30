@@ -176,7 +176,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
-	qDebug("Pegs: %d  Colors: %d", mPegs, mColors);
 	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
 				  mSetPins, mCloseRow, mLocale, mIndicator);
 
