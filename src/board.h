@@ -41,11 +41,9 @@ enum class GameState
 {
 	None,
 	Running,
-	Paused,
 	Win,
 	Lose,
 	Resign,
-	Error,
 	Guessing,
 	WaittingOkButtonPress,
 	WaittingDoneButtonPress,
@@ -61,7 +59,7 @@ public:
 	explicit Board(const QString &font_name = "Sans Serif", const int &font_size = 12, QWidget *parent = 0);
 	~Board();
 	void play();
-	void setPinsRow(const bool &set_pins, const bool &closeRow);
+	void autoPutPinsCloseRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
 			   const bool &set_pins, const bool &close_row, QLocale locale_n,
@@ -85,7 +83,7 @@ private slots:
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
-	void onChangeIndicators(const IndicatorType &indicator_n);
+	void onChangeIndicatorType(const IndicatorType &indicator_n);
 	void onResign();
 	void onGuessReady(const Algorithm &alg, const QString &guess,
 					  const int &possibleSize, const qreal &lastWeight);
@@ -100,7 +98,6 @@ private:
 	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);
 	void showTranslatedInformation(const Algorithm &alg, const int &possibleSize, const qreal &minWeight);
 	void initializeScene();
-	void setIndicatorType(const IndicatorType &indicator_n);
 
 private:
 	QList<PinBox *> mPinBoxes;

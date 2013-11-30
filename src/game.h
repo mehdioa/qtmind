@@ -67,7 +67,7 @@ protected slots:
 			   const bool &allow_same_color);
 
 signals:
-	void guessDoneSignal(Algorithm, QString, int, qreal);
+	void guessDoneSignal(Algorithm, QString guess, int possible_size, qreal min_weight);
 
 private:
 	void makeGuess();

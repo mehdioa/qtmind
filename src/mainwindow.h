@@ -59,8 +59,6 @@ private slots:
 
 signals:
 	void changeIndicatorsSignal(const IndicatorType&);
-	void updateNumbersSignal();
-	void newGameSignal();
 
 private:
 	void setPegsComboBox();
@@ -77,8 +75,8 @@ private:
 	Algorithm mAlgorithm;
 	IndicatorType mIndicator;
 	bool mSameColorAllowed ;
-	bool mSetPins;
-	bool mCloseRow;
+	bool mAutoPutPins;
+	bool mAutoCloseRow;
 	QLocale mLocale;
 	QString mFontName;
 	int mFontSize;

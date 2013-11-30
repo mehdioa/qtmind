@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	mPegs = QSettings().value("Pegs", 4).toInt();
 	mAlgorithm = (Algorithm) QSettings().value("Algorithm", 0).toInt();
 	mSameColorAllowed = QSettings().value("SameColor", true).toBool();
-	mSetPins = QSettings().value("SetPins", true).toBool();
-	mCloseRow = QSettings().value("CloseRow", true).toBool();
+	mAutoPutPins = QSettings().value("SetPins", true).toBool();
+	mAutoCloseRow = QSettings().value("CloseRow", true).toBool();
 	mIndicator = (IndicatorType) QSettings().value("Indicator", 0).toInt();
 	mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
 	mFontName = QSettings().value("FontName", "SansSerif").toString();
@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
-	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicators(IndicatorType)));
+	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicatorType(IndicatorType)));
 
 	Preferences::loadTranslation("qtmind_");
 
@@ -112,8 +112,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 
-	ui->actionAuto_Set_Pins->setChecked(mSetPins);
-	ui->actionAuto_Close_Rows->setChecked(mCloseRow);
+	ui->actionAuto_Set_Pins->setChecked(mAutoPutPins);
+	ui->actionAuto_Close_Rows->setChecked(mAutoCloseRow);
 
 	setPegsComboBox();
 	setColorsComboBox();
@@ -140,13 +140,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
-	connect(this, SIGNAL(newGameSignal()), this, SLOT(onNewGame()));
-	connect(this, SIGNAL(updateNumbersSignal()), this, SLOT(onUpdateNumbers()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContextMenu(QPoint)));
 
-	emit updateNumbersSignal();
+	onUpdateNumbers();
 
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 }
@@ -165,8 +163,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	QSettings().setValue("Pegs", mPegs);
 	QSettings().setValue("Algorithm", (int) mAlgorithm);
 	QSettings().setValue("SameColor", mSameColorAllowed);
-	QSettings().setValue("SetPins",	mSetPins);
-	QSettings().setValue("CloseRow", mCloseRow);
+	QSettings().setValue("SetPins",	mAutoPutPins);
+	QSettings().setValue("CloseRow", mAutoCloseRow);
 	QSettings().setValue("Indicator", (int) mIndicator);
 	QSettings().setValue("Geometry", saveGeometry());
 	QMainWindow::closeEvent(event);
@@ -177,11 +175,14 @@ void MainWindow::onNewGame()
 {
 	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
 	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
-				  mSetPins, mCloseRow, mLocale, mIndicator);
+				  mAutoPutPins, mAutoCloseRow, mLocale, mIndicator);
 
-	if(mBoard->getState() != GameState::None)
+	if(mBoard->getState() != GameState::None &&
+			mBoard->getState() != GameState::Win &&
+			mBoard->getState() != GameState::Lose &&
+			mBoard->getState() != GameState::WaittingFirstRowFill)
 	{
-		int new_game_accept = QMessageBox::warning( this,
+		int new_game_accept = QMessageBox::warning(this,
 									  tr("New Game"), QString("<p align='center'>%1</p>"
 														"<p align='center'>%2</p>")
 													.arg(tr("An unfinished game is in progress."))
@@ -207,9 +208,9 @@ void MainWindow::onPreferences()
 
 void MainWindow::onSetPinsCloseRowAutomatically()
 {
-	mSetPins = ui->actionAuto_Set_Pins->isChecked();
-	mCloseRow = ui->actionAuto_Close_Rows->isChecked();
-	mBoard->setPinsRow(mSetPins, mCloseRow);
+	mAutoPutPins = ui->actionAuto_Set_Pins->isChecked();
+	mAutoCloseRow = ui->actionAuto_Close_Rows->isChecked();
+	mBoard->autoPutPinsCloseRow(mAutoPutPins, mAutoCloseRow);
 }
 //-----------------------------------------------------------------------------
 
@@ -223,7 +224,7 @@ void MainWindow::onChangeIndicators(QAction *selectedAction)
 void MainWindow::onChangeGameMode(QAction *selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
-	emit updateNumbersSignal();
+	onUpdateNumbers();
 }
 //-----------------------------------------------------------------------------
 
@@ -249,10 +250,9 @@ void MainWindow::onUpdateNumbers()
 		if(mBoard->getState() == GameState::Lose ||
 				mBoard->getState() == GameState::Win ||
 				mBoard->getState() == GameState::None ||
-				mBoard->getState() == GameState::WaittingDoneButtonPress ||
 				mBoard->getState() == GameState::WaittingFirstRowFill)
 		{
-			emit newGameSignal();
+			onNewGame();
 		}
 	}
 }

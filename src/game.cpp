@@ -260,7 +260,6 @@ bool Game::setResponse(const int &response)
 void Game::run()
 {
 	makeGuess();
-	emit finished();
 	if (!mInterupt)
 		emit guessDoneSignal(mAlgorithm, mGuess, mPossibleCodes.size(), mLastMinWeight);
 }
@@ -453,5 +452,3 @@ void Game::stringToArray(const QString &str, int *arr) const
 	for(int i = 0; i < mPegNumber; ++i)
 		arr[i] = str[i].digitValue();
 }
-
-

@@ -44,7 +44,6 @@ Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
 	setScene(scene);
 	scene->setSceneRect(0, 0, 320, 560);
 	fitInView(sceneRect(), Qt::KeepAspectRatio);
-	setScene(scene);
 	setCacheMode(QGraphicsView::CacheNone);
 	setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 	setFrameStyle(QFrame::NoFrame);
@@ -101,6 +100,7 @@ void Board::codeRowFilled(const bool &filled)
 			default:
 				mDoneButton->setVisible(false);
 				mMessage->showMessage(tr("Place Your Pegs ... "));
+				mState = GameState::None;
 				break;
 			}
 		}
@@ -357,10 +357,13 @@ void Board::onPinBoxPressed()
 }
 //-----------------------------------------------------------------------------
 
-void Board::onChangeIndicators(const IndicatorType &indicator_n)
+void Board::onChangeIndicatorType(const IndicatorType &indicator_n)
 {
-	setIndicatorType(indicator_n);
-	emit changePegIndicatorSignal(mIndicator);
+	if(mIndicator != indicator_n)
+	{
+		mIndicator = indicator_n;
+		emit changePegIndicatorSignal(mIndicator);
+	}
 }
 //-----------------------------------------------------------------------------
 
@@ -368,7 +371,7 @@ void Board::onResign()
 {
 	if (mMode == GameMode::Breaker && (mState == GameState::Running || mState == GameState::WaittingPinBoxPress))
 	{
-		mState = GameState::Resign;
+		mState = GameState::None;
 		mMessage->showMessage(tr("You Resign"));
 
 		setBoxStateOfList(&mMasterBoxes, BoxState::Past);
@@ -649,20 +652,10 @@ void Board::showTranslatedInformation(const Algorithm &alg, const int &possibleS
 }
 //-----------------------------------------------------------------------------
 
-void Board::setPinsRow(const bool &set_pins, const bool &closeRow)
+void Board::autoPutPinsCloseRow(const bool &set_pins, const bool &closeRow)
 {
 	mSetPins = set_pins;
 	mCloseRow = closeRow;
-}
-//-----------------------------------------------------------------------------
-
-void Board::setIndicatorType(const IndicatorType &indicator_n)
-{
-	if(mIndicator != indicator_n)
-	{
-		mIndicator = indicator_n;
-		emit changePegIndicatorSignal(mIndicator);
-	}
 }
 //-----------------------------------------------------------------------------
 
