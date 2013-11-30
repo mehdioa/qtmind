@@ -169,6 +169,14 @@ header p {
 	display: block;
 	margin: 0 auto;
 }
+
+
+button{
+	width: 200px;
+	height: 100px;
+	background-color: cyan;
+}
+
 /* article */
 
 section.buy, article {
