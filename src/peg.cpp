@@ -31,7 +31,7 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FF3300"), QColor("#400040")},
 	{QColor("#33CCFF"), QColor("#000080")},
 	{QColor("#ffffff"), QColor("#666666")},
-	{QColor("#808080"), Qt::black},
+	{QColor("#808080"), QColor("#000000")},
 	{QColor("#66FF33"), QColor("#385009")},
 	{QColor("#FF9900"), QColor("#A82A00")},
 	{QColor("#BA88FF"), QColor("#38005D")},
@@ -140,6 +140,7 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		setPos(mBox->sceneBoundingRect().topLeft());
 	}
+
 }
 //-----------------------------------------------------------------------------
 

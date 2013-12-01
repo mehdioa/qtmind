@@ -127,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->toolBar->addWidget(solvingAlgorithmsComboBox);
 
 	connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNewGame()));
+	connect(ui->actionReveal_One_Peg, SIGNAL(triggered()), mBoard, SLOT(onRevealOnePeg()));
 	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResign()));
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onChangeGameMode(QAction*)));
@@ -174,6 +175,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
+	ui->actionResign->setVisible(mMode == GameMode::Breaker);
+	ui->actionReveal_One_Peg->setEnabled(mMode == GameMode::Breaker);
+	ui->actionReveal_One_Peg->setVisible(mMode == GameMode::Breaker);
+
 	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
 				  mAutoPutPins, mAutoCloseRow, mLocale, mIndicator);
 
@@ -276,6 +281,7 @@ void MainWindow::onShowContextMenu(const QPoint &position)
 {
 	QMenu contextMenu(this);
 	contextMenu.addAction(ui->actionNew);
+	contextMenu.addAction(ui->actionReveal_One_Peg);
 	contextMenu.addAction(ui->actionResign);
 	contextMenu.addSeparator();
 	contextMenu.addMenu(ui->menuGame_Mode);

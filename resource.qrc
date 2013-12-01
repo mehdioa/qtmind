@@ -18,5 +18,6 @@
         <file>icons/hicolor/128x128/qtmind.png</file>
         <file>icons/hicolor/256x256/qtmind.png</file>
         <file>icons/hicolor/512x512/qtmind.png</file>
+        <file>icons/reveal_one_peg.png</file>
     </qresource>
 </RCC>

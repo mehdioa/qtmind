@@ -383,6 +383,27 @@ void Board::onChangeIndicatorType(const IndicatorType &indicator_n)
 }
 //-----------------------------------------------------------------------------
 
+void Board::onRevealOnePeg()
+{
+	foreach (PegBox *box, mMasterBoxes)
+	{
+		if(box->getBoxState() != BoxState::Past)
+		{
+			if (box == mMasterBoxes.last())
+			{
+				mState = GameState::Running;
+				onResign();
+			}
+			else
+			{
+				box->setBoxState(BoxState::Past);
+				return;
+			}
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+
 void Board::onResign()
 {
 	if (mMode == GameMode::Breaker && (mState == GameState::Running || mState == GameState::WaittingPinBoxPress))

@@ -28,6 +28,7 @@
      <string>Game</string>
     </property>
     <addaction name="actionNew"/>
+    <addaction name="actionReveal_One_Peg"/>
     <addaction name="actionResign"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -230,6 +231,15 @@
    </property>
    <property name="text">
     <string>Digits</string>
+   </property>
+  </action>
+  <action name="actionReveal_One_Peg">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/reveal_one_peg.png</normaloff>:/icons/reveal_one_peg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reveal One Peg</string>
    </property>
   </action>
  </widget>

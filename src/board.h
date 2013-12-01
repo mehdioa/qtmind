@@ -85,6 +85,7 @@ private slots:
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
 	void onChangeIndicatorType(const IndicatorType &indicator_n);
+	void onRevealOnePeg();
 	void onResign();
 	void onGuessReady(const Algorithm &alg, const QString &guess,
 					  const int &possibleSize, const qreal &lastWeight);
