@@ -22,27 +22,16 @@
 
 #include <QGraphicsEllipseItem>
 
-enum class PinMouse
-{
-	Ignore,
-	Accept,
-	Pass
-};
-
 class Pin : public QGraphicsEllipseItem
 {
 public:
-
 	explicit Pin(const int &color = 0, QGraphicsItem *parent = 0);
 	int getColor() const {return m_color;}
 	void setColor(const int &c);
-	void setMouseEventHandling(const PinMouse &event);
+	void setActivity(const bool &b) {isActive = b;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
-
-	//	ignoring mouse double click by the following apparently on Qt >= 5
-//	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *){}
 
 private:
 	int m_color;//  -1 = white, 0 = none, 1 = black

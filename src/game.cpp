@@ -19,7 +19,6 @@
 
 #include "game.h"
 #include <QtCore/qmath.h>
-#include <QElapsedTimer>
 
 inline int ipow(int base, int exp)
 {
@@ -134,7 +133,7 @@ QString Game::randomPermutation(QString str) const
 	int n = str.length();
 	for(int i = 0; i < n; ++i)
 	{
-		int j = qrand() % (n - i);
+		int j = rand() % (n - i);
 		answer.append(str.at(j));
 		str.remove(j, 1);
 	}
@@ -167,45 +166,21 @@ int Game::compare(const int *codeA, const int *codeB) const
 	 */
 	int c[mColorNumber];
 	int g[mColorNumber];
-	for(int i = 0; i< mColorNumber; ++i)
-	{
-		c[i] = 0;
-		g[i] = 0;
-	}
-
+	std::fill(c, c+mColorNumber, 0);
+	std::fill(g, g+mColorNumber, 0);
 	int blacks = 0;
-	int whites = 0;
 
 	for (int i = 0; i < mPegNumber; ++i)
 	{
 		if (codeA[i] == codeB[i])
-		{
 			++blacks;
-			continue;
-		}
-
-		if (c[codeB[i]] != 0)
-		{
-			--c[codeB[i]];
-			++whites;
-		}
-		else
-		{
-			++g[codeB[i]];
-		}
-
-		if (g[codeA[i]] != 0)
-		{
-			--g[codeA[i]];
-			++whites;
-		}
-		else
-		{
-			++c[codeA[i]];
-		}
+		++c[codeA[i]];
+		++g[codeB[i]];
 	}
 
-	int total = blacks + whites;		//	blacks + whites, since we don't need whites below
+	int total = 0;//	blacks + whites, since we don't need whites below
+	for(int i = 0; i < mColorNumber; ++i)
+		total += (c[i] < g[i]) ? c[i] : g[i];
 
 	return total*(total + 1)/2 + blacks;
 }
@@ -252,7 +227,6 @@ bool Game::setResponse(const int &response)
 				mFirstPossibleCodes[i] = mPossibleCodes.at(i);
 		}
 	}
-
 	return true;
 }
 //-----------------------------------------------------------------------------

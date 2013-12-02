@@ -79,7 +79,7 @@ void Board::codeRowFilled(const bool &filled)
 			mState = GameState::WaittingPinBoxPress;
 			mMessage->showMessage("Press The Pin Box ...");
 			if (mCloseRow)
-				mPinBoxes.first()->fakePress();
+				onPinBoxPressed();
 			break;
 		default:
 			mPinBoxes.first()->setBoxState(BoxState::Future);
@@ -130,7 +130,7 @@ void Board::createBoxes()
 		auto pinbox = new PinBox(mPegNumber, position);
 		scene()->addItem(pinbox);
 		mPinBoxes.append(pinbox);
-		connect(pinbox, SIGNAL(pinBoxPressed()), this, SLOT(onPinBoxPressed()));
+		connect(pinbox, SIGNAL(pinBoxPressSignal()), this, SLOT(onPinBoxPressed()));
 
 		position.setX(160-20*mPegNumber);
 
@@ -579,7 +579,7 @@ void Board::playCodeBreaker()
 
 	foreach (PegBox *box, mMasterBoxes) //creating a master code to be guessed
 	{
-		int color = qrand() % remainingNumbers;
+		int color = rand() % remainingNumbers;
 		createPegForBox(box, digits.at(color).digitValue());
 		box->setPegState(PegState::Empty);
 		box->setBoxState(BoxState::None);

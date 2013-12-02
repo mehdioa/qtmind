@@ -106,38 +106,44 @@ void PinBox::setBoxState(const BoxState &state)
 {
 	mBoxState = state;
 	switch (mBoxState) {
-	case BoxState::Past: // used for boxes that are done. No interaction allowed
-		isActive = false;
-		setCursor(Qt::ArrowCursor);
-		foreach (Pin *pin, pins)
-			pin->setMouseEventHandling(PinMouse::Ignore);
-		break;
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		isActive = true;
 		setCursor(Qt::PointingHandCursor);
 		foreach (Pin *pin, pins)
-			pin->setMouseEventHandling(PinMouse::Pass);
+		{
+			pin->setActivity(false);
+			pin->setAcceptedMouseButtons(Qt::NoButton);
+			pin->setCursor(Qt::PointingHandCursor);
+		}
 		break;
-	case BoxState::Future: //BOX_FUTURE: used for boxes that are done or it is not their time yet. no interaction allowed
+	case BoxState::None: //BoxState::None: used for entering keys in breaker mode, just keys are active
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin *pin, pins)
-			pin->setMouseEventHandling(PinMouse::Ignore);
+		{
+			pin->setActivity(true);
+			pin->setAcceptedMouseButtons(Qt::LeftButton);
+			pin->setCursor(Qt::PointingHandCursor);
+		}
 		break;
-
-	default: //BoxState::None: used for entering keys in breaker mode, just keys are active
+	default: //BoxState::FUTURE and BoxState::Past, no interaction is allowed
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		foreach (Pin *pin, pins)
-			pin->setMouseEventHandling(PinMouse::Accept);
+		{
+			pin->setActivity(false);
+			pin->setAcceptedMouseButtons(Qt::NoButton);
+			pin->setCursor(Qt::ArrowCursor);
+		}
 		break;
 	}
 	update();
 }
 //-----------------------------------------------------------------------------
 
-void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
+void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	QGraphicsRectItem::mousePressEvent(event);
 	if (isActive)
-		emit pinBoxPressed();
+		emit pinBoxPressSignal();
 }
