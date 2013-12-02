@@ -563,7 +563,7 @@ void Board::playCodeBreaker()
 		mMasterCode.append(QString::number(realcolor));
 		createPegForBox(box, realcolor);
 		box->setPegState(PegState::Invisible);
-		box->setBoxState(BoxState::Past);
+		box->setBoxState(BoxState::None);
 		if(!mSameColor)
 		{
 			digits.remove(color, 1);
