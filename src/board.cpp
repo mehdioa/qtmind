@@ -176,7 +176,7 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 	{
 		auto peg = new Peg(pos, color, mIndicator);
 		scene()->addItem(peg);
-		connect(this, SIGNAL(changePegIndicatorSignal(IndicatorType)), peg, SLOT(onIndicatorChanged(IndicatorType)));
+		connect(this, SIGNAL(IndicatorTypeChangeSignal(IndicatorType)), peg, SLOT(onIndicatorChanged(IndicatorType)));
 
 		if(backPeg)
 		{
@@ -359,7 +359,7 @@ void Board::onIndicatorTypeChanged(const IndicatorType &indicator_n)
 	if(mIndicator != indicator_n)
 	{
 		mIndicator = indicator_n;
-		emit changePegIndicatorSignal(mIndicator);
+		emit IndicatorTypeChangeSignal(mIndicator);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -559,10 +559,11 @@ void Board::playCodeBreaker()
 	foreach (PegBox *box, mMasterBoxes) //creating a master code to be guessed
 	{
 		int color = qrand() % remainingNumbers;
-		mMasterCode.append(QString::number(color));
-		createPegForBox(box, digits.at(color).digitValue());
+		int realcolor = digits.at(color).digitValue();
+		mMasterCode.append(QString::number(realcolor));
+		createPegForBox(box, realcolor);
 		box->setPegState(PegState::Invisible);
-		box->setBoxState(BoxState::None);
+		box->setBoxState(BoxState::Past);
 		if(!mSameColor)
 		{
 			digits.remove(color, 1);

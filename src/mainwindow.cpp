@@ -53,15 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	mFontSize = QSettings().value("FontSize", 12).toInt();
 
 	mLocale.setNumberOptions(QLocale::OmitGroupSeparator);
+	Preferences::loadTranslation("qtmind_");
 
 	mBoard = new Board(mFontName, mFontSize, this);
 
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
-	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
+	connect(this, SIGNAL(indicatorChangeSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
 
-	Preferences::loadTranslation("qtmind_");
 
 	ui->menuGame->setTitle(tr("Game"));
 	ui->actionNew->setText(tr("New"));
@@ -130,8 +130,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionReveal_One_Peg, SIGNAL(triggered()), mBoard, SLOT(onRevealOnePeg()));
 	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResigned()));
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onChangeGameMode(QAction*)));
-	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), SLOT(onChangeIndicators(QAction*)));
+	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onGameModeChanged(QAction*)));
+	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), SLOT(onIndicatorChanged(QAction*)));
 	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onUpdateNumbers()));
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
@@ -219,14 +219,14 @@ void MainWindow::onSetPinsCloseRowAutomatically()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onChangeIndicators(QAction *selectedAction)
+void MainWindow::onIndicatorChanged(QAction *selectedAction)
 {
 	mIndicator = (IndicatorType) selectedAction->data().toInt();
-	emit changeIndicatorsSignal(mIndicator);
+	emit indicatorChangeSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onChangeGameMode(QAction *selectedAction)
+void MainWindow::onGameModeChanged(QAction *selectedAction)
 {
 	mMode =  (GameMode) selectedAction->data().toInt();
 	onUpdateNumbers();
@@ -276,6 +276,7 @@ void MainWindow::onAbout()
 			tr("Used under the <a href=%1>LGPL 3</a> license").arg("\"http://www.gnu.org/licenses/lgpl.html\""))
 					   );
 }
+//-----------------------------------------------------------------------------
 
 void MainWindow::onShowContextMenu(const QPoint &position)
 {

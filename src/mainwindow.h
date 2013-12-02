@@ -49,8 +49,8 @@ protected:
 
 private slots:
 	void onSetPinsCloseRowAutomatically();
-	void onChangeIndicators(QAction*);
-	void onChangeGameMode(QAction*);
+	void onIndicatorChanged(QAction*);
+	void onGameModeChanged(QAction*);
 	void onUpdateNumbers();
 	void onNewGame();
 	void onPreferences();
@@ -58,7 +58,7 @@ private slots:
 	void onShowContextMenu(const QPoint& position);
 
 signals:
-	void changeIndicatorsSignal(const IndicatorType&);
+	void indicatorChangeSignal(const IndicatorType&);
 
 private:
 	void setPegsComboBox();

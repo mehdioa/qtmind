@@ -72,7 +72,7 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 
 signals:
-	void changePegIndicatorSignal(IndicatorType);
+	void IndicatorTypeChangeSignal(IndicatorType);
 	void startGuessingSignal(Algorithm);
 	void resetGameSignal(int peg_no, int color_no, bool allow_same_color);
 	void interuptSignal();

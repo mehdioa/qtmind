@@ -67,6 +67,7 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &colo
 	std::fill(g, g+color_n, 0);
 
 	int blacks = 0;
+	qDebug("pin.size: %d", pins.size());
 	for (int i = 0; i < pins.size(); ++i) {
 		if (codeA[i] == codeB[i])
 			++blacks;
