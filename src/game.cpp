@@ -129,11 +129,12 @@ void Game::onStartGuessing(const Algorithm &alg)
 
 QString Game::randomPermutation(QString str) const
 {
+	qsrand(time(NULL));
 	QString answer = "";
 	int n = str.length();
 	for(int i = 0; i < n; ++i)
 	{
-		int j = rand() % (n - i);
+		int j = qrand() % (n - i);
 		answer.append(str.at(j));
 		str.remove(j, 1);
 	}

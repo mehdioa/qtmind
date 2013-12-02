@@ -576,10 +576,11 @@ void Board::playCodeBreaker()
 	QString digits = "0123456789";
 	digits.left(mColorNumber);
 	int remainingNumbers = mColorNumber;
+	qsrand(time(NULL));
 
 	foreach (PegBox *box, mMasterBoxes) //creating a master code to be guessed
 	{
-		int color = rand() % remainingNumbers;
+		int color = qrand() % remainingNumbers;
 		createPegForBox(box, digits.at(color).digitValue());
 		box->setPegState(PegState::Empty);
 		box->setBoxState(BoxState::None);
