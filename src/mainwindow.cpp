@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
-	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onChangeIndicatorType(IndicatorType)));
+	connect(this, SIGNAL(changeIndicatorsSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
 
 	Preferences::loadTranslation("qtmind_");
 
@@ -128,7 +128,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNewGame()));
 	connect(ui->actionReveal_One_Peg, SIGNAL(triggered()), mBoard, SLOT(onRevealOnePeg()));
-	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResign()));
+	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResigned()));
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onChangeGameMode(QAction*)));
 	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), SLOT(onChangeIndicators(QAction*)));

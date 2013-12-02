@@ -69,7 +69,7 @@ Peg::Peg(const QPoint &position, int color_number, const IndicatorType &indicato
 	font.setStyleHint(QFont::TypeWriter);
 	mIndicator->setFont(font);
 	mIndicator->setPos(13.5,7);
-	onChangeIndicators(indicator_n);
+	onIndicatorChanged(indicator_n);
 
 	setColor(mColor);
 	setZValue(2);
@@ -86,7 +86,7 @@ void Peg::setColor(const int &color_number)
 	gradient.setColorAt(0, PegColors[mColor][0]);
 	gradient.setColorAt(1, PegColors[mColor][1]);
 	setBrush(gradient);
-	onChangeIndicators(mIndicatorType);
+	onIndicatorChanged(mIndicatorType);
 }
 //-----------------------------------------------------------------------------
 
@@ -95,6 +95,7 @@ void Peg::setMovable(bool enabled)
 	setFlag(QGraphicsItem::ItemIsMovable, enabled);
 	isActive = enabled;
 	setCursor(enabled ? Qt::OpenHandCursor : Qt::ArrowCursor);
+	setAcceptedMouseButtons(enabled ? Qt::LeftButton : Qt::NoButton);
 	setZValue(1);
 }
 //-----------------------------------------------------------------------------
@@ -129,13 +130,13 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		if (mBox->sceneBoundingRect().contains(sceneBoundingRect().center().toPoint()))//	droped on its own box
 		{
 			if (mBox->getPegState() != PegState::Initial)
-				mBox->setPegState(PegState::Filled);
+				mBox->setPegState(PegState::Visible);
 		}
 		else //	droped out of its own box,
 		{
 			if (mBox->getPegState() != PegState::Initial)
-				mBox->setPegState(PegState::Empty);
-			emit mouseReleasedSignal(sceneBoundingRect().center().toPoint(), mColor);
+				mBox->setPegState(PegState::Invisible);
+			emit mouseReleaseSignal(sceneBoundingRect().center().toPoint(), mColor);
 		}
 
 		setPos(mBox->sceneBoundingRect().topLeft());
@@ -159,7 +160,7 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
-void Peg::onChangeIndicators(const IndicatorType &indicator_n)
+void Peg::onIndicatorChanged(const IndicatorType &indicator_n)
 {
 	mIndicatorType = indicator_n;
 	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);

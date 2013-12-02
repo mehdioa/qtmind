@@ -30,10 +30,9 @@ class PinBox : public QObject, public EmptyBox
 
 public:
 	explicit PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *parent = 0);
-	int getValue(int &blacks, int &whites) const;
 	int getValue() const;
-	void setPins(const int &b, const int &w);
-	void setPins(const QString &codeA, const QString &codeB, const int &peg, const int &color);
+//	void setPins(const int &b, const int &w);
+	void setPins(const QString &codeA, const QString &codeB, const int &color_n);
 	void setBoxState(const BoxState &state = BoxState::Future);
 
 protected:

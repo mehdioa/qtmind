@@ -24,7 +24,7 @@
 
 PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
 	EmptyBox(position, parent),
-	mPegState(PegState::Empty),
+	mPegState(PegState::Invisible),
 	mPeg(0)
 {
 	QLinearGradient lgrad(2, 2, 35, 35);
@@ -33,11 +33,10 @@ PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
 
 	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
 	mCircle->setPen(QPen(QBrush(lgrad), 2));
-	setBoxState(BoxState::Future);
 }
 //-----------------------------------------------------------------------------
 
-int PegBox::getPegColor()
+int PegBox::getPegColor() const
 {
 	if (mPeg)
 		return mPeg->getColor();
@@ -57,28 +56,22 @@ void PegBox::setBoxState(const BoxState &state)
 
 	switch (mBoxState) {
 	case BoxState::Past:
-		setPegState(PegState::Filled);
-		if (mPeg) {
-			mPeg->setMovable(false);
+		if(mPeg)
+		{
 			mPeg->setVisible(true);
+			mPeg->setMovable(false);
 		}
+		mCircle->setVisible(true);
 		break;
 	case BoxState::Current:
-		if (mPeg) {
+		if (mPeg)
+		{
 			mPeg->setMovable(true);
-			mPeg->setVisible(true);
 		}
 		break;
-	case BoxState::Future:
-		if (mPeg) {
-			mPeg->setMovable(false);
-			mPeg->setVisible(true);
-		}
-		break;
-	default: //BOX_NONE
-		if (mPeg) {
+	default: // BoxState::None and BoxState::Future
+		if (mPeg)
 			mPeg->setVisible(false);
-		}
 		break;
 	}
 	update();
@@ -93,7 +86,7 @@ void PegBox::setPeg(Peg *peg)
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setPegColor(int color_number)
+void PegBox::setPegColor(const int &color_number)
 {
 	if (mPeg)
 		mPeg->setColor(color_number);
@@ -104,26 +97,19 @@ void PegBox::setPegState(const PegState &state)
 {
 	mPegState = state;
 	switch (mPegState) {
-	case PegState::Initial:
-		if (mPeg)
-			mPeg->setVisible(true);
-		mCircle->setVisible(true);
+	case PegState::Draged:
+		mPeg->setVisible(true);
+		mCircle->setVisible(false);
 		break;
-	case PegState::Filled:
-		if (mPeg)
-			mPeg->setVisible(true);
-		mCircle->setVisible(true);
-		break;
-	case PegState::Empty:
+	case PegState::Invisible:
 		if (mPeg)
 			mPeg->setVisible(false);
 		mCircle->setVisible(false);
 		break;
-	default:// PegState::Draged
+	default:// PegState::Initial and PegState::Visible
 		if (mPeg)
 			mPeg->setVisible(true);
-		mCircle->setVisible(false);
+		mCircle->setVisible(true);
 		break;
 	}
 }
-

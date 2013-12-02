@@ -74,19 +74,18 @@ protected:
 signals:
 	void changePegIndicatorSignal(IndicatorType);
 	void startGuessingSignal(Algorithm);
-	void resetGameSignal(int peg_no, int color_no,
-					bool allow_same_color);
+	void resetGameSignal(int peg_no, int color_no, bool allow_same_color);
 	void interuptSignal();
 
 private slots:
-	void onPegMouseRelease(const QPoint &position, const int &color);
-	void onPegMouseDoubleClick(Peg *);
+	void onPegMouseReleased(const QPoint &position, const int &color);
+	void onPegMouseDoubleClicked(Peg *);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
-	void onChangeIndicatorType(const IndicatorType &indicator_n);
+	void onIndicatorTypeChanged(const IndicatorType &indicator_n);
 	void onRevealOnePeg();
-	void onResign();
+	void onResigned();
 	void onGuessReady(const Algorithm &alg, const QString &guess,
 					  const int &possibleSize, const qreal &lastWeight);
 

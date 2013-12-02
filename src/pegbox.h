@@ -34,11 +34,10 @@ public:
 	bool hasPeg() const {return mPeg != 0;}
 	void setPeg(Peg *peg);
 	void setPegState(const PegState &state);
-	void setPegColor(int color_number);
-	int getPegColor();
+	void setPegColor(const int &color_number);
+	int getPegColor() const;
 	void setBoxState(const BoxState &state);
 	bool isPegVisible();
-
 	PegState getPegState() const {return mPegState;}
 
 private:

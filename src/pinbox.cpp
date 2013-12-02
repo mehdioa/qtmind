@@ -37,10 +37,10 @@ PinBox::PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *par
 }
 //-----------------------------------------------------------------------------
 
-int PinBox::getValue(int &blacks, int &whites) const
+int PinBox::getValue() const
 {
-	blacks = 0;
-	whites = 0;
+	int blacks = 0;
+	int whites = 0;
 	foreach(Pin *pin, pins)
 	{
 		switch (pin->getColor()) {
@@ -56,49 +56,34 @@ int PinBox::getValue(int &blacks, int &whites) const
 	}
 	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
 }
+
 //-----------------------------------------------------------------------------
 
-int PinBox::getValue() const
+void PinBox::setPins(const QString &codeA, const QString &codeB, const int &color_n)
 {
-	if (mBoxState != BoxState::None)
-		return -1;
-
-	int blacks;
-	int whites;
-	return getValue(blacks, whites);
-}
-//-----------------------------------------------------------------------------
-
-void PinBox::setPins(const int &blacks, const int &whites)
-{
-	for(int i = 0; i < blacks; ++i)
-		pins.at(i)->setColor(1);
-
-	for(int i = 0; i < whites; ++i)
-		pins.at(blacks + i)->setColor(-1);
-}
-//-----------------------------------------------------------------------------
-
-void PinBox::setPins(const QString &codeA, const QString &codeB, const int &peg, const int &color)
-{
-	int c[color];
-	int g[color];
-	std::fill(c, c+color, 0);
-	std::fill(g, g+color, 0);
+	int c[color_n];
+	int g[color_n];
+	std::fill(c, c+color_n, 0);
+	std::fill(g, g+color_n, 0);
 
 	int blacks = 0;
-	for (int i = 0; i < peg; ++i) {
-		blacks += (codeA[i] == codeB[i]);
+	for (int i = 0; i < pins.size(); ++i) {
+		if (codeA[i] == codeB[i])
+			++blacks;
 		++c[codeA[i].digitValue()];
 		++g[codeB[i].digitValue()];
 	}
 
 	int total = 0;		//	blacks + whites
-	for (int i = 0; i < color; ++i){
+	for (int i = 0; i < color_n; ++i){
 		total += qMin(c[i],g[i]);
 	}
 
-	setPins(blacks, total-blacks);
+	for(int i = 0; i < blacks; ++i)
+		pins.at(i)->setColor(1);
+
+	for(int i = blacks; i < total; ++i)
+		pins.at(i)->setColor(-1);
 }
 //-----------------------------------------------------------------------------
 
@@ -108,6 +93,7 @@ void PinBox::setBoxState(const BoxState &state)
 	switch (mBoxState) {
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		isActive = true;
+		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 		foreach (Pin *pin, pins)
 		{
@@ -116,9 +102,10 @@ void PinBox::setBoxState(const BoxState &state)
 			pin->setCursor(Qt::PointingHandCursor);
 		}
 		break;
-	case BoxState::None: //BoxState::None: used for entering keys in breaker mode, just keys are active
+	case BoxState::None: //BoxState::None: used for entering pins in breaker mode, just pins are active
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
+		setAcceptedMouseButtons(Qt::NoButton);
 		foreach (Pin *pin, pins)
 		{
 			pin->setActivity(true);
@@ -129,6 +116,7 @@ void PinBox::setBoxState(const BoxState &state)
 	default: //BoxState::FUTURE and BoxState::Past, no interaction is allowed
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
+		setAcceptedMouseButtons(Qt::NoButton);
 		foreach (Pin *pin, pins)
 		{
 			pin->setActivity(false);

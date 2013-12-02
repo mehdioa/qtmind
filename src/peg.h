@@ -26,8 +26,8 @@
 enum class PegState
 {
 	Initial,
-	Filled,
-	Empty,
+	Visible,
+	Invisible,
 	Draged
 };
 
@@ -59,11 +59,11 @@ protected:
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 signals:
-	void mouseReleasedSignal(QPoint position, int color);
+	void mouseReleaseSignal(QPoint position, int color);
 	void mouseDoubleClickSignal(Peg *);
 
 protected slots:
-	void onChangeIndicators(const IndicatorType &indicator_n);
+	void onIndicatorChanged(const IndicatorType &indicator_n);
 
 private:
 	QPointF mPosition;// position of hole containing peg

@@ -415,9 +415,8 @@ void Game::convertBase(int decimal, const int &base, const int &precision, int *
 QString Game::arrayToString(const int *ar) const
 {
 	QString answer = "";
-	QString temp;
 	for(int i = 0; i < mPegNumber; ++i)
-		answer.append(temp.setNum(ar[i]));
+		answer.append(QString::number(ar[i]));
 	return answer;
 }
 //-----------------------------------------------------------------------------
