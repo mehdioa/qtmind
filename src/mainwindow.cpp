@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->menuGame->setTitle(tr("Game"));
 	ui->actionNew->setText(tr("New"));
+	ui->actionReveal_One_Peg->setText(tr("Reveal One Peg"));
 	ui->actionResign->setText(tr("Resign"));
 	ui->actionQuit->setText(tr("Quit"));
 
