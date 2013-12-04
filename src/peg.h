@@ -31,7 +31,6 @@ enum class PegState
 	Draged
 };
 
-
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
 class PegBox;

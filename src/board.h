@@ -21,6 +21,7 @@
 #define BOARD_H
 
 #include "constants.h"
+//#include <QtMultimedia/QSoundEffect>
 #include <QGraphicsView>
 #include <QLocale>
 
@@ -56,13 +57,13 @@ class Board: public QGraphicsView
 	Q_OBJECT
 
 public:
-	explicit Board(const QString &font_name = "Sans Serif", const int &font_size = 12, QWidget *parent = 0);
+	explicit Board(QWidget *parent = 0);
 	~Board();
 	void play();
 	void autoPutPinsCloseRow(const bool &set_pins, const bool &closeRow);
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
-			   const bool &set_pins, const bool &close_row, QLocale locale_n,
+			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
 			   const IndicatorType &indicator_n = IndicatorType::None);
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
@@ -88,6 +89,7 @@ private slots:
 	void onResigned();
 	void onGuessReady(const Algorithm &alg, const QString &guess,
 					  const int &possibleSize, const qreal &lastWeight);
+	void onPreferencesChanged();
 
 private:
 	void playCodeMaster();
@@ -115,20 +117,27 @@ private:
 	bool mSetPins;
 	bool mCloseRow;
 	bool mDone;
+	int mFontSize;
+	QString mFontName;
 	Algorithm mAlgorithm;
 	IndicatorType mIndicator;
 	QString mMasterCode;
 	QString mGuess;
-	QLocale mLocale;
+	QLocale *mLocale;
 
-	QString mFontName;
-	int mFontSize;
 
 	Game *mGame;
 	Button *mOkButton;
 	Button *mDoneButton;
 	Message *mMessage;
 	Message *mInformation;
+
+//	QSoundEffect sound;
+//	QSoundEffect pegDropSound;
+//	QSoundEffect pegDropRefuseSound;
+//	QSoundEffect okButtonPressSound;
+//	QSoundEffect doneButtonPressSound;
+
 };
 
 #endif // BOARD_H

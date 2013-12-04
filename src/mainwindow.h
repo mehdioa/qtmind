@@ -59,6 +59,8 @@ private slots:
 
 signals:
 	void indicatorChangeSignal(const IndicatorType&);
+//	void volumeChangeSignal(const int &);
+	void preferencesChangeSignal();
 
 private:
 	void setPegsComboBox();
@@ -78,8 +80,7 @@ private:
 	bool mAutoPutPins;
 	bool mAutoCloseRow;
 	QLocale mLocale;
-	QString mFontName;
-	int mFontSize;
+	int mVolume;
 
 	QComboBox *pegsNumberComboBox;
 	QComboBox *colorsNumberComboBox;

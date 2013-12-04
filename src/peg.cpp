@@ -150,14 +150,15 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 	if (isActive)
 	{
 		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
-		if (mBox->getPegState() == PegState::Initial)
-			emit mouseDoubleClickSignal(this);
-		else if (mBox->getBoxState() == BoxState::Current)
+		if (mBox && mBox->getPegState() == PegState::Initial)
 		{
-			setPos(sceneBoundingRect().center().toPoint() - QPoint(20, 60));
+			emit mouseDoubleClickSignal(this);
+			emit mouseReleaseSignal(sceneBoundingRect().center().toPoint(), mColor);
+			setPos(mBox->sceneBoundingRect().topLeft().toPoint());
 		}
 	}
 }
+
 //-----------------------------------------------------------------------------
 
 void Peg::onIndicatorChanged(const IndicatorType &indicator_n)

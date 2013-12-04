@@ -25,7 +25,7 @@
 #include <QLibraryInfo>
 #include <QDir>
 #include <QTranslator>
-#include <QMessageBox>
+#include <QSlider>
 //-----------------------------------------------------------------------------
 
 QString Preferences::mCurrent;
@@ -48,6 +48,10 @@ Preferences::Preferences(QLocale *locale_n, QWidget *parent) :
 	ui->fontSizeComboBox->setCurrentIndex(QSettings().value("FontSize", 12).toInt());
 
 	ui->fontComboBox->setCurrentFont(QFont(QSettings().value("FontName", "Sans Serif").toString()));
+
+	ui->volumeVerticalSlider->setValue(QSettings().value("Volume", 50).toInt());
+
+	ui->noteTextLabel->setText(tr("Language change needs restart."));
 
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
@@ -169,5 +173,5 @@ void Preferences::accept()
 	QSettings().setValue("Locale/Language", mCurrent);
 	QSettings().setValue("FontName", ui->fontComboBox->currentText());
 	QSettings().setValue("FontSize", ui->fontSizeComboBox->currentIndex());
-	QMessageBox::information(this, tr("Note"), tr("Changes will take effect next time."), QMessageBox::Ok);
+	QSettings().setValue("Volume", ui->volumeVerticalSlider->value());
 }

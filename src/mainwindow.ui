@@ -115,9 +115,6 @@
    <property name="text">
     <string>Resign</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
   </action>
   <action name="actionQuit">
    <property name="icon">

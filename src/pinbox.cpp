@@ -129,9 +129,8 @@ void PinBox::setBoxState(const BoxState &state)
 }
 //-----------------------------------------------------------------------------
 
-void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	QGraphicsRectItem::mousePressEvent(event);
 	if (isActive)
 		emit pinBoxPressSignal();
 }

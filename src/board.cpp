@@ -25,8 +25,10 @@
 #include "message.h"
 #include <QMetaType>
 #include <QDebug>
+#include <QSettings>
+#include <QSound>
 
-Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
+Board::Board(QWidget *parent):
 	QGraphicsView(parent),
 	mState(GameState::None),
 	mMode(GameMode::Master),
@@ -35,9 +37,10 @@ Board::Board(const QString &font_name, const int &font_size, QWidget *parent):
 	mSameColor(true),
 	mSetPins(false),
 	mCloseRow(false),
+	mFontSize(QSettings().value("FontSize", 12).toInt()),
+	mFontName(QSettings().value("FontName", "SansSerif").toString()),
 	mAlgorithm(Algorithm::MostParts),
-	mFontName(font_name),
-	mFontSize(font_size),
+	mLocale(0),
 	mGame(0)
 {
 	qRegisterMetaType<Algorithm>("Algorithm");
@@ -180,7 +183,7 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 
 		if(backPeg)
 		{
-			peg->setMovable(false);
+			peg->setEnabled(false);
 		}
 		else
 		{
@@ -222,12 +225,12 @@ void Board::initializeScene()
 	scene()->addItem(mMessage);
 	mMessage->setPos(20, 0);
 
-	mInformation = new Message("#808080", mFontName, qMax(mFontSize - 2, 1));
+	mInformation = new Message("#808080", mFontName, mFontSize - 2);
 	scene()->addItem(mInformation);
 	mInformation->setPos(20, 506);
 	mInformation->showMessage(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
-							  arg(mLocale.toString(mPegNumber)).arg(tr("Colors")).
-							  arg(mLocale.toString(mColorNumber)).arg(tr("Same Color")).
+							  arg(mLocale->toString(mPegNumber)).arg(tr("Colors")).
+							  arg(mLocale->toString(mColorNumber)).arg(tr("Same Color")).
 							  arg(mSameColor ? tr("Yes"): tr("No")));
 	createBoxes();
 	scene()->update();
@@ -243,7 +246,12 @@ void Board::onPegMouseReleased(const QPoint &position, const int &color)
 		{
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color)
+			{
+//				sound.setSource(QUrl::fromLocalFile("://sounds/pegrefuse1.wav"));
+//				sound.play();
+//				QSound::play("/mnt/Personal/Projects/QTProjects/QtMind/QtMind/sounds/pegrefuse1.wav");
 				return;
+			}
 		}
 	}
 
@@ -258,7 +266,8 @@ void Board::onPegMouseReleased(const QPoint &position, const int &color)
 		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PegState::Initial && dropOnlyOnce)
 		{
 			dropOnlyOnce = false;
-
+//			sound.setSource(QUrl::fromLocalFile("://sounds/pegdrop1.wav"));
+//			sound.play();
 			if(box->hasPeg())
 				box->setPegColor(color);
 			else
@@ -489,7 +498,20 @@ void Board::onGuessReady(const Algorithm &alg, const QString &guess,
 		mPinBoxes.first()->setPins(mMasterCode, mGuess, mColorNumber);
 	}
 }
+//-----------------------------------------------------------------------------
 
+void Board::onPreferencesChanged()
+{
+	mFontName =  QSettings().value("FontName", "Sans Serif").toString();
+	mFontSize = QSettings().value("FontSize", 12).toInt();
+//	qreal volume = (qreal) QSettings().value("Volume", 70).toInt()/100;
+//	sound.setVolume(volume);
+//	pegPressSound.setVolume(volume);
+//	pegDropSound.setVolume(volume);
+//	pegDropRefuseSound.setVolume(volume);
+//	okButtonPressSound.setVolume(volume);
+//	doneButtonPressSound.setVolume(volume);
+}
 //-----------------------------------------------------------------------------
 
 void Board::play()
@@ -586,7 +608,7 @@ void Board::playCodeBreaker()
 //-----------------------------------------------------------------------------
 
 void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, const bool &samecolor,
-				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale locale_n,
+				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale *locale_n,
 				  const IndicatorType &indicator_n)
 {
 	mPegNumber = peg_n;
@@ -643,25 +665,25 @@ void Board::showTranslatedInformation(const Algorithm &alg, const int &possibleS
 	else if (possibleSize > 10000)
 	{
 		mInformation->showMessage(QString("%1    %2: %3").arg(tr("Random Guess")).
-							  arg(tr("Remaining")).arg(mLocale.toString(possibleSize)));
+							  arg(tr("Remaining")).arg(mLocale->toString(possibleSize)));
 	}
 	else
 	{
 		switch (alg) {
 		case Algorithm::MostParts:
 			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
-									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
-									  arg(mLocale.toString(possibleSize)));
+									  arg(mLocale->toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale->toString(possibleSize)));
 			break;
 		case Algorithm::WorstCase:
 			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
-									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
-									  arg(mLocale.toString(possibleSize)));
+									  arg(mLocale->toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale->toString(possibleSize)));
 			break;
 		default:
 			mInformation->showMessage(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
-									  arg(mLocale.toString(minWeight)).arg(tr("Remaining")).
-									  arg(mLocale.toString(possibleSize)));
+									  arg(mLocale->toString(minWeight)).arg(tr("Remaining")).
+									  arg(mLocale->toString(possibleSize)));
 			break;
 		}
 

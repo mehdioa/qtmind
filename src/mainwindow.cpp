@@ -20,19 +20,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "preferences.h"
-#include <QApplication>
 #include <QComboBox>
-#include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
-#include <QSpinBox>
-#include <QToolBar>
-#include <QRadioButton>
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QLinearGradient>
-#include <QString>
-#include <QStyleOption>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -49,18 +39,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	mAutoCloseRow = QSettings().value("CloseRow", true).toBool();
 	mIndicator = (IndicatorType) QSettings().value("Indicator", 0).toInt();
 	mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
-	mFontName = QSettings().value("FontName", "SansSerif").toString();
-	mFontSize = QSettings().value("FontSize", 12).toInt();
+	mVolume = QSettings().value("Volume", 70).toInt();
 
 	mLocale.setNumberOptions(QLocale::OmitGroupSeparator);
 	Preferences::loadTranslation("qtmind_");
 
-	mBoard = new Board(mFontName, mFontSize, this);
+	mBoard = new Board(this);
 
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
 	connect(this, SIGNAL(indicatorChangeSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
+	connect(this, SIGNAL(preferencesChangeSignal()), mBoard, SLOT(onPreferencesChanged()));
+	emit preferencesChangeSignal();
+	emit indicatorChangeSignal(mIndicator);
 
 
 	ui->menuGame->setTitle(tr("Game"));
@@ -107,8 +99,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionCode_Breaker->setChecked(mMode == GameMode::Breaker);
 
 	QIcon double_icon;
-	double_icon.addPixmap(QPixmap(":/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
-	double_icon.addPixmap(QPixmap(":/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
+	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
+	double_icon.addPixmap(QPixmap("://icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
 	allowSameColorAction = new QAction(double_icon, tr("Allow Same Color"), this);
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(mSameColorAllowed);
@@ -181,7 +173,7 @@ void MainWindow::onNewGame()
 	ui->actionReveal_One_Peg->setVisible(mMode == GameMode::Breaker);
 
 	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
-				  mAutoPutPins, mAutoCloseRow, mLocale, mIndicator);
+				  mAutoPutPins, mAutoCloseRow, &mLocale, mIndicator);
 
 	if(mBoard->getState() != GameState::None &&
 			mBoard->getState() != GameState::Win &&
@@ -209,6 +201,8 @@ void MainWindow::onPreferences()
 	auto preferencesWidget = new Preferences(&mLocale, this);
 	preferencesWidget->setWindowTitle(tr("Options"));
 	preferencesWidget->exec();
+	mVolume = QSettings().value("Volume", 70).toInt();
+	emit preferencesChangeSignal();
 }
 //-----------------------------------------------------------------------------
 
@@ -267,15 +261,11 @@ void MainWindow::onUpdateNumbers()
 void MainWindow::onAbout()
 {
 	QMessageBox::about(this, tr("About QtMind"), QString(
-		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>"
-		"<p align='center'>%6<br/><small>%7</small></p>")
+		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("QtMind"), QCoreApplication::applicationVersion(),
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
 			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(mLocale.toString(2013)),
-			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\""),
-			tr("Uses icons from the <a href=%1>Oxygen</a> icon theme").arg("\"http://www.oxygen-icons.org/\""),
-			tr("Used under the <a href=%1>LGPL 3</a> license").arg("\"http://www.gnu.org/licenses/lgpl.html\""))
-					   );
+			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\"")));
 }
 //-----------------------------------------------------------------------------
 
