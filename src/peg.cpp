@@ -92,10 +92,10 @@ void Peg::setColor(const int &color_number)
 
 void Peg::setMovable(bool enabled)
 {
-	setFlag(QGraphicsItem::ItemIsMovable, enabled);
 	isActive = enabled;
-	setCursor(enabled ? Qt::OpenHandCursor : Qt::ArrowCursor);
-	setAcceptedMouseButtons(enabled ? Qt::LeftButton : Qt::NoButton);
+	setFlag(QGraphicsItem::ItemIsMovable, isActive);
+	setCursor(isActive ? Qt::OpenHandCursor : Qt::ArrowCursor);
+	setAcceptedMouseButtons(isActive ? Qt::LeftButton : Qt::NoButton);
 	setZValue(1);
 }
 //-----------------------------------------------------------------------------

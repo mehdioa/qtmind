@@ -67,9 +67,10 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelp"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout_QtMind"/>
     <addaction name="actionAbout_Qt"/>
-    <addaction name="separator"/>
    </widget>
    <addaction name="menuGame"/>
    <addaction name="menuTools"/>
@@ -240,6 +241,15 @@
    </property>
    <property name="text">
     <string>Reveal One Peg</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/information-icon.png</normaloff>:/icons/information-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

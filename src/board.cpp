@@ -402,7 +402,7 @@ void Board::onResigned()
 		mMessage->showMessage(tr("You Resign"));
 
 		setBoxStateOfList(&mMasterBoxes, BoxState::Past);
-		setBoxStateOfList(&mCurrentBoxes, BoxState::Future);
+		setBoxStateOfList(&mCurrentBoxes, BoxState::Past);
 		setBoxStateOfList(&mPinBoxes, BoxState::Future);
 		setBoxStateOfList(&mPegBoxes, BoxState::Future);
 	}

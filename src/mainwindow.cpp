@@ -49,10 +49,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
-	connect(this, SIGNAL(indicatorChangeSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
+	connect(this, SIGNAL(indicatorTypeChangeSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
 	connect(this, SIGNAL(preferencesChangeSignal()), mBoard, SLOT(onPreferencesChanged()));
 	emit preferencesChangeSignal();
-	emit indicatorChangeSignal(mIndicator);
+	emit indicatorTypeChangeSignal(mIndicator);
 
 
 	ui->menuGame->setTitle(tr("Game"));
@@ -217,7 +217,7 @@ void MainWindow::onSetPinsCloseRowAutomatically()
 void MainWindow::onIndicatorChanged(QAction *selectedAction)
 {
 	mIndicator = (IndicatorType) selectedAction->data().toInt();
-	emit indicatorChangeSignal(mIndicator);
+	emit indicatorTypeChangeSignal(mIndicator);
 }
 //-----------------------------------------------------------------------------
 
@@ -235,6 +235,10 @@ void MainWindow::onUpdateNumbers()
 	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
 	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
 	allowSameColorAction->setChecked(mSameColorAllowed);
+	if (mSameColorAllowed)
+		allowSameColorAction->setToolTip(tr("Same Color Allowed"));
+	else
+		allowSameColorAction->setToolTip(tr("Same Color Not Allwed"));
 
 	// for safety, fallback to standard in out-range inputs
 	if (mPegs < MIN_SLOT_NUMBER || mPegs > MAX_SLOT_NUMBER ||

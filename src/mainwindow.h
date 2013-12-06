@@ -58,7 +58,7 @@ private slots:
 	void onShowContextMenu(const QPoint& position);
 
 signals:
-	void indicatorChangeSignal(const IndicatorType&);
+	void indicatorTypeChangeSignal(const IndicatorType&);
 //	void volumeChangeSignal(const int &);
 	void preferencesChangeSignal();
 

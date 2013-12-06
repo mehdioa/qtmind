@@ -131,10 +131,10 @@ QString Game::randomPermutation(QString str) const
 {
 	qsrand(time(NULL));
 	QString answer = "";
-	int n = str.length();
-	for(int i = 0; i < n; ++i)
+
+	while(str.length() > 0)
 	{
-		int j = qrand() % (n - i);
+		int j = qrand() % str.length();
 		answer.append(str.at(j));
 		str.remove(j, 1);
 	}
@@ -148,9 +148,7 @@ void Game::permute(QString &code) const
 	code = randomPermutation(code);
 
 	for(int i = 0; i < code.length(); ++i)
-	{
 		code.replace(i, 1, permutatedColors.at(code.at(i).digitValue()));
-	}
 }
 //-----------------------------------------------------------------------------
 
@@ -210,6 +208,8 @@ bool Game::setResponse(const int &response)
 
 	/*	The first time algorithm comes here, it decide to fill in the mFirstPossibleCodes.
 	 *	If mAllCodesSize > 10000, we stick to the possible codes, as it is time consuming.
+	 *	If neither of mAllCodesSize or mPossibleCodes.size() is less than 10001, it will
+	 *	postpone filling mFirstPossibleCodes to next time.
 	 */
 	if (!mFirstPossibleCodes)
 	{
@@ -248,25 +248,26 @@ QString Game::getFirstGuess() const
 	{
 		switch (mColorNumber) {
 		case 2:
-			str = (QString ) "010101";
+			str = (QString) "010101";
 			answer = str.left(mPegNumber);
 			break;
 		case 3:
-			str = (QString ) "01212";
+			str = (QString) "01212";
 			answer = str.left(mPegNumber);
 			break;
 		case 4:
-			str = (QString ) "01223";
+			str = (QString) "01223";
 			answer = str.left(mPegNumber);
 			break;
 		default:
-			str = (QString ) "01223";
+			str = (QString) "01223";
 			answer = str.left(mPegNumber);
 			break;
 		}
 
-		if(mColorNumber == 6 && mPegNumber == 4 && mAlgorithm == Algorithm::WorstCase) // the classic game is best with this first guess
-			answer = (QString ) "0011";
+		// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
+		if(mColorNumber == 6 && mPegNumber == 4 && mAlgorithm == Algorithm::WorstCase)
+			answer = (QString) "0011";
 	}
 	else
 	{
@@ -281,7 +282,7 @@ QString Game::getFirstGuess() const
 
 void Game::makeGuess()
 {
-	/*	This function create a guess based on the algorithm. The first guess
+	/*	This function creates a guess based on the algorithm. The first guess
 	 *	and guess when there are at least 10000 codes possibles are treated
 	 *	differently.
 	 */
@@ -368,7 +369,7 @@ qreal Game::computeWeight(int *responses) const
 		break;
 	}
 
-	// This little trick will prefer possibles
+	// This little trick will prefer possibles in tie
 	if (responses[mResponseSpaceSize - 1] != 0)
 	{
 		answer -= 0.5;
