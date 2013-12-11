@@ -28,8 +28,8 @@ Pin::Pin(const int &color, QGraphicsItem *parent) :
 {
 	setPen(Qt::NoPen);
 	QLinearGradient lgrad(0, 0, 12, 12);
-	lgrad.setColorAt(0.0, QColor(0, 0, 0, 128));
-	lgrad.setColorAt(1.0, QColor(255, 255, 255, 160));
+	lgrad.setColorAt(0.0, QColor(80, 80, 80));
+	lgrad.setColorAt(1.0, QColor(220, 220, 220));
 	setPen(QPen(QBrush(lgrad), 1));
 
 	setAcceptedMouseButtons(Qt::NoButton);
@@ -61,4 +61,24 @@ void Pin::setColor(const int &c)
 		break;
 	}
 	update();
+}
+
+void Pin::setMouseState(const PinMouseState &state)
+{
+	switch (state) {
+	case PinMouseState::Accept:
+		isActive = true;
+		setAcceptedMouseButtons(Qt::LeftButton);
+		setCursor(Qt::PointingHandCursor);
+		break;
+	case PinMouseState::PassToBox:
+		isActive = false;
+		setAcceptedMouseButtons(Qt::NoButton);
+		setCursor(Qt::PointingHandCursor);
+	default:// PinMouseState::Ignore
+		isActive = false;
+		setAcceptedMouseButtons(Qt::NoButton);
+		setCursor(Qt::ArrowCursor);
+		break;
+	}
 }

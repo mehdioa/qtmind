@@ -38,11 +38,11 @@ public:
 	int getPegColor() const;
 	void setBoxState(const BoxState &state);
 	bool isPegVisible();
-	PegState getPegState() const {return mPegState;}
+	PegState getPegState() const;
 
 private:
-	PegState mPegState;
-	QGraphicsEllipseItem *mCircle;
+//	PegState mPegState;
+//	QGraphicsEllipseItem *mCircle;
 	Peg *mPeg;
 };
 

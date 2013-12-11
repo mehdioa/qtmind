@@ -28,7 +28,8 @@ enum class PegState
 	Initial,
 	Visible,
 	Invisible,
-	Draged
+	Underneath,
+	Plain
 };
 
 class QGraphicsDropShadowEffect;
@@ -44,13 +45,15 @@ public:
 	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
 
-	explicit Peg(const QPoint &position, int color_number = 0,
+	explicit Peg(const QPointF &position, int color_number = 0,
 	const IndicatorType &indicator_n = IndicatorType::None, QGraphicsItem *parent = 0);
 	void setColor(const int &color_number);
 	int getColor() const {return mColor;}
 	void setMovable(bool );
 	bool isMovable() const {return isActive;}
 	void setBox(PegBox *box) {mBox = box;}
+	void setState(const PegState &state);
+	PegState getState() const {return mState;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
@@ -58,7 +61,7 @@ protected:
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 signals:
-	void mouseReleaseSignal(QPoint position, int color);
+	void mouseReleaseSignal(Peg *);
 	void mouseDoubleClickSignal(Peg *);
 
 protected slots:
@@ -73,6 +76,10 @@ private:
 	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect *pressedEffect;
 	QGraphicsSimpleTextItem *mIndicator;
+	QGraphicsEllipseItem *mGloss;
+	QGraphicsEllipseItem *mCircle;
+
+	PegState mState;
 	int mColor;
 	bool isActive;
 };

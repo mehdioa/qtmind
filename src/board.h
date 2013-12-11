@@ -60,7 +60,7 @@ public:
 	explicit Board(QWidget *parent = 0);
 	~Board();
 	void play();
-	void autoPutPinsCloseRow(const bool &set_pins, const bool &closeRow);
+	void autoPutPinsCloseRow(const bool &set_pins, const bool &close_row);
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
 			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
@@ -79,7 +79,7 @@ signals:
 	void interuptSignal();
 
 private slots:
-	void onPegMouseReleased(const QPoint &position, const int &color);
+	void onPegMouseReleased(Peg *);
 	void onPegMouseDoubleClicked(Peg *);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
@@ -95,7 +95,7 @@ private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-	void createPegForBox(PegBox *box, int color, bool backPeg = false);// backPeg is used to put an extra peg under initial pegs,
+	void createPegForBox(PegBox *box, int color, bool underneath = false, bool plain = false);// backPeg is used to put an extra peg under initial pegs,
 	void codeRowFilled(const bool &filled);
 	void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t);
 	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);

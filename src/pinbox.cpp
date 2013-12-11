@@ -96,33 +96,21 @@ void PinBox::setBoxState(const BoxState &state)
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 		foreach (Pin *pin, pins)
-		{
-			pin->setActivity(false);
-			pin->setAcceptedMouseButtons(Qt::NoButton);
-			pin->setCursor(Qt::PointingHandCursor);
-		}
+			pin->setMouseState(PinMouseState::PassToBox);
 		break;
 	case BoxState::None: //BoxState::None: used for entering pins in breaker mode, just pins are active
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
 		foreach (Pin *pin, pins)
-		{
-			pin->setActivity(true);
-			pin->setAcceptedMouseButtons(Qt::LeftButton);
-			pin->setCursor(Qt::PointingHandCursor);
-		}
+			pin->setMouseState(PinMouseState::Accept);
 		break;
 	default: //BoxState::FUTURE and BoxState::Past, no interaction is allowed
 		isActive = false;
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
 		foreach (Pin *pin, pins)
-		{
-			pin->setActivity(false);
-			pin->setAcceptedMouseButtons(Qt::NoButton);
-			pin->setCursor(Qt::ArrowCursor);
-		}
+			pin->setMouseState(PinMouseState::Ignore);
 		break;
 	}
 	update();

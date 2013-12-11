@@ -155,6 +155,10 @@ void Board::createBoxes()
 			createPegForBox(pegbox, i, true);//just a background peg
 			createPegForBox(pegbox, i);
 		}
+		else
+		{
+			createPegForBox(pegbox, i, true, true);
+		}
 		pegbox->setPegState(PegState::Initial);
 		mPegBoxes.append(pegbox);
 	}
@@ -169,9 +173,9 @@ void Board::createBoxes()
 }
 //-----------------------------------------------------------------------------
 
-void Board::createPegForBox(PegBox *box, int color, bool backPeg)
+void Board::createPegForBox(PegBox *box, int color, bool underneath, bool plain)
 {
-	QPoint pos = box->sceneBoundingRect().topLeft().toPoint();
+	QPointF pos = box->sceneBoundingRect().topLeft();
 	if (box->hasPeg())
 	{
 		box->setPegColor(color);
@@ -179,18 +183,20 @@ void Board::createPegForBox(PegBox *box, int color, bool backPeg)
 	{
 		auto peg = new Peg(pos, color, mIndicator);
 		scene()->addItem(peg);
-		connect(this, SIGNAL(IndicatorTypeChangeSignal(IndicatorType)), peg, SLOT(onIndicatorChanged(IndicatorType)));
 
-		if(backPeg)
-		{
-			peg->setEnabled(false);
-		}
-		else
+		if(!underneath && !plain)
 		{
 			box->setPeg(peg);
-			connect(peg, SIGNAL(mouseReleaseSignal(QPoint, int)), this, SLOT(onPegMouseReleased(QPoint, int)));
+			connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
 			connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
 		}
+
+		if (underneath)
+			peg->setState(PegState::Underneath);
+		if (plain)
+			peg->setState(PegState::Plain);
+		else
+			connect(this, SIGNAL(IndicatorTypeChangeSignal(IndicatorType)), peg, SLOT(onIndicatorChanged(IndicatorType)));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -237,8 +243,10 @@ void Board::initializeScene()
 }
 //-----------------------------------------------------------------------------
 
-void Board::onPegMouseReleased(const QPoint &position, const int &color)
+void Board::onPegMouseReleased(Peg *peg)
 {
+	QPointF position = peg->sceneBoundingRect().center();
+	int color = peg->getColor();
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
 	if(!mSameColor)
 	{
@@ -263,7 +271,7 @@ void Board::onPegMouseReleased(const QPoint &position, const int &color)
 
 	foreach (PegBox *box, mCurrentBoxes)
 	{
-		if (box->sceneBoundingRect().contains(position) && box->getPegState() != PegState::Initial && dropOnlyOnce)
+		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
 			dropOnlyOnce = false;
 //			sound.setSource(QUrl::fromLocalFile("://sounds/pegdrop1.wav"));
@@ -295,7 +303,7 @@ void Board::onPegMouseDoubleClicked(Peg *peg)
 	{
 		if (!box->hasPeg() || box->getPegState() == PegState::Invisible)
 		{
-			peg->setPos(box->sceneBoundingRect().topLeft().toPoint());
+			peg->setPos(box->sceneBoundingRect().topLeft());
 			break;
 		}
 	}
@@ -375,19 +383,22 @@ void Board::onIndicatorTypeChanged(const IndicatorType &indicator_n)
 
 void Board::onRevealOnePeg()
 {
-	foreach (PegBox *box, mMasterBoxes)
+	if (mMode == GameMode::Breaker && (mState == GameState::Running || mState == GameState::WaittingPinBoxPress))
 	{
-		if(box->getBoxState() != BoxState::Past)
+		foreach (PegBox *box, mMasterBoxes)
 		{
-			if (box == mMasterBoxes.last())
+			if(box->getBoxState() != BoxState::Past)
 			{
-				mState = GameState::Running;
-				onResigned();
-			}
-			else
-			{
-				box->setBoxState(BoxState::Past);
-				return;
+				if (box == mMasterBoxes.last())
+				{
+					mState = GameState::Running;
+					onResigned();
+				}
+				else
+				{
+					box->setBoxState(BoxState::Past);
+					return;
+				}
 			}
 		}
 	}
@@ -584,7 +595,6 @@ void Board::playCodeBreaker()
 		int realcolor = digits.at(color).digitValue();
 		mMasterCode.append(QString::number(realcolor));
 		createPegForBox(box, realcolor);
-		box->setPegState(PegState::Invisible);
 		box->setBoxState(BoxState::None);
 		if(!mSameColor)
 		{
@@ -692,10 +702,10 @@ void Board::showTranslatedInformation(const Algorithm &alg, const int &possibleS
 }
 //-----------------------------------------------------------------------------
 
-void Board::autoPutPinsCloseRow(const bool &set_pins, const bool &closeRow)
+void Board::autoPutPinsCloseRow(const bool &set_pins, const bool &close_row)
 {
 	mSetPins = set_pins;
-	mCloseRow = closeRow;
+	mCloseRow = close_row;
 }
 //-----------------------------------------------------------------------------
 
@@ -716,10 +726,10 @@ void Board::drawBackground(QPainter *painter, const QRectF &rect)
 	QBrush mBotGrad(botgrad);
 
 	QLinearGradient lgrad(0, 190, 320, 370);
-	lgrad.setColorAt(0.0, QColor(255, 255, 255, 160));
-	lgrad.setColorAt(0.49, QColor(255, 255, 255, 160));
-	lgrad.setColorAt(0.50, QColor(0, 0, 0, 128));
-	lgrad.setColorAt(1.0, QColor(0, 0, 0, 128));
+	lgrad.setColorAt(0.0, QColor(240, 240, 240));
+	lgrad.setColorAt(0.49, QColor(240, 240, 240));
+	lgrad.setColorAt(0.50, QColor(80, 80, 80));
+	lgrad.setColorAt(1.0, QColor(80, 80, 80));
 	QPen mFramePen = QPen(QBrush(lgrad), 1);
 
 	QColor mPend(100, 100, 100);

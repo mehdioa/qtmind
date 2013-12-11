@@ -22,13 +22,20 @@
 
 #include <QGraphicsEllipseItem>
 
+enum class PinMouseState
+{
+	Accept,
+	Ignore,
+	PassToBox
+};
+
 class Pin : public QGraphicsEllipseItem
 {
 public:
 	explicit Pin(const int &color = 0, QGraphicsItem *parent = 0);
 	int getColor() const {return m_color;}
 	void setColor(const int &c);
-	void setActivity(const bool &b) {isActive = b;}
+	void setMouseState (const PinMouseState &state);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
