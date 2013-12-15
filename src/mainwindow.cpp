@@ -66,9 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionCode_Breaker->setText(tr("Code Breaker"));
 	ui->actionCode_Master->setText(tr("Code Master"));
 	ui->menuIndicator_Type->setTitle(tr("Indicator Type"));
-	ui->actionNo_Indicators->setText(tr("No Indicator"));
-	ui->actionCharacters->setText(tr("Character"));
-	ui->actionDigits->setText(tr("Digit"));
+	ui->actionColor_Indicator->setText(tr("Color"));
+	ui->actionCharacter_Indicator->setText(tr("Character"));
+	ui->actionDigit_Indicator->setText(tr("Digit"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close Rows"));
 	ui->actionOptions->setText(tr("Options"));
@@ -78,16 +78,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionAbout_Qt->setText(tr("About Qt"));
 
 	auto indicatorTypeActions = new QActionGroup(this);
-	indicatorTypeActions->addAction(ui->actionNo_Indicators);
-	indicatorTypeActions->addAction(ui->actionCharacters);
-	indicatorTypeActions->addAction(ui->actionDigits);
+	indicatorTypeActions->addAction(ui->actionColor_Indicator);
+	indicatorTypeActions->addAction(ui->actionCharacter_Indicator);
+	indicatorTypeActions->addAction(ui->actionDigit_Indicator);
 	indicatorTypeActions->setExclusive(true);
-	ui->actionNo_Indicators->setData((int) IndicatorType::None);
-	ui->actionCharacters->setData((int) IndicatorType::Character);
-	ui->actionDigits->setData((int) IndicatorType::Digit);
-	ui->actionNo_Indicators->setChecked(mIndicator == IndicatorType::None);
-	ui->actionCharacters->setChecked(mIndicator == IndicatorType::Character);
-	ui->actionDigits->setChecked(mIndicator == IndicatorType::Digit);
+	ui->actionColor_Indicator->setData((int) IndicatorType::Color);
+	ui->actionCharacter_Indicator->setData((int) IndicatorType::Character);
+	ui->actionDigit_Indicator->setData((int) IndicatorType::Digit);
+	ui->actionColor_Indicator->setChecked(mIndicator == IndicatorType::Color);
+	ui->actionCharacter_Indicator->setChecked(mIndicator == IndicatorType::Character);
+	ui->actionDigit_Indicator->setChecked(mIndicator == IndicatorType::Digit);
 
 	auto gameModeActions = new QActionGroup(this);
 	gameModeActions->addAction(ui->actionCode_Master);
@@ -137,9 +137,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContextMenu(QPoint)));
-
 	onUpdateNumbers();
-
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 }
 //-----------------------------------------------------------------------------

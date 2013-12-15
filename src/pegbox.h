@@ -25,14 +25,12 @@
 #include <QGraphicsItem>
 
 class QGraphicsEllipseItem;
-class Board;
-
 class PegBox : public EmptyBox
 {
 public:
 	explicit PegBox(const QPoint &position, QGraphicsItem *parent = 0);
 	bool hasPeg() const {return mPeg != 0;}
-	void setPeg(Peg *peg);
+	void setPeg(Peg *peg) {mPeg = peg;}
 	void setPegState(const PegState &state);
 	void setPegColor(const int &color_number);
 	int getPegColor() const;
@@ -41,8 +39,6 @@ public:
 	PegState getPegState() const;
 
 private:
-//	PegState mPegState;
-//	QGraphicsEllipseItem *mCircle;
 	Peg *mPeg;
 };
 

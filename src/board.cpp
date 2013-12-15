@@ -54,6 +54,10 @@ Board::Board(QWidget *parent):
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setMinimumSize(320, 560);
+
+	pegDropSound.setSource(QUrl::fromLocalFile("://sounds/pegdrop.wav"));
+	pegDropRefuseSound.setSource(QUrl::fromLocalFile("://sounds/pegrefuse.wav"));
+	buttonPressSound.setSource(QUrl::fromLocalFile("://sounds/pin.wav"));
 }
 //-----------------------------------------------------------------------------
 
@@ -143,7 +147,6 @@ void Board::createBoxes()
 			auto pegbox = new PegBox(position+QPoint(j*40, 0));
 			scene()->addItem(pegbox);
 			mCodeBoxes.append(pegbox);
-			pegbox->setPegState(PegState::Invisible);
 		}
 
 		position.setX(276);	//go to right corner for the peg boxes
@@ -154,12 +157,12 @@ void Board::createBoxes()
 		{
 			createPegForBox(pegbox, i, true);//just a background peg
 			createPegForBox(pegbox, i);
+			pegbox->setPegState(PegState::Initial);
 		}
 		else
 		{
 			createPegForBox(pegbox, i, true, true);
 		}
-		pegbox->setPegState(PegState::Initial);
 		mPegBoxes.append(pegbox);
 	}
 
@@ -167,7 +170,6 @@ void Board::createBoxes()
 	{
 		auto box = new PegBox(QPoint(160-20*mPegNumber+i*40, 70));
 		scene()->addItem(box);
-		box->setPegState(PegState::Invisible);
 		mMasterBoxes.append(box);
 	}
 }
@@ -175,7 +177,7 @@ void Board::createBoxes()
 
 void Board::createPegForBox(PegBox *box, int color, bool underneath, bool plain)
 {
-	QPointF pos = box->sceneBoundingRect().topLeft();
+	QPointF pos = box->sceneBoundingRect().center();
 	if (box->hasPeg())
 	{
 		box->setPegColor(color);
@@ -255,9 +257,7 @@ void Board::onPegMouseReleased(Peg *peg)
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color)
 			{
-//				sound.setSource(QUrl::fromLocalFile("://sounds/pegrefuse1.wav"));
-//				sound.play();
-//				QSound::play("/mnt/Personal/Projects/QTProjects/QtMind/QtMind/sounds/pegrefuse1.wav");
+				pegDropRefuseSound.play();
 				return;
 			}
 		}
@@ -274,8 +274,7 @@ void Board::onPegMouseReleased(Peg *peg)
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
 			dropOnlyOnce = false;
-//			sound.setSource(QUrl::fromLocalFile("://sounds/pegdrop1.wav"));
-//			sound.play();
+			pegDropSound.play();
 			if(box->hasPeg())
 				box->setPegColor(color);
 			else
@@ -319,6 +318,8 @@ void Board::onPinBoxPressed()
 	 *	appears in code/guess, and sum runs over all colors.
 	 *	http://mathworld.wolfram.com/Mastermind.html
 	 */
+
+	buttonPressSound.play();
 	mState = GameState::Running;
 
 	mGuess = "";
@@ -430,6 +431,7 @@ void Board::onOkButtonPressed()
 		return;
 	}
 
+	buttonPressSound.play();
 	mOkButton->setVisible(false);
 
 	/*	we are done with the pinbox. Make it past and remove it from mPinBoxes */
@@ -453,6 +455,7 @@ void Board::onOkButtonPressed()
 
 void Board::onDoneButtonPressed()
 {
+	buttonPressSound.play();
 	mState = GameState::Running;
 
 	//	we are done with the done button
@@ -515,13 +518,10 @@ void Board::onPreferencesChanged()
 {
 	mFontName =  QSettings().value("FontName", "Sans Serif").toString();
 	mFontSize = QSettings().value("FontSize", 12).toInt();
-//	qreal volume = (qreal) QSettings().value("Volume", 70).toInt()/100;
-//	sound.setVolume(volume);
-//	pegPressSound.setVolume(volume);
-//	pegDropSound.setVolume(volume);
-//	pegDropRefuseSound.setVolume(volume);
-//	okButtonPressSound.setVolume(volume);
-//	doneButtonPressSound.setVolume(volume);
+	qreal volume = (qreal) QSettings().value("Volume", 70).toInt()/100;
+	pegDropSound.setVolume(volume);
+	pegDropRefuseSound.setVolume(volume);
+	buttonPressSound.setVolume(volume);
 }
 //-----------------------------------------------------------------------------
 
@@ -732,16 +732,6 @@ void Board::drawBackground(QPainter *painter, const QRectF &rect)
 	lgrad.setColorAt(1.0, QColor(80, 80, 80));
 	QPen mFramePen = QPen(QBrush(lgrad), 1);
 
-	QColor mPend(100, 100, 100);
-	QColor mPenl(236, 236, 236);
-	QColor mGrad0(204, 204, 204);
-	QColor mGrad1(252, 252, 252);
-
-	mPend.setAlpha(50);
-	mPenl.setAlpha(80);
-	mGrad0.setAlpha(50);
-	mGrad1.setAlpha(50);
-
 	painter->setPen(Qt::NoPen);
 
 	QRectF cr(3, 3, 314, 554);
@@ -764,7 +754,7 @@ void Board::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->setBrush(QBrush(rowgrad));
 	painter->drawRect(QRectF(4, 129, 318, 400));
 
-	painter->setPen(QColor(154, 154, 154).darker(115));
+	painter->setPen(QColor(135, 135, 135));
 	for(int i = 0; i < 11; ++i)
 	{
 		painter->drawLine(5, 128+i*40, 321, 128+i*40);
@@ -773,7 +763,6 @@ void Board::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->setBrush(mBotGrad);
 	painter->drawRect(QRect(1, 528, 318, 28));
 	painter->setBrush(QBrush(QColor(239, 239, 239)));
-
 	painter->setClipping(false);
 
 	QRectF rightShadow(3.5, 3.5, 313, 553);

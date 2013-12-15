@@ -19,15 +19,9 @@
         <file>icons/hicolor/256x256/qtmind.png</file>
         <file>icons/hicolor/512x512/qtmind.png</file>
         <file>icons/reveal_one_peg.png</file>
-        <file>sounds/pin2.wav</file>
-        <file>sounds/pegpress1.wav</file>
-        <file>sounds/pin1.wav</file>
-        <file>sounds/pegdrop1.wav</file>
-        <file>sounds/pegdrop2.wav</file>
-        <file>sounds/pegpress2.wav</file>
-        <file>sounds/pegrefuse1.wav</file>
-        <file>sounds/pegrefuse2.wav</file>
-        <file>sounds/done_button_press.wav</file>
-        <file>sounds/ok_button_press.wav</file>
+        <file>sounds/button_press.wav</file>
+        <file>sounds/pegdrop.wav</file>
+        <file>sounds/pegrefuse.wav</file>
+        <file>sounds/pin.wav</file>
     </qresource>
 </RCC>

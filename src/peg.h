@@ -34,7 +34,6 @@ enum class PegState
 
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
-class PegBox;
 
 class Peg : public QObject, public QGraphicsEllipseItem
 {
@@ -46,12 +45,11 @@ public:
 	static const QString OrderedChars[3];
 
 	explicit Peg(const QPointF &position, int color_number = 0,
-	const IndicatorType &indicator_n = IndicatorType::None, QGraphicsItem *parent = 0);
+	const IndicatorType &indicator_n = IndicatorType::Color, QGraphicsItem *parent = 0);
 	void setColor(const int &color_number);
 	int getColor() const {return mColor;}
 	void setMovable(bool );
 	bool isMovable() const {return isActive;}
-	void setBox(PegBox *box) {mBox = box;}
 	void setState(const PegState &state);
 	PegState getState() const {return mState;}
 
@@ -68,8 +66,8 @@ protected slots:
 	void onIndicatorChanged(const IndicatorType &indicator_n);
 
 private:
-	QPointF mPosition;// position of hole containing peg
-	PegBox *mBox;
+//	PegBox *mBox;
+	QPointF mPosition;
 	IndicatorType mIndicatorType;
 
 	/*	pressed shadow - the ellipse item takes ownership of

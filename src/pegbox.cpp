@@ -34,6 +34,8 @@ int PegBox::getPegColor() const
 {
 	if (mPeg)
 		return mPeg->getColor();
+
+	qDebug("getPegColor called with no peg setted.");
 	return -1;
 }
 //-----------------------------------------------------------------------------
@@ -42,6 +44,7 @@ bool PegBox::isPegVisible()
 {
 	return mPeg && mPeg->isVisible();
 }
+//-----------------------------------------------------------------------------
 
 PegState PegBox::getPegState() const
 {
@@ -63,10 +66,7 @@ void PegBox::setBoxState(const BoxState &state)
 		case BoxState::Current:
 			mPeg->setState(PegState::Visible);
 			break;
-		case BoxState::Future:
-			mPeg->setState(PegState::Invisible);
-			break;
-		default: // BoxState::None
+		default: // BoxState::None, BoxState::Future
 			mPeg->setState(PegState::Invisible);
 			break;
 		}
@@ -75,17 +75,12 @@ void PegBox::setBoxState(const BoxState &state)
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setPeg(Peg *peg)
-{
-	mPeg = peg;
-	mPeg->setBox(this);
-}
-//-----------------------------------------------------------------------------
-
 void PegBox::setPegColor(const int &color_number)
 {
 	if (mPeg)
 		mPeg->setColor(color_number);
+	else
+		qDebug("setPegColor called with no peg setted.");
 }
 //-----------------------------------------------------------------------------
 
@@ -93,4 +88,7 @@ void PegBox::setPegState(const PegState &state)
 {
 	if (mPeg)
 		mPeg->setState(state);
+	else
+		qDebug("setPegState called with no peg setted.");
+
 }

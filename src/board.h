@@ -21,7 +21,7 @@
 #define BOARD_H
 
 #include "constants.h"
-//#include <QtMultimedia/QSoundEffect>
+#include <QtMultimedia/QSoundEffect>
 #include <QGraphicsView>
 #include <QLocale>
 
@@ -29,14 +29,6 @@ enum class GameMode {
 	Master,		//HUMAN BREAKS THE CODE
 	Breaker		//MACHINE BREAKS THE CODE
 };
-
-class Peg;
-class EmptyBox;
-class PinBox;
-class PegBox;
-class Button;
-class Game;
-class Message;
 
 enum class GameState
 {
@@ -52,6 +44,13 @@ enum class GameState
 	WaittingPinBoxPress
 };
 
+class Peg;
+class PinBox;
+class PegBox;
+class Button;
+class Game;
+class Message;
+
 class Board: public QGraphicsView
 {
 	Q_OBJECT
@@ -64,7 +63,7 @@ public:
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
 			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
-			   const IndicatorType &indicator_n = IndicatorType::None);
+			   const IndicatorType &indicator_n = IndicatorType::Color);
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
 
@@ -95,7 +94,8 @@ private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-	void createPegForBox(PegBox *box, int color, bool underneath = false, bool plain = false);// backPeg is used to put an extra peg under initial pegs,
+	void createPegForBox(PegBox *box, int color, bool underneath = false,
+						 bool plain = false);// backPeg is used to put an extra peg under initial pegs,
 	void codeRowFilled(const bool &filled);
 	void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t);
 	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);
@@ -103,11 +103,11 @@ private:
 	void initializeScene();
 
 private:
-	QList<PinBox *> mPinBoxes;
-	QList<PegBox *> mPegBoxes;
-	QList<PegBox *> mCodeBoxes;
-	QList<PegBox *> mCurrentBoxes;	//	boxes that can be filled by player
-	QList<PegBox *> mMasterBoxes;
+	QList<PinBox *> mPinBoxes;	//	black-white pins
+	QList<PegBox *> mPegBoxes;	//	right boxes that contains color-pegs to put on codeboxes
+	QList<PegBox *> mCodeBoxes;	//	middle boxes that is filled by a player
+	QList<PegBox *> mCurrentBoxes;	//	the active row of codeboxes
+	QList<PegBox *> mMasterBoxes;	//	the mastercode boxes
 
 	GameState mState;
 	GameMode mMode;
@@ -124,20 +124,14 @@ private:
 	QString mMasterCode;
 	QString mGuess;
 	QLocale *mLocale;
-
-
 	Game *mGame;
 	Button *mOkButton;
 	Button *mDoneButton;
 	Message *mMessage;
 	Message *mInformation;
-
-//	QSoundEffect sound;
-//	QSoundEffect pegDropSound;
-//	QSoundEffect pegDropRefuseSound;
-//	QSoundEffect okButtonPressSound;
-//	QSoundEffect doneButtonPressSound;
-
+	QSoundEffect pegDropSound;
+	QSoundEffect pegDropRefuseSound;
+	QSoundEffect buttonPressSound;
 };
 
 #endif // BOARD_H

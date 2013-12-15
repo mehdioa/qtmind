@@ -18,7 +18,6 @@
  ***********************************************************************/
 
 #include "peg.h"
-#include "pegbox.h"
 #include <QPen>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
@@ -44,7 +43,6 @@ const QString Peg::OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
 Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
 	QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 	mPosition(position),
-	mBox(0),
 	isActive(false)
 {
 	mColor = (-1 < color_number &&color_number < 10) ? color_number : 0;
@@ -68,7 +66,7 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 	QFont font("Monospace", 15, QFont::Bold, false);
 	font.setStyleHint(QFont::TypeWriter);
 	mIndicator->setFont(font);
-	mIndicator->setPos(13.5,7);
+	mIndicator->setPos(14,8);
 	onIndicatorChanged(indicator_n);
 
 	QLinearGradient cgrad(2, 2, 35, 35);
@@ -79,7 +77,7 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 	mCircle->setPen(QPen(QBrush(cgrad), 1));
 
 	setZValue(2);
-	setPos(mPosition);
+	setPos(position - QPointF(19.5, 19.5));
 	setMovable(true);
 	setAcceptDrops(true);
 	setState(PegState::Visible);
@@ -89,7 +87,7 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 void Peg::setColor(const int &color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
-	if (mIndicatorType == IndicatorType::None)
+	if (mIndicatorType == IndicatorType::Color)
 	{
 		QRadialGradient gradient(20, 0, 60, 20, 0);
 		gradient.setColorAt(0, PegColors[mColor][0]);
@@ -164,13 +162,13 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		setZValue(2);
 		setCursor(Qt::OpenHandCursor);
 
-		if (!mBox->sceneBoundingRect().contains(sceneBoundingRect().center()))//	droped out of its own box,
+		if (!sceneBoundingRect().contains(mPosition))//	droped out of its own box,
 		{
 			if (mState != PegState::Initial)
 				setState(PegState::Invisible);
 			emit mouseReleaseSignal(this);
 		}
-		setPos(mBox->sceneBoundingRect().topLeft());
+		setPos(mPosition - QPointF(19.5, 19.5));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -184,10 +182,10 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 		{
 			emit mouseDoubleClickSignal(this);
 			emit mouseReleaseSignal(this);
-			setPos(mBox->sceneBoundingRect().topLeft());
+			setPos(mPosition - QPoint(19.5, 19.5));
 		}
 		else
-			setPos(sceneBoundingRect().center() - QPoint(20, 60));
+			setPos(mPosition - QPoint(19.5, 60));
 	}
 }
 //-----------------------------------------------------------------------------

@@ -41,9 +41,9 @@
      <property name="title">
       <string>Indicator Type</string>
      </property>
-     <addaction name="actionNo_Indicators"/>
-     <addaction name="actionCharacters"/>
-     <addaction name="actionDigits"/>
+     <addaction name="actionColor_Indicator"/>
+     <addaction name="actionCharacter_Indicator"/>
+     <addaction name="actionDigit_Indicator"/>
     </widget>
     <widget class="QMenu" name="menuGame_Mode">
      <property name="enabled">
@@ -195,7 +195,7 @@
     <string>Code Breaker</string>
    </property>
   </action>
-  <action name="actionNo_Indicators">
+  <action name="actionColor_Indicator">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -210,7 +210,7 @@
     <string>No Indicators</string>
    </property>
   </action>
-  <action name="actionCharacters">
+  <action name="actionCharacter_Indicator">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -222,7 +222,7 @@
     <string>Characters</string>
    </property>
   </action>
-  <action name="actionDigits">
+  <action name="actionDigit_Indicator">
    <property name="checkable">
     <bool>true</bool>
    </property>
