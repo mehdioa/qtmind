@@ -44,9 +44,9 @@ public:
 	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
 
-	explicit Peg(const QPointF &position, int color_number = 0,
-	const IndicatorType &indicator_n = IndicatorType::Color, QGraphicsItem *parent = 0);
-	void setColor(const int &color_number);
+	explicit Peg(const QPointF &position, int color_number = 0, const bool &show_colors = true, const bool &show_indicators = false,
+	const IndicatorType &indicator_n = IndicatorType::Character, QGraphicsItem *parent = 0);
+	void setColor(int color_number);
 	int getColor() const {return mColor;}
 	void setMovable(bool );
 	bool isMovable() const {return isActive;}
@@ -63,11 +63,12 @@ signals:
 	void mouseDoubleClickSignal(Peg *);
 
 protected slots:
-	void onIndicatorChanged(const IndicatorType &indicator_n);
+	void onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n);
 
 private:
-//	PegBox *mBox;
 	QPointF mPosition;
+	bool mShowColors;
+	bool mShowIndicators;
 	IndicatorType mIndicatorType;
 
 	/*	pressed shadow - the ellipse item takes ownership of

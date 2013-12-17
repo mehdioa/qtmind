@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>385</width>
-    <height>185</height>
+    <width>542</width>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,6 +61,42 @@
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Indicator</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="showColorsCheckBox">
+            <property name="text">
+             <string>Show Colors</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QRadioButton" name="characterRadioButton">
+            <property name="text">
+             <string>Characters</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QRadioButton" name="digitRadioButton">
+            <property name="text">
+             <string>Digits</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

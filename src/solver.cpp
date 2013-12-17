@@ -17,7 +17,7 @@
  *
  ***********************************************************************/
 
-#include "game.h"
+#include "solver.h"
 #include <QtCore/qmath.h>
 
 inline int ipow(int base, int exp)
@@ -34,7 +34,7 @@ inline int ipow(int base, int exp)
 }
 //-----------------------------------------------------------------------------
 
-Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color, QObject *parent):
+Solver::Solver(const int &peg_no, const int &color_no, const bool &allow_same_color, QObject *parent):
 	QThread(parent),
 	mPegNumber(peg_no),
 	mColorNumber(color_no),
@@ -49,13 +49,13 @@ Game::Game(const int &peg_no, const int &color_no, const bool &allow_same_color,
 }
 //-----------------------------------------------------------------------------
 
-Game::~Game()
+Solver::~Solver()
 {
 	deleteTables();
 }
 //-----------------------------------------------------------------------------
 
-void Game::createTables()
+void Solver::createTables()
 {
 	if (mAllowSameColor){
 		mAllCodesSize = ipow(mColorNumber, mPegNumber);
@@ -77,7 +77,7 @@ void Game::createTables()
 }
 //-----------------------------------------------------------------------------
 
-void Game::deleteTables()
+void Solver::deleteTables()
 {
 	for(int i = 0; i < mAllCodesSize; ++i)
 		delete[] mAllCodes[i];
@@ -93,7 +93,7 @@ void Game::deleteTables()
 }
 //-----------------------------------------------------------------------------
 
-void Game::onReset(const int &peg_no, const int &color_no, const bool &allow_same_color)
+void Solver::onReset(const int &peg_no, const int &color_no, const bool &allow_same_color)
 {
 	if(mColorNumber != color_no || mPegNumber != peg_no || mAllowSameColor != allow_same_color)
 	{
@@ -119,7 +119,7 @@ void Game::onReset(const int &peg_no, const int &color_no, const bool &allow_sam
 }
 //-----------------------------------------------------------------------------
 
-void Game::onStartGuessing(const Algorithm &alg)
+void Solver::onStartGuessing(const Algorithm &alg)
 {
 	mInterupt = false;
 	mAlgorithm = alg;
@@ -127,7 +127,7 @@ void Game::onStartGuessing(const Algorithm &alg)
 }
 //-----------------------------------------------------------------------------
 
-QString Game::randomPermutation(QString str) const
+QString Solver::randomPermutation(QString str) const
 {
 	qsrand(time(NULL));
 	QString answer = "";
@@ -142,7 +142,7 @@ QString Game::randomPermutation(QString str) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::permute(QString &code) const
+void Solver::permute(QString &code) const
 {
 	QString permutatedColors = randomPermutation(QString("0123456789").left(mColorNumber));
 	code = randomPermutation(code);
@@ -152,7 +152,7 @@ void Game::permute(QString &code) const
 }
 //-----------------------------------------------------------------------------
 
-int Game::compare(const int *codeA, const int *codeB) const
+int Solver::compare(const int *codeA, const int *codeB) const
 {
 	/*	Compare codeA to codeB and return the black-white code response.
 	 *	Interestingly,  total can be computed as
@@ -185,7 +185,7 @@ int Game::compare(const int *codeA, const int *codeB) const
 }
 //-----------------------------------------------------------------------------
 
-bool Game::setResponse(const int &response)
+bool Solver::setResponse(const int &response)
 {
 	/*	This function is responsible for puting the response and erase the impossibles.
 	 *	It will return false if the response is not possible and do nothing
@@ -232,7 +232,7 @@ bool Game::setResponse(const int &response)
 }
 //-----------------------------------------------------------------------------
 
-void Game::run()
+void Solver::run()
 {
 	makeGuess();
 	if (!mInterupt)
@@ -240,7 +240,7 @@ void Game::run()
 }
 //-----------------------------------------------------------------------------
 
-QString Game::getFirstGuess() const
+QString Solver::getFirstGuess() const
 {
 	QString answer;
 	QString str;
@@ -280,7 +280,7 @@ QString Game::getFirstGuess() const
 }
 //-----------------------------------------------------------------------------
 
-void Game::makeGuess()
+void Solver::makeGuess()
 {
 	/*	This function creates a guess based on the algorithm. The first guess
 	 *	and guess when there are at least 10000 codes possibles are treated
@@ -339,7 +339,7 @@ void Game::makeGuess()
 }
 //-----------------------------------------------------------------------------
 
-qreal Game::computeWeight(int *responses) const
+qreal Solver::computeWeight(int *responses) const
 {
 	qreal answer = 0;
 
@@ -385,7 +385,7 @@ qreal Game::computeWeight(int *responses) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::convertBase(int decimal, const int &base, const int &precision, int *convertedArray)
+void Solver::convertBase(int decimal, const int &base, const int &precision, int *convertedArray)
 {
 
 	if(mAllowSameColor)
@@ -413,7 +413,7 @@ void Game::convertBase(int decimal, const int &base, const int &precision, int *
 }
 //-----------------------------------------------------------------------------
 
-QString Game::arrayToString(const int *ar) const
+QString Solver::arrayToString(const int *ar) const
 {
 	QString answer = "";
 	for(int i = 0; i < mPegNumber; ++i)
@@ -422,7 +422,7 @@ QString Game::arrayToString(const int *ar) const
 }
 //-----------------------------------------------------------------------------
 
-void Game::stringToArray(const QString &str, int *arr) const
+void Solver::stringToArray(const QString &str, int *arr) const
 {
 	for(int i = 0; i < mPegNumber; ++i)
 		arr[i] = str[i].digitValue();

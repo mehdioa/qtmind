@@ -38,7 +38,7 @@ enum class Algorithm
 
 enum class IndicatorType
 {
-	Color,
+//	Color,
 	Character,
 	Digit
 };

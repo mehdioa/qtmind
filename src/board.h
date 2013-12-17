@@ -48,7 +48,7 @@ class Peg;
 class PinBox;
 class PegBox;
 class Button;
-class Game;
+class Solver;
 class Message;
 
 class Board: public QGraphicsView
@@ -63,7 +63,8 @@ public:
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
 			   const bool &samecolor, const Algorithm &algorithm_n,
 			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
-			   const IndicatorType &indicator_n = IndicatorType::Color);
+			   const bool &show_colors, const bool &show_indicators,
+			   const IndicatorType &indicator_n);
 	GameState getState() const {return mState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
 
@@ -72,7 +73,7 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 
 signals:
-	void IndicatorTypeChangeSignal(IndicatorType);
+	void showIndicatorsSignal(bool, bool, IndicatorType);
 	void startGuessingSignal(Algorithm);
 	void resetGameSignal(int peg_no, int color_no, bool allow_same_color);
 	void interuptSignal();
@@ -83,7 +84,7 @@ private slots:
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
-	void onIndicatorTypeChanged(const IndicatorType &indicator_n);
+	void onShowIndicators(bool show_colors, bool show_indicators, IndicatorType);
 	void onRevealOnePeg();
 	void onResigned();
 	void onGuessReady(const Algorithm &alg, const QString &guess,
@@ -120,11 +121,13 @@ private:
 	int mFontSize;
 	QString mFontName;
 	Algorithm mAlgorithm;
-	IndicatorType mIndicator;
+	bool mShowColors;
+	bool mShowIndicators;
+	IndicatorType mIndicatorType;
 	QString mMasterCode;
 	QString mGuess;
 	QLocale *mLocale;
-	Game *mGame;
+	Solver *mSolver;
 	Button *mOkButton;
 	Button *mDoneButton;
 	Message *mMessage;

@@ -38,17 +38,17 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFC0FF"), QColor("#800080")}
 };
 
-const QString Peg::OrderedChars[3] = {"          ", "ABCDEFGHIJ", "0123456789"};
+const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
 
-Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicator_n, QGraphicsItem *parent):
+Peg::Peg(const QPointF &position, int color_number, const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n, QGraphicsItem *parent):
 	QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 	mPosition(position),
+	mShowColors(show_colors),
+	mShowIndicators(show_indicators),
+	mIndicatorType(indicator_n),
 	isActive(false)
 {
-	mColor = (-1 < color_number &&color_number < 10) ? color_number : 0;
-
 	setPen(Qt::NoPen);
-
 	pressedEffect = new QGraphicsDropShadowEffect;
 	pressedEffect->setBlurRadius(10);
 	pressedEffect->setXOffset(5);
@@ -67,7 +67,6 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 	font.setStyleHint(QFont::TypeWriter);
 	mIndicator->setFont(font);
 	mIndicator->setPos(14,8);
-	onIndicatorChanged(indicator_n);
 
 	QLinearGradient cgrad(2, 2, 35, 35);
 	cgrad.setColorAt(0.0, QColor(80, 80, 80));
@@ -76,6 +75,7 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
 	mCircle->setPen(QPen(QBrush(cgrad), 1));
 
+	setColor(color_number);
 	setZValue(2);
 	setPos(position - QPointF(19.5, 19.5));
 	setMovable(true);
@@ -84,10 +84,10 @@ Peg::Peg(const QPointF &position, int color_number, const IndicatorType &indicat
 }
 //-----------------------------------------------------------------------------
 
-void Peg::setColor(const int &color_number)
+void Peg::setColor(int color_number)
 {
 	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
-	if (mIndicatorType == IndicatorType::Color)
+	if (mShowColors || !mShowIndicators)
 	{
 		QRadialGradient gradient(20, 0, 60, 20, 0);
 		gradient.setColorAt(0, PegColors[mColor][0]);
@@ -95,7 +95,15 @@ void Peg::setColor(const int &color_number)
 		setBrush(gradient);
 	}
 	else
-		setBrush(Qt::NoBrush);
+	{
+		QRadialGradient gradient(20, 0, 60, 20, 0);
+		gradient.setColorAt(0, PegColors[3][0]);
+		gradient.setColorAt(1, PegColors[3][1]);
+		setBrush(gradient);
+	}
+
+	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);
+	mIndicator->setVisible(mShowIndicators);
 }
 //-----------------------------------------------------------------------------
 
@@ -190,9 +198,10 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
-void Peg::onIndicatorChanged(const IndicatorType &indicator_n)
+void Peg::onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n)
 {
+	mShowColors = show_colors;
+	mShowIndicators = show_indicators;
 	mIndicatorType = indicator_n;
-	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);
 	setColor(mColor);
 }

@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QTranslator>
 #include <QSlider>
+#include "constants.h"
 //-----------------------------------------------------------------------------
 
 QString Preferences::mCurrent;
@@ -46,13 +47,12 @@ Preferences::Preferences(QLocale *locale_n, QWidget *parent) :
 		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(locale_n->toString(i)).arg(tr("Points")));
 	}
 	ui->fontSizeComboBox->setCurrentIndex(QSettings().value("FontSize", 12).toInt());
-
 	ui->fontComboBox->setCurrentFont(QFont(QSettings().value("FontName", "Sans Serif").toString()));
-
 	ui->volumeVerticalSlider->setValue(QSettings().value("Volume", 50).toInt());
-
+	ui->showColorsCheckBox->setChecked(QSettings().value("ShowColors", 1).toBool());
+	ui->characterRadioButton->setChecked((IndicatorType) QSettings().value("IndicatorType", 0).toInt() == IndicatorType::Character);
+	ui->digitRadioButton->setChecked((IndicatorType) QSettings().value("IndicatorType", 0).toInt() == IndicatorType::Digit);
 	ui->noteTextLabel->setText(tr("Language change needs restart."));
-
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QString translation;
@@ -168,10 +168,12 @@ QStringList Preferences::findTranslations()
 void Preferences::accept()
 {
 	QDialog::accept();
-
 	mCurrent = ui->languageComboBox->itemData(ui->languageComboBox->currentIndex()).toString();
 	QSettings().setValue("Locale/Language", mCurrent);
 	QSettings().setValue("FontName", ui->fontComboBox->currentText());
 	QSettings().setValue("FontSize", ui->fontSizeComboBox->currentIndex());
 	QSettings().setValue("Volume", ui->volumeVerticalSlider->value());
+	QSettings().setValue("ShowColors", (int) ui->showColorsCheckBox->isChecked());
+	QSettings().setValue("IndicatorType", (int) ui->digitRadioButton->isChecked());
+	QSettings().setValue("Geometry", saveGeometry());
 }

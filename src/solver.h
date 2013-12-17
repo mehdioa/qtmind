@@ -17,15 +17,15 @@
  *
  ***********************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef SOLVER_H
+#define SOLVER_H
 
 #include "constants.h"
 #include <QList>
 #include <QString>
 #include <QThread>
 
-/*	The class Game is the engine of the mastermind game. It contains all the solving
+/*	The class Solver is the engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
  *	response and so on. The response is stored this way:
  *	example: p := peg number = 4
@@ -48,14 +48,14 @@
  *			f(b, w) = (b+w)(b+w+1)/2 + b;
  */
 
-class Game : public QThread
+class Solver : public QThread
 {
 	Q_OBJECT
 
 public:
-	explicit Game(const int &peg_no, const int &color_no,
+	explicit Solver(const int &peg_no, const int &color_no,
 		 const bool &allow_same_color, QObject *parent = 0);
-	~Game();
+	~Solver();
 	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
 	bool setResponse(const int &response);
 	void run();
@@ -102,4 +102,4 @@ private:
 
 };
 
-#endif // GAME_H
+#endif // SOLVER_H

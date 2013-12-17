@@ -21,7 +21,7 @@
 #include "button.h"
 #include "pegbox.h"
 #include "pinbox.h"
-#include "game.h"
+#include "solver.h"
 #include "message.h"
 #include <QMetaType>
 #include <QDebug>
@@ -40,8 +40,11 @@ Board::Board(QWidget *parent):
 	mFontSize(QSettings().value("FontSize", 12).toInt()),
 	mFontName(QSettings().value("FontName", "SansSerif").toString()),
 	mAlgorithm(Algorithm::MostParts),
+	mShowColors(QSettings().value("ShowColors", 0).toBool()),
+	mShowIndicators(QSettings().value("ShowIndicators", 0).toBool()),
+	mIndicatorType((IndicatorType) QSettings().value("IndicatorType", 0).toInt()),
 	mLocale(0),
-	mGame(0)
+	mSolver(0)
 {
 	qRegisterMetaType<Algorithm>("Algorithm");
 	auto scene = new QGraphicsScene(this);
@@ -63,12 +66,12 @@ Board::Board(QWidget *parent):
 
 Board::~Board()
 {
-	if (mGame)
+	if (mSolver)
 	{
 		emit interuptSignal();
-		mGame->quit();
-		mGame->wait();
-		mGame->deleteLater();
+		mSolver->quit();
+		mSolver->wait();
+		mSolver->deleteLater();
 	}
 
 	scene()->clear();
@@ -183,7 +186,7 @@ void Board::createPegForBox(PegBox *box, int color, bool underneath, bool plain)
 		box->setPegColor(color);
 	} else
 	{
-		auto peg = new Peg(pos, color, mIndicator);
+		auto peg = new Peg(pos, color, mShowColors, mShowIndicators, mIndicatorType);
 		scene()->addItem(peg);
 
 		if(!underneath && !plain)
@@ -198,7 +201,7 @@ void Board::createPegForBox(PegBox *box, int color, bool underneath, bool plain)
 		if (plain)
 			peg->setState(PegState::Plain);
 		else
-			connect(this, SIGNAL(IndicatorTypeChangeSignal(IndicatorType)), peg, SLOT(onIndicatorChanged(IndicatorType)));
+			connect(this, SIGNAL(showIndicatorsSignal(bool,bool,IndicatorType)), peg, SLOT(onShowIndicators(bool,bool,IndicatorType)));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -372,13 +375,12 @@ void Board::onPinBoxPressed()
 }
 //-----------------------------------------------------------------------------
 
-void Board::onIndicatorTypeChanged(const IndicatorType &indicator_n)
+void Board::onShowIndicators(bool show_colors, bool show_indicators, IndicatorType indicator_type)
 {
-	if(mIndicator != indicator_n)
-	{
-		mIndicator = indicator_n;
-		emit IndicatorTypeChangeSignal(mIndicator);
-	}
+	mShowColors = show_colors,
+	mShowIndicators = show_indicators;
+	mIndicatorType = indicator_type;
+	emit showIndicatorsSignal(mShowColors, mShowIndicators, mIndicatorType);
 }
 //-----------------------------------------------------------------------------
 
@@ -423,9 +425,9 @@ void Board::onResigned()
 
 void Board::onOkButtonPressed()
 {
-	/*	passing user inputed blacks and whites to mGame */
+	/*	passing user inputed blacks and whites to mSolver */
 	int resp = mPinBoxes.first()->getValue();
-	if(!mGame->setResponse(resp))
+	if(!mSolver->setResponse(resp))
 	{
 		mMessage->showMessage(tr("Not Possible, Try Again..."));
 		return;
@@ -439,7 +441,7 @@ void Board::onOkButtonPressed()
 	mPinBoxes.removeFirst();
 
 	/*	Here we check if the user inputs 4 blacks*/
-	if (mGame->done())
+	if (mSolver->done())
 	{
 		mMessage->showMessage(tr("Ready To Play"));
 		mState = GameState::None;
@@ -527,11 +529,11 @@ void Board::onPreferencesChanged()
 
 void Board::play()
 {
-	if (mGame)
+	if (mSolver)
 	{
 		emit interuptSignal();
-		mGame->quit();
-		mGame->wait();
+		mSolver->quit();
+		mSolver->wait();
 	}
 	initializeScene();
 	mState = GameState::None;
@@ -552,14 +554,14 @@ void Board::playCodeMaster()
 	mDoneButton->setVisible(false);
 	mDoneButton->setEnabled(true);
 
-	if (!mGame)
+	if (!mSolver)
 	{
-		mGame = new Game(mPegNumber, mColorNumber, mSameColor, this);
-		connect(mGame, SIGNAL(guessDoneSignal(Algorithm, QString, int, qreal)),
+		mSolver = new Solver(mPegNumber, mColorNumber, mSameColor, this);
+		connect(mSolver, SIGNAL(guessDoneSignal(Algorithm, QString, int, qreal)),
 				this, SLOT(onGuessReady(Algorithm, QString, int, qreal)));
-		connect(this, SIGNAL(startGuessingSignal(Algorithm)), mGame, SLOT(onStartGuessing(Algorithm)));
-		connect(this, SIGNAL(resetGameSignal(int,int,bool)), mGame, SLOT(onReset(int,int,bool)));
-		connect(this, SIGNAL(interuptSignal()), mGame, SLOT(onInterupt()));
+		connect(this, SIGNAL(startGuessingSignal(Algorithm)), mSolver, SLOT(onStartGuessing(Algorithm)));
+		connect(this, SIGNAL(resetGameSignal(int,int,bool)), mSolver, SLOT(onReset(int,int,bool)));
+		connect(this, SIGNAL(interuptSignal()), mSolver, SLOT(onInterupt()));
 	}
 	emit interuptSignal();
 	emit resetGameSignal(mPegNumber, mColorNumber, mSameColor);
@@ -618,7 +620,7 @@ void Board::playCodeBreaker()
 //-----------------------------------------------------------------------------
 
 void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, const bool &samecolor,
-				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale *locale_n,
+				  const Algorithm &algorithm_n, const bool &set_pins, const bool &close_row, QLocale *locale_n, const bool &show_colors, const bool &show_indicators,
 				  const IndicatorType &indicator_n)
 {
 	mPegNumber = peg_n;
@@ -626,7 +628,9 @@ void Board::reset(const int &peg_n, const int &color_n, const GameMode &mode_n, 
 	mSetPins = set_pins;
 	mCloseRow = close_row;
 	mMode = mode_n;
-	mIndicator = indicator_n;
+	mShowColors = show_colors;
+	mShowIndicators = show_indicators;
+	mIndicatorType = indicator_n;
 	mAlgorithm = algorithm_n;
 	mLocale = locale_n;
 	mSameColor = samecolor;

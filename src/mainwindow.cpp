@@ -26,20 +26,21 @@
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
-	ui(new Ui::MainWindow)
+	ui(new Ui::MainWindow),
+	mMode((GameMode) QSettings().value("Mode", 0).toInt()),
+	mColors(QSettings().value("Colors", 6).toInt()),
+	mPegs(QSettings().value("Pegs", 4).toInt()),
+	mAlgorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
+	mShowColors(QSettings().value("ShowColors", 1).toBool()),
+	mShowIndicators(QSettings().value("ShowIndicators", 0).toBool()),
+	mIndicatorType((IndicatorType) QSettings().value("IndicatorType", 0).toInt()),
+	mSameColorAllowed(QSettings().value("SameColor", true).toBool()),
+	mAutoPutPins(QSettings().value("SetPins", true).toBool()),
+	mAutoCloseRow(QSettings().value("CloseRow", true).toBool()),
+	mLocale(QLocale(QSettings().value("Locale/Language", "en").toString().left(5))),
+	mVolume(QSettings().value("Volume", 70).toInt())
 {
 	ui->setupUi(this);
-
-	mMode = (GameMode) QSettings().value("Mode", 0).toInt();
-	mColors = QSettings().value("Colors", 6).toInt();
-	mPegs = QSettings().value("Pegs", 4).toInt();
-	mAlgorithm = (Algorithm) QSettings().value("Algorithm", 0).toInt();
-	mSameColorAllowed = QSettings().value("SameColor", true).toBool();
-	mAutoPutPins = QSettings().value("SetPins", true).toBool();
-	mAutoCloseRow = QSettings().value("CloseRow", true).toBool();
-	mIndicator = (IndicatorType) QSettings().value("Indicator", 0).toInt();
-	mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
-	mVolume = QSettings().value("Volume", 70).toInt();
 
 	mLocale.setNumberOptions(QLocale::OmitGroupSeparator);
 	Preferences::loadTranslation("qtmind_");
@@ -49,10 +50,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	setLayoutDirection(mLocale.textDirection());
 	setWindowTitle(tr("QtMind"));
 	setCentralWidget(mBoard);
-	connect(this, SIGNAL(indicatorTypeChangeSignal(IndicatorType)), mBoard, SLOT(onIndicatorTypeChanged(IndicatorType)));
+	connect(this, SIGNAL(showIndicatorsSignal(bool,bool,IndicatorType)), mBoard, SLOT(onShowIndicators(bool,bool,IndicatorType)));
 	connect(this, SIGNAL(preferencesChangeSignal()), mBoard, SLOT(onPreferencesChanged()));
 	emit preferencesChangeSignal();
-	emit indicatorTypeChangeSignal(mIndicator);
+	emit showIndicatorsSignal(mShowColors, mShowIndicators, mIndicatorType);
 
 
 	ui->menuGame->setTitle(tr("Game"));
@@ -65,10 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->menuGame_Mode->setTitle(tr("Game Mode"));
 	ui->actionCode_Breaker->setText(tr("Code Breaker"));
 	ui->actionCode_Master->setText(tr("Code Master"));
-	ui->menuIndicator_Type->setTitle(tr("Indicator Type"));
-	ui->actionColor_Indicator->setText(tr("Color"));
-	ui->actionCharacter_Indicator->setText(tr("Character"));
-	ui->actionDigit_Indicator->setText(tr("Digit"));
+	ui->actionShow_Indicators->setText(tr("Show Indicators"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close Rows"));
 	ui->actionOptions->setText(tr("Options"));
@@ -76,18 +74,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->menuHelp->setTitle(tr("Help"));
 	ui->actionAbout_QtMind->setText(tr("About QtMind"));
 	ui->actionAbout_Qt->setText(tr("About Qt"));
-
-	auto indicatorTypeActions = new QActionGroup(this);
-	indicatorTypeActions->addAction(ui->actionColor_Indicator);
-	indicatorTypeActions->addAction(ui->actionCharacter_Indicator);
-	indicatorTypeActions->addAction(ui->actionDigit_Indicator);
-	indicatorTypeActions->setExclusive(true);
-	ui->actionColor_Indicator->setData((int) IndicatorType::Color);
-	ui->actionCharacter_Indicator->setData((int) IndicatorType::Character);
-	ui->actionDigit_Indicator->setData((int) IndicatorType::Digit);
-	ui->actionColor_Indicator->setChecked(mIndicator == IndicatorType::Color);
-	ui->actionCharacter_Indicator->setChecked(mIndicator == IndicatorType::Character);
-	ui->actionDigit_Indicator->setChecked(mIndicator == IndicatorType::Digit);
 
 	auto gameModeActions = new QActionGroup(this);
 	gameModeActions->addAction(ui->actionCode_Master);
@@ -105,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 
+	ui->actionShow_Indicators->setChecked(mShowIndicators);
 	ui->actionAuto_Set_Pins->setChecked(mAutoPutPins);
 	ui->actionAuto_Close_Rows->setChecked(mAutoCloseRow);
 
@@ -124,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionResign, SIGNAL(triggered()), mBoard, SLOT(onResigned()));
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onGameModeChanged(QAction*)));
-	connect(indicatorTypeActions, SIGNAL(triggered(QAction*)), SLOT(onIndicatorChanged(QAction*)));
+	connect(ui->actionShow_Indicators, SIGNAL(triggered()), SLOT(onIndicatorChanged()));
 	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onUpdateNumbers()));
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
@@ -157,7 +144,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	QSettings().setValue("SameColor", mSameColorAllowed);
 	QSettings().setValue("SetPins",	mAutoPutPins);
 	QSettings().setValue("CloseRow", mAutoCloseRow);
-	QSettings().setValue("Indicator", (int) mIndicator);
+	QSettings().setValue("ShowColors", (int) mShowColors);
+	QSettings().setValue("ShowIndicators", (int) mShowIndicators);
+	QSettings().setValue("IndicatorType", (int) mIndicatorType);
 	QSettings().setValue("Geometry", saveGeometry());
 	QMainWindow::closeEvent(event);
 }
@@ -171,7 +160,7 @@ void MainWindow::onNewGame()
 	ui->actionReveal_One_Peg->setVisible(mMode == GameMode::Breaker);
 
 	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
-				  mAutoPutPins, mAutoCloseRow, &mLocale, mIndicator);
+				  mAutoPutPins, mAutoCloseRow, &mLocale, mShowColors, mShowIndicators, mIndicatorType);
 
 	if(mBoard->getState() != GameState::None &&
 			mBoard->getState() != GameState::Win &&
@@ -201,6 +190,7 @@ void MainWindow::onPreferences()
 	preferencesWidget->exec();
 	mVolume = QSettings().value("Volume", 70).toInt();
 	emit preferencesChangeSignal();
+	onIndicatorChanged();
 }
 //-----------------------------------------------------------------------------
 
@@ -212,10 +202,19 @@ void MainWindow::onSetPinsCloseRowAutomatically()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onIndicatorChanged(QAction *selectedAction)
+void MainWindow::onIndicatorChanged()
 {
-	mIndicator = (IndicatorType) selectedAction->data().toInt();
-	emit indicatorTypeChangeSignal(mIndicator);
+	bool newShowIndicators = ui->actionShow_Indicators->isChecked();
+	bool newShowColors = (bool) QSettings().value("ShowColors", 1).toBool();
+	IndicatorType newIndicatorType = (IndicatorType) QSettings().value("IndicatorType", 0).toInt();
+	if (mShowColors == newShowColors &&
+			mShowIndicators == newShowIndicators &&
+			mIndicatorType == newIndicatorType)
+		return;
+	mShowColors = newShowColors;
+	mShowIndicators = newShowIndicators;
+	mIndicatorType = newIndicatorType;
+	emit showIndicatorsSignal(mShowColors, mShowIndicators, mIndicatorType);
 }
 //-----------------------------------------------------------------------------
 

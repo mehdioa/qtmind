@@ -49,7 +49,7 @@ protected:
 
 private slots:
 	void onSetPinsCloseRowAutomatically();
-	void onIndicatorChanged(QAction*);
+	void onIndicatorChanged();
 	void onGameModeChanged(QAction*);
 	void onUpdateNumbers();
 	void onNewGame();
@@ -58,7 +58,7 @@ private slots:
 	void onShowContextMenu(const QPoint& position);
 
 signals:
-	void indicatorTypeChangeSignal(const IndicatorType&);
+	void showIndicatorsSignal(bool show_colors, bool show_indicators, IndicatorType);
 //	void volumeChangeSignal(const int &);
 	void preferencesChangeSignal();
 
@@ -75,7 +75,9 @@ private:
 	int mColors;
 	int mPegs;
 	Algorithm mAlgorithm;
-	IndicatorType mIndicator;
+	bool mShowColors;
+	bool mShowIndicators;
+	IndicatorType mIndicatorType;
 	bool mSameColorAllowed ;
 	bool mAutoPutPins;
 	bool mAutoCloseRow;

@@ -4,19 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia
+QT       += core gui
 
 QMAKE_CXXFLAGS += -std=c++0x
 
 TEMPLATE = app
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
 MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
 
-VERSION = 0.6
+VERSION = 0.6.1
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
@@ -36,10 +36,10 @@ SOURCES += src/main.cpp\
 	src/pegbox.cpp \
     src/emptybox.cpp \
     src/message.cpp \
-    src/game.cpp \
     src/pinbox.cpp \
     src/pin.cpp \
-    src/preferences.cpp
+    src/preferences.cpp \
+    src/solver.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -49,10 +49,10 @@ HEADERS  += src/mainwindow.h \
 	src/pegbox.h \
     src/emptybox.h \
     src/message.h \
-    src/game.h \
     src/pinbox.h \
     src/pin.h \
-    src/preferences.h
+    src/preferences.h \
+    src/solver.h
 
 FORMS    += \
     src/preferences.ui \

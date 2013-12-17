@@ -37,14 +37,6 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <widget class="QMenu" name="menuIndicator_Type">
-     <property name="title">
-      <string>Indicator Type</string>
-     </property>
-     <addaction name="actionColor_Indicator"/>
-     <addaction name="actionCharacter_Indicator"/>
-     <addaction name="actionDigit_Indicator"/>
-    </widget>
     <widget class="QMenu" name="menuGame_Mode">
      <property name="enabled">
       <bool>true</bool>
@@ -56,8 +48,8 @@
      <addaction name="actionCode_Breaker"/>
     </widget>
     <addaction name="menuGame_Mode"/>
-    <addaction name="menuIndicator_Type"/>
     <addaction name="separator"/>
+    <addaction name="actionShow_Indicators"/>
     <addaction name="actionAuto_Set_Pins"/>
     <addaction name="actionAuto_Close_Rows"/>
     <addaction name="separator"/>
@@ -195,45 +187,6 @@
     <string>Code Breaker</string>
    </property>
   </action>
-  <action name="actionColor_Indicator">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../resource.qrc">
-     <normaloff>:/icons/no_indicator.png</normaloff>:/icons/no_indicator.png</iconset>
-   </property>
-   <property name="text">
-    <string>No Indicators</string>
-   </property>
-  </action>
-  <action name="actionCharacter_Indicator">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../resource.qrc">
-     <normaloff>:/icons/char_indicator.png</normaloff>:/icons/char_indicator.png</iconset>
-   </property>
-   <property name="text">
-    <string>Characters</string>
-   </property>
-  </action>
-  <action name="actionDigit_Indicator">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../resource.qrc">
-     <normaloff>:/icons/digit_indicator.png</normaloff>:/icons/digit_indicator.png</iconset>
-   </property>
-   <property name="text">
-    <string>Digits</string>
-   </property>
-  </action>
   <action name="actionReveal_One_Peg">
    <property name="icon">
     <iconset resource="../resource.qrc">
@@ -250,6 +203,14 @@
    </property>
    <property name="text">
     <string>Help</string>
+   </property>
+  </action>
+  <action name="actionShow_Indicators">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Indicators</string>
    </property>
   </action>
  </widget>
