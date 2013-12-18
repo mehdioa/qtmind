@@ -7,9 +7,6 @@
         <file>icons/qt_icon.png</file>
         <file>icons/new-icon.png</file>
         <file>icons/modemaster.png</file>
-        <file>icons/no_indicator.png</file>
-        <file>icons/char_indicator.png</file>
-        <file>icons/digit_indicator.png</file>
         <file>icons/resign.png</file>
         <file>icons/modebreaker.png</file>
         <file>icons/hicolor/16x16/qtmind.png</file>

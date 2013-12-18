@@ -39,10 +39,11 @@ public:
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 private:
 	int m_color;//  -1 = white, 0 = none, 1 = black
-	bool isActive;
+	PinMouseState mPinMouseState;
 };
 
 #endif // PIN_H

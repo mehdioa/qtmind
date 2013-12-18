@@ -24,7 +24,7 @@
 Pin::Pin(const int &color, QGraphicsItem *parent) :
 	QGraphicsEllipseItem(0, 0, 12, 12, parent),
 	m_color(color),
-	isActive(false)
+	mPinMouseState(PinMouseState::Ignore)
 {
 	setPen(Qt::NoPen);
 	QLinearGradient lgrad(0, 0, 12, 12);
@@ -40,8 +40,15 @@ Pin::Pin(const int &color, QGraphicsItem *parent) :
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsEllipseItem::mousePressEvent(event);
-	if (isActive)
+	if (mPinMouseState == PinMouseState::Accept)
 		setColor((m_color - 2) % 3 + 1);
+}
+
+void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+	#if QT_VERSION < 0x050000
+		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
+	#endif
 }
 //-----------------------------------------------------------------------------
 
@@ -62,21 +69,20 @@ void Pin::setColor(const int &c)
 	}
 	update();
 }
+//-----------------------------------------------------------------------------
 
 void Pin::setMouseState(const PinMouseState &state)
 {
-	switch (state) {
+	mPinMouseState = state;
+	switch (mPinMouseState) {
 	case PinMouseState::Accept:
-		isActive = true;
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 		break;
 	case PinMouseState::PassToBox:
-		isActive = false;
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::PointingHandCursor);
 	default:// PinMouseState::Ignore
-		isActive = false;
 		setAcceptedMouseButtons(Qt::NoButton);
 		setCursor(Qt::ArrowCursor);
 		break;

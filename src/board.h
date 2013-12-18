@@ -21,7 +21,6 @@
 #define BOARD_H
 
 #include "constants.h"
-#include <QtMultimedia/QSoundEffect>
 #include <QGraphicsView>
 #include <QLocale>
 
@@ -50,6 +49,7 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
+class QSoundEffect;
 
 class Board: public QGraphicsView
 {
@@ -65,7 +65,7 @@ public:
 			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
 			   const bool &show_colors, const bool &show_indicators,
 			   const IndicatorType &indicator_n);
-	GameState getState() const {return mState;}
+	GameState getState() const {return mGameState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
 
 protected:
@@ -98,8 +98,6 @@ private:
 	void createPegForBox(PegBox *box, int color, bool underneath = false,
 						 bool plain = false);// backPeg is used to put an extra peg under initial pegs,
 	void codeRowFilled(const bool &filled);
-	void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t);
-	void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t);
 	void showTranslatedInformation(const Algorithm &alg, const int &possibleSize, const qreal &minWeight);
 	void initializeScene();
 
@@ -110,13 +108,13 @@ private:
 	QList<PegBox *> mCurrentBoxes;	//	the active row of codeboxes
 	QList<PegBox *> mMasterBoxes;	//	the mastercode boxes
 
-	GameState mState;
-	GameMode mMode;
+	GameState mGameState;
+	GameMode mGameMode;
 	int mPegNumber;
 	int mColorNumber;
-	bool mSameColor;
-	bool mSetPins;
-	bool mCloseRow;
+	bool mSameColorAllowed;
+	bool mAutoPutPins;
+	bool mAutoCloseRows;
 	bool mDone;
 	int mFontSize;
 	QString mFontName;
@@ -132,9 +130,12 @@ private:
 	Button *mDoneButton;
 	Message *mMessage;
 	Message *mInformation;
-	QSoundEffect pegDropSound;
-	QSoundEffect pegDropRefuseSound;
-	QSoundEffect buttonPressSound;
+
+#if QT_VERSION >= 0x050000
+	QSoundEffect *pegDropSound;
+	QSoundEffect *pegDropRefuseSound;
+	QSoundEffect *buttonPressSound;
+#endif
 };
 
 #endif // BOARD_H

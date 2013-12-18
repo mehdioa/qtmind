@@ -20,8 +20,15 @@
 #ifndef EmptyBox_H
 #define EmptyBox_H
 
-#include "constants.h"
 #include <QGraphicsRectItem>
+
+enum class BoxState
+{
+	Past,
+	Current,
+	Future,
+	None
+};
 
 class EmptyBox : public QGraphicsRectItem
 {

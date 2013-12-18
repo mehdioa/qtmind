@@ -59,7 +59,6 @@ private slots:
 
 signals:
 	void showIndicatorsSignal(bool show_colors, bool show_indicators, IndicatorType);
-//	void volumeChangeSignal(const int &);
 	void preferencesChangeSignal();
 
 private:
@@ -71,16 +70,16 @@ private:
 	Ui::MainWindow *ui;
 
 	Board *mBoard;
-	GameMode mMode;
-	int mColors;
-	int mPegs;
+	GameMode mGameMode;
+	int mColorNumber;
+	int mPegNumber;
 	Algorithm mAlgorithm;
 	bool mShowColors;
 	bool mShowIndicators;
 	IndicatorType mIndicatorType;
-	bool mSameColorAllowed ;
+	bool mSameColorAllowed;
 	bool mAutoPutPins;
-	bool mAutoCloseRow;
+	bool mAutoCloseRows;
 	QLocale mLocale;
 	int mVolume;
 

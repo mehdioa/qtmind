@@ -21,6 +21,7 @@
 #define PINBOX_H
 
 #include "emptybox.h"
+#include "constants.h"
 class Pin;
 
 class PinBox : public QObject, public EmptyBox
@@ -41,8 +42,8 @@ signals:
 	void pinBoxPressSignal();
 
 private:
-	QVector<Pin*> pins;
-	bool isActive;
+	static const int PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2];
+	QVector<Pin *> pins;
 };
 
 #endif // PINBOX_H

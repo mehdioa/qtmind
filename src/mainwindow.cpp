@@ -27,16 +27,16 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	mMode((GameMode) QSettings().value("Mode", 0).toInt()),
-	mColors(QSettings().value("Colors", 6).toInt()),
-	mPegs(QSettings().value("Pegs", 4).toInt()),
+	mGameMode((GameMode) QSettings().value("Mode", 0).toInt()),
+	mColorNumber(QSettings().value("Colors", 6).toInt()),
+	mPegNumber(QSettings().value("Pegs", 4).toInt()),
 	mAlgorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
 	mShowColors(QSettings().value("ShowColors", 1).toBool()),
 	mShowIndicators(QSettings().value("ShowIndicators", 0).toBool()),
 	mIndicatorType((IndicatorType) QSettings().value("IndicatorType", 0).toInt()),
 	mSameColorAllowed(QSettings().value("SameColor", true).toBool()),
 	mAutoPutPins(QSettings().value("SetPins", true).toBool()),
-	mAutoCloseRow(QSettings().value("CloseRow", true).toBool()),
+	mAutoCloseRows(QSettings().value("AutoCloseRows", true).toBool()),
 	mLocale(QLocale(QSettings().value("Locale/Language", "en").toString().left(5))),
 	mVolume(QSettings().value("Volume", 70).toInt())
 {
@@ -81,8 +81,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	gameModeActions->setExclusive(true);
 	ui->actionCode_Master->setData((int) GameMode::Master);
 	ui->actionCode_Breaker->setData((int) GameMode::Breaker);
-	ui->actionCode_Master->setChecked(mMode == GameMode::Master);
-	ui->actionCode_Breaker->setChecked(mMode == GameMode::Breaker);
+	ui->actionCode_Master->setChecked(mGameMode == GameMode::Master);
+	ui->actionCode_Breaker->setChecked(mGameMode == GameMode::Breaker);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->actionShow_Indicators->setChecked(mShowIndicators);
 	ui->actionAuto_Set_Pins->setChecked(mAutoPutPins);
-	ui->actionAuto_Close_Rows->setChecked(mAutoCloseRow);
+	ui->actionAuto_Close_Rows->setChecked(mAutoCloseRows);
 
 	setPegsComboBox();
 	setColorsComboBox();
@@ -137,13 +137,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-	QSettings().setValue("Mode", (int) mMode);
-	QSettings().setValue("Colors", mColors);
-	QSettings().setValue("Pegs", mPegs);
+	QSettings().setValue("Mode", (int) mGameMode);
+	QSettings().setValue("Colors", mColorNumber);
+	QSettings().setValue("Pegs", mPegNumber);
 	QSettings().setValue("Algorithm", (int) mAlgorithm);
 	QSettings().setValue("SameColor", mSameColorAllowed);
 	QSettings().setValue("SetPins",	mAutoPutPins);
-	QSettings().setValue("CloseRow", mAutoCloseRow);
+	QSettings().setValue("AutoCloseRows", mAutoCloseRows);
 	QSettings().setValue("ShowColors", (int) mShowColors);
 	QSettings().setValue("ShowIndicators", (int) mShowIndicators);
 	QSettings().setValue("IndicatorType", (int) mIndicatorType);
@@ -154,13 +154,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::onNewGame()
 {
-	ui->actionResign->setEnabled(mMode == GameMode::Breaker);
-	ui->actionResign->setVisible(mMode == GameMode::Breaker);
-	ui->actionReveal_One_Peg->setEnabled(mMode == GameMode::Breaker);
-	ui->actionReveal_One_Peg->setVisible(mMode == GameMode::Breaker);
+	ui->actionResign->setEnabled(mGameMode == GameMode::Breaker);
+	ui->actionResign->setVisible(mGameMode == GameMode::Breaker);
+	ui->actionReveal_One_Peg->setEnabled(mGameMode == GameMode::Breaker);
+	ui->actionReveal_One_Peg->setVisible(mGameMode == GameMode::Breaker);
 
-	mBoard->reset(mPegs, mColors, mMode, mSameColorAllowed, mAlgorithm,
-				  mAutoPutPins, mAutoCloseRow, &mLocale, mShowColors, mShowIndicators, mIndicatorType);
+	mBoard->reset(mPegNumber, mColorNumber, mGameMode, mSameColorAllowed, mAlgorithm,
+				  mAutoPutPins, mAutoCloseRows, &mLocale, mShowColors, mShowIndicators, mIndicatorType);
 
 	if(mBoard->getState() != GameState::None &&
 			mBoard->getState() != GameState::Win &&
@@ -197,8 +197,8 @@ void MainWindow::onPreferences()
 void MainWindow::onSetPinsCloseRowAutomatically()
 {
 	mAutoPutPins = ui->actionAuto_Set_Pins->isChecked();
-	mAutoCloseRow = ui->actionAuto_Close_Rows->isChecked();
-	mBoard->autoPutPinsCloseRow(mAutoPutPins, mAutoCloseRow);
+	mAutoCloseRows = ui->actionAuto_Close_Rows->isChecked();
+	mBoard->autoPutPinsCloseRow(mAutoPutPins, mAutoCloseRows);
 }
 //-----------------------------------------------------------------------------
 
@@ -220,17 +220,17 @@ void MainWindow::onIndicatorChanged()
 
 void MainWindow::onGameModeChanged(QAction *selectedAction)
 {
-	mMode =  (GameMode) selectedAction->data().toInt();
+	mGameMode =  (GameMode) selectedAction->data().toInt();
 	onUpdateNumbers();
 }
 //-----------------------------------------------------------------------------
 
 void MainWindow::onUpdateNumbers()
 {
-	mColors = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
-	mPegs = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
+	mColorNumber = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
+	mPegNumber = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
 	mAlgorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
-	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegs > mColors);
+	mSameColorAllowed = (allowSameColorAction->isChecked()) || (mPegNumber > mColorNumber);
 	allowSameColorAction->setChecked(mSameColorAllowed);
 	if (mSameColorAllowed)
 		allowSameColorAction->setToolTip(tr("Same Color Allowed"));
@@ -238,11 +238,11 @@ void MainWindow::onUpdateNumbers()
 		allowSameColorAction->setToolTip(tr("Same Color Not Allwed"));
 
 	// for safety, fallback to standard in out-range inputs
-	if (mPegs < MIN_SLOT_NUMBER || mPegs > MAX_SLOT_NUMBER ||
-			mColors < MIN_COLOR_NUMBER || mPegs > MAX_COLOR_NUMBER)
+	if (mPegNumber < MIN_SLOT_NUMBER || mPegNumber > MAX_SLOT_NUMBER ||
+			mColorNumber < MIN_COLOR_NUMBER || mPegNumber > MAX_COLOR_NUMBER)
 	{
-		mPegs = 4;
-		mColors = 6;
+		mPegNumber = 4;
+		mColorNumber = 6;
 	}
 
 	if(mBoard)
@@ -289,7 +289,7 @@ void MainWindow::setPegsComboBox()
 	{
 		pegsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Slots")));
 	}
-	pegsNumberComboBox->setCurrentIndex(mPegs-MIN_SLOT_NUMBER);
+	pegsNumberComboBox->setCurrentIndex(mPegNumber-MIN_SLOT_NUMBER);
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
 	pegsNumberComboBox->setLocale(mLocale);
 }
@@ -302,7 +302,7 @@ void MainWindow::setColorsComboBox()
 	{
 		colorsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Colors")));
 	}
-	colorsNumberComboBox->setCurrentIndex(mColors-MIN_COLOR_NUMBER);
+	colorsNumberComboBox->setCurrentIndex(mColorNumber-MIN_COLOR_NUMBER);
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 }
 //-----------------------------------------------------------------------------
