@@ -25,8 +25,8 @@
 #include <QLocale>
 
 enum class GameMode {
-	Master,		//HUMAN BREAKS THE CODE
-	Breaker		//MACHINE BREAKS THE CODE
+	Codemaker,		//HUMAN BREAKS THE CODE
+	Codebreaker		//MACHINE BREAKS THE CODE
 };
 
 enum class GameState

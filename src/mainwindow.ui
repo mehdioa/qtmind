@@ -44,8 +44,8 @@
      <property name="title">
       <string>Game Mode</string>
      </property>
-     <addaction name="actionCode_Master"/>
-     <addaction name="actionCode_Breaker"/>
+     <addaction name="actionCodemaker"/>
+     <addaction name="actionCodebreaker"/>
     </widget>
     <addaction name="menuGame_Mode"/>
     <addaction name="separator"/>
@@ -163,7 +163,7 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionCode_Master">
+  <action name="actionCodemaker">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -175,7 +175,7 @@
     <string>Code Master</string>
    </property>
   </action>
-  <action name="actionCode_Breaker">
+  <action name="actionCodebreaker">
    <property name="checkable">
     <bool>true</bool>
    </property>

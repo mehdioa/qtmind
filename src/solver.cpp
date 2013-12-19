@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include "solver.h"
+#include "ctime"
 #include <QtCore/qmath.h>
 
 inline int ipow(int base, int exp)

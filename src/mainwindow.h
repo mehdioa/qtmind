@@ -54,6 +54,7 @@ private slots:
 	void onUpdateNumbers();
 	void onNewGame();
 	void onPreferences();
+	void onHelp();
 	void onAbout();
 	void onShowContextMenu(const QPoint& position);
 

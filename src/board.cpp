@@ -23,6 +23,7 @@
 #include "pinbox.h"
 #include "solver.h"
 #include "message.h"
+#include "ctime"
 #include <QMetaType>
 #include <QDebug>
 #include <QSettings>
@@ -55,7 +56,7 @@ inline void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 Board::Board(QWidget *parent):
 	QGraphicsView(parent),
 	mGameState(GameState::None),
-	mGameMode(GameMode::Master),
+	mGameMode(GameMode::Codemaker),
 	mPegNumber(4),
 	mColorNumber(6),
 	mSameColorAllowed(true),
@@ -111,7 +112,7 @@ void Board::codeRowFilled(const bool &filled)
 {
 	switch (mGameMode)
 	{
-	case GameMode::Breaker://-----------------------------------------
+	case GameMode::Codebreaker://-----------------------------------------
 		switch (filled)
 		{
 		case true:
@@ -127,7 +128,7 @@ void Board::codeRowFilled(const bool &filled)
 			break;
 		}
 		break;
-	default://GameMode::Master-------------------------------------
+	default://GameMode::Codemaker-------------------------------------
 		if (mDoneButton->isEnabled())//the user is not done putting the master code
 		{
 			switch (filled)
@@ -420,7 +421,7 @@ void Board::onShowIndicators(bool show_colors, bool show_indicators, IndicatorTy
 
 void Board::onRevealOnePeg()
 {
-	if (mGameMode == GameMode::Breaker && (mGameState == GameState::Running || mGameState == GameState::WaittingPinBoxPress))
+	if (mGameMode == GameMode::Codebreaker && (mGameState == GameState::Running || mGameState == GameState::WaittingPinBoxPress))
 	{
 		foreach (PegBox *box, mMasterBoxes)
 		{
@@ -444,7 +445,7 @@ void Board::onRevealOnePeg()
 
 void Board::onResigned()
 {
-	if (mGameMode == GameMode::Breaker && (mGameState == GameState::Running || mGameState == GameState::WaittingPinBoxPress))
+	if (mGameMode == GameMode::Codebreaker && (mGameState == GameState::Running || mGameState == GameState::WaittingPinBoxPress))
 	{
 		mGameState = GameState::None;
 		mMessage->showMessage(tr("You Resign"));
@@ -577,7 +578,7 @@ void Board::play()
 	initializeScene();
 	mGameState = GameState::None;
 	switch (mGameMode) {
-	case GameMode::Master:
+	case GameMode::Codemaker:
 		playCodeMaster();
 		break;
 	default:

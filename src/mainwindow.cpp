@@ -23,6 +23,8 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <QSettings>
+#include <QDesktopServices>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -64,8 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->menuTools->setTitle(tr("Tools"));
 	ui->menuGame_Mode->setTitle(tr("Game Mode"));
-	ui->actionCode_Breaker->setText(tr("Code Breaker"));
-	ui->actionCode_Master->setText(tr("Code Master"));
+	ui->actionCodebreaker->setText(tr("Codebreaker"));
+	ui->actionCodemaker->setText(tr("Codemaker"));
 	ui->actionShow_Indicators->setText(tr("Show Indicators"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close Rows"));
@@ -76,13 +78,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionAbout_Qt->setText(tr("About Qt"));
 
 	auto gameModeActions = new QActionGroup(this);
-	gameModeActions->addAction(ui->actionCode_Master);
-	gameModeActions->addAction(ui->actionCode_Breaker);
+	gameModeActions->addAction(ui->actionCodemaker);
+	gameModeActions->addAction(ui->actionCodebreaker);
 	gameModeActions->setExclusive(true);
-	ui->actionCode_Master->setData((int) GameMode::Master);
-	ui->actionCode_Breaker->setData((int) GameMode::Breaker);
-	ui->actionCode_Master->setChecked(mGameMode == GameMode::Master);
-	ui->actionCode_Breaker->setChecked(mGameMode == GameMode::Breaker);
+	ui->actionCodemaker->setData((int) GameMode::Codemaker);
+	ui->actionCodebreaker->setData((int) GameMode::Codebreaker);
+	ui->actionCodemaker->setChecked(mGameMode == GameMode::Codemaker);
+	ui->actionCodebreaker->setChecked(mGameMode == GameMode::Codebreaker);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
@@ -116,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
+	connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(onHelp()));
 	connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
@@ -154,10 +157,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::onNewGame()
 {
-	ui->actionResign->setEnabled(mGameMode == GameMode::Breaker);
-	ui->actionResign->setVisible(mGameMode == GameMode::Breaker);
-	ui->actionReveal_One_Peg->setEnabled(mGameMode == GameMode::Breaker);
-	ui->actionReveal_One_Peg->setVisible(mGameMode == GameMode::Breaker);
+	ui->actionResign->setEnabled(mGameMode == GameMode::Codebreaker);
+	ui->actionResign->setVisible(mGameMode == GameMode::Codebreaker);
+	ui->actionReveal_One_Peg->setEnabled(mGameMode == GameMode::Codebreaker);
+	ui->actionReveal_One_Peg->setVisible(mGameMode == GameMode::Codebreaker);
 
 	mBoard->reset(mPegNumber, mColorNumber, mGameMode, mSameColorAllowed, mAlgorithm,
 				  mAutoPutPins, mAutoCloseRows, &mLocale, mShowColors, mShowIndicators, mIndicatorType);
@@ -191,6 +194,13 @@ void MainWindow::onPreferences()
 	mVolume = QSettings().value("Volume", 70).toInt();
 	emit preferencesChangeSignal();
 	onIndicatorChanged();
+}
+//-----------------------------------------------------------------------------
+
+void MainWindow::onHelp()
+{
+	QDesktopServices::openUrl(QUrl("http://omidnikta.github.io/qtmind/documentation.html", QUrl::TolerantMode));
+
 }
 //-----------------------------------------------------------------------------
 
