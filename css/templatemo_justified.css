@@ -1,5 +1,7 @@
 body {
-
+	width: 900px;
+	margin: 0 auto;
+	
 }
 
 a:hover { color: #090; }
