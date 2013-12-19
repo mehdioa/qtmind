@@ -62,13 +62,27 @@ RESOURCES += \
     resource.qrc
 
 TRANSLATIONS = translations/qtmind_ara.ts \
+	translations/qtmind_af.ts \
+	translations/qtmind_ar.ts \
+	translations/qtmind_ca.ts \
+	translations/qtmind_cs.ts \
 	translations/qtmind_cz.ts \
 	translations/qtmind_de.ts \
 	translations/qtmind_en.ts \
 	translations/qtmind_es.ts \
 	translations/qtmind_fa.ts \
+	translations/qtmind_fo.ts \
 	translations/qtmind_fr.ts \
-	translations/qtmindk_nl.ts
+	translations/qtmind_it.ts \
+	translations/qtmind_ja.ts \
+	translations/qtmind_ko.ts \
+	translations/qtmind_nl.ts \
+	translations/qtmind_pl.ts \
+	translations/qtmind_pt_BR.ts \
+	translations/qtmind_ru.ts \
+	translations/qtmind_sl.ts \
+	translations/qtmind_tr.ts \
+	translations/qtmind_zh_CN.ts
 
 OTHER_FILES += \
 	qtmind.desktop
