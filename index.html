@@ -29,67 +29,36 @@
             <div class="col-md-12">
               	<h2>The Game</h2>
               	<img src="images/mastermind1.jpg" alt="Image 1" class="img-responsive img-rounded img_left" />
-              	<p>Mastermind is a codebreaking game played by two players. The game starts with the first player, who we call "the codemaster", creates a hidden four digits (colors) code. Then the second player, who we call "the codebreaker", guess a code. The codemaster then evaluate the guess by providing the codebreaker with some black and white pins (plus and minus in the paper version). Based on the evaluation, the code breaker guess another code and game continues untill either the code breaker finds (or fails to find) the hidden code within a maximum tries.</p>
+              	<p><a href="http://en.wikipedia.org/wiki/Mastermind_(board_game)">Mastermind</a> is a codebreaking game played by two players. The game starts with the first player, who we call "the codemaker", creates a hidden four digits (colors) code. Then the second player, who we call "the codebreaker", guess a code. The codemaker then evaluate the guess by providing the codebreaker with some black and white pins (plus and minus in the paper version). Based on the evaluation, the codebreaker guess another code and game continues untill either the codebreaker finds (or fails to find) the hidden code within a maximum tries.</p>
               
               	<h4>Game History</h4>
               	<p>"The modern game with pegs was invented in 1970 by Mordecai Meirowitz, an Israeli postmaster and telecommunications expert. It resembles an earlier pencil and paper game called Bulls and Cows that may date back a century or more." (<a href="http://en.wikipedia.org/wiki/Mastermind_(board_game)">Ref</a>)</p>
     
               	<h4>Game Rules</h4>
               	<ol>
-					<li>If a digit of the code is in the hidden code and on the right place, a black (plus) is put.
+					<li>If a digit of the guess code is in the hidden code and on the correct place, a black pin (plus) is put.</li>
+					<li>If a digit of the guess code is in the hidden code but not on the correct place, a white pin (minus) is put.</li>
 					<li>Every peg in the hidden code and the guess counts only once in the black and white pins.</li>
-					<li>If a peg in the guess can be counts as both a black or a white pin, preference is black. For example, let the hidden code and the guess be "1124" and "1343", respectively. Then the only '1' in the guess can result in a black pin (with the first '1' in the hidden code) or a white pin (with the second '1' in the hidden code). In such a situation, the code master must put a black pin not a white. In this example, the code master puts one black and one white.</li>
+					<li>If a peg in the guess can be considered as both a black or a white pin, preference is black.</li>
               	</ol>
+              	<p>For example, let the hidden code and the guess be "1124" and "1343", respectively. Then the only '1' in the guess can result in a black pin (with the first '1' in the hidden code) or a white pin (with the second '1' in the hidden code). In such a situation, the codemaker must put a black pin not a white. In this example, the codemaker puts one black pin for '1' and one white pin for '4'.</p>
             </div>
         
             <div class="col-md-12">
-              	<h2>Digital Media</h2>
-              	<img src="images/templatemo_image_02.jpg" alt="Image 2" class="img-responsive img-rounded img_left" />
-              	<p>Pellentesque adipiscing pharetra lorem, ullamcorper luctus tortor iaculis sit amet. In arcu magna, tincidunt at justo eget, mattis semper diam.</p>
-              	<p>Morbi eu metus accumsan, posuere velit ac, tempor eros. Sed porta in nibh id auctor. Cras scelerisque tempor enim, in condimentum dolor sollicitudin ut.</p>
-                <ul>
-                	<li>Phasellus sit amet lacinia quam</li>
-                    <li>Duis semper diam mauris, ac porta</li>
-                    <li>Mauris vitae elementum tellus</li>
-                    <li>Vestibulum eu pellentesque sem</li>
-                    <li>Praesent congue nisl ut turpis sagittis</li>
-                </ul>
-              	<p><a class="btn btn-primary" href="#">More Info. &raquo;</a></p>
+              	<h2>QtMind</h2>
+              	<img src="images/qtmind1.jpg" alt="Image 2" class="img-responsive img-rounded img_left" />
+              	<p>QtMind is a free computer clone of the mastermind game written in C++ with the aid of the Qt framework. It is possible to enable/disable same color in codes. You can play codemaker or codebreaker.</p>
+              	<p>Currently there are three solving algorithms in the codemaker game mode in QtMind: <a href="http://en.wikipedia.org/wiki/Donald_Knuth">Donald Knuth</a>'s Worst Case (minimax), Most Parts, and Expected Size. The worst case algorithm finds the hidden code at most in five guesses in the classical game with six colors and four slots. The solving anlgorithm can be changed in the middle of a game.</p>
+              	<p>The source code is compatible with any version of Qt greater than or equal to four, but to benefit game sound you should compile QtMind against Qt at least five.</p>
+              	<p>The graphical characteristics of QtMind is almost identical to those of <a href="http://colorcode.laebisch.com">ColorCode</a>, another high quality and powerfull clone of mastermind game, though the coding is different. The result of rewritting is that QtMind is lighter, faster and more efficient than ColorCode. ColorCode only contains an incomplete version of the worst case solving algorithm. </p>
+              	<p>QtMind can be translated to any language. If you are interested, help on how to translate QtMind to your language can be found on the <a href="translate.html">tranlate page</a>.</p>
+<!--              	<p><a class="btn btn-primary" href="#">More Info. &raquo;</a></p>-->
            </div>
-       
-            <div class="col-md-6">
-              	<h2>Online Marketing</h2>
-              	<img src="images/templatemo_image_03.jpg" alt="Image 3" class="img-responsive img-rounded img_left" />
-              	<p>Praesent ultrices purus a commodo porttitor. Praesent commodo rutrum mattis. Integer pulvinar dui sed pharetra elementum. Ut dapibus faucibus orci, eu interdum magna porttitor et.</p>
-                <h4>Donec eu auctor nulla</h4>
-              	<p>Aliquam sem sapien, hendrerit eget nisi quis, fermentum varius erat. Maecenas ultrices libero libero, a adipiscing risus luctus ut.</p>
-          		<p>Curabitur dictum nec nisl et faucibus. Quisque rutrum sem blandit convallis malesuada. Quisque blandit consectetur ante, id viverra risus.</p>
-              	<p><a class="btn btn-success" href="#">Details &raquo;</a></p>
-            </div>
-        
       </div> <!-- /row 1 -->
-      
-      <div class="row space30"> <!-- row 2 begins --> 
-      		<div class="col-md-6">
-              	<h2>Sed non arcu blandit</h2>
-                <p>Donec auctor aliquet suscipit. Fusce euismod sem neque, eu fermentum libero pretium a. Praesent vel condimentum augue. Vivamus tempor metus sed mollis scelerisque. <a href="#">More Info.</a></p>
-            </div>
-            
-            <div class="col-md-6">
-              	<h2>Aliquam non egestas leo</h2>
-                <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam tempor, elit sit amet iaculis sodales, orci tellus fringilla nibh, fringilla malesuada ligula sapien quis odio. <a href="#">More Info.</a></p>
-            </div>
-            
-            <div class="col-md-6">
-              	<h2>Sed non arcu blandit</h2>
-                <p>Quisque tincidunt turpis eleifend, facilisis quam vitae, rhoncus nunc. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at erat vitae lacus bibendum malesuada quis quis neque. <a href="#">More Info.</a></p>
-            </div>
-
-      </div> <!-- /row 2 -->
 
       <!-- Site footer -->
       <div class="footer">
-        <p>Copyright © 2072 Company Name | <a href="http://www.templatemo.com/preview/templatemo_382_simplex" rel="nofollow">Simplex</a> by <a href="http://www.templatemo.com/page/1" target="_parent" rel="nofollow">templatemo</a></p>
+        <p>Copyright © 2013 QtMind | <a href="https://github.com/omidnikta" rel="nofollow">QtMind</a> by <a href="https://github.com/omidnikta/qtmind" target="_parent" rel="nofollow">Omid Nikta</a></p>
       </div>
 
     </div> <!-- /container -->
