@@ -21,6 +21,8 @@ a:hover { color: #090; }
 
 .img_right { float: right; margin: 0px 0px 15px 20px; }
 
+.gallery{width: 270px;}
+
 .img_bottom { margin-bottom: 15px; }
 
 .footer {
