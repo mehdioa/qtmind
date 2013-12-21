@@ -58,24 +58,24 @@ MainWindow::MainWindow(QWidget *parent) :
 	emit showIndicatorsSignal(mShowColors, mShowIndicators, mIndicatorType);
 
 
-	ui->menuGame->setTitle(tr("Game"));
-	ui->actionNew->setText(tr("New"));
-	ui->actionReveal_One_Peg->setText(tr("Reveal One Peg"));
-	ui->actionResign->setText(tr("Resign"));
-	ui->actionQuit->setText(tr("Quit"));
+	ui->menuGame->setTitle(tr("&Game"));
+	ui->actionNew->setText(tr("&New"));
+	ui->actionReveal_One_Peg->setText(tr("Reveal One &Peg"));
+	ui->actionResign->setText(tr("&Resign"));
+	ui->actionQuit->setText(tr("&Quit"));
 
-	ui->menuTools->setTitle(tr("Tools"));
-	ui->menuGame_Mode->setTitle(tr("Game Mode"));
-	ui->actionCodebreaker->setText(tr("Codebreaker"));
-	ui->actionCodemaker->setText(tr("Codemaker"));
-	ui->actionShow_Indicators->setText(tr("Show Indicators"));
-	ui->actionAuto_Set_Pins->setText(tr("Auto Put Pins"));
-	ui->actionAuto_Close_Rows->setText(tr("Auto Close Rows"));
-	ui->actionOptions->setText(tr("Options"));
+	ui->menuTools->setTitle(tr("&Tools"));
+	ui->menuGame_Mode->setTitle(tr("Game &Mode"));
+	ui->actionCodebreaker->setText(tr("Code&breaker"));
+	ui->actionCodemaker->setText(tr("Code&maker"));
+	ui->actionShow_Indicators->setText(tr("Show &Indicators"));
+	ui->actionAuto_Set_Pins->setText(tr("Auto Put &Pins"));
+	ui->actionAuto_Close_Rows->setText(tr("Auto Close &Rows"));
+	ui->actionOptions->setText(tr("&Options"));
 
-	ui->menuHelp->setTitle(tr("Help"));
-	ui->actionAbout_QtMind->setText(tr("About QtMind"));
-	ui->actionAbout_Qt->setText(tr("About Qt"));
+	ui->menuHelp->setTitle(tr("&Help"));
+	ui->actionAbout_QtMind->setText(tr("About Qt&Mind"));
+	ui->actionAbout_Qt->setText(tr("About &Qt"));
 
 	auto gameModeActions = new QActionGroup(this);
 	gameModeActions->addAction(ui->actionCodemaker);
@@ -97,9 +97,31 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionAuto_Set_Pins->setChecked(mAutoPutPins);
 	ui->actionAuto_Close_Rows->setChecked(mAutoCloseRows);
 
-	setPegsComboBox();
-	setColorsComboBox();
-	setSolvingAlgorithmsComboBox();
+	pegsNumberComboBox = new QComboBox(this);
+	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
+	{
+		pegsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Slots")));
+	}
+	pegsNumberComboBox->setCurrentIndex(mPegNumber-MIN_SLOT_NUMBER);
+	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
+	pegsNumberComboBox->setLocale(mLocale);
+
+	colorsNumberComboBox = new QComboBox(this);
+	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
+	{
+		colorsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Colors")));
+	}
+	colorsNumberComboBox->setCurrentIndex(mColorNumber-MIN_COLOR_NUMBER);
+	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
+
+
+	solvingAlgorithmsComboBox = new QComboBox(this);
+	solvingAlgorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
+	solvingAlgorithmsComboBox->addItem(tr("Most Parts"));
+	solvingAlgorithmsComboBox->addItem(tr("Worst Case"));
+	solvingAlgorithmsComboBox->addItem(tr("Expected Size"));
+	solvingAlgorithmsComboBox->setCurrentIndex((int) mAlgorithm);
+
 
 	ui->toolBar->addAction(ui->actionNew);
 	ui->toolBar->addAction(allowSameColorAction);
@@ -118,7 +140,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onSetPinsCloseRowAutomatically()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
-	connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(onHelp()));
+	connect(ui->actionQtMind_Home_Page, SIGNAL(triggered()), this, SLOT(onQtMindHomePage()));
 	connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onUpdateNumbers()));
@@ -197,7 +219,7 @@ void MainWindow::onPreferences()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onHelp()
+void MainWindow::onQtMindHomePage()
 {
 	QDesktopServices::openUrl(QUrl("http://omidnikta.github.io/qtmind/index.html", QUrl::TolerantMode));
 
@@ -289,40 +311,4 @@ void MainWindow::onShowContextMenu(const QPoint &position)
 	contextMenu.addSeparator();
 	contextMenu.addMenu(ui->menuGame_Mode);
 	contextMenu.exec(mapToGlobal(position));
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::setPegsComboBox()
-{
-	pegsNumberComboBox = new QComboBox(this);
-	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
-	{
-		pegsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Slots")));
-	}
-	pegsNumberComboBox->setCurrentIndex(mPegNumber-MIN_SLOT_NUMBER);
-	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
-	pegsNumberComboBox->setLocale(mLocale);
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::setColorsComboBox()
-{
-	colorsNumberComboBox = new QComboBox(this);
-	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
-	{
-		colorsNumberComboBox->addItem(QString("%1 %2").arg(mLocale.toString(i)).arg(tr("Colors")));
-	}
-	colorsNumberComboBox->setCurrentIndex(mColorNumber-MIN_COLOR_NUMBER);
-	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::setSolvingAlgorithmsComboBox()
-{
-	solvingAlgorithmsComboBox = new QComboBox(this);
-	solvingAlgorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
-	solvingAlgorithmsComboBox->addItem(tr("Most Parts"));
-	solvingAlgorithmsComboBox->addItem(tr("Worst Case"));
-	solvingAlgorithmsComboBox->addItem(tr("Expected Size"));
-	solvingAlgorithmsComboBox->setCurrentIndex((int) mAlgorithm);
 }

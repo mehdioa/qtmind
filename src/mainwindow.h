@@ -54,18 +54,13 @@ private slots:
 	void onUpdateNumbers();
 	void onNewGame();
 	void onPreferences();
-	void onHelp();
+	void onQtMindHomePage();
 	void onAbout();
 	void onShowContextMenu(const QPoint& position);
 
 signals:
 	void showIndicatorsSignal(bool show_colors, bool show_indicators, IndicatorType);
 	void preferencesChangeSignal();
-
-private:
-	void setPegsComboBox();
-	void setColorsComboBox();
-	void setSolvingAlgorithmsComboBox();
 
 private:
 	Ui::MainWindow *ui;

@@ -59,7 +59,7 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionHelp"/>
+    <addaction name="actionQtMind_Home_Page"/>
     <addaction name="separator"/>
     <addaction name="actionAbout_QtMind"/>
     <addaction name="actionAbout_Qt"/>
@@ -196,13 +196,16 @@
     <string>Reveal One Peg</string>
    </property>
   </action>
-  <action name="actionHelp">
+  <action name="actionQtMind_Home_Page">
    <property name="icon">
     <iconset resource="../resource.qrc">
-     <normaloff>:/icons/information-icon.png</normaloff>:/icons/information-icon.png</iconset>
+     <normaloff>:/icons/globe-icon.png</normaloff>:/icons/globe-icon.png</iconset>
    </property>
    <property name="text">
-    <string>Help</string>
+    <string>QtMind Home Page</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to QtMind home page</string>
    </property>
   </action>
   <action name="actionShow_Indicators">
