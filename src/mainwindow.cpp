@@ -74,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionOptions->setText(tr("&Options"));
 
 	ui->menuHelp->setTitle(tr("&Help"));
+	ui->actionQtMind_Home_Page->setText(tr("QtMind &Home Page"));
 	ui->actionAbout_QtMind->setText(tr("About Qt&Mind"));
 	ui->actionAbout_Qt->setText(tr("About &Qt"));
 
@@ -293,9 +294,16 @@ void MainWindow::onUpdateNumbers()
 
 void MainWindow::onAbout()
 {
+	QStringList app_version = QCoreApplication::applicationVersion().split('.');
+	QString localized_app_version = "";
+	foreach (QString sub_version_number, app_version) {
+		localized_app_version.append(mLocale.toString(sub_version_number.toInt()));
+		localized_app_version.append(mLocale.decimalPoint());
+	}
+	localized_app_version.chop(1);
 	QMessageBox::about(this, tr("About QtMind"), QString(
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
-		.arg(tr("QtMind"), QCoreApplication::applicationVersion(),
+		.arg(tr("QtMind"), localized_app_version,
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
 			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(mLocale.toString(2013)),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\"")));
