@@ -199,7 +199,7 @@ void MainWindow::onPreferences()
 
 void MainWindow::onHelp()
 {
-	QDesktopServices::openUrl(QUrl("http://omidnikta.github.io/qtmind/documentation.html", QUrl::TolerantMode));
+	QDesktopServices::openUrl(QUrl("http://omidnikta.github.io/qtmind/index.html", QUrl::TolerantMode));
 
 }
 //-----------------------------------------------------------------------------
