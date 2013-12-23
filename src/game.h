@@ -17,8 +17,8 @@
  *
  ***********************************************************************/
 
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef GAME_H
+#define GAME_H
 
 #include "constants.h"
 #include <QGraphicsView>
@@ -51,13 +51,13 @@ class Solver;
 class Message;
 class QSoundEffect;
 
-class Board: public QGraphicsView
+class Game: public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	explicit Board(QWidget *parent = 0);
-	~Board();
+	explicit Game(QWidget *parent = 0);
+	~Game();
 	void play();
 	void autoPutPinsCloseRow(const bool &set_pins, const bool &close_row);
 	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
@@ -65,7 +65,7 @@ public:
 			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
 			   const bool &show_colors, const bool &show_indicators,
 			   const IndicatorType &indicator_n);
-	GameState getState() const {return mGameState;}
+	GameState getState() const {return gameState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
 
 protected:
@@ -87,49 +87,49 @@ private slots:
 	void onShowIndicators(bool show_colors, bool show_indicators, IndicatorType);
 	void onRevealOnePeg();
 	void onResigned();
-	void onGuessReady(const Algorithm &alg, const QString &guess,
-					  const int &possibleSize, const qreal &lastWeight);
+	void onGuessReady(const Algorithm &alg, const QString &m_guess,
+					  const int &m_possibleSize, const qreal &m_lastWeight);
 	void onPreferencesChanged();
 
 private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-	void createPegForBox(PegBox *box, int color, bool underneath = false,
-						 bool plain = false);// backPeg is used to put an extra peg under initial pegs,
-	void codeRowFilled(const bool &filled);
-	void showTranslatedInformation(const Algorithm &alg, const int &possibleSize, const qreal &minWeight);
+	void createPegForBox(PegBox *m_box, int m_color, bool m_underneath = false,
+						 bool m_plain = false);// backPeg is used to put an extra peg under initial pegs,
+	void codeRowFilled(const bool &m_filled);
+	void showTranslatedInformation(const Algorithm &m_algorithm, const int &m_possibleSize, const qreal &m_minWeight);
 	void initializeScene();
 
 private:
-	QList<PinBox *> mPinBoxes;	//	black-white pins
-	QList<PegBox *> mPegBoxes;	//	right boxes that contains color-pegs to put on codeboxes
-	QList<PegBox *> mCodeBoxes;	//	middle boxes that is filled by a player
-	QList<PegBox *> mCurrentBoxes;	//	the active row of codeboxes
-	QList<PegBox *> mMasterBoxes;	//	the mastercode boxes
+	QList<PinBox *> pinBoxes;	//	black-white pins
+	QList<PegBox *> pegBoxes;	//	right boxes that contains color-pegs to put on codeboxes
+	QList<PegBox *> codeBoxes;	//	middle boxes that is filled by a player
+	QList<PegBox *> currentBoxes;	//	the active row of codeboxes
+	QList<PegBox *> masterBoxes;	//	the mastercode boxes
 
-	GameState mGameState;
-	GameMode mGameMode;
-	int mPegNumber;
-	int mColorNumber;
-	bool mSameColorAllowed;
-	bool mAutoPutPins;
-	bool mAutoCloseRows;
-	bool mDone;
-	int mFontSize;
-	QString mFontName;
-	Algorithm mAlgorithm;
-	bool mShowColors;
-	bool mShowIndicators;
-	IndicatorType mIndicatorType;
-	QString mMasterCode;
-	QString mGuess;
-	QLocale *mLocale;
-	Solver *mSolver;
-	Button *mOkButton;
-	Button *mDoneButton;
-	Message *mMessage;
-	Message *mInformation;
+	GameState gameState;
+	GameMode gameMode;
+	int pegNumber;
+	int colorNumber;
+	bool sameColorAllowed;
+	bool autoPutPins;
+	bool autoCloseRows;
+	bool done;
+	int fontSize;
+	QString fontName;
+	Algorithm algorithm;
+	bool showColors;
+	bool showIndicators;
+	IndicatorType indicatorType;
+	QString masterCode;
+	QString guess;
+	QLocale *locale;
+	Solver *solver;
+	Button *okButton;
+	Button *doneButton;
+	Message *message;
+	Message *information;
 
 #if QT_VERSION >= 0x050000
 	QSoundEffect *pegDropSound;
@@ -138,4 +138,4 @@ private:
 #endif
 };
 
-#endif // BOARD_H
+#endif // GAME_H

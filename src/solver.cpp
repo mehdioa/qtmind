@@ -37,16 +37,16 @@ inline int ipow(int base, int exp)
 
 Solver::Solver(const int &peg_no, const int &color_no, const bool &allow_same_color, QObject *parent):
 	QThread(parent),
-	mPegNumber(peg_no),
-	mColorNumber(color_no),
-	mAllowSameColor(allow_same_color),
-	mLastMinWeight(-1),
-	mInterupt(true),
-	mAllCodes(0),
-	mFirstPossibleCodes(0)
+	pegNumber(peg_no),
+	colorNumber(color_no),
+	allowSameColor(allow_same_color),
+	lastMinWeight(-1),
+	interupt(true),
+	allCodes(0),
+	firstPossibleCodes(0)
 {
 	createTables();
-	onReset(peg_no, color_no, mAllowSameColor);
+	onReset(peg_no, color_no, allowSameColor);
 }
 //-----------------------------------------------------------------------------
 
@@ -58,98 +58,100 @@ Solver::~Solver()
 
 void Solver::createTables()
 {
-	if (mAllowSameColor){
-		mAllCodesSize = ipow(mColorNumber, mPegNumber);
+	if (allowSameColor){
+		allCodesSize = ipow(colorNumber, pegNumber);
 	} else {
-		mAllCodesSize = 1;
-		for(int i = 0; i < mPegNumber; ++i)
-			mAllCodesSize *= (mColorNumber - i);
+		allCodesSize = 1;
+		for(int i = 0; i < pegNumber; ++i)
+			allCodesSize *= (colorNumber - i);
 	}
 
-	mResponseSpaceSize = (mPegNumber + 1)*(mPegNumber + 2)/2;
+	responseSpaceSize = (pegNumber + 1)*(pegNumber + 2)/2;
 
-	mAllCodes = new int *[mAllCodesSize];
+	allCodes = new int *[allCodesSize];
 
-	for(int i = 0; i < mAllCodesSize; ++i)
+	for(int i = 0; i < allCodesSize; ++i)
 	{
-		mAllCodes[i] = new int[mPegNumber];
-		convertBase(i, mColorNumber, mPegNumber, mAllCodes[i]);
+		allCodes[i] = new int[pegNumber];
+		convertBase(i, colorNumber, pegNumber, allCodes[i]);
 	}
 }
 //-----------------------------------------------------------------------------
 
 void Solver::deleteTables()
 {
-	for(int i = 0; i < mAllCodesSize; ++i)
-		delete[] mAllCodes[i];
+	for(int i = 0; i < allCodesSize; ++i)
+		delete[] allCodes[i];
 
-	delete[] mAllCodes;
-	mAllCodes = NULL;
+	delete[] allCodes;
+	allCodes = NULL;
 
-	if(mFirstPossibleCodes)
+	if(firstPossibleCodes)
 	{
-		delete[] mFirstPossibleCodes;
-		mFirstPossibleCodes = NULL;
+		delete[] firstPossibleCodes;
+		firstPossibleCodes = NULL;
 	}
 }
 //-----------------------------------------------------------------------------
 
 void Solver::onReset(const int &peg_no, const int &color_no, const bool &allow_same_color)
 {
-	if(mColorNumber != color_no || mPegNumber != peg_no || mAllowSameColor != allow_same_color)
+	if(colorNumber != color_no || pegNumber != peg_no || allowSameColor != allow_same_color)
 	{
 		deleteTables();
-		mColorNumber = color_no;
-		mPegNumber = peg_no;
-		mAllowSameColor = allow_same_color;
+		colorNumber = color_no;
+		pegNumber = peg_no;
+		allowSameColor = allow_same_color;
 		createTables();
 	}
 
-	if(mFirstPossibleCodes)
+	if(firstPossibleCodes)
 	{
-		delete[] mFirstPossibleCodes;
-		mFirstPossibleCodes = NULL;
+		delete[] firstPossibleCodes;
+		firstPossibleCodes = NULL;
 	}
 
-	mPossibleCodes.clear();
-	for(int i = 0; i < mAllCodesSize; ++i)
-		mPossibleCodes.append(i);//in case of not same color here must change
+	possibleCodes.clear();
+	for(int i = 0; i < allCodesSize; ++i)
+		possibleCodes.append(i);
 
-	mLastMinWeight = -1;
-	mGuess = "";
+	lastMinWeight = -1;
+	guess = "";
 }
 //-----------------------------------------------------------------------------
 
-void Solver::onStartGuessing(const Algorithm &alg)
+void Solver::onStartGuessing(const Algorithm &m_algorithm)
 {
-	mInterupt = false;
-	mAlgorithm = alg;
+	interupt = false;
+	algorithm = m_algorithm;
 	start(QThread::NormalPriority);
 }
 //-----------------------------------------------------------------------------
 
-QString Solver::randomPermutation(QString str) const
+QString Solver::shuffle(QString m_string) const
 {
+	/*	This function shuffle the characters in a string */
 	qsrand(time(NULL));
 	QString answer = "";
 
-	while(str.length() > 0)
+	while(m_string.length() > 0)
 	{
-		int j = qrand() % str.length();
-		answer.append(str.at(j));
-		str.remove(j, 1);
+		int j = qrand() % m_string.length();
+		answer.append(m_string.at(j));
+		m_string.remove(j, 1);
 	}
 	return answer;
 }
 //-----------------------------------------------------------------------------
 
-void Solver::permute(QString &code) const
+void Solver::permute(QString &m_code) const
 {
-	QString permutatedColors = randomPermutation(QString("0123456789").left(mColorNumber));
-	code = randomPermutation(code);
+	/*	This funstion shuffle the code and do a permutation on the characters */
+	QString shuffled_colors = shuffle(QString("0123456789").left(colorNumber));
+	m_code = shuffle(m_code);
 
-	for(int i = 0; i < code.length(); ++i)
-		code.replace(i, 1, permutatedColors.at(code.at(i).digitValue()));
+	for(int i = 0; i < m_code.length(); ++i)
+		m_code.replace(i, 1, shuffled_colors.at(m_code.at(i).digitValue()));
 }
 //-----------------------------------------------------------------------------
 
@@ -164,13 +166,13 @@ int Solver::compare(const int *codeA, const int *codeB) const
 	 *  g_i is the number of times it is in the guess. See
 	 *	http://mathworld.wolfram.com/Mastermind.html for more information
 	 */
-	int c[mColorNumber];
-	int g[mColorNumber];
-	std::fill(c, c+mColorNumber, 0);
-	std::fill(g, g+mColorNumber, 0);
+	int c[colorNumber];
+	int g[colorNumber];
+	std::fill(c, c+colorNumber, 0);
+	std::fill(g, g+colorNumber, 0);
 	int blacks = 0;
 
-	for (int i = 0; i < mPegNumber; ++i)
+	for (int i = 0; i < pegNumber; ++i)
 	{
 		if (codeA[i] == codeB[i])
 			++blacks;
@@ -179,54 +181,54 @@ int Solver::compare(const int *codeA, const int *codeB) const
 	}
 
 	int total = 0;//	blacks + whites, since we don't need whites below
-	for(int i = 0; i < mColorNumber; ++i)
+	for(int i = 0; i < colorNumber; ++i)
 		total += (c[i] < g[i]) ? c[i] : g[i];
 
 	return total*(total + 1)/2 + blacks;
 }
 //-----------------------------------------------------------------------------
 
-bool Solver::setResponse(const int &response)
+bool Solver::setResponse(const int &m_response)
 {
 	/*	This function is responsible for puting the response and erase the impossibles.
 	 *	It will return false if the response is not possible and do nothing
 	 */
 	QList<int> tempPossibleCodes;
-	int mGuessArray[mPegNumber];
-	stringToArray(mGuess, mGuessArray);
+	int guessArray[pegNumber];
+	stringToArray(guess, guessArray);
 
-	foreach (int possible, mPossibleCodes)
+	foreach (int possible, possibleCodes)
 	{
-		if(compare(mGuessArray, mAllCodes[possible]) == response)
+		if(compare(guessArray, allCodes[possible]) == m_response)
 			tempPossibleCodes.append(possible);
 	}
 
 	if (tempPossibleCodes.isEmpty())
 		return false;
 
-	mPossibleCodes = tempPossibleCodes;
-	mResponse = response;
+	possibleCodes = tempPossibleCodes;
+	response = m_response;
 
-	/*	The first time algorithm comes here, it decide to fill in the mFirstPossibleCodes.
-	 *	If mAllCodesSize > 10000, we stick to the possible codes, as it is time consuming.
-	 *	If neither of mAllCodesSize or mPossibleCodes.size() is less than 10001, it will
-	 *	postpone filling mFirstPossibleCodes to next time.
+	/*	The first time algorithm comes here, it decide to fill in the firstPossibleCodes.
+	 *	If allCodesSize > 10000, we stick to the possible codes, as it is time consuming.
+	 *	If neither of allCodesSize or possibleCodes.size() is less than 10001, it will
+	 *	postpone filling firstPossibleCodes to next time.
 	 */
-	if (!mFirstPossibleCodes)
+	if (!firstPossibleCodes)
 	{
-		if (mAllCodesSize <= 10000)
+		if (allCodesSize <= 10000)
 		{
-			mFirstPossibleCodesSize = mAllCodesSize;
-			mFirstPossibleCodes = new int[mFirstPossibleCodesSize];
-			for(int i = 0; i < mFirstPossibleCodesSize; ++i)
-				mFirstPossibleCodes[i] = i;
+			firstPossibleCodesSize = allCodesSize;
+			firstPossibleCodes = new int[firstPossibleCodesSize];
+			for(int i = 0; i < firstPossibleCodesSize; ++i)
+				firstPossibleCodes[i] = i;
 		}
-		else if (mPossibleCodes.size() <= 10000)
+		else if (possibleCodes.size() <= 10000)
 		{
-			mFirstPossibleCodesSize = mPossibleCodes.size();
-			mFirstPossibleCodes = new int[mFirstPossibleCodesSize];
-			for(int i = 0; i < mFirstPossibleCodesSize; ++i)
-				mFirstPossibleCodes[i] = mPossibleCodes.at(i);
+			firstPossibleCodesSize = possibleCodes.size();
+			firstPossibleCodes = new int[firstPossibleCodesSize];
+			for(int i = 0; i < firstPossibleCodesSize; ++i)
+				firstPossibleCodes[i] = possibleCodes.at(i);
 		}
 	}
 	return true;
@@ -236,8 +238,8 @@ bool Solver::setResponse(const int &response)
 void Solver::run()
 {
 	makeGuess();
-	if (!mInterupt)
-		emit guessDoneSignal(mAlgorithm, mGuess, mPossibleCodes.size(), mLastMinWeight);
+	if (!interupt)
+		emit guessDoneSignal(algorithm, guess, possibleCodes.size(), lastMinWeight);
 }
 //-----------------------------------------------------------------------------
 
@@ -245,35 +247,35 @@ QString Solver::getFirstGuess() const
 {
 	QString answer;
 	QString str;
-	if (mAllowSameColor)
+	if (allowSameColor)
 	{
-		switch (mColorNumber) {
+		switch (colorNumber) {
 		case 2:
 			str = (QString) "010101";
-			answer = str.left(mPegNumber);
+			answer = str.left(pegNumber);
 			break;
 		case 3:
 			str = (QString) "01212";
-			answer = str.left(mPegNumber);
+			answer = str.left(pegNumber);
 			break;
 		case 4:
 			str = (QString) "01223";
-			answer = str.left(mPegNumber);
+			answer = str.left(pegNumber);
 			break;
 		default:
 			str = (QString) "01223";
-			answer = str.left(mPegNumber);
+			answer = str.left(pegNumber);
 			break;
 		}
 
 		// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
-		if(mColorNumber == 6 && mPegNumber == 4 && mAlgorithm == Algorithm::WorstCase)
+		if(colorNumber == 6 && pegNumber == 4 && algorithm == Algorithm::WorstCase)
 			answer = (QString) "0011";
 	}
 	else
 	{
 		QString str = "01234";
-		answer = str.left(mPegNumber);
+		answer = str.left(pegNumber);
 	}
 
 	permute(answer);
@@ -287,128 +289,128 @@ void Solver::makeGuess()
 	 *	and guess when there are at least 10000 codes possibles are treated
 	 *	differently.
 	 */
-	if (mGuess == "")	// The first guess here
+	if (guess == "")	// The first guess here
 	{
-		mGuess = getFirstGuess();
+		guess = getFirstGuess();
 		return;
 	}
 
-	if (mPossibleCodes.size() == 1)
+	if (possibleCodes.size() == 1)
 	{
-		mGuess =  arrayToString(mAllCodes[mPossibleCodes.first()]);
+		guess =  arrayToString(allCodes[possibleCodes.first()]);
 		return;
 	}
 
-	if(mPossibleCodes.size() > 10000)
+	if(possibleCodes.size() > 10000)
 	{
-		mGuess = arrayToString(mAllCodes[mPossibleCodes.at(mPossibleCodes.size() >> 1)]);
+		guess = arrayToString(allCodes[possibleCodes.at(possibleCodes.size() >> 1)]);
 		return;
 	}
 
-	int responsesOfCodes[mResponseSpaceSize];
-	for(int i = 0; i < mResponseSpaceSize; ++i)
+	int responsesOfCodes[responseSpaceSize];
+	for(int i = 0; i < responseSpaceSize; ++i)
 		responsesOfCodes[i] = 0;
 
-	int answerIndex = 0;
-	qreal minWeight = 1000000000;
-	qreal weight;
+	int answer_index = 0;
+	qreal min_code_weight = 1000000000;
+	qreal code_weight;
 
-	for (int codeIndex = 0; codeIndex < mFirstPossibleCodesSize; ++codeIndex)
+	for (int code_index = 0; code_index < firstPossibleCodesSize; ++code_index)
 	{
-		if(mInterupt)
+		if(interupt)
 			return;
 
-		foreach (int possibleIndex, mPossibleCodes)
+		foreach (int possible_index, possibleCodes)
 		{
-			++responsesOfCodes[compare(mAllCodes[mFirstPossibleCodes[codeIndex]], mAllCodes[possibleIndex])];
+			++responsesOfCodes[compare(allCodes[firstPossibleCodes[code_index]], allCodes[possible_index])];
 		}
-		weight = computeWeight(responsesOfCodes);
+		code_weight = computeWeight(responsesOfCodes);
 
-		if (weight < minWeight)
+		if (code_weight < min_code_weight)
 		{
-			answerIndex = codeIndex;
-			minWeight = weight;
+			answer_index = code_index;
+			min_code_weight = code_weight;
 		}
 	}
 
-	if(mAlgorithm == Algorithm::MostParts)
-		minWeight = mResponseSpaceSize - 2 - minWeight;
+	if(algorithm == Algorithm::MostParts)
+		min_code_weight = responseSpaceSize - 2 - min_code_weight;
 
-	mLastMinWeight = qFloor(minWeight);
+	lastMinWeight = qFloor(min_code_weight);
 
-	mGuess = arrayToString(mAllCodes[mFirstPossibleCodes[answerIndex]]);
+	guess = arrayToString(allCodes[firstPossibleCodes[answer_index]]);
 }
 //-----------------------------------------------------------------------------
 
-qreal Solver::computeWeight(int *responses) const
+qreal Solver::computeWeight(int *m_responses) const
 {
 	qreal answer = 0;
 
-	switch (mAlgorithm) {
+	switch (algorithm) {
 	case Algorithm::ExpectedSize:
-		for(int i = 0; i < mResponseSpaceSize-2; ++i)
+		for(int i = 0; i < responseSpaceSize-2; ++i)
 		{
-			answer += ipow(responses[i], 2);
-			responses[i] = 0;
+			answer += ipow(m_responses[i], 2);
+			m_responses[i] = 0;
 		}
 		break;
 	case Algorithm::WorstCase:
-		for(int i = 0; i < mResponseSpaceSize-2; ++i)
+		for(int i = 0; i < responseSpaceSize-2; ++i)
 		{
-			answer = qMax((qreal)responses[i], answer);
-			responses[i] = 0;
+			answer = qMax((qreal)m_responses[i], answer);
+			m_responses[i] = 0;
 		}
 		break;
 	default:	//	Most Parts
-		for(int i = 0; i < mResponseSpaceSize-2; ++i)
+		for(int i = 0; i < responseSpaceSize-2; ++i)
 		{
-			if (responses[i] == 0)
+			if (m_responses[i] == 0)
 				++answer;
 			else
-				responses[i] = 0;
+				m_responses[i] = 0;
 		}
 		break;
 	}
 
 	// This little trick will prefer possibles in tie
-	if (responses[mResponseSpaceSize - 1] != 0)
+	if (m_responses[responseSpaceSize - 1] != 0)
 	{
 		answer -= 0.5;
-		if (mAlgorithm == Algorithm::MostParts)
+		if (algorithm == Algorithm::MostParts)
 			--answer;
 		else
 			++answer;
 
-		responses[mResponseSpaceSize - 1] = 0;
+		m_responses[responseSpaceSize - 1] = 0;
 	}
 
 	return answer;
 }
 //-----------------------------------------------------------------------------
 
-void Solver::convertBase(int decimal, const int &base, const int &precision, int *convertedArray)
+void Solver::convertBase(int m_decimal, const int &m_base, const int &m_precision, int *m_convertedArray)
 {
 
-	if(mAllowSameColor)
+	if(allowSameColor)
 	{
-		for(int i = 0; i < precision; ++i)
+		for(int i = 0; i < m_precision; ++i)
 		{
-			convertedArray[i] = decimal % base;
-			decimal /= base;
+			m_convertedArray[i] = m_decimal % m_base;
+			m_decimal /= m_base;
 		}
 	}
 	else
 	{
 		QString NUMS = "0123456789"; // Characters that may be used
 
-		int maxDigits = mAllCodesSize;
-		for(int i = 0; i < precision; ++i)
+		int max_digits = allCodesSize;
+		for(int i = 0; i < m_precision; ++i)
 		{
-			maxDigits /= base - i;
-			int temp = decimal / maxDigits;
-			convertedArray[i] = NUMS[temp].digitValue();
+			max_digits /= m_base - i;
+			int temp = m_decimal / max_digits;
+			m_convertedArray[i] = NUMS[temp].digitValue();
 			NUMS.remove(temp, 1);
-			decimal -= temp*maxDigits;
+			m_decimal -= temp*max_digits;
 		}
 	}
 }
@@ -417,14 +419,14 @@ void Solver::convertBase(int decimal, const int &base, const int &precision, int
 QString Solver::arrayToString(const int *ar) const
 {
 	QString answer = "";
-	for(int i = 0; i < mPegNumber; ++i)
+	for(int i = 0; i < pegNumber; ++i)
 		answer.append(QString::number(ar[i]));
 	return answer;
 }
 //-----------------------------------------------------------------------------
 
-void Solver::stringToArray(const QString &str, int *arr) const
+void Solver::stringToArray(const QString &m_string, int *m_array) const
 {
-	for(int i = 0; i < mPegNumber; ++i)
-		arr[i] = str[i].digitValue();
+	for(int i = 0; i < pegNumber; ++i)
+		m_array[i] = m_string[i].digitValue();
 }

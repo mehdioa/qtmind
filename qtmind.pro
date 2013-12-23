@@ -31,7 +31,6 @@ TEMPLATE = app
 SOURCES += src/main.cpp\
 		src/mainwindow.cpp \
 	src/peg.cpp \
-	src/board.cpp \
 	src/button.cpp \
 	src/pegbox.cpp \
     src/emptybox.cpp \
@@ -39,12 +38,12 @@ SOURCES += src/main.cpp\
     src/pinbox.cpp \
     src/pin.cpp \
     src/preferences.cpp \
-    src/solver.cpp
+    src/solver.cpp \
+    src/game.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
 	src/constants.h \
-	src/board.h \
 	src/button.h \
 	src/pegbox.h \
     src/emptybox.h \
@@ -52,7 +51,8 @@ HEADERS  += src/mainwindow.h \
     src/pinbox.h \
     src/pin.h \
     src/preferences.h \
-    src/solver.h
+    src/solver.h \
+    src/game.h
 
 FORMS    += \
     src/preferences.ui \

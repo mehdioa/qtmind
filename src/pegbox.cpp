@@ -22,9 +22,9 @@
 #include <QPen>
 #include <QLinearGradient>
 
-PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
-	EmptyBox(position, parent),
-	mPeg(0)
+PegBox::PegBox(const QPoint &m_position, QGraphicsItem *parent):
+	EmptyBox(m_position, parent),
+	peg(0)
 {
 
 }
@@ -32,8 +32,8 @@ PegBox::PegBox(const QPoint &position, QGraphicsItem *parent):
 
 int PegBox::getPegColor() const
 {
-	if (mPeg)
-		return mPeg->getColor();
+	if (peg)
+		return peg->getColor();
 
 	qDebug("getPegColor called with no peg setted.");
 	return -1;
@@ -42,32 +42,32 @@ int PegBox::getPegColor() const
 
 bool PegBox::isPegVisible()
 {
-	return mPeg && mPeg->isVisible();
+	return peg && peg->isVisible();
 }
 //-----------------------------------------------------------------------------
 
 PegState PegBox::getPegState() const
 {
-	if (mPeg) return mPeg->getState();
+	if (peg) return peg->getState();
 	return PegState::Plain;
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setBoxState(const BoxState &state)
+void PegBox::setBoxState(const BoxState &box_state)
 {
-	mBoxState = state;
+	boxState = box_state;
 
-	if (mPeg)
+	if (peg)
 	{
-		switch (mBoxState) {
+		switch (boxState) {
 		case BoxState::Past:
-			mPeg->setState(PegState::Underneath);
+			peg->setState(PegState::Underneath);
 			break;
 		case BoxState::Current:
-			mPeg->setState(PegState::Visible);
+			peg->setState(PegState::Visible);
 			break;
 		default: // BoxState::None, BoxState::Future
-			mPeg->setState(PegState::Invisible);
+			peg->setState(PegState::Invisible);
 			break;
 		}
 	}
@@ -77,17 +77,17 @@ void PegBox::setBoxState(const BoxState &state)
 
 void PegBox::setPegColor(const int &color_number)
 {
-	if (mPeg)
-		mPeg->setColor(color_number);
+	if (peg)
+		peg->setColor(color_number);
 	else
 		qDebug("setPegColor called with no peg setted.");
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setPegState(const PegState &state)
+void PegBox::setPegState(const PegState &peg_state)
 {
-	if (mPeg)
-		mPeg->setState(state);
+	if (peg)
+		peg->setState(peg_state);
 	else
 		qDebug("setPegState called with no peg setted.");
 

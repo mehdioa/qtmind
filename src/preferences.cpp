@@ -175,5 +175,4 @@ void Preferences::accept()
 	QSettings().setValue("Volume", ui->volumeVerticalSlider->value());
 	QSettings().setValue("ShowColors", (int) ui->showColorsCheckBox->isChecked());
 	QSettings().setValue("IndicatorType", (int) ui->digitRadioButton->isChecked());
-	QSettings().setValue("Geometry", saveGeometry());
 }

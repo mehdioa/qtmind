@@ -36,12 +36,12 @@ public:
 	static const int BoxAlphas[4];
 
 	explicit EmptyBox(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
-	virtual void setBoxState(const BoxState &state = BoxState::Future);
-	BoxState getBoxState() const {return mBoxState;}
+	virtual void setBoxState(const BoxState &m_state = BoxState::Future);
+	BoxState getBoxState() const {return boxState;}
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-	BoxState mBoxState;
+	BoxState boxState;
 };
 
 #endif // EmptyBox_H

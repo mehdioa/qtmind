@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fa_IR">
+<TS version="2.0" language="fa_IR">
 <context>
-    <name>Board</name>
+    <name>Game</name>
     <message>
-        <location filename="../src/board.cpp" line="138"/>
-        <source>Press Done ...</source>
-        <translation>انجام را بفشارید...</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="250"/>
-        <source>OK</source>
-        <translation>آری</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="257"/>
-        <source>Done</source>
-        <translation>انجام</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="272"/>
-        <source>Slots</source>
-        <translation>گوی</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="273"/>
-        <source>Colors</source>
-        <translation>رنگ</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="274"/>
-        <source>Same Color</source>
-        <translation>رنگ یکسان</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="275"/>
-        <source>Yes</source>
-        <translation>آری</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="275"/>
-        <source>No</source>
-        <translation>نه</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="382"/>
-        <source>Success! You Win</source>
-        <translation>شما برنده شدید</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="393"/>
-        <source>Game Over! You Failed</source>
-        <translation>پایان بازی! شکست خوردید</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="487"/>
-        <location filename="../src/board.cpp" line="513"/>
-        <source>Let Me Think...</source>
-        <translation>بگذارید بیاندیشم...</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="699"/>
-        <source>The Code Is Cracked!</source>
-        <translation>کد شکسته شد!</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="703"/>
-        <source>Random Guess</source>
-        <translation>کد تصادفی</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="704"/>
-        <location filename="../src/board.cpp" line="711"/>
-        <location filename="../src/board.cpp" line="716"/>
-        <location filename="../src/board.cpp" line="721"/>
-        <source>Remaining</source>
-        <translation>باقیمانده</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="710"/>
-        <source>Most Parts</source>
-        <translation>بیشترین بخش</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="715"/>
-        <source>Worst Case</source>
-        <translation>بدترین حالت</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="720"/>
-        <source>Expected Size</source>
-        <translation>کمترین واریانس</translation>
-    </message>
-    <message>
-        <location filename="../src/board.cpp" line="127"/>
-        <location filename="../src/board.cpp" line="143"/>
-        <location filename="../src/board.cpp" line="401"/>
-        <location filename="../src/board.cpp" line="609"/>
-        <location filename="../src/board.cpp" line="655"/>
+        <location filename="../src/game.cpp" line="127"/>
+        <location filename="../src/game.cpp" line="143"/>
+        <location filename="../src/game.cpp" line="401"/>
+        <location filename="../src/game.cpp" line="609"/>
+        <location filename="../src/game.cpp" line="655"/>
         <source>Place Your Pegs ... </source>
         <translation>گوی‌ها را بگذارید...</translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="451"/>
+        <location filename="../src/game.cpp" line="138"/>
+        <source>Press Done ...</source>
+        <translation>انجام را بفشارید...</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="250"/>
+        <source>OK</source>
+        <translation>آری</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="257"/>
+        <source>Done</source>
+        <translation>انجام</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="272"/>
+        <source>Slots</source>
+        <translation>گوی</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="273"/>
+        <source>Colors</source>
+        <translation>رنگ</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="274"/>
+        <source>Same Color</source>
+        <translation>رنگ یکسان</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="275"/>
+        <source>Yes</source>
+        <translation>آری</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="275"/>
+        <source>No</source>
+        <translation>نه</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="382"/>
+        <source>Success! You Win</source>
+        <translation>شما برنده شدید</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="393"/>
+        <source>Game Over! You Failed</source>
+        <translation>پایان بازی! شکست خوردید</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="451"/>
         <source>You Resign</source>
         <translation>بی‌خیال شدید</translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="467"/>
+        <location filename="../src/game.cpp" line="467"/>
         <source>Not Possible, Try Again...</source>
         <translation>پذیرفتنی نیست، دوباره تلاش کنید...</translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="482"/>
+        <location filename="../src/game.cpp" line="482"/>
         <source>Ready To Play</source>
         <translation>آمادهٔ بازی</translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="530"/>
+        <location filename="../src/game.cpp" line="487"/>
+        <location filename="../src/game.cpp" line="513"/>
+        <source>Let Me Think...</source>
+        <translation>بگذارید بیاندیشم...</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="530"/>
         <source>I Lose</source>
         <translation>باختم</translation>
     </message>
     <message>
-        <location filename="../src/board.cpp" line="541"/>
+        <location filename="../src/game.cpp" line="541"/>
         <source>Please Put Pins And Press OK</source>
         <translation>پین‌ها را بگذارید و آری را بفشارید</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="699"/>
+        <source>The Code Is Cracked!</source>
+        <translation>کد شکسته شد!</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="703"/>
+        <source>Random Guess</source>
+        <translation>کد تصادفی</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="704"/>
+        <location filename="../src/game.cpp" line="711"/>
+        <location filename="../src/game.cpp" line="716"/>
+        <location filename="../src/game.cpp" line="721"/>
+        <source>Remaining</source>
+        <translation>باقیمانده</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="710"/>
+        <source>Most Parts</source>
+        <translation>بیشترین بخش</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="715"/>
+        <source>Worst Case</source>
+        <translation>بدترین حالت</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="720"/>
+        <source>Expected Size</source>
+        <translation>کمترین واریانس</translation>
     </message>
 </context>
 <context>

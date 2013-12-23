@@ -40,12 +40,12 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 
 const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
 
-Peg::Peg(const QPointF &position, int color_number, const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n, QGraphicsItem *parent):
+Peg::Peg(const QPointF &m_position, int color_number, const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_type, QGraphicsItem *parent):
 	QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
-	mPosition(position),
-	mShowColors(show_colors),
-	mShowIndicators(show_indicators),
-	mIndicatorType(indicator_n),
+	position(m_position),
+	showColors(show_colors),
+	showIndicators(show_indicators),
+	indicatorType(indicator_type),
 	isActive(false)
 {
 	setPen(Qt::NoPen);
@@ -55,29 +55,29 @@ Peg::Peg(const QPointF &position, int color_number, const bool &show_colors, con
 	setGraphicsEffect(pressedEffect);
 	pressedEffect->setEnabled(false);
 
-	mGloss = new QGraphicsEllipseItem(7, 4, 24, 20, this);
+	gloss = new QGraphicsEllipseItem(7, 4, 24, 20, this);
 	QLinearGradient lgrad(25, 0, 25, 21);
 	lgrad.setColorAt(0, QColor(255, 255, 255, 150));
 	lgrad.setColorAt(1, QColor(255, 255, 255, 0));
-	mGloss->setBrush(lgrad);
-	mGloss->setPen(Qt::NoPen);
+	gloss->setBrush(lgrad);
+	gloss->setPen(Qt::NoPen);
 
-	mIndicator = new QGraphicsSimpleTextItem(this);
+	indicator = new QGraphicsSimpleTextItem(this);
 	QFont font("Monospace", 15, QFont::Bold, false);
 	font.setStyleHint(QFont::TypeWriter);
-	mIndicator->setFont(font);
-	mIndicator->setPos(14,8);
+	indicator->setFont(font);
+	indicator->setPos(14,8);
 
 	QLinearGradient cgrad(2, 2, 35, 35);
 	cgrad.setColorAt(0.0, QColor(80, 80, 80));
 	cgrad.setColorAt(1.0, QColor(220, 220, 220));
 
-	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
-	mCircle->setPen(QPen(QBrush(cgrad), 1));
+	circle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
+	circle->setPen(QPen(QBrush(cgrad), 1));
 
 	setColor(color_number);
 	setZValue(2);
-	setPos(position - QPointF(19.5, 19.5));
+	setPos(m_position - QPointF(19.5, 19.5));
 	setMovable(true);
 	setAcceptDrops(true);
 	setState(PegState::Visible);
@@ -86,12 +86,12 @@ Peg::Peg(const QPointF &position, int color_number, const bool &show_colors, con
 
 void Peg::setColor(int color_number)
 {
-	mColor = (-1 < color_number && color_number < 10) ? color_number : 0;
-	if (mShowColors || !mShowIndicators)
+	color = (-1 < color_number && color_number < 10) ? color_number : 0;
+	if (showColors || !showIndicators)
 	{
 		QRadialGradient gradient(20, 0, 60, 20, 0);
-		gradient.setColorAt(0, PegColors[mColor][0]);
-		gradient.setColorAt(1, PegColors[mColor][1]);
+		gradient.setColorAt(0, PegColors[color][0]);
+		gradient.setColorAt(1, PegColors[color][1]);
 		setBrush(gradient);
 	}
 	else
@@ -102,8 +102,8 @@ void Peg::setColor(int color_number)
 		setBrush(gradient);
 	}
 
-	mIndicator->setText(OrderedChars[(int)mIndicatorType][mColor]);
-	mIndicator->setVisible(mShowIndicators);
+	indicator->setText(OrderedChars[(int)indicatorType][color]);
+	indicator->setVisible(showIndicators);
 }
 //-----------------------------------------------------------------------------
 
@@ -117,10 +117,10 @@ void Peg::setMovable(bool enabled)
 }
 //-----------------------------------------------------------------------------
 
-void Peg::setState(const PegState &state)
+void Peg::setState(const PegState &m_state)
 {
-	mState = state;
-	switch (mState) {
+	pegState = m_state;
+	switch (pegState) {
 	case PegState::Invisible:
 		setVisible(false);
 		setMovable(false);
@@ -132,9 +132,9 @@ void Peg::setState(const PegState &state)
 	case PegState::Plain:
 		setVisible(true);
 		setMovable(false);
-		mCircle->setVisible(true);
-		mIndicator->setVisible(false);
-		mGloss->setBrush(Qt::NoBrush);
+		circle->setVisible(true);
+		indicator->setVisible(false);
+		gloss->setBrush(Qt::NoBrush);
 		setBrush(Qt::NoBrush);
 		break;
 	default:// PegState::Initial and PegState::Visible
@@ -151,7 +151,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 	if (event->button() == Qt::LeftButton && isActive)
 	{
-		mCircle->setVisible(false);
+		circle->setVisible(false);
 		pressedEffect->setEnabled(true);
 		setZValue(3);
 		setCursor(Qt::ClosedHandCursor);
@@ -165,18 +165,18 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 	if (event->button() == Qt::LeftButton && isActive)
 	{
-		mCircle->setVisible(true);
+		circle->setVisible(true);
 		pressedEffect->setEnabled(false);
 		setZValue(2);
 		setCursor(Qt::OpenHandCursor);
 
-		if (!sceneBoundingRect().contains(mPosition))//	droped out of its own box,
+		if (!sceneBoundingRect().contains(position))//	droped out of its own box,
 		{
-			if (mState != PegState::Initial)
+			if (pegState != PegState::Initial)
 				setState(PegState::Invisible);
 			emit mouseReleaseSignal(this);
 		}
-		setPos(mPosition - QPointF(19.5, 19.5));
+		setPos(position - QPointF(19.5, 19.5));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -186,22 +186,22 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 	if (isActive)
 	{
 		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
-		if (mState == PegState::Initial)
+		if (pegState == PegState::Initial)
 		{
 			emit mouseDoubleClickSignal(this);
 			emit mouseReleaseSignal(this);
-			setPos(mPosition - QPoint(19.5, 19.5));
+			setPos(position - QPoint(19.5, 19.5));
 		}
 		else
-			setPos(mPosition - QPoint(19.5, 60));
+			setPos(position - QPoint(19.5, 60));
 	}
 }
 //-----------------------------------------------------------------------------
 
 void Peg::onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n)
 {
-	mShowColors = show_colors;
-	mShowIndicators = show_indicators;
-	mIndicatorType = indicator_n;
-	setColor(mColor);
+	showColors = show_colors;
+	showIndicators = show_indicators;
+	indicatorType = indicator_n;
+	setColor(color);
 }

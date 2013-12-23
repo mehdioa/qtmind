@@ -23,14 +23,14 @@
 #include <QMainWindow>
 #include <QLocale>
 #include "constants.h"
-#include "board.h"
+#include "game.h"
 
 class QMenu;
 class QAction;
 class QToolBar;
 class QActionGroup;
 class QComboBox;
-class Board;
+class Game;
 
 namespace Ui {
 class MainWindow;
@@ -65,19 +65,19 @@ signals:
 private:
 	Ui::MainWindow *ui;
 
-	Board *mBoard;
-	GameMode mGameMode;
-	int mColorNumber;
-	int mPegNumber;
-	Algorithm mAlgorithm;
-	bool mShowColors;
-	bool mShowIndicators;
-	IndicatorType mIndicatorType;
-	bool mSameColorAllowed;
-	bool mAutoPutPins;
-	bool mAutoCloseRows;
-	QLocale mLocale;
-	int mVolume;
+	Game *game;
+	GameMode gameMode;
+	int colorNumber;
+	int pegNumber;
+	Algorithm algorithm;
+	bool showColors;
+	bool showIndicators;
+	IndicatorType indicatorType;
+	bool sameColorAllowed;
+	bool autoPutPins;
+	bool autoCloseRows;
+	QLocale locale;
+	int volume;
 
 	QComboBox *pegsNumberComboBox;
 	QComboBox *colorsNumberComboBox;

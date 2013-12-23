@@ -44,14 +44,14 @@ public:
 	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
 
-	explicit Peg(const QPointF &position, int color_number = 0, const bool &show_colors = true, const bool &show_indicators = false,
-	const IndicatorType &indicator_n = IndicatorType::Character, QGraphicsItem *parent = 0);
+	explicit Peg(const QPointF &m_position, int color_number = 0, const bool &show_colors = true, const bool &show_indicators = false,
+	const IndicatorType &indicator_type = IndicatorType::Character, QGraphicsItem *parent = 0);
 	void setColor(int color_number);
-	int getColor() const {return mColor;}
+	int getColor() const {return color;}
 	void setMovable(bool );
 	bool isMovable() const {return isActive;}
-	void setState(const PegState &state);
-	PegState getState() const {return mState;}
+	void setState(const PegState &m_state);
+	PegState getState() const {return pegState;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
@@ -66,20 +66,20 @@ protected slots:
 	void onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n);
 
 private:
-	QPointF mPosition;
-	bool mShowColors;
-	bool mShowIndicators;
-	IndicatorType mIndicatorType;
+	QPointF position;
+	bool showColors;
+	bool showIndicators;
+	IndicatorType indicatorType;
 
 	/*	pressed shadow - the ellipse item takes ownership of
 	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect *pressedEffect;
-	QGraphicsSimpleTextItem *mIndicator;
-	QGraphicsEllipseItem *mGloss;
-	QGraphicsEllipseItem *mCircle;
+	QGraphicsSimpleTextItem *indicator;
+	QGraphicsEllipseItem *gloss;
+	QGraphicsEllipseItem *circle;
 
-	PegState mState;
-	int mColor;
+	PegState pegState;
+	int color;
 	bool isActive;
 };
 

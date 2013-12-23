@@ -24,26 +24,26 @@
 
 Message::Message(const QString &color_name, const QString &font_name, const int &font_size, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
-	mColor(QColor(color_name))
+	color(QColor(color_name))
 {
-	mLayout.setFont(QFont(font_name, font_size, QFont::Bold, false));
-	mLayout.setTextOption(QTextOption(Qt::AlignHCenter));
-	mUpdateRect = QRectF(0, 0, 10, 10);
+	textLayout.setFont(QFont(font_name, font_size, QFont::Bold, false));
+	textLayout.setTextOption(QTextOption(Qt::AlignHCenter));
+	updateRect = QRectF(0, 0, 10, 10);
 }
 //-----------------------------------------------------------------------------
 
-void Message::showMessage(const QString str)
+void Message::showMessage(const QString m_string)
 {
-	mUpdateRect = boundingRect();
-	mLayout.setText(str);
+	updateRect = boundingRect();
+	textLayout.setText(m_string);
 
 	int leading = -3;
 	qreal height = 0;
 	qreal max_width = 0;
 	qreal max_height = 0;
-	mLayout.beginLayout();
+	textLayout.beginLayout();
 
-	QTextLine line = mLayout.createLine();
+	QTextLine line = textLayout.createLine();
 	while (line.isValid())
 	{
 		line.setLineWidth(280);
@@ -51,16 +51,16 @@ void Message::showMessage(const QString str)
 		line.setPosition(QPointF(0, height));
 		height += line.height();
 		max_width = qMax(max_width, line.naturalTextWidth());
-		line = mLayout.createLine();
+		line = textLayout.createLine();
 	}
-	mLayout.endLayout();
+	textLayout.endLayout();
 
-	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
+	float ypos = 4 + (70 - textLayout.boundingRect().height()) / 2;
 
-	max_width = qMax(mUpdateRect.width(), mLayout.boundingRect().width());
-	max_height = qMax(mUpdateRect.height(), mLayout.boundingRect().height() + ypos);
+	max_width = qMax(updateRect.width(), textLayout.boundingRect().width());
+	max_height = qMax(updateRect.height(), textLayout.boundingRect().height() + ypos);
 
-	mUpdateRect = QRectF(0, 0, max_width, max_height + ypos);
+	updateRect = QRectF(0, 0, max_width, max_height + ypos);
 
 	update();
 }
@@ -68,14 +68,14 @@ void Message::showMessage(const QString str)
 
 QRectF Message::boundingRect() const
 {
-	return mUpdateRect;
+	return updateRect;
 }
 //-----------------------------------------------------------------------------
 
 void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
-	painter->setPen(QPen(mColor));
-	float ypos = 4 + (70 - mLayout.boundingRect().height()) / 2;
-	mLayout.draw(painter, QPointF(0, ypos));
+	painter->setPen(QPen(color));
+	float ypos = 4 + (70 - textLayout.boundingRect().height()) / 2;
+	textLayout.draw(painter, QPointF(0, ypos));
 }

@@ -30,10 +30,10 @@ class PinBox : public QObject, public EmptyBox
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit PinBox(const int &pin_number, const QPoint &position, QGraphicsItem *parent = 0);
+	explicit PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent = 0);
 	int getValue() const;
 	void setPins(const QString &codeA, const QString &codeB, const int &color_n);
-	void setBoxState(const BoxState &state = BoxState::Future);
+	void setBoxState(const BoxState &m_state = BoxState::Future);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);

@@ -28,18 +28,18 @@ class QGraphicsEllipseItem;
 class PegBox : public EmptyBox
 {
 public:
-	explicit PegBox(const QPoint &position, QGraphicsItem *parent = 0);
-	bool hasPeg() const {return mPeg != 0;}
-	void setPeg(Peg *peg) {mPeg = peg;}
-	void setPegState(const PegState &state);
+	explicit PegBox(const QPoint &m_position, QGraphicsItem *parent = 0);
+	bool hasPeg() const {return peg != 0;}
+	void setPeg(Peg *m_peg) {peg = m_peg;}
+	void setPegState(const PegState &peg_state);
 	void setPegColor(const int &color_number);
 	int getPegColor() const;
-	void setBoxState(const BoxState &state);
+	void setBoxState(const BoxState &box_state);
 	bool isPegVisible();
 	PegState getPegState() const;
 
 private:
-	Peg *mPeg;
+	Peg *peg;
 };
 
 #endif // PEGBOX_H

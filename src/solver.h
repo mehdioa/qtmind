@@ -56,49 +56,49 @@ public:
 	explicit Solver(const int &peg_no, const int &color_no,
 		 const bool &allow_same_color, QObject *parent = 0);
 	~Solver();
-	bool done () const {return (mResponse == mResponseSpaceSize - 1);}
-	bool setResponse(const int &response);
+	bool done () const {return (response == responseSpaceSize - 1);}
+	bool setResponse(const int &m_response);
 	void run();
 
 protected slots:
-	void onInterupt() {mInterupt = true;}
-	void onStartGuessing(const Algorithm &alg);
+	void onInterupt() {interupt = true;}
+	void onStartGuessing(const Algorithm &m_algorithm);
 	void onReset(const int &peg_no, const int &color_no,
 			   const bool &allow_same_color);
 
 signals:
-	void guessDoneSignal(Algorithm, QString guess, int possible_size, qreal min_weight);
+	void guessDoneSignal(Algorithm m_algorithm, QString m_guess, int possible_size, qreal min_weight);
 
 private:
 	void makeGuess();
 	QString getFirstGuess() const;
-	QString randomPermutation(QString str) const;
-	void permute(QString &code) const;
+	QString shuffle(QString m_string) const;
+	void permute(QString &m_code) const;
 	void createTables();
 	void deleteTables();
 	int compare (const int *codeA, const int *codeB) const;
 	QString arrayToString(const int*) const;
-	void stringToArray(const QString &str, int *arr) const;
-	qreal computeWeight(int *responses) const;
-	void convertBase(int decimal, const int &base,
-					 const int &precision, int *convertedArray);
+	void stringToArray(const QString &m_string, int *m_array) const;
+	qreal computeWeight(int *m_responses) const;
+	void convertBase(int m_decimal, const int &m_base,
+					 const int &m_precision, int *m_convertedArray);
 
 private:
-	int mPegNumber;										//	pegs count, 4
-	int mColorNumber;									//	colors count, 6
-	bool mAllowSameColor;
-	Algorithm mAlgorithm;
-	QString mGuess;										//	the guess number, ?
-	int mResponse;										//	the black-white response code, [0..14]
-	int mResponseSpaceSize;
-	int mAllCodesSize;									//	the size of the complete code space, 6^4 = 1296
-	qreal mLastMinWeight;
-	volatile bool mInterupt;
+	int pegNumber;										//	pegs count, 4
+	int colorNumber;									//	colors count, 6
+	bool allowSameColor;
+	Algorithm algorithm;
+	QString guess;										//	the guess number, ?
+	int response;										//	the black-white response code, [0..14]
+	int responseSpaceSize;
+	int allCodesSize;									//	the size of the complete code space, 6^4 = 1296
+	qreal lastMinWeight;
+	volatile bool interupt;
 
-	int **mAllCodes;									//	all indexes of codes (0...1295)
-	int *mFirstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
-	int mFirstPossibleCodesSize;
-	QList<int> mPossibleCodes;							//	list of all possibles
+	int **allCodes;									//	all indexes of codes (0...1295)
+	int *firstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
+	int firstPossibleCodesSize;
+	QList<int> possibleCodes;							//	list of all possibles
 
 };
 
