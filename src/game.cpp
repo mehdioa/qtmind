@@ -35,20 +35,20 @@
 
 //-----------------------------------------------------------------------------
 
-inline void setBoxStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
+inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
 	foreach (PegBox *box, *boxlist)
 	{
-		box->setBoxState(state_t);
+		box->setState(state_t);
 	}
 }
 //-----------------------------------------------------------------------------
 
-inline void setBoxStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
+inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 {
 	foreach (PinBox *box, *boxlist)
 	{
-		box->setBoxState(state_t);
+		box->setState(state_t);
 	}
 }
 
@@ -116,14 +116,14 @@ void Game::codeRowFilled(const bool &m_filled)
 		switch (m_filled)
 		{
 		case true:
-			pinBoxes.first()->setBoxState(BoxState::Current);
+			pinBoxes.first()->setState(BoxState::Current);
 			gameState = GameState::WaittingPinBoxPress;
 			message->showMessage("Press The Pin Box ...");
 			if (autoCloseRows)
 				onPinBoxPressed();
 			break;
 		default:
-			pinBoxes.first()->setBoxState(BoxState::Future);
+			pinBoxes.first()->setState(BoxState::Future);
 			message->showMessage(tr("Place Your Pegs ... "));
 			break;
 		}
@@ -366,13 +366,13 @@ void Game::onPinBoxPressed()
 
 	pinBoxes.first()->setPins(masterCode, guess, colorNumber);
 	bool isDone = (pinBoxes.first()->getValue() == (pegNumber + 1)*(pegNumber + 2)/2 - 1);
-	pinBoxes.first()->setBoxState(BoxState::Past);
+	pinBoxes.first()->setState(BoxState::Past);
 	pinBoxes.removeFirst();	// the pinbox goes to past
 
 	//old row of codes goes to past and are removed from current
 	for(int i = 0; i < pegNumber; ++i)
 	{
-		currentBoxes.first()->setBoxState(BoxState::Past);
+		currentBoxes.first()->setState(BoxState::Past);
 		currentBoxes.removeFirst();
 	}
 
@@ -381,20 +381,20 @@ void Game::onPinBoxPressed()
 		gameState = GameState::Win;
 		message->showMessage(tr("Success! You Win"));
 
-		setBoxStateOfList(&masterBoxes, BoxState::Past);
-		setBoxStateOfList(&currentBoxes, BoxState::Past);
-		setBoxStateOfList(&pinBoxes, BoxState::Future);
-		setBoxStateOfList(&pegBoxes, BoxState::Future);
+		setStateOfList(&masterBoxes, BoxState::Past);
+		setStateOfList(&currentBoxes, BoxState::Past);
+		setStateOfList(&pinBoxes, BoxState::Future);
+		setStateOfList(&pegBoxes, BoxState::Future);
 
 	}
 	else if (codeBoxes.isEmpty()) //out of more row of codes, a fail
 	{
 		gameState = GameState::Lose;
 		message->showMessage(tr("Game Over! You Failed"));
-		setBoxStateOfList(&masterBoxes, BoxState::Past);
-		setBoxStateOfList(&currentBoxes, BoxState::Past);
-		setBoxStateOfList(&pinBoxes, BoxState::Future);
-		setBoxStateOfList(&pegBoxes, BoxState::Future);
+		setStateOfList(&masterBoxes, BoxState::Past);
+		setStateOfList(&currentBoxes, BoxState::Past);
+		setStateOfList(&pinBoxes, BoxState::Future);
+		setStateOfList(&pegBoxes, BoxState::Future);
 	}
 	else // continue the game
 	{
@@ -402,7 +402,7 @@ void Game::onPinBoxPressed()
 		for(int i = 0; i < pegNumber; ++i) //put the next codeboxes in action
 		{
 			currentBoxes.append(codeBoxes.first());
-			codeBoxes.first()->setBoxState(BoxState::Current);
+			codeBoxes.first()->setState(BoxState::Current);
 			codeBoxes.removeFirst();
 			gameState = GameState::WaittingPinBoxPress;
 		}
@@ -425,7 +425,7 @@ void Game::onRevealOnePeg()
 	{
 		foreach (PegBox *box, masterBoxes)
 		{
-			if(box->getBoxState() != BoxState::Past)
+			if(box->getState() != BoxState::Past)
 			{
 				if (box == masterBoxes.last())
 				{
@@ -434,7 +434,7 @@ void Game::onRevealOnePeg()
 				}
 				else
 				{
-					box->setBoxState(BoxState::Past);
+					box->setState(BoxState::Past);
 					return;
 				}
 			}
@@ -450,10 +450,10 @@ void Game::onResigned()
 		gameState = GameState::None;
 		message->showMessage(tr("You Resign"));
 
-		setBoxStateOfList(&masterBoxes, BoxState::Past);
-		setBoxStateOfList(&currentBoxes, BoxState::Past);
-		setBoxStateOfList(&pinBoxes, BoxState::Future);
-		setBoxStateOfList(&pegBoxes, BoxState::Future);
+		setStateOfList(&masterBoxes, BoxState::Past);
+		setStateOfList(&currentBoxes, BoxState::Past);
+		setStateOfList(&pinBoxes, BoxState::Future);
+		setStateOfList(&pegBoxes, BoxState::Future);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -473,7 +473,7 @@ void Game::onOkButtonPressed()
 	okButton->setVisible(false);
 
 	/*	we are done with the pinbox. Make it past and remove it from pinBoxes */
-	pinBoxes.first()->setBoxState(BoxState::Past);
+	pinBoxes.first()->setState(BoxState::Past);
 	pinBoxes.removeFirst();
 
 	/*	Here we check if the user inputs 4 blacks*/
@@ -502,8 +502,8 @@ void Game::onDoneButtonPressed()
 	doneButton->setVisible(false);
 	doneButton->setEnabled(false);
 
-	setBoxStateOfList(&currentBoxes, BoxState::Past);	//	master code boxes become past for no interaction
-	setBoxStateOfList(&pegBoxes, BoxState::Future);	//	freezing the peg boxes
+	setStateOfList(&currentBoxes, BoxState::Past);	//	master code boxes become past for no interaction
+	setStateOfList(&pegBoxes, BoxState::Future);	//	freezing the peg boxes
 
 	masterCode = "";
 	foreach(PegBox *box, currentBoxes)
@@ -535,11 +535,11 @@ void Game::onGuessReady(const Algorithm &alg, const QString &m_guess,
 		for(int i = 0; i < pegNumber; ++i)
 		{
 			createPegForBox(codeBoxes.first(), guess[i].digitValue());
-			codeBoxes.first()->setBoxState(BoxState::Past);
+			codeBoxes.first()->setState(BoxState::Past);
 			codeBoxes.removeFirst();
 		}
 		message->showMessage(tr("Please Put Pins And Press OK"));
-		pinBoxes.first()->setBoxState(BoxState::None);
+		pinBoxes.first()->setState(BoxState::None);
 		okButton->setEnabled(true);
 		okButton->setVisible(true);
 		okButton->setPos(pinBoxes.first()->pos()-QPoint(0, 39));
@@ -611,7 +611,7 @@ void Game::playCodeMaster()
 	for(int i = 0; i < pegNumber; ++i) //initializing currentrow
 	{
 		currentBoxes.append(masterBoxes.first());
-		masterBoxes.first()->setBoxState(BoxState::Current);
+		masterBoxes.first()->setState(BoxState::Current);
 		masterBoxes.removeFirst();
 	}
 
@@ -637,7 +637,7 @@ void Game::playCodeBreaker()
 		int realcolor = digits.at(color).digitValue();
 		masterCode.append(QString::number(realcolor));
 		createPegForBox(box, realcolor);
-		box->setBoxState(BoxState::None);
+		box->setState(BoxState::None);
 		if(!sameColorAllowed)
 		{
 			digits.remove(color, 1);
@@ -648,7 +648,7 @@ void Game::playCodeBreaker()
 	for(int i = 0; i < pegNumber; ++i) //initializing currentrow
 	{
 		currentBoxes.append(codeBoxes.first());
-		codeBoxes.first()->setBoxState(BoxState::Current);
+		codeBoxes.first()->setState(BoxState::Current);
 		codeBoxes.removeFirst();
 	}
 

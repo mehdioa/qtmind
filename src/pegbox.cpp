@@ -53,13 +53,13 @@ PegState PegBox::getPegState() const
 }
 //-----------------------------------------------------------------------------
 
-void PegBox::setBoxState(const BoxState &box_state)
+void PegBox::setState(const BoxState &m_state)
 {
-	boxState = box_state;
+	state = m_state;
 
 	if (peg)
 	{
-		switch (boxState) {
+		switch (state) {
 		case BoxState::Past:
 			peg->setState(PegState::Underneath);
 			break;

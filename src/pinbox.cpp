@@ -41,7 +41,7 @@ PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *p
 		pins.append(pin);
 		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
 	}
-	setBoxState(BoxState::Future);
+	setState(BoxState::Future);
 }
 //-----------------------------------------------------------------------------
 
@@ -95,10 +95,10 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &colo
 }
 //-----------------------------------------------------------------------------
 
-void PinBox::setBoxState(const BoxState &m_state)
+void PinBox::setState(const BoxState &m_state)
 {
-	boxState = m_state;
-	switch (boxState) {
+	state = m_state;
+	switch (state) {
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
@@ -124,6 +124,6 @@ void PinBox::setBoxState(const BoxState &m_state)
 
 void PinBox::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	if (boxState == BoxState::Current)
+	if (state == BoxState::Current)
 		emit pinBoxPressSignal();
 }

@@ -34,7 +34,7 @@ public:
 	void setPegState(const PegState &peg_state);
 	void setPegColor(const int &color_number);
 	int getPegColor() const;
-	void setBoxState(const BoxState &box_state);
+	void setState(const BoxState &m_state);
 	bool isPegVisible();
 	PegState getPegState() const;
 
