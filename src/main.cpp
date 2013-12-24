@@ -23,10 +23,10 @@
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	app.setApplicationName("QtMind");
-	app.setApplicationVersion(VERSIONSTR);
-	app.setOrganizationDomain("http://omidnikta.github.io/qtmind");
-	app.setOrganizationName("QtMind");
+	app.setApplicationName(APP_NAME);
+	app.setApplicationVersion(VERSION);
+	app.setOrganizationName(ORG_NAME);
+	app.setOrganizationDomain(ORG_DOMAIN);
 
 	MainWindow w;
 	w.setWindowIcon(QIcon("://icons/hicolor/64x64/qtmind.png"));
