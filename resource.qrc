@@ -8,12 +8,7 @@
         <file>icons/modemaster.png</file>
         <file>icons/resign.png</file>
         <file>icons/modebreaker.png</file>
-        <file>icons/hicolor/16x16/qtmind.png</file>
-        <file>icons/hicolor/32x32/qtmind.png</file>
         <file>icons/hicolor/64x64/qtmind.png</file>
-        <file>icons/hicolor/128x128/qtmind.png</file>
-        <file>icons/hicolor/256x256/qtmind.png</file>
-        <file>icons/hicolor/512x512/qtmind.png</file>
         <file>icons/reveal_one_peg.png</file>
         <file>sounds/button_press.wav</file>
         <file>sounds/pegdrop.wav</file>

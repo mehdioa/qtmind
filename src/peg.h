@@ -35,6 +35,7 @@ enum class PegState
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
 
+
 class Peg : public QObject, public QGraphicsEllipseItem
 {
 	Q_OBJECT

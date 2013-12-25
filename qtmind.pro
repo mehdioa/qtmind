@@ -29,7 +29,7 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp\
-		src/mainwindow.cpp \
+	src/mainwindow.cpp \
 	src/peg.cpp \
 	src/button.cpp \
 	src/pegbox.cpp \
@@ -86,3 +86,17 @@ TRANSLATIONS = translations/qtmind_ara.ts \
 
 OTHER_FILES += \
 	qtmind.desktop
+
+unix:!macx { # installation on Unix-ish platforms
+	isEmpty(BIN_DIR):BIN_DIR = $$INSTALL_PREFIX/bin
+	isEmpty(ICON_DIR):ICON_DIR = $$DATA_DIR/pixmaps
+	isEmpty(DESKTOP_DIR):DESKTOP_DIR = $$DATA_DIR/applications
+
+	target.path = $$BIN_DIR
+	icon.files = icons/hicolor/128x128/qtmind.png
+	icon.path = $$ICON_DIR
+	desktop.files = qtmind.desktop
+	desktop.path = $$DESKTOP_DIR
+	INSTALLS = target icon desktop
+}
+

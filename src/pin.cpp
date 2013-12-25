@@ -46,9 +46,11 @@ void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-	#if QT_VERSION < 0x050000
-		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
-	#endif
+#if QT_VERSION < 0x050000
+	QGraphicsEllipseItem::mouseDoubleClickEvent(event);
+#else
+	Q_UNUSED(event);
+#endif
 }
 //-----------------------------------------------------------------------------
 
