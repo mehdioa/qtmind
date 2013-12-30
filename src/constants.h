@@ -22,13 +22,6 @@
 
 #include <QString>
 
-static const QString APP_NAME        = "qtmind";
-static const QString ORG_NAME        = "qtmind";
-static const QString ORG_DOMAIN      = "http://omidnikta.github.io/qtmind";
-static const QString VERSION         = "0.6.1";
-static const QString AUTHOR_NAME     = "Omid Nikta";
-
-
 static const int MIN_COLOR_NUMBER	= 2;
 static const int MAX_COLOR_NUMBER	= 10;
 
@@ -40,12 +33,6 @@ enum class Algorithm
 	MostParts,
 	WorstCase,
 	ExpectedSize
-};
-
-enum class IndicatorType
-{
-	Character,
-	Digit
 };
 
 #endif // CONSTANTS_H

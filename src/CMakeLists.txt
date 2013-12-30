@@ -1,25 +1,32 @@
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
-#option(BUILD_WERROR "Build with -Werror" ON)
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}  -std=c++0x")
+option(BUILD_WERROR "Build with -Werror" ON)
 
-# if(BUILD_WERROR)
-#   if (LINUX)
-#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-#   endif (LINUX)
-# endif(BUILD_WERROR)
+if(BUILD_WERROR)
+  if (LINUX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  endif (LINUX)
+endif(BUILD_WERROR)
 
-include_directories(
-#	${CMAKE_SOURCE_DIR} 
-	${CMAKE_CURRENT_BINARY_DIR} 
-#	${CMAKE_CURRENT_SOURCE_DIR}
-)
+
+ include_directories(
+# 	${CMAKE_SOURCE_DIR} 
+ 	${CMAKE_CURRENT_BINARY_DIR} 
+# 	${CMAKE_CURRENT_SOURCE_DIR}
+ )
 
 set (QTMIND_SOURCES 
+	boardaid.cpp
 	button.cpp
 	emptybox.cpp
 	game.cpp
+	gamerules.cpp
+	gamesounds.cpp
+	guesselement.cpp
+	indicator.cpp
 	main.cpp
 	mainwindow.cpp
 	message.cpp
@@ -46,7 +53,7 @@ set (QTMIND_SOURCES
 # 	solver.h
 # )
 
-set(QTMIND_FORMS
+set(QTMIND_UI
 	mainwindow.ui
 	preferences.ui
 )
@@ -55,22 +62,22 @@ set(QTMIND_RESOURCES
 	../resource.qrc
 )
 
-#QT4_WRAP_CPP(QTMIND_HEADERS_MOC ${QTMIND_HEADERS})
-QT4_WRAP_UI(QTMIND_FORMS_HEADERS ${QTMIND_FORMS})
-QT4_ADD_RESOURCES(QTMIND_RESOURCES_RCC ${QTMIND_RESOURCES})
+#qt4_wrap_cpp(QTMIND_HEADERS_MOC ${QTMIND_HEADERS})
+qt4_wrap_ui(QTMIND_UI_HEADERS ${QTMIND_UI})
+qt4_add_resources(QTMIND_RESOURCES_RCC ${QTMIND_RESOURCES})
 
 
 # ------------------------------------------------------------------------------
 #  TRANSLATION
 # ------------------------------------------------------------------------------
-option (UPDATE_TRANSLATIONS "Update source translation ../translations/*.ts files")
-set (FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${QTMIND_SOURCES})
-
-if (UPDATE_TRANSLATIONS)
-  QT4_CREATE_TRANSLATION(QTMIND_QM_FILES ${FILES_TO_TRANSLATE} ${TS_FILES})
-else (UPDATE_TRANSLATIONS)
-  QT4_ADD_TRANSLATION(QTMIND_QM_FILES ${TS_FILES})
-endif (UPDATE_TRANSLATIONS)
+# option (UPDATE_TRANSLATIONS "Update source translation ../translations/*.ts files")
+# set (FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${QTMIND_SOURCES})
+# 
+# if (UPDATE_TRANSLATIONS)
+#   QT4_CREATE_TRANSLATION(QTMIND_QM_FILES ${FILES_TO_TRANSLATE} ${TS_FILES})
+# else (UPDATE_TRANSLATIONS)
+#   QT4_ADD_TRANSLATION(QTMIND_QM_FILES ${TS_FILES})
+# endif (UPDATE_TRANSLATIONS)
 
 # # ------------------------------------------------------------------------------
 # #  BUILDING
@@ -78,12 +85,12 @@ endif (UPDATE_TRANSLATIONS)
 add_executable(qtmind 
 #	${QT_DEFINITIONS}
 	${QTMIND_SOURCES}
-	${QTMIND_FORMS_HEADERS}
+	${QTMIND_UI_HEADERS}
 	${QTMIND_RESOURCES_RCC}
-#	${QTMIND_QM_FILES}
+#	${QTMIND_QM}
 )
 
-set_target_properties(qtmind PROPERTIES AUTOMOC TRUE)
+#set_target_properties(qtmind PROPERTIES AUTOMOC TRUE)
 
 #to include translation file in binary
 set(EXECUTABLE_OUTPUT_PATH ..)
@@ -97,5 +104,5 @@ target_link_libraries(qtmind ${QT_LIBRARIES})
 install( TARGETS qtmind DESTINATION /usr/bin/ )
 
 # -- install translations files
-install(FILES ${QTMIND_QM_FILES} DESTINATION /usr/share/qtmind/)
+#install(FILES ${QTMIND_QM} DESTINATION /usr/share/qtmind/)
   

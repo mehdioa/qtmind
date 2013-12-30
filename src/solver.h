@@ -20,7 +20,6 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include "constants.h"
 #include <QList>
 #include <QString>
 #include <QThread>
@@ -48,26 +47,27 @@
  *			f(b, w) = (b+w)(b+w+1)/2 + b;
  */
 
+class GameRules;
+class GuessElement;
+
 class Solver : public QThread
 {
 	Q_OBJECT
 
 public:
-	explicit Solver(const int &peg_no, const int &color_no,
-		 const bool &allow_same_color, QObject *parent = 0);
+	explicit Solver(GameRules *game_rules, GuessElement *guess_element, QObject *parent = 0);
 	~Solver();
-	bool done () const {return (response == responseSpaceSize - 1);}
+	bool done () const;
 	bool setResponse(const int &m_response);
 	void run();
 
 protected slots:
 	void onInterupt() {interupt = true;}
-	void onStartGuessing(const Algorithm &m_algorithm);
-	void onReset(const int &peg_no, const int &color_no,
-			   const bool &allow_same_color);
+	void onStartGuessing();
+	void onReset();
 
 signals:
-	void guessDoneSignal(Algorithm m_algorithm, QString m_guess, int possible_size, qreal min_weight);
+	void guessDoneSignal();
 
 private:
 	void makeGuess();
@@ -80,26 +80,20 @@ private:
 	QString arrayToString(const int*) const;
 	void stringToArray(const QString &m_string, int *m_array) const;
 	qreal computeWeight(int *m_responses) const;
-	void convertBase(int m_decimal, const int &m_base,
-					 const int &m_precision, int *m_convertedArray);
+	void convertBase(const int &number);
+	void setFirstPossibles();
 
 private:
-	int pegNumber;										//	pegs count, 4
-	int colorNumber;									//	colors count, 6
-	bool allowSameColor;
-	Algorithm algorithm;
-	QString guess;										//	the guess number, ?
-	int response;										//	the black-white response code, [0..14]
+	GameRules *gameRules;
+	GuessElement *guessElement;
 	int responseSpaceSize;
 	int allCodesSize;									//	the size of the complete code space, 6^4 = 1296
-	qreal lastMinWeight;
 	volatile bool interupt;
 
-	int **allCodes;									//	all indexes of codes (0...1295)
+	int **allCodes;										//	all indexes of codes (0...1295)
 	int *firstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 	int firstPossibleCodesSize;
 	QList<int> possibleCodes;							//	list of all possibles
-
 };
 
 #endif // SOLVER_H

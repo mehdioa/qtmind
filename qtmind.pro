@@ -39,7 +39,13 @@ SOURCES += src/main.cpp\
     src/pin.cpp \
     src/preferences.cpp \
     src/solver.cpp \
-    src/game.cpp
+    src/game.cpp \
+    src/gamerules.cpp \
+    src/indicator.cpp \
+    src/guesselement.cpp \
+    src/boardaid.cpp \
+    src/boardsounds.cpp \
+    src/boardfont.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -52,7 +58,14 @@ HEADERS  += src/mainwindow.h \
     src/pin.h \
     src/preferences.h \
     src/solver.h \
-    src/game.h
+    src/game.h \
+    src/appinfo.h \
+    src/gamerules.h \
+    src/indicator.h \
+    src/guesselement.h \
+    src/boardaid.h \
+    src/boardsounds.h \
+    src/boardfont.h
 
 FORMS    += \
     src/preferences.ui \

@@ -25,6 +25,7 @@
 #include <QBrush>
 
 class Board;
+class BoardFont;
 
 class Button : public QObject, public QGraphicsItem
 {
@@ -32,10 +33,10 @@ class Button : public QObject, public QGraphicsItem
 	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit Button(const int &buttonWidth = 152, const QString &str = "",
-					const QString &font_name = "Sans Serif", const int &font_size = 12);
+	explicit Button(const BoardFont &board_font, const int &buttonWidth = 152, const QString &str = "");
 	void setPressable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
+	void setLabel(QString label){mLabel = label;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);

@@ -19,6 +19,7 @@
 
 #include "preferences.h"
 #include "ui_preferences.h"
+#include "boardaid.h"
 
 #include <QFile>
 #include <QSettings>
@@ -35,24 +36,24 @@ QString Preferences::mAppName;
 
 //-----------------------------------------------------------------------------
 
-Preferences::Preferences(QLocale *locale_n, QWidget *parent) :
+Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::Preferences)
+	ui(new Ui::Preferences),
+	boardAid(board_aid)
 {
 	ui->setupUi(this);
-	setLayoutDirection(locale_n->textDirection());
+	setLayoutDirection(boardAid->locale.textDirection());
 
 	for(int i = 1; i < 21; ++i)
 	{
-		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(locale_n->toString(i)).arg(tr("Points")));
+		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(boardAid->locale.toString(i)).arg(tr("Points")));
 	}
-	ui->fontSizeComboBox->setCurrentIndex(QSettings().value("FontSize", 12).toInt());
-	ui->fontComboBox->setCurrentFont(QFont(QSettings().value("FontName", "Sans Serif").toString()));
-	ui->volumeVerticalSlider->setValue(QSettings().value("Volume", 50).toInt());
-	ui->showColorsCheckBox->setChecked(QSettings().value("ShowColors", 1).toBool());
-	ui->characterRadioButton->setChecked((IndicatorType) QSettings().value("IndicatorType", 0).toInt() == IndicatorType::Character);
-	ui->digitRadioButton->setChecked((IndicatorType) QSettings().value("IndicatorType", 0).toInt() == IndicatorType::Digit);
-	ui->noteTextLabel->setText(tr("Language change needs restart."));
+	ui->fontComboBox->setCurrentFont(boardAid->boardFont.fontName);
+	ui->fontSizeComboBox->setCurrentIndex(boardAid->boardFont.fontSize);
+	ui->volumeVerticalSlider->setValue(boardAid->boardSounds.getVolume());
+	ui->showColorsCheckBox->setChecked(boardAid->indicator.showColors);
+	ui->characterRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Character);
+	ui->digitRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Digit);
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QString translation;
@@ -170,9 +171,11 @@ void Preferences::accept()
 	QDialog::accept();
 	mCurrent = ui->languageComboBox->itemData(ui->languageComboBox->currentIndex()).toString();
 	QSettings().setValue("Locale/Language", mCurrent);
-	QSettings().setValue("FontName", ui->fontComboBox->currentText());
-	QSettings().setValue("FontSize", ui->fontSizeComboBox->currentIndex());
-	QSettings().setValue("Volume", ui->volumeVerticalSlider->value());
-	QSettings().setValue("ShowColors", (int) ui->showColorsCheckBox->isChecked());
-	QSettings().setValue("IndicatorType", (int) ui->digitRadioButton->isChecked());
+	QLocale newLocale(mCurrent);
+	boardAid->locale = newLocale;
+	boardAid->boardFont.fontName = ui->fontComboBox->currentText();
+	boardAid->boardFont.fontSize = ui->fontSizeComboBox->currentIndex();
+	boardAid->boardSounds.setVolume(ui->volumeVerticalSlider->value());
+	boardAid->indicator.showColors = ui->showColorsCheckBox->isChecked();
+	boardAid->indicator.indicatorType = (ui->digitRadioButton->isChecked() ? IndicatorType::Digit : IndicatorType::Character);
 }

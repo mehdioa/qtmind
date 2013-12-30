@@ -10,7 +10,6 @@
         <file>icons/modebreaker.png</file>
         <file>icons/hicolor/64x64/qtmind.png</file>
         <file>icons/reveal_one_peg.png</file>
-        <file>sounds/button_press.wav</file>
         <file>sounds/pegdrop.wav</file>
         <file>sounds/pegrefuse.wav</file>
         <file>sounds/pin.wav</file>

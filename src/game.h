@@ -21,13 +21,9 @@
 #define GAME_H
 
 #include "constants.h"
+#include "guesselement.h"
 #include <QGraphicsView>
 #include <QLocale>
-
-enum class GameMode {
-	Codemaker,		//HUMAN BREAKS THE CODE
-	Codebreaker		//MACHINE BREAKS THE CODE
-};
 
 enum class GameState
 {
@@ -49,33 +45,32 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
-class QSoundEffect;
+class GameRules;
+class BoardAid;
 
 class Game: public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	explicit Game(QWidget *parent = 0);
+	explicit Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent = 0);
 	~Game();
 	void play();
-	void autoPutPinsCloseRow(const bool &set_pins, const bool &close_row);
-	void reset(const int &peg_n, const int &color_n, const GameMode &mode_n,
-			   const bool &samecolor, const Algorithm &algorithm_n,
-			   const bool &set_pins, const bool &close_row, QLocale *locale_n,
-			   const bool &show_colors, const bool &show_indicators,
-			   const IndicatorType &indicator_n);
+	void stop();
 	GameState getState() const {return gameState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
+	void changeIndicators();
+	bool isRunning();
+	void retranslateTexts();
 
 protected:
 	void drawBackground(QPainter *painter, const QRectF &rect);
 	void resizeEvent(QResizeEvent *event);
 
 signals:
-	void showIndicatorsSignal(bool, bool, IndicatorType);
-	void startGuessingSignal(Algorithm);
-	void resetGameSignal(int peg_no, int color_no, bool allow_same_color);
+	void showIndicatorsSignal();
+	void startGuessingSignal();
+	void resetGameSignal();
 	void interuptSignal();
 
 private slots:
@@ -84,12 +79,9 @@ private slots:
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
 	void onPinBoxPressed();
-	void onShowIndicators(bool show_colors, bool show_indicators, IndicatorType);
 	void onRevealOnePeg();
 	void onResigned();
-	void onGuessReady(const Algorithm &alg, const QString &m_guess,
-					  const int &m_possibleSize, const qreal &m_lastWeight);
-	void onPreferencesChanged();
+	void onGuessReady();
 
 private:
 	void playCodeMaster();
@@ -98,8 +90,9 @@ private:
 	void createPegForBox(PegBox *m_box, int m_color, bool m_underneath = false,
 						 bool m_plain = false);// backPeg is used to put an extra peg under initial pegs,
 	void codeRowFilled(const bool &m_filled);
-	void showTranslatedInformation(const Algorithm &m_algorithm, const int &m_possibleSize, const qreal &m_minWeight);
+	void showTranslatedInformation();
 	void initializeScene();
+	void freezeAllLists();
 
 private:
 	QList<PinBox *> pinBoxes;	//	black-white pins
@@ -109,33 +102,14 @@ private:
 	QList<PegBox *> masterBoxes;	//	the mastercode boxes
 
 	GameState gameState;
-	GameMode gameMode;
-	int pegNumber;
-	int colorNumber;
-	bool sameColorAllowed;
-	bool autoPutPins;
-	bool autoCloseRows;
-	bool done;
-	int fontSize;
-	QString fontName;
-	Algorithm algorithm;
-	bool showColors;
-	bool showIndicators;
-	IndicatorType indicatorType;
-	QString masterCode;
-	QString guess;
-	QLocale *locale;
+	GameRules *gameRules;
+	BoardAid *boardAid;
+	GuessElement guessElement;
 	Solver *solver;
 	Button *okButton;
 	Button *doneButton;
 	Message *message;
 	Message *information;
-
-#if QT_VERSION >= 0x050000
-	QSoundEffect *pegDropSound;
-	QSoundEffect *pegDropRefuseSound;
-	QSoundEffect *buttonPressSound;
-#endif
 };
 
 #endif // GAME_H

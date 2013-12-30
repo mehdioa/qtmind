@@ -22,6 +22,8 @@
 
 #include <QDialog>
 
+class BoardAid;
+
 namespace Ui {
 class Preferences;
 }
@@ -31,7 +33,7 @@ class Preferences : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Preferences(QLocale *locale_n, QWidget *parent = 0);
+	explicit Preferences(BoardAid *board_aid, QWidget *parent = 0);
 	~Preferences();
 
 	static void loadTranslation(const QString &appname);
@@ -49,7 +51,7 @@ private:
 	static QString mCurrent; /**< stored application language */
 	static QString mPath; /**< location of translations; found in loadTranslator() */
 	static QString mAppName; /**< application name passed to loadTranslator() */
-
+	BoardAid *boardAid;
 };
 
 #endif // PREFERENCES_H

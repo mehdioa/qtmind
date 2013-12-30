@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include "peg.h"
+#include "indicator.h"
 #include <QPen>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
@@ -40,12 +41,10 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 
 const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
 
-Peg::Peg(const QPointF &m_position, int color_number, const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_type, QGraphicsItem *parent):
+Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent):
 	QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
 	position(m_position),
-	showColors(show_colors),
-	showIndicators(show_indicators),
-	indicatorType(indicator_type),
+	indicator(indicator_s),
 	isActive(false)
 {
 	setPen(Qt::NoPen);
@@ -62,11 +61,11 @@ Peg::Peg(const QPointF &m_position, int color_number, const bool &show_colors, c
 	gloss->setBrush(lgrad);
 	gloss->setPen(Qt::NoPen);
 
-	indicator = new QGraphicsSimpleTextItem(this);
+	indicatorText = new QGraphicsSimpleTextItem(this);
 	QFont font("Monospace", 15, QFont::Bold, false);
 	font.setStyleHint(QFont::TypeWriter);
-	indicator->setFont(font);
-	indicator->setPos(14,8);
+	indicatorText->setFont(font);
+	indicatorText->setPos(14,8);
 
 	QLinearGradient cgrad(2, 2, 35, 35);
 	cgrad.setColorAt(0.0, QColor(80, 80, 80));
@@ -87,7 +86,7 @@ Peg::Peg(const QPointF &m_position, int color_number, const bool &show_colors, c
 void Peg::setColor(int color_number)
 {
 	color = (-1 < color_number && color_number < 10) ? color_number : 0;
-	if (showColors || !showIndicators)
+	if (indicator->forceColor())
 	{
 		QRadialGradient gradient(20, 0, 60, 20, 0);
 		gradient.setColorAt(0, PegColors[color][0]);
@@ -102,8 +101,8 @@ void Peg::setColor(int color_number)
 		setBrush(gradient);
 	}
 
-	indicator->setText(OrderedChars[(int)indicatorType][color]);
-	indicator->setVisible(showIndicators);
+	indicatorText->setText(OrderedChars[(int)indicator->indicatorType][color]);
+	indicatorText->setVisible(indicator->showIndicators);
 }
 //-----------------------------------------------------------------------------
 
@@ -133,7 +132,7 @@ void Peg::setState(const PegState &m_state)
 		setVisible(true);
 		setMovable(false);
 		circle->setVisible(true);
-		indicator->setVisible(false);
+		indicatorText->setVisible(false);
 		gloss->setBrush(Qt::NoBrush);
 		setBrush(Qt::NoBrush);
 		break;
@@ -198,10 +197,7 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
-void Peg::onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n)
+void Peg::onShowIndicators()
 {
-	showColors = show_colors;
-	showIndicators = show_indicators;
-	indicatorType = indicator_n;
 	setColor(color);
 }

@@ -34,6 +34,7 @@ enum class PegState
 
 class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
+class Indicator;
 
 
 class Peg : public QObject, public QGraphicsEllipseItem
@@ -45,8 +46,7 @@ public:
 	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
 
-	explicit Peg(const QPointF &m_position, int color_number = 0, const bool &show_colors = true, const bool &show_indicators = false,
-	const IndicatorType &indicator_type = IndicatorType::Character, QGraphicsItem *parent = 0);
+	explicit Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent = 0);
 	void setColor(int color_number);
 	int getColor() const {return color;}
 	void setMovable(bool );
@@ -64,18 +64,16 @@ signals:
 	void mouseDoubleClickSignal(Peg *);
 
 protected slots:
-	void onShowIndicators(const bool &show_colors, const bool &show_indicators, const IndicatorType &indicator_n);
+	void onShowIndicators();
 
 private:
 	QPointF position;
-	bool showColors;
-	bool showIndicators;
-	IndicatorType indicatorType;
+	Indicator *indicator;
 
 	/*	pressed shadow - the ellipse item takes ownership of
 	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect *pressedEffect;
-	QGraphicsSimpleTextItem *indicator;
+	QGraphicsSimpleTextItem *indicatorText;
 	QGraphicsEllipseItem *gloss;
 	QGraphicsEllipseItem *circle;
 

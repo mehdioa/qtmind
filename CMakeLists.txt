@@ -1,25 +1,35 @@
 # ------------------------------------------------------------------------------
 #  QTMIND CMAKE FILE
 # ------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 2.8.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 project(qtmind)
-set(QTMIND_MAJOR_VERSION 0)
-set(QTMIND_MINOR_VERSION 6)
-set(QTMIND_PATCH_VERSION 1)
-set(QTMIND_VERSION ${QTMIND_MAJOR_VERSION}.${QTMIND_MINOR_VERSION}.${QTMIND_PATCH_VERSION})
 
-# ------------------------------------------------------------------------------
-#  build def
-# ------------------------------------------------------------------------------
-#ADD_DEFINITIONS( -DTEST_FLAG )
-#ADD_DEFINITIONS(-Wall -Wextra )
+# Recover canonical (x.y.z) version number from `src/appinfo.h`.
+file(STRINGS ${PROJECT_SOURCE_DIR}/src/appinfo.h qtmind_VER_MAJOR REGEX "VER_MAJOR")
+string(REGEX MATCH "([0-9]+)" qtmind_VER_MAJOR ${qtmind_VER_MAJOR})
+file(STRINGS ${PROJECT_SOURCE_DIR}/src/appinfo.h qtmind_VER_MINOR REGEX "VER_MINOR")
+string(REGEX MATCH "([0-9]+)" qtmind_VER_MINOR ${qtmind_VER_MINOR})
+file(STRINGS ${PROJECT_SOURCE_DIR}/src/appinfo.h qtmind_VER_PATCH REGEX "VER_BUGFIX")
+string(REGEX MATCH "([0-9]+)" qtmind_VER_PATCH ${qtmind_VER_PATCH})
+SET(QTMIND_VERSION ${qtmind_VER_MAJOR}.${qtmind_VER_MINOR}.${qtmind_VER_PATCH})
+
+
+if(${CMAKE_BUILD_TYPE} MATCHES "Release")
+  add_definitions(-DQT_NO_DEBUG)
+  add_definitions(-DQT_GUI_LIB)
+  add_definitions(-DQT_CORE_LIB)
+  add_definitions(-DQT_SHARED)
+endif(${CMAKE_BUILD_TYPE} MATCHES "Release")
+#unset(CMAKE_REQUIRED_FLAGS)
 
 
 # ------------------------------------------------------------------------------
 #  EXTERNAL PACKAGE
 # ------------------------------------------------------------------------------
-find_package( Qt4 4.7.0 REQUIRED QtCore QtGui)
+find_package( Qt4 4.5.0 REQUIRED QtCore QtGui)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #FIND_PACKAGE(Qt5Widgets)
 # ------------------------------------------------------------------------------
 #  includeS
@@ -29,6 +39,7 @@ include(CheckCXXCompilerFlag)
 include(FindPkgConfig)
 include(cmake/Deb.cmake)
 include(cmake/Rpm.cmake)
+include(cmake/Summary.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 if (CMAKE_CXX_COMPILER MATCHES ".*clang")
@@ -36,11 +47,10 @@ if (CMAKE_CXX_COMPILER MATCHES ".*clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
 endif ()
 
-set(CMAKE_REQUIRED_FLAGS "-std=c++0x")
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
-	${QT_INCLUDES}
+#	${QT_INCLUDES}
 )
 
 file( GLOB TRANS_FILES ${CMAKE_SOURCE_DIR}/translation/qtmind_*.ts)
@@ -58,7 +68,7 @@ add_subdirectory(src)
 #  INSTALLATION
 # ------------------------------------------------------------------------------
 # -- install binary
-#install( TARGETS qtmind DESTINATION /usr/bin/ )
+
 
 # -- install destop file
 install(FILES qtmind.desktop  DESTINATION /usr/share/applications/)
@@ -76,4 +86,9 @@ install(FILES icons/hicolor/512x512/qtmind.png DESTINATION share/icons/hicolor/5
 # ------------------------------------------------------------------------------
 #  UN-INSTALL SUPPORT
 # ------------------------------------------------------------------------------
+add_custom_target(uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+
+# Show a summary of what we have enabled
+summary_show()
 

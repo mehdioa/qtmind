@@ -23,6 +23,8 @@
 #include <QMainWindow>
 #include <QLocale>
 #include "constants.h"
+#include "gamerules.h"
+#include "boardaid.h"
 #include "game.h"
 
 class QMenu;
@@ -45,40 +47,34 @@ public:
 	~MainWindow();
 
 protected:
-	void closeEvent(QCloseEvent *event); /** Override parent function to save window geometry. */
+	void closeEvent(QCloseEvent *event);
 
 private slots:
-	void onSetPinsCloseRowAutomatically();
+	void onAutoSetPins();
+	void onAutoCloseRows();
 	void onIndicatorChanged();
 	void onGameModeChanged(QAction*);
-	void onUpdateNumbers();
 	void onNewGame();
 	void onPreferences();
 	void onQtMindHomePage();
 	void onAbout();
-	void onShowContextMenu(const QPoint& position);
+	void onShowContextMenu(const QPoint &position);
+	void onPegNumberChanged();
+	void onColorNumberChanged();
+	void onSameColorAllowedChanged();
+	void onAlgorithmChanded();
 
-signals:
-	void showIndicatorsSignal(bool show_colors, bool show_indicators, IndicatorType);
-	void preferencesChangeSignal();
+private:
+	bool quitUnfinishedGame();
+	void updateGameRules();
+	void resetActionsText();
 
 private:
 	Ui::MainWindow *ui;
 
 	Game *game;
-	GameMode gameMode;
-	int colorNumber;
-	int pegNumber;
-	Algorithm algorithm;
-	bool showColors;
-	bool showIndicators;
-	IndicatorType indicatorType;
-	bool sameColorAllowed;
-	bool autoPutPins;
-	bool autoCloseRows;
-	QLocale locale;
-	int volume;
-
+	GameRules gameRules;
+	BoardAid boardAid;
 	QComboBox *pegsNumberComboBox;
 	QComboBox *colorsNumberComboBox;
 	QComboBox *solvingAlgorithmsComboBox;

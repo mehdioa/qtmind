@@ -18,13 +18,14 @@
  ***********************************************************************/
 
 #include "mainwindow.h"
+#include "appinfo.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 	app.setApplicationName(APP_NAME);
-	app.setApplicationVersion(VERSION);
+	app.setApplicationVersion(QString("%1.%2.%3").arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX));
 	app.setOrganizationName(ORG_NAME);
 	app.setOrganizationDomain(ORG_DOMAIN);
 

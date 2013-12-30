@@ -18,16 +18,19 @@
  ***********************************************************************/
 
 #include "button.h"
+#include "boardfont.h"
 #include <QGraphicsSceneEvent>
 #include <QCursor>
 #include <QPainter>
+#include <QSettings>
 
-Button::Button(const int &buttonWidth, const QString &str, const QString &font_name, const int &font_size)
+Button::Button(const BoardFont &board_font, const int &buttonWidth, const QString &str)
 {
 	mWidth = buttonWidth;
 	mLabel = str;
 	mYOffs = 0;
-	mFont = QFont(font_name, qMax(font_size - 1, 1), QFont::Bold, false);
+
+	mFont = QFont(board_font.fontName, board_font.fontSize - 1, QFont::Bold, false);
 	mFont.setStyleHint(QFont::SansSerif);
 	mFont.setStyleStrategy(QFont::PreferAntialias);
 

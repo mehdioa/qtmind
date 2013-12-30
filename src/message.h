@@ -23,21 +23,25 @@
 #include <QGraphicsSimpleTextItem>
 #include <QTextLayout>
 
+class BoardFont;
+
 class Message : public QGraphicsSimpleTextItem
 {
 public:
-	explicit Message(const QString &color_name = "#303133",const QString &font_name = "Sans Serif",
-					 const int &font_size = 12, QGraphicsItem *parent = 0);
-	void showMessage(const QString m_string);
-	QRectF boundingRect() const;
+	explicit Message(const BoardFont &board_font, const QString &color_name = "#303133",
+					 const int &smaller = 0, QGraphicsItem *parent = 0);
+	void setText(const QString m_text);
+	QString getText() const {return text;}
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+	QRectF boundingRect() const;
 
 private:
 	QTextLayout textLayout;
 	QRectF updateRect;
 	QColor color;
+	QString text;
 };
 
 #endif // MESSAGE_H
