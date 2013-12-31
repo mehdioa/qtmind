@@ -3,9 +3,8 @@
 
 #include "constants.h"
 
-class GuessElement
+struct GuessElement
 {
-public:
 	void reset(const Algorithm &algorithm_m, const int &possibles_m);
 
 	QString guess;

@@ -69,16 +69,16 @@ private:
 	void updateGameRules();
 	void resetActionsText();
 
-private:
 	Ui::MainWindow *ui;
-
-	Game *game;
-	GameRules gameRules;
-	BoardAid boardAid;
 	QComboBox *pegsNumberComboBox;
 	QComboBox *colorsNumberComboBox;
 	QComboBox *solvingAlgorithmsComboBox;
 	QAction *allowSameColorAction;
+
+private:
+	Game *game;
+	GameRules gameRules;
+	BoardAid boardAid;
 };
 
 #endif // MAINWINDOW_H

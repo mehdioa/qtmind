@@ -252,10 +252,7 @@ void Game::initializeScene()
 	information = new Message(boardAid->boardFont, "#808080", 2);
 	scene()->addItem(information);
 	information->setPos(20, 506);
-	information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
-							  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors")).
-							  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
-							  arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
+	showTranslatedInformation();
 	createBoxes();
 	scene()->update();
 }
@@ -394,14 +391,7 @@ void Game::retranslateTexts()
 		okButton->setLabel(tr("OK"));
 	if (doneButton)
 		doneButton->setLabel(tr("Done"));
-	if (gameRules->gameMode == GameMode::Codemaker)
-		showTranslatedInformation();
-	else
-		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
-								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors")).
-								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
-								  arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
-
+	showTranslatedInformation();
 }
 //-----------------------------------------------------------------------------
 
@@ -643,38 +633,44 @@ void Game::setAlgorithm(const Algorithm &algorithm_n)
 
 void Game::showTranslatedInformation()
 {
+	if (gameRules->gameMode == GameMode::Codemaker)
+	{
+		if (guessElement.possibles == 1)
+		{
+			information->setText(tr("The Code Is Cracked!"));
+		}
+		else if (guessElement.possibles > 10000)
+		{
+			information->setText(QString("%1    %2: %3").arg(tr("Random Guess")).
+								  arg(tr("Remaining")).arg(boardAid->locale.toString(guessElement.possibles)));
+		}
+		else
+		{
+			switch (guessElement.algorithm) {
+			case Algorithm::MostParts:
+				information->setText(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
+										  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
+										  arg(boardAid->locale.toString(guessElement.possibles)));
+				break;
+			case Algorithm::WorstCase:
+				information->setText(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
+										  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
+										  arg(boardAid->locale.toString(guessElement.possibles)));
+				break;
+			default:
+				information->setText(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
+										  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
+										  arg(boardAid->locale.toString(guessElement.possibles)));
+				break;
+			}
 
-	if (guessElement.possibles == 1)
-	{
-		information->setText(tr("The Code Is Cracked!"));
-	}
-	else if (guessElement.possibles > 10000)
-	{
-		information->setText(QString("%1    %2: %3").arg(tr("Random Guess")).
-							  arg(tr("Remaining")).arg(boardAid->locale.toString(guessElement.possibles)));
+		}
 	}
 	else
-	{
-		switch (guessElement.algorithm) {
-		case Algorithm::MostParts:
-			information->setText(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
-									  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
-									  arg(boardAid->locale.toString(guessElement.possibles)));
-			break;
-		case Algorithm::WorstCase:
-			information->setText(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
-									  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
-									  arg(boardAid->locale.toString(guessElement.possibles)));
-			break;
-		default:
-			information->setText(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
-									  arg(boardAid->locale.toString(guessElement.weight)).arg(tr("Remaining")).
-									  arg(boardAid->locale.toString(guessElement.possibles)));
-			break;
-		}
-
-	}
-
+		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
+								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors")).
+								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
+								  arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
 }
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

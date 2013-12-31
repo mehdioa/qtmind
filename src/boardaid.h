@@ -10,9 +10,8 @@
 
 
 
-class BoardAid
+struct BoardAid
 {
-public:
 	BoardAid();
 	~BoardAid();
 

@@ -51,9 +51,9 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->fontComboBox->setCurrentFont(boardAid->boardFont.fontName);
 	ui->fontSizeComboBox->setCurrentIndex(boardAid->boardFont.fontSize);
 	ui->volumeVerticalSlider->setValue(boardAid->boardSounds.getVolume());
-	ui->showColorsCheckBox->setChecked(boardAid->indicator.showColors);
-	ui->characterRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Character);
-	ui->digitRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Digit);
+	ui->showColorsCheckBox->setChecked(boardAid->indicator.getShowColors());
+	ui->characterRadioButton->setChecked(boardAid->indicator.getIndicatorType() == IndicatorType::Character);
+	ui->digitRadioButton->setChecked(boardAid->indicator.getIndicatorType() == IndicatorType::Digit);
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QString translation;
@@ -176,6 +176,6 @@ void Preferences::accept()
 	boardAid->boardFont.fontName = ui->fontComboBox->currentText();
 	boardAid->boardFont.fontSize = ui->fontSizeComboBox->currentIndex();
 	boardAid->boardSounds.setVolume(ui->volumeVerticalSlider->value());
-	boardAid->indicator.showColors = ui->showColorsCheckBox->isChecked();
-	boardAid->indicator.indicatorType = (ui->digitRadioButton->isChecked() ? IndicatorType::Digit : IndicatorType::Character);
+	boardAid->indicator.setShowColors(ui->showColorsCheckBox->isChecked());
+	boardAid->indicator.setIndicatorType(ui->digitRadioButton->isChecked() ? IndicatorType::Digit : IndicatorType::Character);
 }

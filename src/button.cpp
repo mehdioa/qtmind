@@ -19,6 +19,7 @@
 
 #include "button.h"
 #include "boardfont.h"
+#include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneEvent>
 #include <QCursor>
 #include <QPainter>
@@ -26,104 +27,63 @@
 
 Button::Button(const BoardFont &board_font, const int &buttonWidth, const QString &str)
 {
-	mWidth = buttonWidth;
-	mLabel = str;
-	mYOffs = 0;
+	width = buttonWidth;
+	label = str;
 
-	mFont = QFont(board_font.fontName, board_font.fontSize - 1, QFont::Bold, false);
-	mFont.setStyleHint(QFont::SansSerif);
-	mFont.setStyleStrategy(QFont::PreferAntialias);
+	font = QFont(board_font.fontName, board_font.fontSize - 1, QFont::Bold, false);
+	font.setStyleHint(QFont::SansSerif);
+	font.setStyleStrategy(QFont::PreferAntialias);
 
-	QLinearGradient fillgrad(0, 0, 0, 36);
-	fillgrad.setColorAt(0.0, QColor("#f7f7f7"));
-	fillgrad.setColorAt(0.5, QColor("#b9b9b9"));
-	mFillOutBrush = QBrush(fillgrad);
+	pressedEffect = new QGraphicsDropShadowEffect;
+	pressedEffect->setOffset(0, 1);
+	setGraphicsEffect(pressedEffect);
+	pressedEffect->setEnabled(true);
 
-	QLinearGradient fillovergrad(0, 0, 0, 36);
-	fillovergrad.setColorAt(0.0, QColor("#f7f7f7"));
-	fillovergrad.setColorAt(1.0, QColor("#b9b9b9"));
-	mFillOverBrush = QBrush(fillovergrad);
-
-	QLinearGradient framegrad(0, 0, 0, 40);
-	framegrad.setColorAt(1.0, QColor(0, 0, 0, 0xa0));
-	framegrad.setColorAt(0.0, QColor(0xff, 0xff, 0xff, 0xa0));
-	mFrameOutBrush = QBrush(framegrad);
-
-	QLinearGradient frameovergrad(0, 0, 0, 40);
-	frameovergrad.setColorAt(0.0, QColor(0, 0, 0, 0xa0));
-	frameovergrad.setColorAt(1.0, QColor(0xff, 0xff, 0xff, 0xa0));
-	mFrameOverBrush = QBrush(frameovergrad);
-
-	mFrameBrush = &mFrameOutBrush;
-	mFillBrush = &mFillOutBrush;
-
-	mRect = QRectF(0, 0, mWidth, 38);
-	mRectFill = QRectF(1, 1, mWidth - 2, 36);
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptHoverEvents (true);
-	setPressable(true);
-}
-//-----------------------------------------------------------------------------
-
-void Button::setPressable(bool enabled)
-{
-	setEnabled(enabled);
-	setCursor(enabled ? Qt::PointingHandCursor : Qt::ArrowCursor);
+	setEnabled(true);
+	setCursor(Qt::PointingHandCursor);
 }
 //-----------------------------------------------------------------------------
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	mFrameBrush = &mFrameOverBrush;
-	mYOffs = 1;
-	update(mRect);
+	pressedEffect->setOffset(0, -1);
+	moveBy(0, 1);
 }
 //-----------------------------------------------------------------------------
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	mFrameBrush = &mFrameOutBrush;
-	mYOffs = 0;
-	update(mRect);
+	moveBy(0, -1);
+	pressedEffect->setOffset(0, 1);
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
-}
-//-----------------------------------------------------------------------------
-
-void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *)
-{
-	mFillBrush = &mFillOverBrush;
-	update(mRect);
-}
-//-----------------------------------------------------------------------------
-
-void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
-{
-	mFillBrush = &mFillOutBrush;
-	update(mRect);
 }
 //-----------------------------------------------------------------------------
 
 void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-	painter->setBrush(*mFrameBrush);
-	painter->drawRoundedRect(mRect, 20, 20);
 
-	painter->setBrush(*mFillBrush);
-	painter->drawRoundedRect(mRectFill, 18, 18);
+	QLinearGradient framegrad(0, 0, 0, 40);
+	framegrad.setColorAt(0.0, QColor(248, 248, 248));
+	framegrad.setColorAt(0.6, QColor(184, 184, 184));
+	framegrad.setColorAt(1, QColor(212, 212, 212));
+	painter->setBrush(QBrush(framegrad));
+	painter->drawRoundedRect(boundingRect(), 20, 20);
 
-	if (mLabel != "")
+	if (label != "")
 	{
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(QColor("#303030")));
-		painter->setFont(mFont);
-		painter->drawText(mRectFill.adjusted(0, mYOffs, 0, mYOffs), Qt::AlignCenter, mLabel);
+		painter->setFont(font);
+		painter->drawText(boundingRect(), Qt::AlignCenter, label);
 	}
 }
 //-----------------------------------------------------------------------------
 
 QRectF Button::boundingRect() const
 {
-	return mRect.adjusted(-0.5, -0.5, 1, 1);
+	return QRectF(1, 0, width -2, 36);
 }

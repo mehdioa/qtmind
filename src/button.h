@@ -26,6 +26,7 @@
 
 class Board;
 class BoardFont;
+class QGraphicsDropShadowEffect;
 
 class Button : public QObject, public QGraphicsItem
 {
@@ -34,16 +35,12 @@ class Button : public QObject, public QGraphicsItem
 
 public:
 	explicit Button(const BoardFont &board_font, const int &buttonWidth = 152, const QString &str = "");
-	void setPressable(bool);
 	void fakeButtonPress(){emit buttonPressed();}
-	void setLabel(QString label){mLabel = label;}
+	void setLabel(QString label_s){label = label_s;}
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-	void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-	void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem*,
 			   QWidget*);
 	QRectF boundingRect() const;
@@ -52,22 +49,10 @@ signals:
 	void buttonPressed();
 
 private:
-	QString mLabel;
-	QFont mFont;
-	int mWidth;
-	int mYOffs;
-
-	QBrush mFillOutBrush;
-	QBrush mFillOverBrush;
-	QBrush *mFillBrush;
-
-	QBrush mFrameOutBrush;
-	QBrush mFrameOverBrush;
-	QBrush *mFrameBrush;
-
-	QRectF mRect;
-	QRectF mRectFill;
-
+	QString label;
+	QFont font;
+	int width;
+	QGraphicsDropShadowEffect *pressedEffect;
 };
 
 #endif // BUTTON_H

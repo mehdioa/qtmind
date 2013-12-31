@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	allowSameColorAction->setCheckable(true);
 	allowSameColorAction->setChecked(gameRules.sameColorAllowed);
 
-	ui->actionShow_Indicators->setChecked(boardAid.indicator.showIndicators);
+	ui->actionShow_Indicators->setChecked(boardAid.indicator.getShowIndicators());
 	ui->actionAuto_Set_Pins->setChecked(boardAid.autoPutPins);
 	ui->actionAuto_Close_Rows->setChecked(boardAid.autoCloseRows);
 
@@ -263,7 +263,7 @@ void MainWindow::onAutoCloseRows()
 
 void MainWindow::onIndicatorChanged()
 {
-	boardAid.indicator.showIndicators = ui->actionShow_Indicators->isChecked();
+	boardAid.indicator.setShowIndicators(ui->actionShow_Indicators->isChecked());
 	game->changeIndicators();
 }
 //-----------------------------------------------------------------------------

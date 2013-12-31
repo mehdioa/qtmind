@@ -13,9 +13,15 @@ class Indicator
 public:
 	Indicator();
 	~Indicator();
-	bool forceColor() const {return showColors || !showIndicators;}
+	bool forceColor() const;
+	void setShowColors(const bool &show_colors);
+	void setShowIndicators(const bool &show_indicators);
+	void setIndicatorType(const IndicatorType &indicator_type);
+	bool getShowColors() const;
+	bool getShowIndicators() const;
+	IndicatorType getIndicatorType() const;
 
-//private:
+private:
 	bool showColors;
 	bool showIndicators;
 	IndicatorType indicatorType;

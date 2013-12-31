@@ -3,9 +3,8 @@
 
 #include <QString>
 
-class BoardFont
+struct BoardFont
 {
-public:
 	BoardFont();
 	~BoardFont();
 
