@@ -586,6 +586,7 @@ void Game::playHVM()
 
 void Game::playHVH()
 {
+	freezeAllLists();
 	scene()->update();
 }
 //-----------------------------------------------------------------------------
