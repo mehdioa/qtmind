@@ -33,10 +33,7 @@ enum class GameState
 	Lose,
 	Resign,
 	Guessing,
-	WaittingOkButtonPress,
-	WaittingDoneButtonPress,
 	WaittingFirstRowFill,
-	WaittingPinBoxPress
 };
 
 class Peg;

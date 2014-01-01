@@ -35,7 +35,7 @@ Button::Button(const BoardFont &board_font, const int &buttonWidth, const QStrin
 	font.setStyleStrategy(QFont::PreferAntialias);
 
 	pressedEffect = new QGraphicsDropShadowEffect;
-	pressedEffect->setOffset(0, 1);
+	pressedEffect->setOffset(0, 2);
 	setGraphicsEffect(pressedEffect);
 	pressedEffect->setEnabled(true);
 
@@ -48,7 +48,7 @@ Button::Button(const BoardFont &board_font, const int &buttonWidth, const QStrin
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	pressedEffect->setOffset(0, -1);
+	pressedEffect->setOffset(0, 1);
 	moveBy(0, 1);
 }
 //-----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	moveBy(0, -1);
-	pressedEffect->setOffset(0, 1);
+	pressedEffect->setOffset(0, 2);
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
 }
@@ -85,5 +85,5 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 
 QRectF Button::boundingRect() const
 {
-	return QRectF(1, 0, width -2, 36);
+	return QRectF(1, 0, width, 36);
 }

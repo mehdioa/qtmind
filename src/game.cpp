@@ -84,42 +84,29 @@ Game::~Game()
 
 void Game::codeRowFilled(const bool &m_filled)
 {
-	switch (gameRules->gameMode)
+	if(gameRules->gameMode == GameMode::Codebreaker)
 	{
-	case GameMode::Codebreaker://-----------------------------------------
-		switch (m_filled)
+		if (m_filled)
 		{
-		case true:
 			pinBoxes.first()->setState(BoxState::Current);
-			gameState = GameState::WaittingPinBoxPress;
+//			gameState = GameState::WaittingPinBoxPress;
 			message->setText(tr("Press The Pin Box"));
 			if (boardAid->autoCloseRows)
 				onPinBoxPressed();
-			break;
-		default:
+		}
+		else
+		{
 			pinBoxes.first()->setState(BoxState::Future);
 			message->setText(tr("Place Your Pegs"));
-			break;
 		}
-		break;
-	default://GameMode::Codemaker-------------------------------------
-		if (doneButton->isEnabled())//the user is not done putting the master code
-		{
-			switch (m_filled)
-			{
-			case true:
-				doneButton->setVisible(true);
-				message->setText(tr("Press Done"));
-				gameState = GameState::WaittingDoneButtonPress;
-				break;
-			default:
-				doneButton->setVisible(false);
-				message->setText(tr("Place Your Pegs"));
-				gameState = GameState::None;
-				break;
-			}
-		}
-		break;
+	}
+	else	//gameRules->gameMode == GameMode::Codemaker
+	{
+		doneButton->setVisible(m_filled);
+		if (m_filled)//the user is not done putting the master code
+			message->setText(tr("Press Done"));
+		else
+			message->setText(tr("Place Your Pegs"));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -230,14 +217,14 @@ void Game::initializeScene()
 	scene()->clear();
 	setInteractive(true);
 
-	okButton = new Button(boardAid->boardFont, 38, tr("OK"));
+	okButton = new Button(boardAid->boardFont, 36, tr("OK"));
 	scene()->addItem(okButton);
 	okButton->setZValue(2);
 	connect(okButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
 	okButton->setEnabled(false);
 	okButton->setVisible(false);
 
-	doneButton = new Button(boardAid->boardFont, 160, tr("Done"));
+	doneButton = new Button(boardAid->boardFont, 158, tr("Done"));
 	doneButton->setPos(79, 118);
 	doneButton->setVisible(false);
 	doneButton->setZValue(2);
@@ -364,7 +351,7 @@ void Game::onPinBoxPressed()
 			currentBoxes.append(codeBoxes.first());
 			codeBoxes.first()->setState(BoxState::Current);
 			codeBoxes.removeFirst();
-			gameState = GameState::WaittingPinBoxPress;
+//			gameState = GameState::WaittingPinBoxPress;
 		}
 	}
 }
@@ -397,7 +384,7 @@ void Game::retranslateTexts()
 
 void Game::onRevealOnePeg()
 {
-	if (gameRules->gameMode == GameMode::Codebreaker && (gameState == GameState::Running || gameState == GameState::WaittingPinBoxPress))
+	if (gameRules->gameMode == GameMode::Codebreaker && gameState == GameState::Running)
 	{
 		foreach (PegBox *box, masterBoxes)
 		{
@@ -421,7 +408,7 @@ void Game::onRevealOnePeg()
 
 void Game::onResigned()
 {
-	if (gameRules->gameMode == GameMode::Codebreaker && (gameState == GameState::Running || gameState == GameState::WaittingPinBoxPress))
+	if (gameRules->gameMode == GameMode::Codebreaker && gameState == GameState::Running)
 	{
 		gameState = GameState::None;
 		message->setText(tr("You Resign"));
@@ -432,7 +419,6 @@ void Game::onResigned()
 
 void Game::onOkButtonPressed()
 {
-	/*	passing user inputed blacks and whites to solver */
 	int resp = pinBoxes.first()->getValue();
 	if(!solver->setResponse(resp))
 	{
@@ -442,11 +428,9 @@ void Game::onOkButtonPressed()
 	boardAid->boardSounds.playButtonPressSound();
 	okButton->setVisible(false);
 
-	/*	we are done with the pinbox. Make it past and remove it from pinBoxes */
 	pinBoxes.first()->setState(BoxState::Past);
 	pinBoxes.removeFirst();
 
-	/*	Here we check if the user inputs 4 blacks*/
 	if (solver->done())
 	{
 		message->setText(tr("Ready To Play"));
@@ -466,12 +450,11 @@ void Game::onDoneButtonPressed()
 	boardAid->boardSounds.playButtonPressSound();
 	gameState = GameState::Running;
 
-	//	we are done with the done button
 	doneButton->setVisible(false);
 	doneButton->setEnabled(false);
 
-	setStateOfList(&currentBoxes, BoxState::Past);	//	master code boxes become past for no interaction
-	setStateOfList(&pegBoxes, BoxState::Future);	//	freezing the peg boxes
+	setStateOfList(&currentBoxes, BoxState::Past);
+	setStateOfList(&pegBoxes, BoxState::Future);
 
 	guessElement.code = "";
 	foreach(PegBox *box, currentBoxes)
@@ -492,8 +475,7 @@ void Game::onGuessReady()
 
 	if (codeBoxes.isEmpty())
 	{
-		gameState = GameState::Lose; // Hehe, I can solve it always
-		message->setText(tr("I Lose"));
+		gameState = GameState::Lose;
 		return;
 	}
 	else
@@ -511,8 +493,6 @@ void Game::onGuessReady()
 		okButton->setPos(pinBoxes.first()->pos()-QPoint(0, 39));
 	}
 
-	gameState = GameState::WaittingOkButtonPress;
-
 	if (boardAid->autoPutPins)
 	{
 		pinBoxes.first()->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
@@ -523,15 +503,13 @@ void Game::onGuessReady()
 void Game::play()
 {
 	stop();
-	switch (gameRules->gameMode) {
-	case GameMode::Codemaker:
+
+	if(gameRules->gameMode == GameMode::Codemaker)
 		playCodeMaster();
-		break;
-	default:
+	else	//	gameRules->gameMode == GameMode::Codebreaker
 		playCodeBreaker();
-		break;
-	}
 }
+//-----------------------------------------------------------------------------
 
 void Game::stop()
 {

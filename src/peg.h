@@ -20,6 +20,7 @@
 #ifndef PEG_H
 #define PEG_H
 
+#include <QGraphicsDropShadowEffect>
 #include <QGraphicsEllipseItem>
 #include "constants.h"
 
@@ -32,7 +33,7 @@ enum class PegState
 	Plain
 };
 
-class QGraphicsDropShadowEffect;
+//class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
 class Indicator;
 
