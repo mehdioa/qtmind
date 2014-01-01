@@ -46,11 +46,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	auto gameModeActions = new QActionGroup(this);
 	gameModeActions->addAction(ui->actionGameMode_MVH);
 	gameModeActions->addAction(ui->actionGameMode_HVM);
+	gameModeActions->addAction(ui->actionGameMode_HVH);
 	gameModeActions->setExclusive(true);
 	ui->actionGameMode_MVH->setData((int) GameMode::MVH);
 	ui->actionGameMode_HVM->setData((int) GameMode::HVM);
+	ui->actionGameMode_HVM->setData((int) GameMode::HVH);
 	ui->actionGameMode_MVH->setChecked(gameRules.gameMode == GameMode::MVH);
 	ui->actionGameMode_HVM->setChecked(gameRules.gameMode == GameMode::HVM);
+	ui->actionGameMode_HVH->setChecked(gameRules.gameMode == GameMode::HVH);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
@@ -356,6 +359,8 @@ GameMode MainWindow::getGameMode()
 {
 	if (ui->actionGameMode_MVH->isChecked())
 		return GameMode::MVH;
-	else if (ui->actionGameMode_HVM->isChecked())
+	else	if (ui->actionGameMode_HVM->isChecked())
 		return GameMode::HVM;
+	else
+		return GameMode::HVH;
 }

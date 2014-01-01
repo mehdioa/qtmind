@@ -44,8 +44,15 @@
      <property name="title">
       <string>Game Mode</string>
      </property>
+     <property name="icon">
+      <iconset theme="emblem-favorite"/>
+     </property>
+     <property name="separatorsCollapsible">
+      <bool>true</bool>
+     </property>
      <addaction name="actionGameMode_MVH"/>
      <addaction name="actionGameMode_HVM"/>
+     <addaction name="actionGameMode_HVH"/>
     </widget>
     <addaction name="menuGameMode"/>
     <addaction name="separator"/>
@@ -125,6 +132,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="task-accepted"/>
+   </property>
    <property name="text">
     <string>Auto Set Pins</string>
    </property>
@@ -133,11 +143,17 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="task-complete"/>
+   </property>
    <property name="text">
     <string>Auto Close Rows</string>
    </property>
   </action>
   <action name="actionOptions">
+   <property name="icon">
+    <iconset theme="configure"/>
+   </property>
    <property name="text">
     <string>Options</string>
    </property>
@@ -172,7 +188,7 @@
      <normaloff>:/icons/modemaster.png</normaloff>:/icons/modemaster.png</iconset>
    </property>
    <property name="text">
-    <string>Code Master</string>
+    <string>Machine vs Human</string>
    </property>
   </action>
   <action name="actionGameMode_HVM">
@@ -184,12 +200,12 @@
      <normaloff>:/icons/modebreaker.png</normaloff>:/icons/modebreaker.png</iconset>
    </property>
    <property name="text">
-    <string>Code Breaker</string>
+    <string>Human vs Machine</string>
    </property>
   </action>
   <action name="actionReveal_One_Peg">
    <property name="icon">
-    <iconset theme="help-feedback" resource="../resource.qrc">
+    <iconset theme="system-help" resource="../resource.qrc">
      <normaloff>:/icons/reveal_one_peg.png</normaloff>:/icons/reveal_one_peg.png</iconset>
    </property>
    <property name="text">
@@ -212,8 +228,24 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="layer-visible-on"/>
+   </property>
    <property name="text">
     <string>Show Indicators</string>
+   </property>
+  </action>
+  <action name="actionGameMode_HVH">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="system-users">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Human vs Human</string>
    </property>
   </action>
  </widget>

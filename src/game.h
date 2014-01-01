@@ -58,6 +58,7 @@ public:
 
 protected:
 	void drawBackground(QPainter *painter, const QRectF &rect);
+	void drawForeground(QPainter *painter, const QRectF &);
 	void resizeEvent(QResizeEvent *event);
 
 signals:
@@ -77,8 +78,9 @@ private slots:
 	void onGuessReady();
 
 private:
-	void playCodeMaster();
-	void playCodeBreaker();
+	void playMVH();
+	void playHVM();
+	void playHVH();
 	void createBoxes();
 	void createPegForBox(PegBox *m_box, int m_color);
 	Peg *createPeg(PegBox *m_box, const int &m_color);
