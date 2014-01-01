@@ -33,7 +33,6 @@ enum class PegState
 	Plain
 };
 
-//class QGraphicsDropShadowEffect;
 class QGraphicsSimpleTextItem;
 class Indicator;
 

@@ -28,11 +28,8 @@
 #include <QTranslator>
 #include <QSlider>
 #include "constants.h"
-//-----------------------------------------------------------------------------
 
-QString Preferences::mCurrent;
-QString Preferences::mPath;
-QString Preferences::mAppName;
+QString Preferences::AppPath;
 
 //-----------------------------------------------------------------------------
 
@@ -59,10 +56,10 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	QString translation;
 	QStringList translations = findTranslations();
 	foreach (translation, translations) {
-		translation.remove(mAppName);
+		translation.remove(boardAid->appName);
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
-	int index = qMax(0, ui->languageComboBox->findData(mCurrent));
+	int index = qMax(0, ui->languageComboBox->findData(boardAid->locale.name().left(2)));
 	ui->languageComboBox->setCurrentIndex(index);
 
 	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -77,10 +74,9 @@ Preferences::~Preferences()
 }
 //-----------------------------------------------------------------------------
 
-void Preferences::loadTranslation(const QString &name)
+void Preferences::loadTranslation(BoardAid *board_aid)
 {
 	QString appdir = QCoreApplication::applicationDirPath();
-	mAppName = name;
 
 	// Find translator path
 	QStringList paths;
@@ -89,18 +85,17 @@ void Preferences::loadTranslation(const QString &name)
 	paths.append(appdir + "/../Resources/translations");
 	foreach (const QString &path, paths) {
 		if (QFile::exists(path)) {
-			mPath = path;
+			AppPath = path;
 			break;
 		}
 	}
 
 	// Find current locale
-	mCurrent = QSettings().value("Locale/Language").toString();
-	QString current = !mCurrent.isEmpty() ? mCurrent : QLocale::system().name();
+	QString current = board_aid->locale.name();
 	QStringList translations = findTranslations();
-	if (!translations.contains(mAppName + current)) {
+	if (!translations.contains(board_aid->appName + current)) {
 		current = current.left(2);
-		if (!translations.contains(mAppName + current)) {
+		if (!translations.contains(board_aid->appName + current)) {
 			current.clear();
 		}
 	}
@@ -113,14 +108,14 @@ void Preferences::loadTranslation(const QString &name)
 	// Load translators
 	static QTranslator qt_translator;
 	if (translations.contains("qt_" + current) || translations.contains("qt_" + current.left(2))) {
-		qt_translator.load("qt_" + current, mPath);
+		qt_translator.load("qt_" + current, AppPath);
 	} else {
 		qt_translator.load("qt_" + current, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	}
 	QCoreApplication::installTranslator(&qt_translator);
 
 	static QTranslator translator;
-	translator.load(mAppName + current, mPath);
+	translator.load(board_aid->appName + current, AppPath);
 	QCoreApplication::installTranslator(&translator);
 }
 //-----------------------------------------------------------------------------
@@ -160,7 +155,7 @@ QString Preferences::languageName(const QString &language)
 
 QStringList Preferences::findTranslations()
 {
-	QStringList result = QDir(mPath, "*.qm").entryList(QDir::Files);
+	QStringList result = QDir(AppPath, "*.qm").entryList(QDir::Files);
 	result.replaceInStrings(".qm", "");
 	return result;
 }
@@ -169,9 +164,7 @@ QStringList Preferences::findTranslations()
 void Preferences::accept()
 {
 	QDialog::accept();
-	mCurrent = ui->languageComboBox->itemData(ui->languageComboBox->currentIndex()).toString();
-	QSettings().setValue("Locale/Language", mCurrent);
-	QLocale newLocale(mCurrent);
+	QLocale newLocale(ui->languageComboBox->itemData(ui->languageComboBox->currentIndex()).toString());
 	boardAid->locale = newLocale;
 	boardAid->boardFont.fontName = ui->fontComboBox->currentText();
 	boardAid->boardFont.fontSize = ui->fontSizeComboBox->currentIndex();

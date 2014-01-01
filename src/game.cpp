@@ -26,9 +26,6 @@
 #include "solver.h"
 #include "message.h"
 #include "ctime"
-#include <QSettings>
-
-//-----------------------------------------------------------------------------
 
 inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
@@ -46,7 +43,7 @@ inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 		box->setState(state_t);
 	}
 }
-
+//-----------------------------------------------------------------------------
 
 Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
 	QGraphicsView(parent),
@@ -84,12 +81,11 @@ Game::~Game()
 
 void Game::codeRowFilled(const bool &m_filled)
 {
-	if(gameRules->gameMode == GameMode::Codebreaker)
+	if(gameRules->gameMode == GameMode::HVM)
 	{
 		if (m_filled)
 		{
 			pinBoxes.first()->setState(BoxState::Current);
-//			gameState = GameState::WaittingPinBoxPress;
 			message->setText(tr("Press The Pin Box"));
 			if (boardAid->autoCloseRows)
 				onPinBoxPressed();
@@ -100,7 +96,7 @@ void Game::codeRowFilled(const bool &m_filled)
 			message->setText(tr("Place Your Pegs"));
 		}
 	}
-	else	//gameRules->gameMode == GameMode::Codemaker
+	else	//gameRules->gameMode == GameMode::MVH
 	{
 		doneButton->setVisible(m_filled);
 		if (m_filled)//the user is not done putting the master code
@@ -149,13 +145,16 @@ void Game::createBoxes()
 		scene()->addItem(pegbox);
 		if (i < gameRules->colorNumber)
 		{
-			createPegForBox(pegbox, i, true);//just a background peg
+			Peg *peg;
+			peg = createPeg(pegbox, i);
+			peg->setState(PegState::Underneath);
+			connect(this, SIGNAL(showIndicatorsSignal()), peg, SLOT(onShowIndicators()));
 			createPegForBox(pegbox, i);
 			pegbox->setPegState(PegState::Initial);
 		}
 		else
 		{
-			createPegForBox(pegbox, i, true, true);
+			createPeg(pegbox, i)->setState(PegState::Plain);
 		}
 		pegBoxes.append(pegbox);
 	}
@@ -169,7 +168,7 @@ void Game::createBoxes()
 }
 //-----------------------------------------------------------------------------
 
-void Game::createPegForBox(PegBox *m_box, int m_color, bool m_underneath, bool m_plain)
+void Game::createPegForBox(PegBox *m_box, int m_color)
 {
 	QPointF pos = m_box->sceneBoundingRect().center();
 	if (m_box->hasPeg())
@@ -180,20 +179,20 @@ void Game::createPegForBox(PegBox *m_box, int m_color, bool m_underneath, bool m
 		auto peg = new Peg(pos, m_color, &boardAid->indicator);
 		scene()->addItem(peg);
 
-		if(!m_underneath && !m_plain)
-		{
-			m_box->setPeg(peg);
-			connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
-			connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
-		}
-
-		if (m_underneath)
-			peg->setState(PegState::Underneath);
-		if (m_plain)
-			peg->setState(PegState::Plain);
-		else
-			connect(this, SIGNAL(showIndicatorsSignal()), peg, SLOT(onShowIndicators()));
+		m_box->setPeg(peg);
+		connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
+		connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
+		connect(this, SIGNAL(showIndicatorsSignal()), peg, SLOT(onShowIndicators()));
 	}
+}
+//-----------------------------------------------------------------------------
+
+Peg *Game::createPeg(PegBox *m_box, const int &m_color)
+{
+	QPointF pos = m_box->sceneBoundingRect().center();
+	auto peg = new Peg(pos, m_color, &boardAid->indicator);
+	scene()->addItem(peg);
+	return peg;
 }
 //-----------------------------------------------------------------------------
 
@@ -351,7 +350,6 @@ void Game::onPinBoxPressed()
 			currentBoxes.append(codeBoxes.first());
 			codeBoxes.first()->setState(BoxState::Current);
 			codeBoxes.removeFirst();
-//			gameState = GameState::WaittingPinBoxPress;
 		}
 	}
 }
@@ -363,28 +361,25 @@ void Game::changeIndicators()
 }
 //-----------------------------------------------------------------------------
 
-bool Game::isRunning()
-{
-	return (getState() != GameState::None &&
-			getState() != GameState::Win &&
-			getState() != GameState::Lose &&
-			getState() != GameState::WaittingFirstRowFill);
-}
-//-----------------------------------------------------------------------------
-
 void Game::retranslateTexts()
 {
 	if(okButton)
+	{
 		okButton->setLabel(tr("OK"));
+		okButton->update();
+	}
 	if (doneButton)
+	{
 		doneButton->setLabel(tr("Done"));
+		doneButton->update();
+	}
 	showTranslatedInformation();
 }
 //-----------------------------------------------------------------------------
 
 void Game::onRevealOnePeg()
 {
-	if (gameRules->gameMode == GameMode::Codebreaker && gameState == GameState::Running)
+	if (gameRules->gameMode == GameMode::HVM && gameState == GameState::Running)
 	{
 		foreach (PegBox *box, masterBoxes)
 		{
@@ -408,7 +403,7 @@ void Game::onRevealOnePeg()
 
 void Game::onResigned()
 {
-	if (gameRules->gameMode == GameMode::Codebreaker && gameState == GameState::Running)
+	if (gameRules->gameMode == GameMode::HVM && gameState == GameState::Running)
 	{
 		gameState = GameState::None;
 		message->setText(tr("You Resign"));
@@ -439,8 +434,6 @@ void Game::onOkButtonPressed()
 	}
 
 	message->setText(tr("Let Me Think"));
-	gameState = GameState::Guessing;
-
 	emit startGuessingSignal();
 }
 //-----------------------------------------------------------------------------
@@ -462,8 +455,6 @@ void Game::onDoneButtonPressed()
 
 	currentBoxes.clear();
 	message->setText(tr("Let Me Think"));
-
-	gameState = GameState::Guessing;
 	emit startGuessingSignal();
 }
 //-----------------------------------------------------------------------------
@@ -504,9 +495,9 @@ void Game::play()
 {
 	stop();
 
-	if(gameRules->gameMode == GameMode::Codemaker)
+	if(gameRules->gameMode == GameMode::MVH)
 		playCodeMaster();
-	else	//	gameRules->gameMode == GameMode::Codebreaker
+	else	//	gameRules->gameMode == GameMode::HVM
 		playCodeBreaker();
 }
 //-----------------------------------------------------------------------------
@@ -551,7 +542,6 @@ void Game::playCodeMaster()
 		masterBoxes.removeFirst();
 	}
 
-	gameState = GameState::WaittingFirstRowFill;
 	/*	Nothing happening from here till the user fill the master code
 	 *	row and press the done button. After the done button is pressed,
 	 *	the onDoneButtonPressed is continuing the game
@@ -589,8 +579,6 @@ void Game::playCodeBreaker()
 	}
 
 	message->setText(tr("Place Your Pegs"));
-	gameState = GameState::WaittingFirstRowFill;
-
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
 }
 //-----------------------------------------------------------------------------
@@ -611,7 +599,7 @@ void Game::setAlgorithm(const Algorithm &algorithm_n)
 
 void Game::showTranslatedInformation()
 {
-	if (gameRules->gameMode == GameMode::Codemaker)
+	if (gameRules->gameMode == GameMode::MVH)
 	{
 		if (guessElement.possibles == 1)
 		{

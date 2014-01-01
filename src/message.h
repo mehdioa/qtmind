@@ -31,7 +31,7 @@ public:
 	explicit Message(const BoardFont &board_font, const QString &color_name = "#303133",
 					 const int &smaller = 0, QGraphicsItem *parent = 0);
 	void setText(const QString m_text);
-	QString getText() const {return text;}
+	QString getText() {return text;}
 
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);

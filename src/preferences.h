@@ -36,7 +36,7 @@ public:
 	explicit Preferences(BoardAid *board_aid, QWidget *parent = 0);
 	~Preferences();
 
-	static void loadTranslation(const QString &appname);
+	static void loadTranslation(BoardAid *board_aid);
 	static QString languageName(const QString &language);
 
 public slots:
@@ -48,9 +48,9 @@ private:
 private:
 	Ui::Preferences *ui;
 
-	static QString mCurrent; /**< stored application language */
-	static QString mPath; /**< location of translations; found in loadTranslator() */
-	static QString mAppName; /**< application name passed to loadTranslator() */
+//	static QString mCurrent; /**< stored application language */
+	static QString AppPath; /**< location of translations; found in loadTranslator() */
+//	static QString mAppName; /**< application name passed to loadTranslator() */
 	BoardAid *boardAid;
 };
 

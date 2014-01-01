@@ -20,8 +20,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <QString>
-
 static const int MIN_COLOR_NUMBER	= 2;
 static const int MAX_COLOR_NUMBER	= 10;
 

@@ -22,8 +22,6 @@
 #include <QTextLayout>
 #include <QPainter>
 #include <QFont>
-#include <QSettings>
-#include <QLocale>
 
 Message::Message(const BoardFont &board_font, const QString &color_name,
 				 const int &smaller, QGraphicsItem *parent):

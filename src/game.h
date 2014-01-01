@@ -23,7 +23,6 @@
 #include "constants.h"
 #include "guesselement.h"
 #include <QGraphicsView>
-#include <QLocale>
 
 enum class GameState
 {
@@ -31,8 +30,6 @@ enum class GameState
 	Running,
 	Win,
 	Lose,
-	Resign,
-	Guessing,
 	WaittingFirstRowFill,
 };
 
@@ -57,7 +54,6 @@ public:
 	GameState getState() const {return gameState;}
 	void setAlgorithm(const Algorithm &algorithm_n);
 	void changeIndicators();
-	bool isRunning();
 	void retranslateTexts();
 
 protected:
@@ -84,8 +80,8 @@ private:
 	void playCodeMaster();
 	void playCodeBreaker();
 	void createBoxes();
-	void createPegForBox(PegBox *m_box, int m_color, bool m_underneath = false,
-						 bool m_plain = false);// backPeg is used to put an extra peg under initial pegs,
+	void createPegForBox(PegBox *m_box, int m_color);
+	Peg *createPeg(PegBox *m_box, const int &m_color);
 	void codeRowFilled(const bool &m_filled);
 	void showTranslatedInformation();
 	void initializeScene();

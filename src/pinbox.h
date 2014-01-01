@@ -22,6 +22,7 @@
 
 #include "emptybox.h"
 #include "constants.h"
+
 class Pin;
 
 class PinBox : public QObject, public EmptyBox

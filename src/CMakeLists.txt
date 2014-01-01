@@ -20,11 +20,12 @@ endif(BUILD_WERROR)
 
 set (QTMIND_SOURCES 
 	boardaid.cpp
+	boardfont.cpp
+	boardsounds.cpp
 	button.cpp
 	emptybox.cpp
 	game.cpp
 	gamerules.cpp
-	gamesounds.cpp
 	guesselement.cpp
 	indicator.cpp
 	main.cpp

@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	boardAid.locale.setNumberOptions(QLocale::OmitGroupSeparator);
-	Preferences::loadTranslation("qtmind_");
+	Preferences::loadTranslation(&boardAid);
 
 	game = new Game(&gameRules, &boardAid, this);
 
@@ -44,13 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 	auto gameModeActions = new QActionGroup(this);
-	gameModeActions->addAction(ui->actionCodemaker);
-	gameModeActions->addAction(ui->actionCodebreaker);
+	gameModeActions->addAction(ui->actionGameMode_MVH);
+	gameModeActions->addAction(ui->actionGameMode_HVM);
 	gameModeActions->setExclusive(true);
-	ui->actionCodemaker->setData((int) GameMode::Codemaker);
-	ui->actionCodebreaker->setData((int) GameMode::Codebreaker);
-	ui->actionCodemaker->setChecked(gameRules.gameMode == GameMode::Codemaker);
-	ui->actionCodebreaker->setChecked(gameRules.gameMode == GameMode::Codebreaker);
+	ui->actionGameMode_MVH->setData((int) GameMode::MVH);
+	ui->actionGameMode_HVM->setData((int) GameMode::HVM);
+	ui->actionGameMode_MVH->setChecked(gameRules.gameMode == GameMode::MVH);
+	ui->actionGameMode_HVM->setChecked(gameRules.gameMode == GameMode::HVM);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onGameModeChanged(QAction*)));
 	connect(ui->actionShow_Indicators, SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
 	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onSameColorAllowedChanged()));
-	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoSetPins()));
+	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoPutPins()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onAutoCloseRows()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
 	connect(ui->actionQtMind_Home_Page, SIGNAL(triggered()), this, SLOT(onQtMindHomePage()));
@@ -137,9 +137,9 @@ void MainWindow::resetActionsText()
 	ui->actionQuit->setText(tr("&Quit"));
 
 	ui->menuTools->setTitle(tr("&Tools"));
-	ui->menuGame_Mode->setTitle(tr("Game &Mode"));
-	ui->actionCodebreaker->setText(tr("Code&breaker"));
-	ui->actionCodemaker->setText(tr("Code&maker"));
+	ui->menuGameMode->setTitle(tr("Game &Mode"));
+	ui->actionGameMode_MVH->setText(tr("&Machine vs Human"));
+	ui->actionGameMode_HVM->setText(tr("&Human vs Machine"));
 	ui->actionShow_Indicators->setText(tr("Show &Indicators"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put &Pins"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close &Rows"));
@@ -188,10 +188,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	updateGameRules();
-	ui->actionResign->setEnabled(gameRules.gameMode == GameMode::Codebreaker);
-	ui->actionResign->setVisible(gameRules.gameMode == GameMode::Codebreaker);
-	ui->actionReveal_One_Peg->setEnabled(gameRules.gameMode == GameMode::Codebreaker);
-	ui->actionReveal_One_Peg->setVisible(gameRules.gameMode == GameMode::Codebreaker);
+	ui->actionResign->setEnabled(gameRules.gameMode == GameMode::HVM);
+	ui->actionResign->setVisible(gameRules.gameMode == GameMode::HVM);
+	ui->actionReveal_One_Peg->setEnabled(gameRules.gameMode == GameMode::HVM);
+	ui->actionReveal_One_Peg->setVisible(gameRules.gameMode == GameMode::HVM);
 
 	if(quitUnfinishedGame())
 		game->play();
@@ -200,7 +200,7 @@ void MainWindow::onNewGame()
 
 bool MainWindow::quitUnfinishedGame()
 {
-	if (!game->isRunning())
+	if (game->getState() != GameState::Running)
 		return true;
 	int new_game_accept = QMessageBox::warning(this,
 								  tr("New Game"), QString("<p align='center'>%1</p>"
@@ -219,7 +219,7 @@ void MainWindow::onPreferences()
 	preferencesWidget->setWindowTitle(tr("Options"));
 	preferencesWidget->exec();
 	onIndicatorChanged();
-	Preferences::loadTranslation("qtmind_");
+	Preferences::loadTranslation(&boardAid);
 	setLayoutDirection(boardAid.locale.textDirection());
 	resetActionsText();
 
@@ -250,7 +250,7 @@ void MainWindow::onAbout()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::onAutoSetPins()
+void MainWindow::onAutoPutPins()
 {
 	boardAid.autoPutPins = ui->actionAuto_Set_Pins->isChecked();
 }
@@ -270,10 +270,12 @@ void MainWindow::onIndicatorChanged()
 
 void MainWindow::onGameModeChanged(QAction *selectedAction)
 {
-	if (quitUnfinishedGame())
+	Q_UNUSED(selectedAction);
+	if (getGameMode() != gameRules.gameMode && quitUnfinishedGame())
 	{
-		gameRules.gameMode =  (GameMode) selectedAction->data().toInt();
-		game->play();
+		game->stop();
+//		gameRules.gameMode =  (GameMode) selectedAction->data().toInt();
+		onNewGame();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -283,8 +285,7 @@ void MainWindow::onPegNumberChanged()
 	if (quitUnfinishedGame())
 	{
 		game->stop();
-		gameRules.pegNumber = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
-		onSameColorAllowedChanged();
+		onNewGame();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -294,8 +295,7 @@ void MainWindow::onColorNumberChanged()
 	if (quitUnfinishedGame())
 	{
 		game->stop();
-		gameRules.colorNumber = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
-		onSameColorAllowedChanged();
+		onNewGame();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -304,9 +304,8 @@ void MainWindow::onSameColorAllowedChanged()
 {
 	if (quitUnfinishedGame())
 	{
-		gameRules.sameColorAllowed = (allowSameColorAction->isChecked()) || (gameRules.pegNumber > gameRules.colorNumber);
-		allowSameColorAction->setChecked(gameRules.sameColorAllowed);
-		game->play();
+		game->stop();
+		onNewGame();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -325,13 +324,14 @@ void MainWindow::onShowContextMenu(const QPoint &position)
 	contextMenu.addAction(ui->actionReveal_One_Peg);
 	contextMenu.addAction(ui->actionResign);
 	contextMenu.addSeparator();
-	contextMenu.addMenu(ui->menuGame_Mode);
+	contextMenu.addMenu(ui->menuGameMode);
 	contextMenu.exec(mapToGlobal(position));
 }
 //-----------------------------------------------------------------------------
 
 void MainWindow::updateGameRules()
 {
+	gameRules.gameMode = getGameMode();
 	gameRules.colorNumber = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
 	gameRules.pegNumber = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
 	gameRules.algorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
@@ -350,4 +350,12 @@ void MainWindow::updateGameRules()
 		gameRules.colorNumber = 6;
 	}
 }
+//-----------------------------------------------------------------------------
 
+GameMode MainWindow::getGameMode()
+{
+	if (ui->actionGameMode_MVH->isChecked())
+		return GameMode::MVH;
+	else if (ui->actionGameMode_HVM->isChecked())
+		return GameMode::HVM;
+}

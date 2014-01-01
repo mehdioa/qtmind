@@ -21,7 +21,6 @@
 #define SOLVER_H
 
 #include <QList>
-#include <QString>
 #include <QThread>
 
 /*	The class Solver is the engine of the mastermind game. It contains all the solving

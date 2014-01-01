@@ -37,17 +37,17 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <widget class="QMenu" name="menuGame_Mode">
+    <widget class="QMenu" name="menuGameMode">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="title">
       <string>Game Mode</string>
      </property>
-     <addaction name="actionCodemaker"/>
-     <addaction name="actionCodebreaker"/>
+     <addaction name="actionGameMode_MVH"/>
+     <addaction name="actionGameMode_HVM"/>
     </widget>
-    <addaction name="menuGame_Mode"/>
+    <addaction name="menuGameMode"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Indicators"/>
     <addaction name="actionAuto_Set_Pins"/>
@@ -90,7 +90,7 @@
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="list-add" resource="../resource.qrc">
      <normaloff>:/icons/new-icon.png</normaloff>:/icons/new-icon.png</iconset>
    </property>
    <property name="text">
@@ -102,7 +102,7 @@
   </action>
   <action name="actionResign">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="list-remove" resource="../resource.qrc">
      <normaloff>:/icons/resign.png</normaloff>:/icons/resign.png</iconset>
    </property>
    <property name="text">
@@ -111,7 +111,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="window-close" resource="../resource.qrc">
      <normaloff>:/icons/close-icon.png</normaloff>:/icons/close-icon.png</iconset>
    </property>
    <property name="text">
@@ -144,7 +144,7 @@
   </action>
   <action name="actionAbout_QtMind">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="dialog-information" resource="../resource.qrc">
      <normaloff>:/icons/hicolor/64x64/qtmind.png</normaloff>:/icons/hicolor/64x64/qtmind.png</iconset>
    </property>
    <property name="text">
@@ -163,24 +163,24 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionCodemaker">
+  <action name="actionGameMode_MVH">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="cpu" resource="../resource.qrc">
      <normaloff>:/icons/modemaster.png</normaloff>:/icons/modemaster.png</iconset>
    </property>
    <property name="text">
     <string>Code Master</string>
    </property>
   </action>
-  <action name="actionCodebreaker">
+  <action name="actionGameMode_HVM">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="meeting-chair" resource="../resource.qrc">
      <normaloff>:/icons/modebreaker.png</normaloff>:/icons/modebreaker.png</iconset>
    </property>
    <property name="text">
@@ -189,7 +189,7 @@
   </action>
   <action name="actionReveal_One_Peg">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="help-feedback" resource="../resource.qrc">
      <normaloff>:/icons/reveal_one_peg.png</normaloff>:/icons/reveal_one_peg.png</iconset>
    </property>
    <property name="text">
@@ -198,7 +198,7 @@
   </action>
   <action name="actionQtMind_Home_Page">
    <property name="icon">
-    <iconset resource="../resource.qrc">
+    <iconset theme="applications-internet" resource="../resource.qrc">
      <normaloff>:/icons/globe-icon.png</normaloff>:/icons/globe-icon.png</iconset>
    </property>
    <property name="text">

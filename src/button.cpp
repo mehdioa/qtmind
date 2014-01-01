@@ -23,7 +23,6 @@
 #include <QGraphicsSceneEvent>
 #include <QCursor>
 #include <QPainter>
-#include <QSettings>
 
 Button::Button(const BoardFont &board_font, const int &buttonWidth, const QString &str)
 {

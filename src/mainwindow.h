@@ -21,7 +21,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QLocale>
 #include "constants.h"
 #include "gamerules.h"
 #include "boardaid.h"
@@ -50,7 +49,7 @@ protected:
 	void closeEvent(QCloseEvent *event);
 
 private slots:
-	void onAutoSetPins();
+	void onAutoPutPins();
 	void onAutoCloseRows();
 	void onIndicatorChanged();
 	void onGameModeChanged(QAction*);
@@ -68,6 +67,7 @@ private:
 	bool quitUnfinishedGame();
 	void updateGameRules();
 	void resetActionsText();
+	GameMode getGameMode();
 
 	Ui::MainWindow *ui;
 	QComboBox *pegsNumberComboBox;

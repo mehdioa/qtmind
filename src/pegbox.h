@@ -22,9 +22,7 @@
 
 #include "emptybox.h"
 #include "peg.h"
-#include <QGraphicsItem>
 
-class QGraphicsEllipseItem;
 class PegBox : public EmptyBox
 {
 public:
