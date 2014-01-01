@@ -143,6 +143,7 @@ void MainWindow::resetActionsText()
 	ui->menuGameMode->setTitle(tr("Game &Mode"));
 	ui->actionGameMode_MVH->setText(tr("&Machine vs Human"));
 	ui->actionGameMode_HVM->setText(tr("&Human vs Machine"));
+	ui->actionGameMode_HVH->setText(tr("H&uman vs Human"));
 	ui->actionShow_Indicators->setText(tr("Show &Indicators"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put &Pins"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close &Rows"));
