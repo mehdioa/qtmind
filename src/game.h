@@ -58,7 +58,6 @@ public:
 
 protected:
 	void drawBackground(QPainter *painter, const QRectF &rect);
-	void drawForeground(QPainter *painter, const QRectF &);
 	void resizeEvent(QResizeEvent *event);
 
 signals:

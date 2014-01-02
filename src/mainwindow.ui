@@ -54,7 +54,6 @@
      </property>
      <addaction name="actionGameMode_MVH"/>
      <addaction name="actionGameMode_HVM"/>
-     <addaction name="actionGameMode_HVH"/>
     </widget>
     <addaction name="menuGameMode"/>
     <addaction name="separator"/>
@@ -256,22 +255,6 @@
    </property>
    <property name="icon">
     <iconset theme="layer-visible-on">
-     <normaloff/>
-    </iconset>
-   </property>
-   <property name="text">
-    <string notr="true"/>
-   </property>
-   <property name="iconText">
-    <string notr="true"/>
-   </property>
-  </action>
-  <action name="actionGameMode_HVH">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset theme="system-users">
      <normaloff/>
     </iconset>
    </property>

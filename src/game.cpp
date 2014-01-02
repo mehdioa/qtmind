@@ -731,34 +731,3 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->drawRoundedRect(mRectC, 20, 20);
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 }
-
-void Game::drawForeground(QPainter *painter, const QRectF &)
-{
-	if (gameRules->gameMode == GameMode::HVH)
-	{
-		QString str = "Not Implemented Yet";
-		QFontMetrics metrics(QFont("Sans", 16));
-		int w = metrics.width(str);
-		int h = metrics.height();
-		QPixmap pixmap(QSize(w + h, h * 2));
-		pixmap.fill(QColor(0, 0, 0, 0));
-		{
-			QPainter pixmap_painter(&pixmap);
-
-			pixmap_painter.setPen(Qt::NoPen);
-			pixmap_painter.setBrush(QColor(0, 0, 0, 200));
-			pixmap_painter.setRenderHint(QPainter::Antialiasing, true);
-			pixmap_painter.drawRoundedRect(0, 0, w + h, h * 2, 10, 10);
-
-			pixmap_painter.setFont(QFont("Sans", 16));
-			pixmap_painter.setPen(Qt::white);
-			pixmap_painter.setRenderHint(QPainter::TextAntialiasing, true);
-			pixmap_painter.drawText(h / 2, h / 2 + metrics.ascent(), str);
-		}
-
-		painter->save();
-		painter->resetTransform();
-		painter->drawPixmap((width() - pixmap.width()) / 2, (height() - pixmap.height()) / 2, pixmap);
-		painter->restore();
-	}
-}

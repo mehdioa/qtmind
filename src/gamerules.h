@@ -25,8 +25,7 @@
 
 enum class GameMode {
 	MVH,		//HUMAN MAKE THE HIDDEN CODE
-	HVM,		//HUMAN BREAKS THE HIDDEN CODE
-	HVH
+	HVM		//HUMAN BREAKS THE HIDDEN CODE
 };
 
 struct GameRules
