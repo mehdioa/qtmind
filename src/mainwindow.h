@@ -58,9 +58,6 @@ private slots:
 	void onQtMindHomePage();
 	void onAbout();
 	void onShowContextMenu(const QPoint &position);
-	void onPegNumberChanged();
-	void onColorNumberChanged();
-	void onSameColorAllowedChanged();
 	void onAlgorithmChanded();
 
 private:

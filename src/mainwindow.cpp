@@ -102,15 +102,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onGameModeChanged(QAction*)));
 	connect(ui->actionShow_Indicators, SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
-	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onSameColorAllowedChanged()));
+	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onNewGame()));
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoPutPins()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onAutoCloseRows()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
 	connect(ui->actionQtMind_Home_Page, SIGNAL(triggered()), this, SLOT(onQtMindHomePage()));
 	connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onColorNumberChanged()));
-	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onPegNumberChanged()));
+	connect(colorsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
+	connect(pegsNumberComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmChanded()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
@@ -187,14 +187,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::onNewGame()
 {
-	updateGameRules();
-	ui->actionResign->setEnabled(gameRules.gameMode == GameMode::HVM);
-	ui->actionResign->setVisible(gameRules.gameMode == GameMode::HVM);
-	ui->actionReveal_One_Peg->setEnabled(gameRules.gameMode == GameMode::HVM);
-	ui->actionReveal_One_Peg->setVisible(gameRules.gameMode == GameMode::HVM);
-
-	if(quitUnfinishedGame())
+	if (quitUnfinishedGame())
+	{
+		game->stop();
+		updateGameRules();
+		ui->actionResign->setEnabled(gameRules.gameMode == GameMode::HVM);
+		ui->actionResign->setVisible(gameRules.gameMode == GameMode::HVM);
+		ui->actionReveal_One_Peg->setEnabled(gameRules.gameMode == GameMode::HVM);
+		ui->actionReveal_One_Peg->setVisible(gameRules.gameMode == GameMode::HVM);
 		game->play();
+	}
 }
 //-----------------------------------------------------------------------------
 
@@ -271,42 +273,8 @@ void MainWindow::onIndicatorChanged()
 void MainWindow::onGameModeChanged(QAction *selectedAction)
 {
 	Q_UNUSED(selectedAction);
-	if (getGameMode() != gameRules.gameMode && quitUnfinishedGame())
-	{
-		game->stop();
-//		gameRules.gameMode =  (GameMode) selectedAction->data().toInt();
+	if (getGameMode() != gameRules.gameMode)
 		onNewGame();
-	}
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::onPegNumberChanged()
-{
-	if (quitUnfinishedGame())
-	{
-		game->stop();
-		onNewGame();
-	}
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::onColorNumberChanged()
-{
-	if (quitUnfinishedGame())
-	{
-		game->stop();
-		onNewGame();
-	}
-}
-//-----------------------------------------------------------------------------
-
-void MainWindow::onSameColorAllowedChanged()
-{
-	if (quitUnfinishedGame())
-	{
-		game->stop();
-		onNewGame();
-	}
 }
 //-----------------------------------------------------------------------------
 

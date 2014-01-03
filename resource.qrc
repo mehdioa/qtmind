@@ -1,18 +1,24 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/close-icon.png</file>
         <file>icons/same_color_0.png</file>
         <file>icons/same_color_1.png</file>
         <file>icons/qt_icon.png</file>
-        <file>icons/new-icon.png</file>
-        <file>icons/modemaster.png</file>
-        <file>icons/resign.png</file>
-        <file>icons/modebreaker.png</file>
         <file>icons/hicolor/64x64/qtmind.png</file>
-        <file>icons/reveal_one_peg.png</file>
         <file>sounds/pegdrop.wav</file>
         <file>sounds/pegrefuse.wav</file>
         <file>sounds/pin.wav</file>
-        <file>icons/globe-icon.png</file>
+        <file>icons/application-exit.png</file>
+        <file>icons/applications-internet.png</file>
+        <file>icons/configure.png</file>
+        <file>icons/cpu.png</file>
+        <file>icons/dialog-information.png</file>
+        <file>icons/emblem-favorite.png</file>
+        <file>icons/emblem-new.png</file>
+        <file>icons/layer-visible-on.png</file>
+        <file>icons/list-remove.png</file>
+        <file>icons/system-help.png</file>
+        <file>icons/task-accepted.png</file>
+        <file>icons/task-complete.png</file>
+        <file>icons/meeting-organizer.png</file>
     </qresource>
 </RCC>
