@@ -25,7 +25,7 @@
    </property>
    <widget class="QMenu" name="menuGame">
     <property name="title">
-     <string notr="true"/>
+     <string notr="true">Game</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionReveal_One_Peg"/>
@@ -34,15 +34,21 @@
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
-    <property name="title">
+    <property name="accessibleName">
      <string notr="true"/>
+    </property>
+    <property name="title">
+     <string notr="true">Tools</string>
     </property>
     <widget class="QMenu" name="menuGameMode">
      <property name="enabled">
       <bool>true</bool>
      </property>
-     <property name="title">
+     <property name="accessibleName">
       <string notr="true"/>
+     </property>
+     <property name="title">
+      <string notr="true">Tools</string>
      </property>
      <property name="icon">
       <iconset theme="emblem-favorite">
@@ -64,8 +70,11 @@
     <addaction name="actionOptions"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
-    <property name="title">
+    <property name="accessibleName">
      <string notr="true"/>
+    </property>
+    <property name="title">
+     <string notr="true">Help</string>
     </property>
     <addaction name="actionQtMind_Home_Page"/>
     <addaction name="separator"/>
@@ -101,6 +110,9 @@
     <iconset theme="list-add" resource="../resource.qrc">
      <normaloff>:/icons/new-icon.png</normaloff>:/icons/new-icon.png</iconset>
    </property>
+   <property name="text">
+    <string notr="true">New</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
    </property>
@@ -111,10 +123,10 @@
      <normaloff>:/icons/resign.png</normaloff>:/icons/resign.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Resign</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Resign</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -123,10 +135,10 @@
      <normaloff>:/icons/close-icon.png</normaloff>:/icons/close-icon.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Quit</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -142,10 +154,10 @@
     </iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Auto Put Pins</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Auto Put Pins</string>
    </property>
   </action>
   <action name="actionAuto_Close_Rows">
@@ -157,12 +169,24 @@
      <normaloff/>
     </iconset>
    </property>
+   <property name="text">
+    <string notr="true">Auto Close Rows</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Auto Close Rows</string>
+   </property>
   </action>
   <action name="actionOptions">
    <property name="icon">
     <iconset theme="configure">
      <normaloff/>
     </iconset>
+   </property>
+   <property name="text">
+    <string notr="true">Options</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Options</string>
    </property>
   </action>
   <action name="actionAbout_QtMind">
@@ -171,13 +195,16 @@
      <normaloff>:/icons/hicolor/64x64/qtmind.png</normaloff>:/icons/hicolor/64x64/qtmind.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">About QtMind</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">About QtMind</string>
    </property>
    <property name="toolTip">
     <string>About QtMind</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAbout_Qt">
@@ -186,9 +213,12 @@
      <normaloff>:/icons/qt_icon.png</normaloff>:/icons/qt_icon.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">About QtMind</string>
    </property>
    <property name="iconText">
+    <string notr="true">About QtMind</string>
+   </property>
+   <property name="shortcut">
     <string notr="true"/>
    </property>
   </action>
@@ -201,10 +231,10 @@
      <normaloff>:/icons/modemaster.png</normaloff>:/icons/modemaster.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Machine vs Human</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Machine vs Human</string>
    </property>
   </action>
   <action name="actionGameMode_HVM">
@@ -216,10 +246,10 @@
      <normaloff>:/icons/modebreaker.png</normaloff>:/icons/modebreaker.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Human vs Machine</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Human vs Machine</string>
    </property>
   </action>
   <action name="actionReveal_One_Peg">
@@ -228,10 +258,10 @@
      <normaloff>:/icons/reveal_one_peg.png</normaloff>:/icons/reveal_one_peg.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Reveal One Peg</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Reveal One Peg</string>
    </property>
   </action>
   <action name="actionQtMind_Home_Page">
@@ -240,13 +270,16 @@
      <normaloff>:/icons/globe-icon.png</normaloff>:/icons/globe-icon.png</iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">QtMind Home Page</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">QtMind Home Page</string>
    </property>
    <property name="toolTip">
     <string>Go to QtMind home page</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionShow_Indicators">
@@ -259,10 +292,10 @@
     </iconset>
    </property>
    <property name="text">
-    <string notr="true"/>
+    <string notr="true">Show Indicators</string>
    </property>
    <property name="iconText">
-    <string notr="true"/>
+    <string notr="true">Show Indicators</string>
    </property>
   </action>
  </widget>
