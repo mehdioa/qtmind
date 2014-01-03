@@ -13,12 +13,12 @@
         <file>icons/cpu.png</file>
         <file>icons/dialog-information.png</file>
         <file>icons/emblem-favorite.png</file>
-        <file>icons/emblem-new.png</file>
         <file>icons/layer-visible-on.png</file>
         <file>icons/list-remove.png</file>
         <file>icons/system-help.png</file>
         <file>icons/task-accepted.png</file>
         <file>icons/task-complete.png</file>
-        <file>icons/meeting-organizer.png</file>
+        <file>icons/list-add.png</file>
+        <file>icons/meeting-chair.png</file>
     </qresource>
 </RCC>

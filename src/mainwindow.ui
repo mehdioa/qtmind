@@ -107,8 +107,8 @@
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset theme="emblem-new" resource="../resource.qrc">
-     <normaloff>:/icons/emblem-new.png</normaloff>:/icons/emblem-new.png</iconset>
+    <iconset theme="list-add" resource="../resource.qrc">
+     <normaloff>:/icons/list-add.png</normaloff>:/icons/list-add.png</iconset>
    </property>
    <property name="text">
     <string notr="true">New</string>
@@ -239,8 +239,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="meeting-organizer" resource="../resource.qrc">
-     <normaloff>:/icons/meeting-organizer.png</normaloff>:/icons/meeting-organizer.png</iconset>
+    <iconset theme="meeting-chair" resource="../resource.qrc">
+     <normaloff>:/icons/meeting-chair.png</normaloff>:/icons/meeting-chair.png</iconset>
    </property>
    <property name="text">
     <string notr="true">Human vs Machine</string>
