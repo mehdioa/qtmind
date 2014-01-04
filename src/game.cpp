@@ -93,7 +93,7 @@ void Game::codeRowFilled(const bool &m_filled)
 		else
 		{
 			pinBoxes.first()->setState(BoxState::Future);
-			message->setText(tr("Place Your Pegs"));
+			message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 		}
 	}
 	else	//gameRules->gameMode == GameMode::MVH
@@ -102,7 +102,7 @@ void Game::codeRowFilled(const bool &m_filled)
 		if (m_filled)//the user is not done putting the master code
 			message->setText(tr("Press Done"));
 		else
-			message->setText(tr("Place Your Pegs"));
+			message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -344,7 +344,7 @@ void Game::onPinBoxPressed()
 	}
 	else // continue the game
 	{
-		message->setText(tr("Place Your Pegs"));
+		message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 		for(int i = 0; i < gameRules->pegNumber; ++i) //put the next codeboxes in action
 		{
 			currentBoxes.append(codeBoxes.first());
@@ -477,7 +477,7 @@ void Game::onGuessReady()
 			codeBoxes.first()->setState(BoxState::Past);
 			codeBoxes.removeFirst();
 		}
-		message->setText(tr("Please Put Pins And Press OK"));
+		message->setText(tr("Please Put The Pin(s) And Press OK", "", gameRules->pegNumber));
 		pinBoxes.first()->setState(BoxState::None);
 		okButton->setEnabled(true);
 		okButton->setVisible(true);
@@ -535,7 +535,7 @@ void Game::playMVH()
 	emit interuptSignal();
 	emit resetGameSignal();
 
-	message->setText(tr("Place Your Pegs"));
+	message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 
 	for(int i = 0; i < gameRules->pegNumber; ++i) //initializing currentrow
 	{
@@ -580,7 +580,7 @@ void Game::playHVM()
 		codeBoxes.removeFirst();
 	}
 
-	message->setText(tr("Place Your Pegs"));
+	message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
 }
 
@@ -641,8 +641,8 @@ void Game::showTranslatedInformation()
 		}
 	}
 	else
-		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots")).
-								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors")).
+		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slot(s)", "", gameRules->pegNumber)).
+								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Color(s)", "", gameRules->colorNumber)).
 								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
 								  arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
 }

@@ -9,15 +9,6 @@
         <translation>کادر پین‌ها را بفشارید</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="96"/>
-        <location filename="../src/game.cpp" line="105"/>
-        <location filename="../src/game.cpp" line="347"/>
-        <location filename="../src/game.cpp" line="538"/>
-        <location filename="../src/game.cpp" line="583"/>
-        <source>Place Your Pegs</source>
-        <translation>گوی‌ها را بگذارید</translation>
-    </message>
-    <message>
         <location filename="../src/game.cpp" line="103"/>
         <source>Press Done</source>
         <translation>انجام را بفشارید</translation>
@@ -33,16 +24,6 @@
         <location filename="../src/game.cpp" line="373"/>
         <source>Done</source>
         <translation>انجام</translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="644"/>
-        <source>Slots</source>
-        <translation>گوی</translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="645"/>
-        <source>Colors</source>
-        <translation>رنگ</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="646"/>
@@ -63,6 +44,17 @@
         <location filename="../src/game.cpp" line="335"/>
         <source>Success! You Win</source>
         <translation>شما برنده شدید</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="96"/>
+        <location filename="../src/game.cpp" line="105"/>
+        <location filename="../src/game.cpp" line="347"/>
+        <location filename="../src/game.cpp" line="538"/>
+        <location filename="../src/game.cpp" line="583"/>
+        <source>Place Your Peg(s)</source>
+        <translation>
+            <numerusform>گوی‌ها را بگذارید</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="342"/>
@@ -85,15 +77,31 @@
         <source>Let Me Think</source>
         <translation>بگذارید بیاندیشم</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="480"/>
+        <source>Please Put The Pin(s) And Press OK</source>
+        <translation>
+            <numerusform>پین‌ها را بگذارید و آری را بفشارید</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="644"/>
+        <source>Slot(s)</source>
+        <translation>
+            <numerusform>گوی</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="645"/>
+        <source>Color(s)</source>
+        <translation>
+            <numerusform>رنگ</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/game.cpp" line="431"/>
         <source>Ready To Play</source>
         <translation>آمادهٔ بازی</translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="480"/>
-        <source>Please Put Pins And Press OK</source>
-        <translation>پین‌ها را بگذارید و آری را بفشارید</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="614"/>
@@ -133,7 +141,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../src/mainwindow.cpp" line="132"/>
-        <location filename="../src/mainwindow.cpp" line="246"/>
+        <location filename="../src/mainwindow.cpp" line="248"/>
         <source>QtMind</source>
         <translation>کیوت‌مایند</translation>
     </message>
@@ -148,56 +156,44 @@
         <translation>&amp;انسان رو در روی ماشین</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="206"/>
+        <location filename="../src/mainwindow.cpp" line="208"/>
         <source>New Game</source>
         <translation>بازی نو</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="247"/>
+        <location filename="../src/mainwindow.cpp" line="249"/>
         <source>Code Breaking Game, A Clone Of The Mastermind Board Game</source>
         <translation>بازی شکستن کد، شبیه‌سازی بازی فکر بکر</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="248"/>
+        <location filename="../src/mainwindow.cpp" line="250"/>
         <source>Copyright &amp;copy; 2013-%1 Omid Nikta</source>
         <translation>حق نشر &amp;copy; ۲۰۱۳-%1 امید نیکتا</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="251"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>انتشار یافته زیر &lt;a href=%1&gt;پروانهٔ همگانی گنو ۳&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="78"/>
-        <location filename="../src/mainwindow.cpp" line="162"/>
-        <source>Colors</source>
-        <translation>رنگ</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="69"/>
-        <location filename="../src/mainwindow.cpp" line="156"/>
-        <source>Slots</source>
-        <translation>گوی</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="208"/>
+        <location filename="../src/mainwindow.cpp" line="210"/>
         <source>An unfinished game is in progress.</source>
         <translation>بازی ناتمام در جریان است.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="209"/>
+        <location filename="../src/mainwindow.cpp" line="211"/>
         <source>Do you want to start a new game?</source>
         <translation>آیا می‌خواهید بازی تازه‌ای آغاز کنید؟</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="167"/>
-        <location filename="../src/mainwindow.cpp" line="341"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Same Color Allowed</source>
         <translation>رنگ یکسان مجاز</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="169"/>
-        <location filename="../src/mainwindow.cpp" line="343"/>
+        <location filename="../src/mainwindow.cpp" line="311"/>
         <source>Same Color Not Allwed</source>
         <translation>رنگ یکسان نامجاز</translation>
     </message>
@@ -206,6 +202,22 @@
         <location filename="../src/mainwindow.cpp" line="158"/>
         <source>Choose the numbe of slots</source>
         <translation>گزیدن شمار گوی‌ها</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="69"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
+        <source>Slot(s)</source>
+        <translation>
+            <numerusform>گوی</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
+        <source>Color(s)</source>
+        <translation>
+            <numerusform>رنگ</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>
@@ -313,28 +325,28 @@
         <translation>کمترین واریانس</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="117"/>
+        <location filename="../src/mainwindow.ui" line="116"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="144"/>
+        <location filename="../src/mainwindow.ui" line="143"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="219"/>
+        <location filename="../src/mainwindow.cpp" line="221"/>
         <source>Options</source>
         <translation>گزینه‌ها</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="204"/>
-        <location filename="../src/mainwindow.cpp" line="244"/>
+        <location filename="../src/mainwindow.ui" line="200"/>
+        <location filename="../src/mainwindow.cpp" line="246"/>
         <source>About QtMind</source>
         <translation>دربارهٔ کیوت‌مایند</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="279"/>
+        <location filename="../src/mainwindow.ui" line="275"/>
         <source>Go to QtMind home page</source>
         <translation>به تارنمای کیوت‌مایند برو</translation>
     </message>

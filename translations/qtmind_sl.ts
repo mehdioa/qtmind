@@ -9,15 +9,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="96"/>
-        <location filename="../src/game.cpp" line="105"/>
-        <location filename="../src/game.cpp" line="347"/>
-        <location filename="../src/game.cpp" line="538"/>
-        <location filename="../src/game.cpp" line="583"/>
-        <source>Place Your Pegs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/game.cpp" line="103"/>
         <source>Press Done</source>
         <translation type="unfinished"></translation>
@@ -32,16 +23,6 @@
         <location filename="../src/game.cpp" line="226"/>
         <location filename="../src/game.cpp" line="373"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="644"/>
-        <source>Slots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="645"/>
-        <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -64,6 +45,20 @@
         <source>Success! You Win</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="96"/>
+        <location filename="../src/game.cpp" line="105"/>
+        <location filename="../src/game.cpp" line="347"/>
+        <location filename="../src/game.cpp" line="538"/>
+        <location filename="../src/game.cpp" line="583"/>
+        <source>Place Your Peg(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/game.cpp" line="342"/>
         <source>Game Over! You Failed</source>
@@ -85,14 +80,39 @@
         <source>Let Me Think</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="480"/>
+        <source>Please Put The Pin(s) And Press OK</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="644"/>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="645"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/game.cpp" line="431"/>
         <source>Ready To Play</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/game.cpp" line="480"/>
-        <source>Please Put Pins And Press OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -132,34 +152,34 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.ui" line="117"/>
+        <location filename="../src/mainwindow.ui" line="116"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="144"/>
+        <location filename="../src/mainwindow.ui" line="143"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="219"/>
+        <location filename="../src/mainwindow.cpp" line="221"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="204"/>
-        <location filename="../src/mainwindow.cpp" line="244"/>
+        <location filename="../src/mainwindow.ui" line="200"/>
+        <location filename="../src/mainwindow.cpp" line="246"/>
         <source>About QtMind</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="279"/>
+        <location filename="../src/mainwindow.ui" line="275"/>
         <source>Go to QtMind home page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="132"/>
-        <location filename="../src/mainwindow.cpp" line="246"/>
+        <location filename="../src/mainwindow.cpp" line="248"/>
         <source>QtMind</source>
         <translation type="unfinished"></translation>
     </message>
@@ -169,23 +189,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="206"/>
+        <location filename="../src/mainwindow.cpp" line="208"/>
         <source>New Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="208"/>
+        <location filename="../src/mainwindow.cpp" line="210"/>
         <source>An unfinished game is in progress.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="209"/>
+        <location filename="../src/mainwindow.cpp" line="211"/>
         <source>Do you want to start a new game?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="167"/>
-        <location filename="../src/mainwindow.cpp" line="341"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Same Color Allowed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -201,30 +221,46 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="169"/>
-        <location filename="../src/mainwindow.cpp" line="343"/>
+        <location filename="../src/mainwindow.cpp" line="311"/>
         <source>Same Color Not Allwed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="247"/>
+        <location filename="../src/mainwindow.cpp" line="249"/>
         <source>Code Breaking Game, A Clone Of The Mastermind Board Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="248"/>
+        <location filename="../src/mainwindow.cpp" line="250"/>
         <source>Copyright &amp;copy; 2013-%1 Omid Nikta</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="251"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
+    <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="69"/>
         <location filename="../src/mainwindow.cpp" line="156"/>
-        <source>Slots</source>
-        <translation type="unfinished"></translation>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>
@@ -305,12 +341,6 @@
         <location filename="../src/mainwindow.cpp" line="72"/>
         <location filename="../src/mainwindow.cpp" line="158"/>
         <source>Choose the numbe of slots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="78"/>
-        <location filename="../src/mainwindow.cpp" line="162"/>
-        <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
