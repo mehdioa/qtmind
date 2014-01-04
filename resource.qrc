@@ -20,5 +20,6 @@
         <file>icons/task-complete.png</file>
         <file>icons/list-add.png</file>
         <file>icons/meeting-chair.png</file>
+        <file>icons/layer-visible-off.png</file>
     </qresource>
 </RCC>

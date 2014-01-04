@@ -27,7 +27,7 @@ endif(${CMAKE_BUILD_TYPE} MATCHES "Release")
 # ------------------------------------------------------------------------------
 #  EXTERNAL PACKAGE
 # ------------------------------------------------------------------------------
-find_package( Qt4 4.5.0 REQUIRED QtCore QtGui)
+find_package( Qt4 4.5.0 COMPONENTS QtCore QtGui REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #FIND_PACKAGE(Qt5Widgets)
