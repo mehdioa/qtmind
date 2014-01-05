@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.0" language="en_US">
 <context>
     <name>Game</name>
     <message>
@@ -110,12 +110,12 @@
     <message>
         <location filename="../src/game.cpp" line="614"/>
         <source>The Code Is Cracked!</source>
-        <translation type="unfinished"></translation>
+        <translation>The Code Is Cracked!</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="618"/>
         <source>Random Guess</source>
-        <translation type="unfinished"></translation>
+        <translation>Random Guess</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="619"/>
@@ -123,22 +123,22 @@
         <location filename="../src/game.cpp" line="631"/>
         <location filename="../src/game.cpp" line="636"/>
         <source>Remaining</source>
-        <translation type="unfinished"></translation>
+        <translation>Remaining</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="625"/>
         <source>Most Parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Most Parts</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="630"/>
         <source>Worst Case</source>
-        <translation type="unfinished"></translation>
+        <translation>Worst Case</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="635"/>
         <source>Expected Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Expected Size</translation>
     </message>
 </context>
 <context>
@@ -156,81 +156,81 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="221"/>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Options</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="200"/>
         <location filename="../src/mainwindow.cpp" line="246"/>
         <source>About QtMind</source>
-        <translation type="unfinished"></translation>
+        <translation>About QtMind</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="275"/>
         <source>Go to QtMind home page</source>
-        <translation type="unfinished"></translation>
+        <translation>Go to QtMind home page</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="132"/>
         <location filename="../src/mainwindow.cpp" line="248"/>
         <source>QtMind</source>
-        <translation type="unfinished"></translation>
+        <translation>QtMind</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="58"/>
         <source>Allow Same Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Allow Same Color</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="208"/>
         <source>New Game</source>
-        <translation type="unfinished"></translation>
+        <translation>New Game</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="210"/>
         <source>An unfinished game is in progress.</source>
-        <translation type="unfinished"></translation>
+        <translation>An unfinished game is in progress.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="211"/>
         <source>Do you want to start a new game?</source>
-        <translation type="unfinished"></translation>
+        <translation>Do you want to start a new game?</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="167"/>
         <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Same Color Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Same Color Allowed</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="141"/>
         <source>&amp;Machine vs Human</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Machine vs Human</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="142"/>
         <source>&amp;Human vs Machine</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Human vs Machine</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="169"/>
         <location filename="../src/mainwindow.cpp" line="311"/>
         <source>Same Color Not Allwed</source>
-        <translation type="unfinished"></translation>
+        <translation>Same Color Not Allwed</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="249"/>
         <source>Code Breaking Game, A Clone Of The Mastermind Board Game</source>
-        <translation type="unfinished"></translation>
+        <translation>Code Breaking Game, A Clone Of The Mastermind Board Game</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="250"/>
         <source>Copyright &amp;copy; 2013-%1 Omid Nikta</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright &amp;copy; 2013-%1 Omid Nikta</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="251"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
-        <translation type="unfinished"></translation>
+        <translation>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/mainwindow.cpp" line="69"/>
@@ -253,113 +253,113 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>
         <source>&amp;Game</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Game</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="134"/>
         <source>&amp;New</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;New</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="135"/>
         <source>Reveal One &amp;Peg</source>
-        <translation type="unfinished"></translation>
+        <translation>Reveal One &amp;Peg</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="136"/>
         <source>&amp;Resign</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Resign</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="137"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Quit</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="139"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tools</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="140"/>
         <source>Game &amp;Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Game &amp;Mode</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Show &amp;Indicators</source>
-        <translation type="unfinished"></translation>
+        <translation>Show &amp;Indicators</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="144"/>
         <source>Auto Put &amp;Pins</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Put &amp;Pins</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="145"/>
         <source>Auto Close &amp;Rows</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto Close &amp;Rows</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="146"/>
         <source>&amp;Options</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Options</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="148"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="149"/>
         <source>QtMind &amp;Home Page</source>
-        <translation type="unfinished"></translation>
+        <translation>QtMind &amp;Home Page</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="150"/>
         <source>About Qt&amp;Mind</source>
-        <translation type="unfinished"></translation>
+        <translation>About Qt&amp;Mind</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="151"/>
         <source>About &amp;Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>About &amp;Qt</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="72"/>
         <location filename="../src/mainwindow.cpp" line="158"/>
         <source>Choose the numbe of slots</source>
-        <translation type="unfinished"></translation>
+        <translation>Choose the numbe of slots</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="81"/>
         <location filename="../src/mainwindow.cpp" line="164"/>
         <source>Choose the number of colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Choose the number of colors</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="85"/>
         <location filename="../src/mainwindow.cpp" line="172"/>
         <source>Choose the solving algorithm</source>
-        <translation type="unfinished"></translation>
+        <translation>Choose the solving algorithm</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="86"/>
         <location filename="../src/mainwindow.cpp" line="173"/>
         <source>Most Parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Most Parts</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="87"/>
         <location filename="../src/mainwindow.cpp" line="174"/>
         <source>Worst Case</source>
-        <translation type="unfinished"></translation>
+        <translation>Worst Case</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="88"/>
         <location filename="../src/mainwindow.cpp" line="175"/>
         <source>Expected Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Expected Size</translation>
     </message>
 </context>
 <context>
@@ -367,47 +367,47 @@
     <message>
         <location filename="../src/preferences.ui" line="30"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Language</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="48"/>
         <source>Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Font</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="77"/>
         <source>Indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>Indicator</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="83"/>
         <source>Show Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Show Colors</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="90"/>
         <source>Characters</source>
-        <translation type="unfinished"></translation>
+        <translation>Characters</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="97"/>
         <source>Digits</source>
-        <translation type="unfinished"></translation>
+        <translation>Digits</translation>
     </message>
     <message>
         <location filename="../src/preferences.ui" line="115"/>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume</translation>
     </message>
     <message>
         <location filename="../src/preferences.cpp" line="46"/>
         <source>Points</source>
-        <translation type="unfinished"></translation>
+        <translation>Points</translation>
     </message>
     <message>
         <location filename="../src/preferences.cpp" line="54"/>
         <source>&lt;System Language&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;System Language&gt;</translation>
     </message>
 </context>
 </TS>

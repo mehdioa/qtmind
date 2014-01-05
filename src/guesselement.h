@@ -25,6 +25,7 @@
 
 struct GuessElement
 {
+	GuessElement();
 	void reset(const Algorithm &algorithm_m, const int &possibles_m);
 
 	QString guess;

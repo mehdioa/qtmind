@@ -53,9 +53,9 @@
         <location filename="../src/game.cpp" line="583"/>
         <source>Place Your Peg(s)</source>
         <translation>
-            <numerusform>Umístěte své kolíky</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Umístěte své kameny</numerusform>
+            <numerusform>Umístěte své kameny</numerusform>
+            <numerusform>Umístěte své kameny</numerusform>
         </translation>
     </message>
     <message>
@@ -84,26 +84,26 @@
         <source>Please Put The Pin(s) And Press OK</source>
         <translation>
             <numerusform>Umístěte, prosím, kameny a stiskněte OK</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Umístěte, prosím, kameny a stiskněte OK</numerusform>
+            <numerusform>Umístěte, prosím, kameny a stiskněte OK</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/game.cpp" line="644"/>
         <source>Slot(s)</source>
         <translation>
-            <numerusform>Pole</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>pole</numerusform>
+            <numerusform>pole</numerusform>
+            <numerusform>polí</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../src/game.cpp" line="645"/>
         <source>Color(s)</source>
         <translation>
-            <numerusform>Barvy</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>barva</numerusform>
+            <numerusform>barvy</numerusform>
+            <numerusform>barev</numerusform>
         </translation>
     </message>
     <message>
@@ -114,7 +114,7 @@
     <message>
         <location filename="../src/game.cpp" line="614"/>
         <source>The Code Is Cracked!</source>
-        <translation>Kód je praštěný!</translation>
+        <translation>Kód je rozluštěn!</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="618"/>
@@ -211,8 +211,8 @@
         <source>Slot(s)</source>
         <translation>
             <numerusform>Pole</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Pole</numerusform>
+            <numerusform>Polí</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -220,9 +220,9 @@
         <location filename="../src/mainwindow.cpp" line="162"/>
         <source>Color(s)</source>
         <translation>
+            <numerusform>Barva</numerusform>
             <numerusform>Barvy</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Barev</numerusform>
         </translation>
     </message>
     <message>

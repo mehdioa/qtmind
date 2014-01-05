@@ -19,6 +19,11 @@
 
 #include "guesselement.h"
 
+GuessElement::GuessElement()
+{
+	reset(Algorithm::MostParts, 0);
+}
+
 void GuessElement::reset(const Algorithm &algorithm_m, const int &possibles_m)
 {
 	guess = "";
