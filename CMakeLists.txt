@@ -42,10 +42,18 @@ include(cmake/Rpm.cmake)
 include(cmake/Summary.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-if (CMAKE_CXX_COMPILER MATCHES ".*clang")
-  set(CMAKE_COMPILER_IS_CLANGXX 1)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
-endif ()
+# if (CMAKE_CXX_COMPILER MATCHES ".*clang")
+#   set(CMAKE_COMPILER_IS_CLANGXX 1)
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-uninitialized")
+# endif ()
+
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
+if (CMAKE_COMPILER_IS_GNUCXX)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--as-needed")
+    endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif (CMAKE_COMPILER_IS_GNUCXX)
 
 
 include_directories(
