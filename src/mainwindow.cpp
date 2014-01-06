@@ -238,7 +238,8 @@ void MainWindow::onAbout()
 {
 	QStringList app_version = QCoreApplication::applicationVersion().split('.');
 	QString localized_app_version = "";
-	foreach (QString sub_version_number, app_version) {
+	foreach (QString sub_version_number, app_version)
+	{
 		localized_app_version.append(boardAid.locale.toString(sub_version_number.toInt()));
 		localized_app_version.append(boardAid.locale.decimalPoint());
 	}

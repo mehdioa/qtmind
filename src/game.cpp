@@ -343,7 +343,7 @@ void Game::onPinBoxPressed()
 		freezeAllLists();
 
 	}
-	else if (playedMoves >= MAX_COLOR_NUMBER) //out of more row of codes, a fail
+	else if (playedMoves >= MAX_COLOR_NUMBER - 1) //out of more row of codes, a fail
 	{
 		gameState = GameState::Lose;
 		message->setText(tr("Game Over! You Failed"));
