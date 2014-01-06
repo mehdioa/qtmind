@@ -85,14 +85,14 @@ void Game::codeRowFilled(const bool &m_filled)
 	{
 		if (m_filled)
 		{
-			pinBoxes.first()->setState(BoxState::Current);
+			pinBoxes.at(playedMoves)->setState(BoxState::Current);
 			message->setText(tr("Press The Pin Box"));
 			if (boardAid->autoCloseRows)
 				onPinBoxPressed();
 		}
 		else
 		{
-			pinBoxes.first()->setState(BoxState::Future);
+			pinBoxes.at(playedMoves)->setState(BoxState::Future);
 			message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 		}
 	}
@@ -200,8 +200,19 @@ void Game::freezeAllLists()
 {
 	setStateOfList(&masterBoxes, BoxState::Past);
 	setStateOfList(&currentBoxes, BoxState::Past);
-	setStateOfList(&pinBoxes, BoxState::Future);
+//	setStateOfList(&pinBoxes, BoxState::Future);
+	pinBoxes.at(playedMoves)->setState(BoxState::Past);
 	setStateOfList(&pegBoxes, BoxState::Future);
+}
+//-----------------------------------------------------------------------------
+
+void Game::setNextRowInAction()
+{
+	currentBoxes.clear();
+	for(int i = playedMoves*gameRules->pegNumber; i < (playedMoves+1)*gameRules->pegNumber; ++i)
+		currentBoxes.append(codeBoxes.at(i));
+	setStateOfList(&currentBoxes, BoxState::Current);
+	message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
 }
 //-----------------------------------------------------------------------------
 
@@ -212,6 +223,7 @@ void Game::initializeScene()
 	pegBoxes.clear();
 	masterBoxes.clear();
 	currentBoxes.clear();
+	playedMoves = 0;
 
 	scene()->clear();
 	setInteractive(true);
@@ -317,18 +329,13 @@ void Game::onPinBoxPressed()
 	for(int i = 0; i < gameRules->pegNumber; ++i)
 		guessElement.guess.append(QString::number(currentBoxes.at(i)->getPegColor()));
 
-	pinBoxes.first()->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
-	bool isDone = (pinBoxes.first()->getValue() == (gameRules->pegNumber + 1)*(gameRules->pegNumber + 2)/2 - 1);
-	pinBoxes.first()->setState(BoxState::Past);
-	pinBoxes.removeFirst();	// the pinbox goes to past
+	pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
+	bool isDone = (pinBoxes.at(playedMoves)->getValue() == (gameRules->pegNumber + 1)*(gameRules->pegNumber + 2)/2 - 1);
+	pinBoxes.at(playedMoves)->setState(BoxState::Past);
+//	pinBoxes.removeFirst();	// the pinbox goes to past
 
-	//old row of codes goes to past and are removed from current
-	for(int i = 0; i < gameRules->pegNumber; ++i)
-	{
-		currentBoxes.first()->setState(BoxState::Past);
-		currentBoxes.removeFirst();
-	}
-
+	setStateOfList(&currentBoxes, BoxState::Past);
+	currentBoxes.clear();
 	if (isDone) //success here
 	{
 		gameState = GameState::Win;
@@ -336,7 +343,7 @@ void Game::onPinBoxPressed()
 		freezeAllLists();
 
 	}
-	else if (codeBoxes.isEmpty()) //out of more row of codes, a fail
+	else if (playedMoves >= MAX_COLOR_NUMBER) //out of more row of codes, a fail
 	{
 		gameState = GameState::Lose;
 		message->setText(tr("Game Over! You Failed"));
@@ -344,13 +351,8 @@ void Game::onPinBoxPressed()
 	}
 	else // continue the game
 	{
-		message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
-		for(int i = 0; i < gameRules->pegNumber; ++i) //put the next codeboxes in action
-		{
-			currentBoxes.append(codeBoxes.first());
-			codeBoxes.first()->setState(BoxState::Current);
-			codeBoxes.removeFirst();
-		}
+		++playedMoves;
+		setNextRowInAction();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -414,7 +416,7 @@ void Game::onResigned()
 
 void Game::onOkButtonPressed()
 {
-	int resp = pinBoxes.first()->getValue();
+	int resp = pinBoxes.at(playedMoves)->getValue();
 	if(!solver->setResponse(resp))
 	{
 		message->setText(tr("Not Possible, Try Again"));
@@ -423,8 +425,8 @@ void Game::onOkButtonPressed()
 	boardAid->boardSounds.playButtonPressSound();
 	okButton->setVisible(false);
 
-	pinBoxes.first()->setState(BoxState::Past);
-	pinBoxes.removeFirst();
+	pinBoxes.at(playedMoves)->setState(BoxState::Past);
+//	pinBoxes.removeFirst();
 
 	if (solver->done())
 	{
@@ -434,6 +436,7 @@ void Game::onOkButtonPressed()
 	}
 
 	message->setText(tr("Let Me Think"));
+	++playedMoves;
 	emit startGuessingSignal();
 }
 //-----------------------------------------------------------------------------
@@ -471,22 +474,23 @@ void Game::onGuessReady()
 	}
 	else
 	{
+		int box_index = playedMoves*gameRules->pegNumber;
 		for(int i = 0; i < gameRules->pegNumber; ++i)
 		{
-			createPegForBox(codeBoxes.first(), guessElement.guess[i].digitValue());
-			codeBoxes.first()->setState(BoxState::Past);
-			codeBoxes.removeFirst();
+			createPegForBox(codeBoxes.at(box_index + i), guessElement.guess[i].digitValue());
+			codeBoxes.at(box_index + i)->setState(BoxState::Past);
+//			codeBoxes.removeFirst();
 		}
 		message->setText(tr("Please Put The Pin(s) And Press OK", "", gameRules->pegNumber));
-		pinBoxes.first()->setState(BoxState::None);
+		pinBoxes.at(playedMoves)->setState(BoxState::None);
 		okButton->setEnabled(true);
 		okButton->setVisible(true);
-		okButton->setPos(pinBoxes.first()->pos()-QPoint(0, 39));
+		okButton->setPos(pinBoxes.at(playedMoves)->pos()-QPoint(0, 39));
 	}
 
 	if (boardAid->autoPutPins)
 	{
-		pinBoxes.first()->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
+		pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -497,10 +501,8 @@ void Game::play()
 
 	if(gameRules->gameMode == GameMode::MVH)
 		playMVH();
-	else if (gameRules->gameMode == GameMode::HVM)
+	else // (gameRules->gameMode == GameMode::HVM)
 		playHVM();
-	else
-		playHVH();
 }
 //-----------------------------------------------------------------------------
 
@@ -539,9 +541,9 @@ void Game::playMVH()
 
 	for(int i = 0; i < gameRules->pegNumber; ++i) //initializing currentrow
 	{
-		currentBoxes.append(masterBoxes.first());
-		masterBoxes.first()->setState(BoxState::Current);
-		masterBoxes.removeFirst();
+		currentBoxes.append(masterBoxes.at(i));
+		masterBoxes.at(i)->setState(BoxState::Current);
+//		masterBoxes.removeFirst();
 	}
 
 	/*	Nothing happening from here till the user fill the master code
@@ -572,22 +574,8 @@ void Game::playHVM()
 			--remainingNumbers;
 		}
 	}
-
-	for(int i = 0; i < gameRules->pegNumber; ++i) //initializing currentrow
-	{
-		currentBoxes.append(codeBoxes.first());
-		codeBoxes.first()->setState(BoxState::Current);
-		codeBoxes.removeFirst();
-	}
-
-	message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
+	setNextRowInAction();
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
-}
-
-void Game::playHVH()
-{
-	freezeAllLists();
-	scene()->update();
 }
 //-----------------------------------------------------------------------------
 

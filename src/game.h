@@ -79,7 +79,6 @@ private slots:
 private:
 	void playMVH();
 	void playHVM();
-	void playHVH();
 	void createBoxes();
 	void createPegForBox(PegBox *m_box, int m_color);
 	Peg *createPeg(PegBox *m_box, const int &m_color);
@@ -87,6 +86,7 @@ private:
 	void showTranslatedInformation();
 	void initializeScene();
 	void freezeAllLists();
+	void setNextRowInAction();
 
 private:
 	QList<PinBox *> pinBoxes;	//	black-white pins
@@ -104,6 +104,7 @@ private:
 	Button *doneButton;
 	Message *message;
 	Message *information;
+	int playedMoves;
 };
 
 #endif // GAME_H
