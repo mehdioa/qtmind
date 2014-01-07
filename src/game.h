@@ -30,7 +30,14 @@ enum class GameState
 	Running,
 	Win,
 	Lose,
+	Resign,
+	Thinking,
 	WaittingFirstRowFill,
+	WaittingCodeRowFill,
+	WaittingHiddenCodeFill,
+	WaittingPinboxPress,
+	WaittingOkButtonPress,
+	WaittingDoneButtonPress
 };
 
 class Peg;
@@ -55,6 +62,7 @@ public:
 	void setAlgorithm(const Algorithm &algorithm_n);
 	void changeIndicators();
 	void retranslateTexts();
+	bool isRunning();
 
 protected:
 	void drawBackground(QPainter *painter, const QRectF &rect);
@@ -84,9 +92,11 @@ private:
 	Peg *createPeg(PegBox *m_box, const int &m_color);
 	void codeRowFilled(const bool &m_filled);
 	void showTranslatedInformation();
+	void showTranslatedMessage();
 	void initializeScene();
 	void freezeAllLists();
 	void setNextRowInAction();
+	void getNextGuess();
 
 private:
 	QList<PinBox *> pinBoxes;	//	black-white pins

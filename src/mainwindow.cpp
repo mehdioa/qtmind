@@ -202,7 +202,7 @@ void MainWindow::onNewGame()
 
 bool MainWindow::quitUnfinishedGame()
 {
-	if (game->getState() != GameState::Running)
+	if (!game->isRunning())
 		return true;
 	int new_game_accept = QMessageBox::warning(this,
 								  tr("New Game"), QString("<p align='center'>%1</p>"
