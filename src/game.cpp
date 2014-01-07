@@ -83,7 +83,7 @@ void Game::codeRowFilled(const bool &m_filled)
 		{
 			pinBoxes.at(playedMoves)->setState(BoxState::Current);
 			gameState = GameState::WaittingPinboxPress;
-			showTranslatedMessage();
+			showMessage();
 			if (boardAid->autoCloseRows)
 				onPinBoxPressed();
 		}
@@ -94,7 +94,7 @@ void Game::codeRowFilled(const bool &m_filled)
 				gameState = GameState::WaittingFirstRowFill;
 			else
 				gameState = GameState::WaittingCodeRowFill;
-			showTranslatedMessage();
+			showMessage();
 		}
 	}
 	else	//gameRules->gameMode == GameMode::MVH
@@ -103,12 +103,12 @@ void Game::codeRowFilled(const bool &m_filled)
 		if (m_filled)//the user is not done putting the master code
 		{
 			gameState = GameState::WaittingDoneButtonPress;
-			showTranslatedMessage();
+			showMessage();
 		}
 		else
 		{
 			gameState = GameState::WaittingHiddenCodeFill;
-			showTranslatedMessage();
+			showMessage();
 		}
 	}
 }
@@ -225,7 +225,7 @@ void Game::setNextRowInAction()
 void Game::getNextGuess()
 {
 	gameState = GameState::Thinking;
-	showTranslatedMessage();
+	showMessage();
 	emit startGuessingSignal();
 }
 //-----------------------------------------------------------------------------
@@ -264,7 +264,7 @@ void Game::initializeScene()
 	information = new Message(boardAid->boardFont, "#808080", 2);
 	scene()->addItem(information);
 	information->setPos(20, 506);
-	showTranslatedInformation();
+	showInformation();
 	createBoxes();
 	scene()->update();
 }
@@ -365,7 +365,7 @@ void Game::onPinBoxPressed()
 		setNextRowInAction();
 	}
 
-	showTranslatedMessage();
+	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -387,8 +387,8 @@ void Game::retranslateTexts()
 		doneButton->setLabel(tr("Done"));
 		doneButton->update();
 	}
-	showTranslatedInformation();
-	showTranslatedMessage();
+	showInformation();
+	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -440,7 +440,7 @@ void Game::onResigned()
 	if (gameRules->gameMode == GameMode::HVM && isRunning())
 	{
 		gameState = GameState::Resign;
-		showTranslatedMessage();
+		showMessage();
 		freezeAllLists();
 	}
 }
@@ -462,7 +462,7 @@ void Game::onOkButtonPressed()
 	if (solver->done())
 	{
 		gameState = GameState::Win;
-		showTranslatedMessage();
+		showMessage();
 		return;
 	}
 
@@ -494,7 +494,7 @@ void Game::onDoneButtonPressed()
 void Game::onGuessReady()
 {
 	gameState = GameState::Running;
-	showTranslatedInformation();
+	showInformation();
 
 //	if (codeBoxes.isEmpty())
 //	{
@@ -510,7 +510,7 @@ void Game::onGuessReady()
 			codeBoxes.at(box_index + i)->setState(BoxState::Past);
 		}
 		gameState = GameState::WaittingOkButtonPress;
-		showTranslatedMessage();
+		showMessage();
 		pinBoxes.at(playedMoves)->setState(BoxState::None);
 		okButton->setEnabled(true);
 		okButton->setVisible(true);
@@ -566,7 +566,7 @@ void Game::playMVH()
 	emit resetGameSignal();
 
 	gameState = GameState::WaittingHiddenCodeFill;
-	showTranslatedMessage();
+	showMessage();
 	for(int i = 0; i < gameRules->pegNumber; ++i) //initializing currentrow
 	{
 		currentBoxes.append(masterBoxes.at(i));
@@ -602,7 +602,7 @@ void Game::playHVM()
 		}
 	}
 	setNextRowInAction();
-	showTranslatedMessage();
+	showMessage();
 	gameState = GameState::WaittingFirstRowFill;
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
 }
@@ -622,7 +622,7 @@ void Game::setAlgorithm(const Algorithm &algorithm_n)
 }
 //-----------------------------------------------------------------------------
 
-void Game::showTranslatedInformation()
+void Game::showInformation()
 {
 	if (gameRules->gameMode == GameMode::MVH)
 	{
@@ -665,7 +665,7 @@ void Game::showTranslatedInformation()
 }
 //-----------------------------------------------------------------------------
 
-void Game::showTranslatedMessage()
+void Game::showMessage()
 {
 	bool is_MVH = (gameRules->gameMode == GameMode::MVH);
 	switch (gameState) {

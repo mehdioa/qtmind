@@ -91,8 +91,8 @@ private:
 	void createPegForBox(PegBox *m_box, int m_color);
 	Peg *createPeg(PegBox *m_box, const int &m_color);
 	void codeRowFilled(const bool &m_filled);
-	void showTranslatedInformation();
-	void showTranslatedMessage();
+	void showInformation();
+	void showMessage();
 	void initializeScene();
 	void freezeAllLists();
 	void setNextRowInAction();
