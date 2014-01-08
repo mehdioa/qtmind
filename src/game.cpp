@@ -261,7 +261,7 @@ void Game::initializeScene()
 	scene()->addItem(message);
 	message->setPos(20, 0);
 
-	information = new Message(boardAid->boardFont, "#808080", 2);
+	information = new Message(boardAid->boardFont, "#808080", 4);
 	scene()->addItem(information);
 	information->setPos(20, 506);
 	showInformation();

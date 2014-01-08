@@ -15,12 +15,12 @@ string(REGEX MATCH "([0-9]+)" qtmind_VER_PATCH ${qtmind_VER_PATCH})
 SET(QTMIND_VERSION ${qtmind_VER_MAJOR}.${qtmind_VER_MINOR}.${qtmind_VER_PATCH})
 
 
-if(${CMAKE_BUILD_TYPE} MATCHES "Release")
-  add_definitions(-DQT_NO_DEBUG)
-  add_definitions(-DQT_GUI_LIB)
-  add_definitions(-DQT_CORE_LIB)
-  add_definitions(-DQT_SHARED)
-endif(${CMAKE_BUILD_TYPE} MATCHES "Release")
+# if(${CMAKE_BUILD_TYPE} MATCHES "Release")
+#   add_definitions(-DQT_NO_DEBUG)
+#   add_definitions(-DQT_GUI_LIB)
+#   add_definitions(-DQT_CORE_LIB)
+#   add_definitions(-DQT_SHARED)
+# endif(${CMAKE_BUILD_TYPE} MATCHES "Release")
 #unset(CMAKE_REQUIRED_FLAGS)
 
 
