@@ -9,6 +9,11 @@
         <translation>Druk op pin box</translation>
     </message>
     <message>
+        <location filename="../src/game.cpp" line="705"/>
+        <source>Please Put Your Pins And Press OK</source>
+        <translation>Zet je pennen en druk op OK</translation>
+    </message>
+    <message>
         <location filename="../src/game.cpp" line="708"/>
         <source>Press Done</source>
         <translation>Druk is gebeurt</translation>
@@ -24,6 +29,22 @@
         <location filename="../src/game.cpp" line="401"/>
         <source>Done</source>
         <translation>Gebeurt</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="672"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>Blok</numerusform>
+            <numerusform>Blokken</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="673"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>Kleur</numerusform>
+            <numerusform>Kleuren</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="674"/>
@@ -43,7 +64,7 @@
     <message>
         <location filename="../src/game.cpp" line="685"/>
         <source>Success! I Win</source>
-        <translation type="unfinished"></translation>
+        <translation>Succes! ik won</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="687"/>
@@ -53,15 +74,12 @@
     <message>
         <location filename="../src/game.cpp" line="691"/>
         <source>Game Over! I Failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Spel overnieuw! ik heb gefaald</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../src/game.cpp" line="711"/>
-        <source>Place Your Peg(s)</source>
-        <translation>
-            <numerusform>Plaats de pin</numerusform>
-            <numerusform>Plaats de pinnen</numerusform>
-        </translation>
+        <source>Place Your Pegs</source>
+        <translation>Plaats de pin</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="693"/>
@@ -82,34 +100,6 @@
         <location filename="../src/game.cpp" line="699"/>
         <source>Let Me Think</source>
         <translation>Laat me denken</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="705"/>
-        <source>Please Put The Pin(s) And Press OK</source>
-        <translation>
-            <numerusform>Zet een pin in AUB En druk op OK</numerusform>
-            <numerusform>Zet de pinnen in AUB En druk op OK</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="672"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>Blok</numerusform>
-            <numerusform>Blokken</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="673"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>Kleur</numerusform>
-            <numerusform>Kleuren</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Ready To Play</source>
-        <translation type="vanished">Klaar om te spelen</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="642"/>
@@ -205,6 +195,24 @@
         <source>Same Color Allowed</source>
         <translation>Zelfde kleur is toegestaan</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="69"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>Blok</numerusform>
+            <numerusform>Blokken</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>Kleur</numerusform>
+            <numerusform>Kleuren</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="141"/>
         <source>&amp;Machine vs Human</source>
@@ -235,24 +243,6 @@
         <location filename="../src/mainwindow.cpp" line="252"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Uitgegeven onder de &lt;a href=%1&gt;GPL 3&lt;/a&gt;licentie</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="69"/>
-        <location filename="../src/mainwindow.cpp" line="156"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>Blok</numerusform>
-            <numerusform>Blokken</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="78"/>
-        <location filename="../src/mainwindow.cpp" line="162"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>Kleur</numerusform>
-            <numerusform>Kleuren</numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>

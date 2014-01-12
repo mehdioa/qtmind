@@ -669,8 +669,8 @@ void Game::showInformation()
 		}
 	}
 	else
-		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slot(s)", "", gameRules->pegNumber)).
-								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Color(s)", "", gameRules->colorNumber)).
+		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", gameRules->pegNumber)).
+								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors", "", gameRules->colorNumber)).
 								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
 							 arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
 }
@@ -702,13 +702,13 @@ void Game::showMessage()
 		message->setText(tr("Press The Pin Box"));
 		break;
 	case GameState::WaittingOkButtonPress:
-		message->setText(tr("Please Put The Pin(s) And Press OK", "", gameRules->pegNumber));
+		message->setText(tr("Please Put Your Pins And Press OK"));
 		break;
 	case GameState::WaittingDoneButtonPress:
 		message->setText(tr("Press Done"));
 		break;
 	default:
-		message->setText(tr("Place Your Peg(s)", "", gameRules->pegNumber));
+		message->setText(tr("Place Your Pegs"));
 		break;
 	}
 }

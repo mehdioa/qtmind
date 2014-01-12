@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	pegsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
 	{
-		pegsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)));
+		pegsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)));
 	}
 	pegsNumberComboBox->setCurrentIndex(gameRules.pegNumber-MIN_SLOT_NUMBER);
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	colorsNumberComboBox = new QComboBox(this);
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
 	{
-		colorsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)));
+		colorsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)));
 	}
 	colorsNumberComboBox->setCurrentIndex(gameRules.colorNumber-MIN_COLOR_NUMBER);
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
@@ -153,13 +153,13 @@ void MainWindow::resetActionsText()
 
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
 	{
-		pegsNumberComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)));
+		pegsNumberComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)));
 	}
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
 
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
 	{
-		colorsNumberComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)));
+		colorsNumberComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)));
 	}
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 

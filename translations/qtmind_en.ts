@@ -9,6 +9,11 @@
         <translation>Press The Pin Box</translation>
     </message>
     <message>
+        <location filename="../src/game.cpp" line="705"/>
+        <source>Please Put Your Pins And Press OK</source>
+        <translation>Please Put Your Pins And Press OK</translation>
+    </message>
+    <message>
         <location filename="../src/game.cpp" line="708"/>
         <source>Press Done</source>
         <translation>Press Done</translation>
@@ -24,6 +29,22 @@
         <location filename="../src/game.cpp" line="401"/>
         <source>Done</source>
         <translation>Done</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="672"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>Slot</numerusform>
+            <numerusform>Slots</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="673"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>Color</numerusform>
+            <numerusform>Colors</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="674"/>
@@ -55,13 +76,10 @@
         <source>Game Over! I Failed</source>
         <translation>Game Over! I Failed</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../src/game.cpp" line="711"/>
-        <source>Place Your Peg(s)</source>
-        <translation>
-            <numerusform>Place Your Peg</numerusform>
-            <numerusform>Place Your Pegs</numerusform>
-        </translation>
+        <source>Place Your Pegs</source>
+        <translation>Place Your Pegs</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="693"/>
@@ -82,34 +100,6 @@
         <location filename="../src/game.cpp" line="699"/>
         <source>Let Me Think</source>
         <translation>Let Me Think</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="705"/>
-        <source>Please Put The Pin(s) And Press OK</source>
-        <translation>
-            <numerusform>Please Put The Pin And Press OK</numerusform>
-            <numerusform>Please Put The Pins And Press OK</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="672"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>Slot</numerusform>
-            <numerusform>Slots</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="673"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>Color</numerusform>
-            <numerusform>Colors</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Ready To Play</source>
-        <translation type="vanished">Ready To Play</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="642"/>
@@ -205,6 +195,24 @@
         <source>Same Color Allowed</source>
         <translation>Same Color Allowed</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="69"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>Slots</numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>Colors</numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="141"/>
         <source>&amp;Machine vs Human</source>
@@ -235,24 +243,6 @@
         <location filename="../src/mainwindow.cpp" line="252"/>
         <source>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</source>
         <translation>Released under the &lt;a href=%1&gt;GPL 3&lt;/a&gt; license</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="69"/>
-        <location filename="../src/mainwindow.cpp" line="156"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>Slot</numerusform>
-            <numerusform>Slots</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="78"/>
-        <location filename="../src/mainwindow.cpp" line="162"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>Color</numerusform>
-            <numerusform>Colors</numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>

@@ -9,6 +9,11 @@
         <translation>کادر پین‌ها را بفشارید</translation>
     </message>
     <message>
+        <location filename="../src/game.cpp" line="705"/>
+        <source>Please Put Your Pins And Press OK</source>
+        <translation>پین‌ها را بگذارید و آری را بفشارید</translation>
+    </message>
+    <message>
         <location filename="../src/game.cpp" line="708"/>
         <source>Press Done</source>
         <translation>انجام را بفشارید</translation>
@@ -24,6 +29,20 @@
         <location filename="../src/game.cpp" line="401"/>
         <source>Done</source>
         <translation>انجام</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="672"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>گوی</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/game.cpp" line="673"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>رنگ</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="674"/>
@@ -55,12 +74,10 @@
         <source>Game Over! I Failed</source>
         <translation>پایان بازی! من باختم</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../src/game.cpp" line="711"/>
-        <source>Place Your Peg(s)</source>
-        <translation>
-            <numerusform>گوی‌ها را بگذارید</numerusform>
-        </translation>
+        <source>Place Your Pegs</source>
+        <translation>گوی‌ها را بگذارید</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="693"/>
@@ -81,31 +98,6 @@
         <location filename="../src/game.cpp" line="699"/>
         <source>Let Me Think</source>
         <translation>بگذارید بیاندیشم</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="705"/>
-        <source>Please Put The Pin(s) And Press OK</source>
-        <translation>
-            <numerusform>پین‌ها را بگذارید و آری را بفشارید</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="672"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>گوی</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/game.cpp" line="673"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>رنگ</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Ready To Play</source>
-        <translation type="vanished">آمادهٔ بازی</translation>
     </message>
     <message>
         <location filename="../src/game.cpp" line="642"/>
@@ -207,22 +199,6 @@
         <source>Choose the numbe of slots</source>
         <translation>گزیدن شمار گوی‌ها</translation>
     </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="69"/>
-        <location filename="../src/mainwindow.cpp" line="156"/>
-        <source>Slot(s)</source>
-        <translation>
-            <numerusform>گوی</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="78"/>
-        <location filename="../src/mainwindow.cpp" line="162"/>
-        <source>Color(s)</source>
-        <translation>
-            <numerusform>رنگ</numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="133"/>
         <source>&amp;Game</source>
@@ -303,6 +279,22 @@
         <location filename="../src/mainwindow.cpp" line="164"/>
         <source>Choose the number of colors</source>
         <translation>گزیدن شمار رنگ‌ها</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="69"/>
+        <location filename="../src/mainwindow.cpp" line="156"/>
+        <source>Slots</source>
+        <translation>
+            <numerusform>گوی</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
+        <source>Colors</source>
+        <translation>
+            <numerusform>رنگ</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="85"/>
