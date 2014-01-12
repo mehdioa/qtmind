@@ -53,9 +53,9 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->digitRadioButton->setChecked(boardAid->indicator.getIndicatorType() == IndicatorType::Digit);
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
-	QString translation;
 	QStringList translations = findTranslations();
-	foreach (translation, translations) {
+	for(auto translation : translations)
+	{
 		translation.remove(boardAid->appName);
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
@@ -83,7 +83,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	paths.append(appdir + "/translations/");
 	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");
 	paths.append(appdir + "/../Resources/translations");
-	foreach (const QString &path, paths) {
+	for(auto path : paths) {
 		if (QFile::exists(path)) {
 			AppPath = path;
 			break;

@@ -21,13 +21,13 @@
 #include <QPen>
 #include <QCursor>
 
-Pin::Pin(const int &m_color, QGraphicsItem *parent) :
-	QGraphicsEllipseItem(0, 0, 12, 12, parent),
-	color(m_color),
+Pin::Pin(QGraphicsItem *parent) :
+	QGraphicsEllipseItem(0, 0, 13, 13, parent),
+	color(PinColor::None),
 	pinMouseState(PinMouseState::Ignore)
 {
 	setPen(Qt::NoPen);
-	QLinearGradient lgrad(0, 0, 12, 12);
+	QLinearGradient lgrad(0, 0, 13, 13);
 	lgrad.setColorAt(0.0, QColor(80, 80, 80));
 	lgrad.setColorAt(1.0, QColor(220, 220, 220));
 	setPen(QPen(QBrush(lgrad), 1));
@@ -41,7 +41,7 @@ void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsEllipseItem::mousePressEvent(event);
 	if (pinMouseState == PinMouseState::Accept)
-		setColor((color - 2) % 3 + 1);
+		setColor(nextPinColor());
 }
 
 void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -54,22 +54,33 @@ void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
-void Pin::setColor(const int &m_color)
+PinColor Pin::nextPinColor() const
 {
-	if (-2 < m_color && m_color < 2) color = m_color;
-
 	switch (color) {
-	case -1:
+	case PinColor::Black:
+		return PinColor::None;
+	case PinColor::White:
+		return PinColor::Black;
+	default:
+		return PinColor::White;
+	}
+}
+//-----------------------------------------------------------------------------
+
+void Pin::setColor(const PinColor &m_color)
+{
+	color = m_color;
+	switch (color) {
+	case PinColor::White:
 		setBrush(Qt::white);
 		break;
-	case 1:
+	case PinColor::Black:
 		setBrush(Qt::black);
 		break;
 	default:
 		setBrush(Qt::NoBrush);
 		break;
 	}
-	update();
 }
 //-----------------------------------------------------------------------------
 

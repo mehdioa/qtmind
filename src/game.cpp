@@ -29,14 +29,14 @@
 
 inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
-	foreach (PegBox *box, *boxlist)
+	for (auto box : *boxlist)
 		box->setState(state_t);
 }
 //-----------------------------------------------------------------------------
 
 inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
 {
-	foreach (PinBox *box, *boxlist)
+	for (auto box : *boxlist)
 		box->setState(state_t);
 }
 //-----------------------------------------------------------------------------
@@ -84,32 +84,32 @@ void Game::codeRowFilled(const bool &m_filled)
 			pinBoxes.at(playedMoves)->setState(BoxState::Current);
 			gameState = GameState::WaittingPinboxPress;
 			showMessage();
+
 			if (boardAid->autoCloseRows)
 				onPinBoxPressed();
 		}
 		else
 		{
 			pinBoxes.at(playedMoves)->setState(BoxState::Future);
+
 			if (playedMoves == 0)
 				gameState = GameState::WaittingFirstRowFill;
 			else
 				gameState = GameState::WaittingCodeRowFill;
+
 			showMessage();
 		}
 	}
 	else	//gameRules->gameMode == GameMode::MVH
 	{
 		doneButton->setVisible(m_filled);
+
 		if (m_filled)//the user is not done putting the master code
-		{
 			gameState = GameState::WaittingDoneButtonPress;
-			showMessage();
-		}
 		else
-		{
 			gameState = GameState::WaittingHiddenCodeFill;
-			showMessage();
-		}
+
+		showMessage();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -129,7 +129,6 @@ void Game::createBoxes()
 
 	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
 	{
-
 		QPoint position = left_bottom_corner - QPoint(0, i*40);
 
 		auto pinbox = new PinBox(gameRules->pegNumber, position);
@@ -141,15 +140,13 @@ void Game::createBoxes()
 
 		for (int j = 0; j < gameRules->pegNumber; ++j)
 		{
-			auto pegbox = new PegBox(position+QPoint(j*40, 0));
-			scene()->addItem(pegbox);
-			codeBoxes.append(pegbox);
+			codeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
 		}
 
 		position.setX(276);	//go to right corner for the peg boxes
 
-		auto pegbox = new PegBox(position);
-		scene()->addItem(pegbox);
+		PegBox *pegbox = createPegBox(position);
+		pegBoxes.append(pegbox);
 		if (i < gameRules->colorNumber)
 		{
 			Peg *peg;
@@ -163,14 +160,11 @@ void Game::createBoxes()
 		{
 			createPeg(pegbox, i)->setState(PegState::Plain);
 		}
-		pegBoxes.append(pegbox);
 	}
 
 	for (int i = 0; i < gameRules->pegNumber; ++i)// the last code boxes are for the master code
 	{
-		auto box = new PegBox(QPoint(160-20*gameRules->pegNumber+i*40, 70));
-		scene()->addItem(box);
-		masterBoxes.append(box);
+		masterBoxes.append(createPegBox(QPoint(160-20*gameRules->pegNumber+i*40, 70)));
 	}
 }
 //-----------------------------------------------------------------------------
@@ -183,9 +177,7 @@ void Game::createPegForBox(PegBox *m_box, int m_color)
 		m_box->setPegColor(m_color);
 	} else
 	{
-		auto peg = new Peg(pos, m_color, &boardAid->indicator);
-		scene()->addItem(peg);
-
+		Peg *peg = createPeg(pos, m_color);
 		m_box->setPeg(peg);
 		connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
 		connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
@@ -194,12 +186,25 @@ void Game::createPegForBox(PegBox *m_box, int m_color)
 }
 //-----------------------------------------------------------------------------
 
-Peg *Game::createPeg(PegBox *m_box, const int &m_color)
+PegBox *Game::createPegBox(const QPoint &m_position)
 {
-	QPointF pos = m_box->sceneBoundingRect().center();
-	auto peg = new Peg(pos, m_color, &boardAid->indicator);
+	auto pegbox = new PegBox(m_position);
+	scene()->addItem(pegbox);
+	return pegbox;
+}
+//-----------------------------------------------------------------------------
+
+Peg *Game::createPeg(const QPointF &m_position, const int &m_color)
+{
+	auto peg = new Peg(m_position, m_color, &boardAid->indicator);
 	scene()->addItem(peg);
 	return peg;
+}
+//-----------------------------------------------------------------------------
+
+Peg *Game::createPeg(PegBox *m_box, const int &m_color)
+{
+	return createPeg(m_box->sceneBoundingRect().center(), m_color);
 }
 //-----------------------------------------------------------------------------
 
@@ -225,8 +230,18 @@ void Game::setNextRowInAction()
 void Game::getNextGuess()
 {
 	gameState = GameState::Thinking;
-	showMessage();
 	emit startGuessingSignal();
+}
+//-----------------------------------------------------------------------------
+
+Player Game::winner() const
+{
+	if (pinBoxes.at(playedMoves)->getValue() == (gameRules->pegNumber + 1)*(gameRules->pegNumber + 2)/2 - 1)
+		return Player::CodeBreaker;
+	else if (playedMoves >= MAX_COLOR_NUMBER - 1)
+		return Player::CodeMaker;
+	else
+		return Player::None;
 }
 //-----------------------------------------------------------------------------
 
@@ -277,7 +292,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
 	if(!gameRules->sameColorAllowed)
 	{
-		foreach (PegBox *box, currentBoxes)
+		for (auto box : currentBoxes)
 		{
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color)
@@ -294,7 +309,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	// conversion from float to integer may cause double drop on middle. Flag to do it just once
 	bool dropOnlyOnce = true;
 
-	foreach (PegBox *box, currentBoxes)
+	for (auto box : currentBoxes)
 	{
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
@@ -310,7 +325,7 @@ void Game::onPegMouseReleased(Peg *peg)
 
 		if (box->getPegState() != PegState::Visible)
 			newRowFillState = false;
-	} //	end foreach
+	} //	end for
 
 	//	if (master) code row state changed, go to codeRowFilled
 	if (newRowFillState != rowFillState)
@@ -323,7 +338,7 @@ void Game::onPegMouseReleased(Peg *peg)
 
 void Game::onPegMouseDoubleClicked(Peg *peg)
 {
-	foreach (PegBox *box, currentBoxes)
+	for (auto box : currentBoxes)
 	{
 		if (!box->hasPeg() || box->getPegState() == PegState::Invisible)
 		{
@@ -344,25 +359,24 @@ void Game::onPinBoxPressed()
 		guessElement.guess.append(QString::number(currentBoxes.at(i)->getPegColor()));
 
 	pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
-	bool is_done = (pinBoxes.at(playedMoves)->getValue() == (gameRules->pegNumber + 1)*(gameRules->pegNumber + 2)/2 - 1);
 	pinBoxes.at(playedMoves)->setState(BoxState::Past);
 
 	setStateOfList(&currentBoxes, BoxState::Past);
 	currentBoxes.clear();
-	if (is_done) //success here
-	{
+
+	switch (winner()) {
+	case Player::CodeBreaker:
 		gameState = GameState::Win;
 		freezeAllLists();
-	}
-	else if (playedMoves >= MAX_COLOR_NUMBER - 1) //out of more row of codes, a fail
-	{
+		break;
+	case Player::CodeMaker:
 		gameState = GameState::Lose;
 		freezeAllLists();
-	}
-	else // continue the game
-	{
+		break;
+	default:
 		++playedMoves;
 		setNextRowInAction();
+		break;
 	}
 
 	showMessage();
@@ -415,13 +429,12 @@ void Game::onRevealOnePeg()
 {
 	if (gameRules->gameMode == GameMode::HVM && isRunning())
 	{
-		foreach (PegBox *box, masterBoxes)
+		for(auto box : masterBoxes)
 		{
 			if(box->getState() != BoxState::Past)
 			{
 				if (box == masterBoxes.last())
 				{
-//					gameState = GameState::Running;
 					onResigned();
 				}
 				else
@@ -459,15 +472,22 @@ void Game::onOkButtonPressed()
 
 	pinBoxes.at(playedMoves)->setState(BoxState::Past);
 
-	if (solver->done())
-	{
+	switch (winner()) {
+	case Player::CodeBreaker:
 		gameState = GameState::Win;
-		showMessage();
-		return;
+		freezeAllLists();
+		break;
+	case Player::CodeMaker:
+		gameState = GameState::Lose;
+		freezeAllLists();
+		break;
+	default:
+		++playedMoves;
+		getNextGuess();
+		break;
 	}
 
-	++playedMoves;
-	getNextGuess();
+	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -483,11 +503,12 @@ void Game::onDoneButtonPressed()
 	setStateOfList(&pegBoxes, BoxState::Future);
 
 	guessElement.code = "";
-	foreach(PegBox *box, currentBoxes)
+	for(auto box : currentBoxes)
 		guessElement.code.append(QString::number(box->getPegColor()));
 
 	currentBoxes.clear();
 	getNextGuess();
+	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -496,31 +517,21 @@ void Game::onGuessReady()
 	gameState = GameState::Running;
 	showInformation();
 
-//	if (codeBoxes.isEmpty())
-//	{
-//		gameState = GameState::Lose;
-//		return;
-//	}
-//	else
-//	{
-		int box_index = playedMoves*gameRules->pegNumber;
-		for(int i = 0; i < gameRules->pegNumber; ++i)
-		{
-			createPegForBox(codeBoxes.at(box_index + i), guessElement.guess[i].digitValue());
-			codeBoxes.at(box_index + i)->setState(BoxState::Past);
-		}
-		gameState = GameState::WaittingOkButtonPress;
-		showMessage();
-		pinBoxes.at(playedMoves)->setState(BoxState::None);
-		okButton->setEnabled(true);
-		okButton->setVisible(true);
-		okButton->setPos(pinBoxes.at(playedMoves)->pos()-QPoint(0, 39));
-//	}
+	int box_index = playedMoves*gameRules->pegNumber;
+	for(int i = 0; i < gameRules->pegNumber; ++i)
+	{
+		createPegForBox(codeBoxes.at(box_index + i), guessElement.guess[i].digitValue());
+		codeBoxes.at(box_index + i)->setState(BoxState::Past);
+	}
+	gameState = GameState::WaittingOkButtonPress;
+	showMessage();
+	pinBoxes.at(playedMoves)->setState(BoxState::None);
+	okButton->setEnabled(true);
+	okButton->setVisible(true);
+	okButton->setPos(pinBoxes.at(playedMoves)->pos()-QPoint(0, 39));
 
 	if (boardAid->autoPutPins)
-	{
 		pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
-	}
 }
 //-----------------------------------------------------------------------------
 
@@ -588,7 +599,7 @@ void Game::playHVM()
 	qsrand(time(NULL));
 	guessElement.code = "";
 
-	foreach (PegBox *box, masterBoxes) //creating a master code to be guessed
+	for (auto box : masterBoxes) //creating a master code to be guessed
 	{
 		int color = qrand() % remainingNumbers;
 		int realcolor = digits.at(color).digitValue();
@@ -671,7 +682,7 @@ void Game::showMessage()
 	switch (gameState) {
 	case GameState::Win:
 		if (is_MVH)
-			message->setText(tr("Ready To Play"));
+			message->setText(tr("Success! I Win"));
 		else
 			message->setText(tr("Success! You Win"));
 		break;
@@ -706,26 +717,6 @@ void Game::showMessage()
 void Game::drawBackground(QPainter *painter, const QRectF &rect)
 {
 	painter->fillRect(rect, QColor(182, 182, 182));// set scene background color
-
-	QLinearGradient topgrad(0, 16, 0, 129);
-	topgrad.setColorAt(0.0, QColor(248, 248, 248));
-	topgrad.setColorAt(0.6, QColor(184, 184, 184));
-	topgrad.setColorAt(1, QColor(212, 212, 212));
-	QBrush mTopGrad(topgrad);
-
-	QLinearGradient botgrad(0, 530, 0, 557);
-	botgrad.setColorAt(0.0, QColor(204, 204, 204));
-	botgrad.setColorAt(0.3, QColor(206, 206, 206));
-	botgrad.setColorAt(1.0, QColor(180, 180, 180));
-	QBrush mBotGrad(botgrad);
-
-	QLinearGradient lgrad(0, 190, 320, 370);
-	lgrad.setColorAt(0.0, QColor(240, 240, 240));
-	lgrad.setColorAt(0.49, QColor(240, 240, 240));
-	lgrad.setColorAt(0.50, QColor(80, 80, 80));
-	lgrad.setColorAt(1.0, QColor(80, 80, 80));
-	QPen mFramePen = QPen(QBrush(lgrad), 1);
-
 	painter->setPen(Qt::NoPen);
 
 	QRectF cr(3, 3, 314, 554);
@@ -734,7 +725,11 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->setClipPath(cpath);
 	painter->setClipping(true);
 
-	painter->setBrush(mTopGrad);
+	QLinearGradient top_grad(0, 16, 0, 129);
+	top_grad.setColorAt(0.0, QColor(248, 248, 248));
+	top_grad.setColorAt(0.6, QColor(184, 184, 184));
+	top_grad.setColorAt(1, QColor(212, 212, 212));
+	painter->setBrush(QBrush(top_grad));
 	painter->drawRect(QRect(4, 4, 312, 125));
 	painter->setBrush(QBrush(QColor(112, 112, 112)));
 	painter->drawRect(QRect(4, 128, 318, 1));
@@ -750,38 +745,46 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 
 	painter->setPen(QColor(135, 135, 135));
 	for(int i = 0; i < 11; ++i)
-	{
 		painter->drawLine(5, 128+i*40, 321, 128+i*40);
-	}
 
-	painter->setBrush(mBotGrad);
+	QLinearGradient bot_grad(0, 530, 0, 557);
+	bot_grad.setColorAt(0.0, QColor(204, 204, 204));
+	bot_grad.setColorAt(0.3, QColor(206, 206, 206));
+	bot_grad.setColorAt(1.0, QColor(180, 180, 180));
+	painter->setBrush(QBrush(bot_grad));
 	painter->drawRect(QRect(1, 528, 318, 28));
 	painter->setBrush(QBrush(QColor(239, 239, 239)));
 	painter->setClipping(false);
 
-	QRectF rightShadow(3.5, 3.5, 313, 553);
+	QLinearGradient frame_grad(0, 190, 320, 370);
+	frame_grad.setColorAt(0.0, QColor(240, 240, 240));
+	frame_grad.setColorAt(0.49, QColor(240, 240, 240));
+	frame_grad.setColorAt(0.50, QColor(80, 80, 80));
+	frame_grad.setColorAt(1.0, QColor(80, 80, 80));
+	QPen frame_pen = QPen(QBrush(frame_grad), 1);
+	QRectF right_shadow(3.5, 3.5, 313, 553);
 	painter->setBrush(Qt::NoBrush);
-	painter->setPen(mFramePen);
-	painter->drawRoundedRect(rightShadow, 9.8, 9.8);
+	painter->setPen(frame_pen);
+	painter->drawRoundedRect(right_shadow, 9.8, 9.8);
 
-	QLinearGradient solgrad(50, 70, 50, 108);
-	solgrad.setColorAt(0.0, QColor(154, 154, 154));
-	solgrad.setColorAt(1.0, QColor(148, 148, 148));
-	QBrush solBgBrush(solgrad);
+	QLinearGradient sol_grad(50, 70, 50, 108);
+	sol_grad.setColorAt(0.0, QColor(154, 154, 154));
+	sol_grad.setColorAt(1.0, QColor(148, 148, 148));
+	QBrush solBgBrush(sol_grad);
 
-	QLinearGradient framegrad = QLinearGradient(50, 70, 50, 110);
-	framegrad.setColorAt(0.0, QColor(78, 78, 78));
-	framegrad.setColorAt(1.0, QColor(235, 235, 235));
-	QPen solFramePen(QBrush(framegrad), 1);
+	QLinearGradient sol_frame_grad = QLinearGradient(50, 70, 50, 110);
+	sol_frame_grad.setColorAt(0.0, QColor(78, 78, 78));
+	sol_frame_grad.setColorAt(1.0, QColor(235, 235, 235));
+	QPen sol_frame_pen(QBrush(sol_frame_grad), 1);
 
 	painter->setBrush(solBgBrush);
-	painter->setPen(solFramePen);
+	painter->setPen(sol_frame_pen);
 
-	QRectF codeRowContainer(41, 68, 235, 42);
-	QRectF mRectC(42, 69, 235, 41.5);
+	QRectF sol_container(41, 68, 235, 42);
+	QRectF sol_frame(42, 69, 235, 41.5);
 
-	painter->drawRoundedRect(codeRowContainer, 21,21);
-	painter->setBrush(solgrad);
-	painter->drawRoundedRect(mRectC, 20, 20);
+	painter->drawRoundedRect(sol_container, 21,21);
+	painter->setBrush(sol_grad);
+	painter->drawRoundedRect(sol_frame, 20, 20);
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 }

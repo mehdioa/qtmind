@@ -25,10 +25,10 @@
 
 const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] =
 {
-	{{5, 14}, {22, 14}, {0, 0}, {0, 0}, {0, 0}},
-	{{4, 7}, {22, 7}, {14, 21}, {0, 0}, {0, 0}},
-	{{6, 6}, {22, 6}, {6, 22}, {22, 22}, {0, 0}},
-	{{4, 4}, {24, 4}, {14, 14}, {4, 24}, {24, 24}}
+	{{4, 13}, {22, 13}, {0, 0}, {0, 0}, {0, 0}},
+	{{4, 6}, {22, 6}, {13, 22}, {0, 0}, {0, 0}},
+	{{4, 4}, {22, 4}, {4, 22}, {22, 22}, {0, 0}},
+	{{2, 2}, {24, 2}, {13, 13}, {2, 24}, {24, 24}}
 };
 
 
@@ -37,7 +37,7 @@ PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *p
 {
 	for(int i = 0; i < pin_number; ++i)
 	{
-		auto pin = new Pin(0, this);
+		auto pin = new Pin(this);
 		pins.append(pin);
 		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
 	}
@@ -49,14 +49,14 @@ int PinBox::getValue() const
 {
 	int blacks = 0;
 	int whites = 0;
-	foreach(Pin *pin, pins)
+	for(auto pin : pins)
 	{
 		switch (pin->getColor()) {
-		case 1:
-			++blacks;
-			break;
-		case -1:
+		case PinColor::White:
 			++whites;
+			break;
+		case PinColor::Black:
+			++blacks;
 			break;
 		default:
 			break;
@@ -83,15 +83,14 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &colo
 	}
 
 	int total = 0;		//	blacks + whites
-	for (int i = 0; i < color_n; ++i){
+	for (int i = 0; i < color_n; ++i)
 		total += qMin(c[i],g[i]);
-	}
 
 	for(int i = 0; i < blacks; ++i)
-		pins.at(i)->setColor(1);
+		pins.at(i)->setColor(PinColor::Black);
 
 	for(int i = blacks; i < total; ++i)
-		pins.at(i)->setColor(-1);
+		pins.at(i)->setColor(PinColor::White);
 }
 //-----------------------------------------------------------------------------
 
@@ -102,19 +101,19 @@ void PinBox::setState(const BoxState &m_state)
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
-		foreach (Pin *pin, pins)
+		for (auto pin : pins)
 			pin->setMouseState(PinMouseState::PassToBox);
 		break;
 	case BoxState::None: //BoxState::None: used for entering pins in breaker mode, just pins are active
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
-		foreach (Pin *pin, pins)
+		for(auto pin : pins)
 			pin->setMouseState(PinMouseState::Accept);
 		break;
 	default: //BoxState::FUTURE and BoxState::Past, no interaction is allowed
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
-		foreach (Pin *pin, pins)
+		for(auto pin : pins)
 			pin->setMouseState(PinMouseState::Ignore);
 		break;
 	}

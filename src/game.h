@@ -40,6 +40,13 @@ enum class GameState
 	WaittingDoneButtonPress
 };
 
+enum class Player
+{
+	CodeMaker,
+	CodeBreaker,
+	None
+};
+
 class Peg;
 class PinBox;
 class PegBox;
@@ -89,6 +96,8 @@ private:
 	void playHVM();
 	void createBoxes();
 	void createPegForBox(PegBox *m_box, int m_color);
+	PegBox *createPegBox(const QPoint &m_position);
+	Peg *createPeg(const QPointF &m_position, const int &m_color);
 	Peg *createPeg(PegBox *m_box, const int &m_color);
 	void codeRowFilled(const bool &m_filled);
 	void showInformation();
@@ -97,6 +106,7 @@ private:
 	void freezeAllLists();
 	void setNextRowInAction();
 	void getNextGuess();
+	Player winner() const;
 
 private:
 	QList<PinBox *> pinBoxes;	//	black-white pins

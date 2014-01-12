@@ -82,7 +82,7 @@ void Solver::createTables()
 	for(int i = 0; i < allCodesSize; ++i)
 	{
 		allCodes[i] = new int[gameRules->pegNumber];
-		convertBase(i);
+		indexToCode(i);
 	}
 
 	for(int i = 0; i < allCodesSize; ++i)
@@ -197,7 +197,7 @@ bool Solver::setResponse(const int &m_response)
 	int guessArray[gameRules->pegNumber];
 	stringToArray(guessElement->guess, guessArray);
 
-	foreach (int possible, possibleCodes)
+	for(auto possible : possibleCodes)
 	{
 		if(compare(guessArray, allCodes[possible]) == m_response)
 			tempPossibleCodes.append(possible);
@@ -252,7 +252,7 @@ QString Solver::getFirstGuess() const
 	{
 		switch (gameRules->colorNumber) {
 		case 2:
-			str = (QString) "010101";
+			str = (QString) "01010";
 			answer = str.left(gameRules->pegNumber);
 			break;
 		case 3:
@@ -291,7 +291,7 @@ void Solver::makeGuess()
 	 *	and guess when there are at least 10000 codes possibles are treated
 	 *	differently.
 	 */
-	if (guessElement->guess == "")	// The first guess here
+	if (possibleCodes.size() == allCodesSize)	// The first guess here
 	{
 		guessElement->guess = getFirstGuess();
 		return;
@@ -322,7 +322,7 @@ void Solver::makeGuess()
 		if(interupt)
 			return;
 
-		foreach (int possible_index, possibleCodes)
+		for(auto possible_index : possibleCodes)
 		{
 			++responsesOfCodes[compare(allCodes[firstPossibleCodes[code_index]], allCodes[possible_index])];
 		}
@@ -390,7 +390,7 @@ qreal Solver::computeWeight(int *m_responses) const
 }
 //-----------------------------------------------------------------------------
 
-void Solver::convertBase(const int &number)
+void Solver::indexToCode(const int &number)
 {
 	int m_number = number;
 	if(gameRules->sameColorAllowed)
@@ -418,11 +418,11 @@ void Solver::convertBase(const int &number)
 }
 //-----------------------------------------------------------------------------
 
-QString Solver::arrayToString(const int *ar) const
+QString Solver::arrayToString(const int *m_array) const
 {
 	QString answer = "";
 	for(int i = 0; i < gameRules->pegNumber; ++i)
-		answer.append(QString::number(ar[i]));
+		answer.append(QString::number(m_array[i]));
 	return answer;
 }
 //-----------------------------------------------------------------------------

@@ -76,10 +76,10 @@ private:
 	void createTables();
 	void deleteTables();
 	int compare (const int *codeA, const int *codeB) const;
-	QString arrayToString(const int*) const;
+	QString arrayToString(const int *m_array) const;
 	void stringToArray(const QString &m_string, int *m_array) const;
 	qreal computeWeight(int *m_responses) const;
-	void convertBase(const int &number);
+	void indexToCode(const int &number);
 	void setFirstPossibles();
 
 private:

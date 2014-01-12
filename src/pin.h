@@ -29,12 +29,19 @@ enum class PinMouseState
 	PassToBox
 };
 
+enum class PinColor
+{
+	White,
+	Black,
+	None,
+};
+
 class Pin : public QGraphicsEllipseItem
 {
 public:
-	explicit Pin(const int &m_color = 0, QGraphicsItem *parent = 0);
-	int getColor() const {return color;}
-	void setColor(const int &m_color);
+	explicit Pin(QGraphicsItem *parent = 0);
+	PinColor getColor() const {return color;}
+	void setColor(const PinColor &m_color);
 	void setMouseState (const PinMouseState &m_state);
 
 protected:
@@ -42,7 +49,11 @@ protected:
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 private:
-	int color;//  -1 = white, 0 = none, 1 = black
+	PinColor nextPinColor() const;
+
+private:
+	PinColor color;
+//	int color;//  -1 = white, 0 = none, 1 = black
 	PinMouseState pinMouseState;
 };
 

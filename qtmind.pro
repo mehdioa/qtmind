@@ -16,7 +16,7 @@ MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
 
-VERSION = 0.7.0
+VERSION = 0.7.1
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 unix: !macx {
@@ -98,7 +98,21 @@ TRANSLATIONS = translations/qtmind_ara.ts \
 	translations/qtmind_zh_CN.ts
 
 OTHER_FILES += \
-	qtmind.desktop
+	qtmind.desktop \
+    android/AndroidManifest.xml \
+    icons/hicolor/16x16/qtmind.png \
+    icons/hicolor/32x32/qtmind.png \
+    icons/hicolor/36x36/qtmind.png \
+    icons/hicolor/48x48/qtmind.png \
+    icons/hicolor/64x64/qtmind.png \
+    icons/hicolor/72x72/qtmind.png \
+    icons/hicolor/96x96/qtmind.png \
+    icons/hicolor/144x144/qtmind.png \
+    icons/hicolor/256x256/qtmind.png \
+    icons/hicolor/512x512/qtmind.png \
+    icons/hicolor/scalable/qtmind.svg \
+    icons/hicolor/scalable/twoPegs.svg \
+    icons/hicolor/scalable/logo.svg
 
 unix:!macx { # installation on Unix-ish platforms
 	isEmpty(INSTALL_PREFIX):INSTALL_PREFIX = /usr
@@ -118,4 +132,6 @@ unix:!macx { # installation on Unix-ish platforms
 
 	INSTALLS = target icon desktop qm
 }
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

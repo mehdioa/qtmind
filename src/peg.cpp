@@ -56,14 +56,14 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 
 	gloss = new QGraphicsEllipseItem(7, 4, 24, 20, this);
 	QLinearGradient lgrad(25, 0, 25, 21);
-	lgrad.setColorAt(0, QColor(255, 255, 255, 150));
+	lgrad.setColorAt(0, QColor(255, 255, 255, 180));
 	lgrad.setColorAt(1, QColor(255, 255, 255, 0));
 	gloss->setBrush(lgrad);
 	gloss->setPen(Qt::NoPen);
 
 	indicatorText = new QGraphicsSimpleTextItem(this);
 	QFont font("Monospace", 15, QFont::Bold, false);
-	font.setStyleHint(QFont::TypeWriter);
+	font.setStyleHint(QFont::Monospace);
 	indicatorText->setFont(font);
 	indicatorText->setPos(14,8);
 
