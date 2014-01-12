@@ -20,7 +20,7 @@
 #include "boardaid.h"
 #include "QSettings"
 
-const QString BoardAid::appName = "qtmind_";
+const QString BoardAid::appName = "QtMind_";
 
 BoardAid::BoardAid():
 	autoPutPins(QSettings().value("AutoSetPins", true).toBool()),

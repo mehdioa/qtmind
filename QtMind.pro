@@ -74,43 +74,43 @@ FORMS    += \
 RESOURCES += \
     resource.qrc
 
-TRANSLATIONS = translations/qtmind_ara.ts \
-	translations/qtmind_af.ts \
-	translations/qtmind_ar.ts \
-	translations/qtmind_ca.ts \
-	translations/qtmind_cs.ts \
-	translations/qtmind_cz.ts \
-	translations/qtmind_de.ts \
-	translations/qtmind_en.ts \
-	translations/qtmind_es.ts \
-	translations/qtmind_fa.ts \
-	translations/qtmind_fo.ts \
-	translations/qtmind_fr.ts \
-	translations/qtmind_it.ts \
-	translations/qtmind_ja.ts \
-	translations/qtmind_ko.ts \
-	translations/qtmind_nl.ts \
-	translations/qtmind_pl.ts \
-	translations/qtmind_pt_BR.ts \
-	translations/qtmind_ru.ts \
-	translations/qtmind_sl.ts \
-	translations/qtmind_tr.ts \
-	translations/qtmind_zh_CN.ts
+TRANSLATIONS = translations/QtMind_ara.ts \
+	translations/QtMind_af.ts \
+	translations/QtMind_ar.ts \
+	translations/QtMind_ca.ts \
+	translations/QtMind_cs.ts \
+	translations/QtMind_cz.ts \
+	translations/QtMind_de.ts \
+	translations/QtMind_en.ts \
+	translations/QtMind_es.ts \
+	translations/QtMind_fa.ts \
+	translations/QtMind_fo.ts \
+	translations/QtMind_fr.ts \
+	translations/QtMind_it.ts \
+	translations/QtMind_ja.ts \
+	translations/QtMind_ko.ts \
+	translations/QtMind_nl.ts \
+	translations/QtMind_pl.ts \
+	translations/QtMind_pt_BR.ts \
+	translations/QtMind_ru.ts \
+	translations/QtMind_sl.ts \
+	translations/QtMind_tr.ts \
+	translations/QtMind_zh_CN.ts
 
 OTHER_FILES += \
-	qtmind.desktop \
+	QtMind.desktop \
     android/AndroidManifest.xml \
-    icons/hicolor/16x16/qtmind.png \
-    icons/hicolor/32x32/qtmind.png \
-    icons/hicolor/36x36/qtmind.png \
-    icons/hicolor/48x48/qtmind.png \
-    icons/hicolor/64x64/qtmind.png \
-    icons/hicolor/72x72/qtmind.png \
-    icons/hicolor/96x96/qtmind.png \
-    icons/hicolor/144x144/qtmind.png \
-    icons/hicolor/256x256/qtmind.png \
-    icons/hicolor/512x512/qtmind.png \
-    icons/hicolor/scalable/qtmind.svg \
+	icons/hicolor/16x16/QtMind.png \
+	icons/hicolor/32x32/QtMind.png \
+	icons/hicolor/36x36/QtMind.png \
+	icons/hicolor/48x48/QtMind.png \
+	icons/hicolor/64x64/QtMind.png \
+	icons/hicolor/72x72/QtMind.png \
+	icons/hicolor/96x96/QtMind.png \
+	icons/hicolor/144x144/QtMind.png \
+	icons/hicolor/256x256/QtMind.png \
+	icons/hicolor/512x512/QtMind.png \
+	icons/hicolor/scalable/QtMind.svg \
     icons/hicolor/scalable/twoPegs.svg \
     icons/hicolor/scalable/logo.svg
 
@@ -120,12 +120,12 @@ unix:!macx { # installation on Unix-ish platforms
 	isEmpty(DATA_DIR):DATA_DIR = $$INSTALL_PREFIX/share
 	isEmpty(ICON_DIR):ICON_DIR = $$DATA_DIR/pixmaps
 	isEmpty(DESKTOP_DIR):DESKTOP_DIR = $$DATA_DIR/applications
-	isEmpty(TRANSLATIONS_DIR):TRANSLATIONS_DIR = $$DATA_DIR/qtmind/translations
+	isEmpty(TRANSLATIONS_DIR):TRANSLATIONS_DIR = $$DATA_DIR/QtMind/translations
 
 	target.path = $$BIN_DIR
-	icon.files = icons/hicolor/128x128/qtmind.png
+	icon.files = icons/hicolor/128x128/QtMind.png
 	icon.path = $$ICON_DIR
-	desktop.files = qtmind.desktop
+	desktop.files = QtMind.desktop
 	desktop.path = $$DESKTOP_DIR
 	qm.files = translations/*.qm
 	qm.path = $$TRANSLATIONS_DIR
