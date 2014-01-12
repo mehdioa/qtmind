@@ -27,8 +27,8 @@ static const int VER_BUGFIX			= 1;
 static const QString APP_VER = QString("%1.%2.%3")
 		.arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
 
-static const QString APP_NAME		= "qtmind";
-static const QString ORG_NAME		= "qtmind";
+static const QString APP_NAME		= "QtMind";
+static const QString ORG_NAME		= "QtMind";
 static const QString ORG_DOMAIN		= "http://omidnikta.github.io/qtmind";
 static const QString AUTHOR_NAME	= "Omid Nikta";
 

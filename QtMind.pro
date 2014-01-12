@@ -19,11 +19,11 @@ RCC_DIR = build
 VERSION = 0.7.1
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
-unix: !macx {
-	TARGET = qtmind
-} else {
-	TARGET = QtMind
-}
+#unix: !macx {
+#	TARGET = qtmind
+#} else {
+#	TARGET = QtMind
+#}
 
 TEMPLATE = app
 
