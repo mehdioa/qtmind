@@ -70,7 +70,7 @@ private:
 	QComboBox *pegsNumberComboBox;
 	QComboBox *colorsNumberComboBox;
 	QComboBox *solvingAlgorithmsComboBox;
-	QAction *allowSameColorAction;
+//	QAction *allowSameColorAction;
 
 private:
 	Game *game;

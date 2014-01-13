@@ -33,9 +33,9 @@ GameRules::GameRules():
 
 GameRules::~GameRules()
 {
-	QSettings().setValue("Mode", (int) gameMode);
-	QSettings().setValue("Colors", colorNumber);
 	QSettings().setValue("Pegs", pegNumber);
-	QSettings().setValue("Algorithm", (int) algorithm);
+	QSettings().setValue("Colors", colorNumber);
 	QSettings().setValue("SameColor", sameColorAllowed);
+	QSettings().setValue("Algorithm", (int) algorithm);
+	QSettings().setValue("Mode", (int) gameMode);
 }

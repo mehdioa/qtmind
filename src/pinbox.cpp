@@ -49,7 +49,7 @@ int PinBox::getValue() const
 {
 	int blacks = 0;
 	int whites = 0;
-	for(auto pin : pins)
+	for(Pin *pin : pins)
 	{
 		switch (pin->getColor()) {
 		case PinColor::White:
@@ -101,19 +101,19 @@ void PinBox::setState(const BoxState &m_state)
 	case BoxState::Current://	used for Master mode that the user press the box when he/she is satisfied with their guess
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
-		for (auto pin : pins)
+		for (Pin *pin : pins)
 			pin->setMouseState(PinMouseState::PassToBox);
 		break;
 	case BoxState::None: //BoxState::None: used for entering pins in breaker mode, just pins are active
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
-		for(auto pin : pins)
+		for(Pin *pin : pins)
 			pin->setMouseState(PinMouseState::Accept);
 		break;
 	default: //BoxState::FUTURE and BoxState::Past, no interaction is allowed
 		setCursor(Qt::ArrowCursor);
 		setAcceptedMouseButtons(Qt::NoButton);
-		for(auto pin : pins)
+		for(Pin *pin : pins)
 			pin->setMouseState(PinMouseState::Ignore);
 		break;
 	}

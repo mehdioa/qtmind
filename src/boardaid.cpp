@@ -23,7 +23,7 @@
 const QString BoardAid::appName = "QtMind_";
 
 BoardAid::BoardAid():
-	autoPutPins(QSettings().value("AutoSetPins", true).toBool()),
+	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),
 	autoCloseRows(QSettings().value("AutoCloseRows", true).toBool()),
 	locale(QSettings().value("Locale/Language", "en").toString().left(5))
 {
@@ -31,7 +31,7 @@ BoardAid::BoardAid():
 
 BoardAid::~BoardAid()
 {
-	QSettings().setValue("AutoSetPins",	autoPutPins);
+	QSettings().setValue("AutoPutPins",	autoPutPins);
 	QSettings().setValue("AutoCloseRows", autoCloseRows);
 	QSettings().setValue("Locale/Language", locale.name());
 }

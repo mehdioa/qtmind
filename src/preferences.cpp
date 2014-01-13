@@ -54,7 +54,8 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QStringList translations = findTranslations();
-	for(auto translation : translations)
+	translations = translations.filter(boardAid->appName);
+	for(QString translation : translations)
 	{
 		translation.remove(boardAid->appName);
 		ui->languageComboBox->addItem(languageName(translation), translation);
@@ -80,10 +81,11 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 
 	// Find translator path
 	QStringList paths;
-	paths.append(appdir + "/translations/");
-	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");
-	paths.append(appdir + "/../Resources/translations");
-	for(auto path : paths) {
+	paths.append("assets:/qtmind/translations");// Android
+	paths.append(appdir + "/translations/");// Windows
+	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");// *nix
+	paths.append(appdir + "/../Resources/translations");// Mac
+	for(QString path : paths) {
 		if (QFile::exists(path)) {
 			AppPath = path;
 			break;

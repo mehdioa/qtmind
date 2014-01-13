@@ -23,7 +23,13 @@
      <height>24</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string notr="true"/>
+   </property>
    <widget class="QMenu" name="menuGame">
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string notr="true">Game</string>
     </property>
@@ -48,7 +54,7 @@
       <string notr="true"/>
      </property>
      <property name="title">
-      <string notr="true">Tools</string>
+      <string notr="true">Game Mode</string>
      </property>
      <property name="icon">
       <iconset resource="../resource.qrc">
@@ -61,6 +67,7 @@
      <addaction name="actionGameMode_HVM"/>
     </widget>
     <addaction name="menuGameMode"/>
+    <addaction name="actionAllow_Same_Colors"/>
     <addaction name="separator"/>
     <addaction name="actionShow_Indicators"/>
     <addaction name="actionAuto_Set_Pins"/>
@@ -112,8 +119,11 @@
    <property name="text">
     <string notr="true">New</string>
    </property>
+   <property name="iconText">
+    <string notr="true">New</string>
+   </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string notr="true">Ctrl+N</string>
    </property>
   </action>
   <action name="actionResign">
@@ -126,6 +136,9 @@
    </property>
    <property name="iconText">
     <string notr="true">Resign</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionQuit">
@@ -140,7 +153,7 @@
     <string notr="true">Quit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string notr="true">Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAuto_Set_Pins">
@@ -157,6 +170,9 @@
    <property name="iconText">
     <string notr="true">Auto Put Pins</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="actionAuto_Close_Rows">
    <property name="checkable">
@@ -172,6 +188,9 @@
    <property name="iconText">
     <string notr="true">Auto Close Rows</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="actionOptions">
    <property name="icon">
@@ -183,6 +202,9 @@
    </property>
    <property name="iconText">
     <string notr="true">Options</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAbout_QtMind">
@@ -232,6 +254,9 @@
    <property name="iconText">
     <string notr="true">Machine vs Human</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="actionGameMode_HVM">
    <property name="checkable">
@@ -247,6 +272,9 @@
    <property name="iconText">
     <string notr="true">Human vs Machine</string>
    </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
   </action>
   <action name="actionReveal_One_Peg">
    <property name="icon">
@@ -258,6 +286,9 @@
    </property>
    <property name="iconText">
     <string notr="true">Reveal One Peg</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionQtMind_Home_Page">
@@ -282,17 +313,25 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../resource.qrc">
-     <normaloff>:/icons/layer-visible-on.png</normaloff>
-     <normalon>:/icons/layer-visible-off.png</normalon>
-     <selectedon>:/icons/layer-visible-off.png</selectedon>:/icons/layer-visible-on.png</iconset>
-   </property>
    <property name="text">
     <string notr="true">Show Indicators</string>
    </property>
    <property name="iconText">
     <string notr="true">Show Indicators</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true"/>
+   </property>
+  </action>
+  <action name="actionAllow_Same_Colors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Allow Same Colors</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">Allow Same Colors</string>
    </property>
   </action>
  </widget>

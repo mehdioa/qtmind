@@ -48,9 +48,7 @@ private:
 private:
 	Ui::Preferences *ui;
 
-//	static QString mCurrent; /**< stored application language */
 	static QString AppPath; /**< location of translations; found in loadTranslator() */
-//	static QString mAppName; /**< application name passed to loadTranslator() */
 	BoardAid *boardAid;
 };
 

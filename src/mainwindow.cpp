@@ -55,11 +55,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/same_color_1.png"), QIcon::Normal, QIcon::On);
 	double_icon.addPixmap(QPixmap("://icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
-	allowSameColorAction = new QAction(double_icon, tr("Allow Same Color"), this);
-	allowSameColorAction->setCheckable(true);
-	allowSameColorAction->setChecked(gameRules.sameColorAllowed);
+	ui->actionAllow_Same_Colors->setIcon(double_icon);
+	ui->actionAllow_Same_Colors->setChecked(gameRules.sameColorAllowed);
 
+	QIcon show_indicators_icon;
+	show_indicators_icon.addPixmap(QPixmap("://icons/layer-visible-on.png"), QIcon::Normal, QIcon::Off);
+	show_indicators_icon.addPixmap(QPixmap("://icons/layer-visible-off.png"), QIcon::Normal, QIcon::On);
+	ui->actionShow_Indicators->setIcon(show_indicators_icon);
 	ui->actionShow_Indicators->setChecked(boardAid.indicator.getShowIndicators());
+
 	ui->actionAuto_Set_Pins->setChecked(boardAid.autoPutPins);
 	ui->actionAuto_Close_Rows->setChecked(boardAid.autoCloseRows);
 
@@ -90,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 	ui->toolBar->addAction(ui->actionNew);
-	ui->toolBar->addAction(allowSameColorAction);
+	ui->toolBar->addAction(ui->actionAllow_Same_Colors);
 	ui->toolBar->addSeparator();
 	ui->toolBar->addWidget(pegsNumberComboBox);
 	ui->toolBar->addWidget(colorsNumberComboBox);
@@ -102,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(gameModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onGameModeChanged(QAction*)));
 	connect(ui->actionShow_Indicators, SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
-	connect(allowSameColorAction, SIGNAL(triggered()), this, SLOT(onNewGame()));
+	connect(ui->actionAllow_Same_Colors, SIGNAL(triggered()), this, SLOT(onNewGame()));
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoPutPins()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onAutoCloseRows()));
 	connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(onPreferences()));
@@ -163,10 +167,11 @@ void MainWindow::resetActionsText()
 	}
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 
+	ui->actionAllow_Same_Colors->setText(tr("&Allow Same Color"));
 	if (gameRules.sameColorAllowed)
-		allowSameColorAction->setToolTip(tr("Same Color Allowed"));
+		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
 	else
-		allowSameColorAction->setToolTip(tr("Same Color Not Allwed"));
+		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
 
 
 	solvingAlgorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
@@ -238,7 +243,7 @@ void MainWindow::onAbout()
 {
 	QStringList app_version = QCoreApplication::applicationVersion().split('.');
 	QString localized_app_version = "";
-	for(auto sub_version_number : app_version)
+	for(QString sub_version_number : app_version)
 	{
 		localized_app_version.append(boardAid.locale.toString(sub_version_number.toInt()));
 		localized_app_version.append(boardAid.locale.decimalPoint());
@@ -304,12 +309,12 @@ void MainWindow::updateGameRules()
 	gameRules.colorNumber = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
 	gameRules.pegNumber = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
 	gameRules.algorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
-	gameRules.sameColorAllowed = (allowSameColorAction->isChecked()) || (gameRules.pegNumber > gameRules.colorNumber);
-	allowSameColorAction->setChecked(gameRules.sameColorAllowed);
+	gameRules.sameColorAllowed = (ui->actionAllow_Same_Colors->isChecked()) || (gameRules.pegNumber > gameRules.colorNumber);
+	ui->actionAllow_Same_Colors->setChecked(gameRules.sameColorAllowed);
 	if (gameRules.sameColorAllowed)
-		allowSameColorAction->setToolTip(tr("Same Color Allowed"));
+		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
 	else
-		allowSameColorAction->setToolTip(tr("Same Color Not Allwed"));
+		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
 
 	// for safety, fallback to standard in out-range inputs
 	if (gameRules.pegNumber < MIN_SLOT_NUMBER || gameRules.pegNumber > MAX_SLOT_NUMBER ||

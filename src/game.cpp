@@ -29,16 +29,16 @@
 
 inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
-	for (auto box : *boxlist)
+	for (PegBox *box : *boxlist)
 		box->setState(state_t);
 }
 //-----------------------------------------------------------------------------
 
-inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
-{
-	for (auto box : *boxlist)
-		box->setState(state_t);
-}
+//inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
+//{
+//	for (PinBox *box : *boxlist)
+//		box->setState(state_t);
+//}
 //-----------------------------------------------------------------------------
 
 Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
@@ -292,7 +292,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
 	if(!gameRules->sameColorAllowed)
 	{
-		for (auto box : currentBoxes)
+		for (PegBox *box : currentBoxes)
 		{
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color)
@@ -309,7 +309,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	// conversion from float to integer may cause double drop on middle. Flag to do it just once
 	bool dropOnlyOnce = true;
 
-	for (auto box : currentBoxes)
+	for (PegBox *box : currentBoxes)
 	{
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
@@ -338,7 +338,7 @@ void Game::onPegMouseReleased(Peg *peg)
 
 void Game::onPegMouseDoubleClicked(Peg *peg)
 {
-	for (auto box : currentBoxes)
+	for (PegBox *box : currentBoxes)
 	{
 		if (!box->hasPeg() || box->getPegState() == PegState::Invisible)
 		{
@@ -429,7 +429,7 @@ void Game::onRevealOnePeg()
 {
 	if (gameRules->gameMode == GameMode::HVM && isRunning())
 	{
-		for(auto box : masterBoxes)
+		for(PegBox *box : masterBoxes)
 		{
 			if(box->getState() != BoxState::Past)
 			{
@@ -503,7 +503,7 @@ void Game::onDoneButtonPressed()
 	setStateOfList(&pegBoxes, BoxState::Future);
 
 	guessElement.code = "";
-	for(auto box : currentBoxes)
+	for(PegBox *box : currentBoxes)
 		guessElement.code.append(QString::number(box->getPegColor()));
 
 	currentBoxes.clear();
@@ -599,7 +599,7 @@ void Game::playHVM()
 	qsrand(time(NULL));
 	guessElement.code = "";
 
-	for (auto box : masterBoxes) //creating a master code to be guessed
+	for (PegBox *box : masterBoxes) //creating a master code to be guessed
 	{
 		int color = qrand() % remainingNumbers;
 		int realcolor = digits.at(color).digitValue();
@@ -671,7 +671,7 @@ void Game::showInformation()
 	else
 		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", gameRules->pegNumber)).
 								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors", "", gameRules->colorNumber)).
-								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Color")).
+								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Colors")).
 							 arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
 }
 //-----------------------------------------------------------------------------

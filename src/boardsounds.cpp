@@ -34,7 +34,7 @@ BoardSounds::BoardSounds()
 	pegDropRefuseSound->setSource(QUrl::fromLocalFile("://sounds/pegrefuse.wav"));
 	buttonPressSound->setSource(QUrl::fromLocalFile("://sounds/pin.wav"));
 #endif
-	setVolume(QSettings().value("Volume", 50).toInt());
+	setVolume(QSettings().value("Volume", 100).toInt());
 }
 
 BoardSounds::~BoardSounds()
