@@ -53,7 +53,6 @@ private:
 
 private:
 	PinColor color;
-//	int color;//  -1 = white, 0 = none, 1 = black
 	PinMouseState pinMouseState;
 };
 

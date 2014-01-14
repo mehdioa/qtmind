@@ -26,7 +26,6 @@ Pin::Pin(QGraphicsItem *parent) :
 	color(PinColor::None),
 	pinMouseState(PinMouseState::Ignore)
 {
-	setPen(Qt::NoPen);
 	QLinearGradient lgrad(0, 0, 13, 13);
 	lgrad.setColorAt(0.0, QColor(80, 80, 80));
 	lgrad.setColorAt(1.0, QColor(220, 220, 220));
@@ -43,6 +42,7 @@ void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	if (pinMouseState == PinMouseState::Accept)
 		setColor(nextPinColor());
 }
+//-----------------------------------------------------------------------------
 
 void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {

@@ -25,7 +25,7 @@ GameRules::GameRules():
 	colorNumber(QSettings().value("Colors", 6).toInt()),
 	sameColorAllowed(QSettings().value("SameColor", true).toBool()),
 	algorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
-	gameMode((GameMode) QSettings().value("Mode", 0).toInt())
+	gameMode((GameMode) QSettings().value("Mode", 1).toInt())
 {
 
 }

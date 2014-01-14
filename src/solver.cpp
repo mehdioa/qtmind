@@ -197,7 +197,7 @@ bool Solver::setResponse(const int &m_response)
 	int guessArray[gameRules->pegNumber];
 	stringToArray(guessElement->guess, guessArray);
 
-	for(int possible : possibleCodes)
+	foreach(int possible, possibleCodes)
 	{
 		if(compare(guessArray, allCodes[possible]) == m_response)
 			tempPossibleCodes.append(possible);
@@ -322,7 +322,7 @@ void Solver::makeGuess()
 		if(interupt)
 			return;
 
-		for(int possible_index : possibleCodes)
+		foreach(int possible_index, possibleCodes)
 		{
 			++responsesOfCodes[compare(allCodes[firstPossibleCodes[code_index]], allCodes[possible_index])];
 		}

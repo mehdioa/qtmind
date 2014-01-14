@@ -24,7 +24,7 @@ const QString BoardAid::appName = "QtMind_";
 
 BoardAid::BoardAid():
 	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),
-	autoCloseRows(QSettings().value("AutoCloseRows", true).toBool()),
+	autoCloseRows(QSettings().value("AutoCloseRows", false).toBool()),
 	locale(QSettings().value("Locale/Language", "en").toString().left(5))
 {
 }

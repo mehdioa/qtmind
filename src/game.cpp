@@ -29,7 +29,7 @@
 
 inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 {
-	for (PegBox *box : *boxlist)
+	foreach (PegBox *box, *boxlist)
 		box->setState(state_t);
 }
 //-----------------------------------------------------------------------------
@@ -292,7 +292,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
 	if(!gameRules->sameColorAllowed)
 	{
-		for (PegBox *box : currentBoxes)
+		foreach(PegBox *box, currentBoxes)
 		{
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color)
@@ -309,7 +309,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	// conversion from float to integer may cause double drop on middle. Flag to do it just once
 	bool dropOnlyOnce = true;
 
-	for (PegBox *box : currentBoxes)
+	foreach(PegBox *box, currentBoxes)
 	{
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
@@ -338,7 +338,7 @@ void Game::onPegMouseReleased(Peg *peg)
 
 void Game::onPegMouseDoubleClicked(Peg *peg)
 {
-	for (PegBox *box : currentBoxes)
+	foreach(PegBox *box, currentBoxes)
 	{
 		if (!box->hasPeg() || box->getPegState() == PegState::Invisible)
 		{
@@ -429,7 +429,7 @@ void Game::onRevealOnePeg()
 {
 	if (gameRules->gameMode == GameMode::HVM && isRunning())
 	{
-		for(PegBox *box : masterBoxes)
+		foreach(PegBox *box, masterBoxes)
 		{
 			if(box->getState() != BoxState::Past)
 			{
@@ -503,7 +503,7 @@ void Game::onDoneButtonPressed()
 	setStateOfList(&pegBoxes, BoxState::Future);
 
 	guessElement.code = "";
-	for(PegBox *box : currentBoxes)
+	foreach(PegBox *box, currentBoxes)
 		guessElement.code.append(QString::number(box->getPegColor()));
 
 	currentBoxes.clear();
@@ -599,7 +599,7 @@ void Game::playHVM()
 	qsrand(time(NULL));
 	guessElement.code = "";
 
-	for (PegBox *box : masterBoxes) //creating a master code to be guessed
+	foreach(PegBox *box, masterBoxes) //creating a master code to be guessed
 	{
 		int color = qrand() % remainingNumbers;
 		int realcolor = digits.at(color).digitValue();

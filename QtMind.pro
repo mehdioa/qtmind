@@ -135,3 +135,5 @@ unix:!macx { # installation on Unix-ish platforms
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
+ANDROID_EXTRA_LIBS = 
+
