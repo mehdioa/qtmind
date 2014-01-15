@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	show_indicators_icon.addPixmap(QPixmap("://icons/layer-visible-on.png"), QIcon::Normal, QIcon::Off);
 	show_indicators_icon.addPixmap(QPixmap("://icons/layer-visible-off.png"), QIcon::Normal, QIcon::On);
 	ui->actionShow_Indicators->setIcon(show_indicators_icon);
-	ui->actionShow_Indicators->setChecked(boardAid.indicator.getShowIndicators());
+	ui->actionShow_Indicators->setChecked(boardAid.indicator.showIndicators);
 
 	ui->actionAuto_Set_Pins->setChecked(boardAid.autoPutPins);
 	ui->actionAuto_Close_Rows->setChecked(boardAid.autoCloseRows);
@@ -271,7 +271,7 @@ void MainWindow::onAutoCloseRows()
 
 void MainWindow::onIndicatorChanged()
 {
-	boardAid.indicator.setShowIndicators(ui->actionShow_Indicators->isChecked());
+	boardAid.indicator.showIndicators = ui->actionShow_Indicators->isChecked();
 	game->changeIndicators();
 }
 //-----------------------------------------------------------------------------

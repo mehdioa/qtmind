@@ -23,17 +23,21 @@
 #include "constants.h"
 #include <QString>
 
-struct GuessElement
+class GuessElement
 {
 	GuessElement();
 	void reset(const Algorithm &algorithm_m, const int &possibles_m);
 
+private:
 	QString guess;
 	QString code;
 	int response;
 	Algorithm algorithm;
 	int possibles;
 	qreal weight;
+
+	friend class Solver;
+	friend class Game;
 };
 
 #endif // GUESSELEMENT_H

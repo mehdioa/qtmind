@@ -48,16 +48,16 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->fontComboBox->setCurrentFont(boardAid->boardFont.fontName);
 	ui->fontSizeComboBox->setCurrentIndex(boardAid->boardFont.fontSize);
 	ui->volumeVerticalSlider->setValue(boardAid->boardSounds.getVolume());
-	ui->showColorsCheckBox->setChecked(boardAid->indicator.getShowColors());
-	ui->characterRadioButton->setChecked(boardAid->indicator.getIndicatorType() == IndicatorType::Character);
-	ui->digitRadioButton->setChecked(boardAid->indicator.getIndicatorType() == IndicatorType::Digit);
+	ui->showColorsCheckBox->setChecked(boardAid->indicator.showColors);
+	ui->characterRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Character);
+	ui->digitRadioButton->setChecked(boardAid->indicator.indicatorType == IndicatorType::Digit);
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QStringList translations = findTranslations();
-	translations = translations.filter(boardAid->appName);
+	translations = translations.filter(boardAid->underlineAppName);
 	foreach(QString translation, translations)
 	{
-		translation.remove(boardAid->appName);
+		translation.remove(boardAid->underlineAppName);
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
 	int index = qMax(0, ui->languageComboBox->findData(boardAid->locale.name().left(2)));
@@ -96,9 +96,9 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	// Find current locale
 	QString current = board_aid->locale.name();
 	QStringList translations = findTranslations();
-	if (!translations.contains(board_aid->appName + current)) {
+	if (!translations.contains(board_aid->underlineAppName + current)) {
 		current = current.left(2);
-		if (!translations.contains(board_aid->appName + current)) {
+		if (!translations.contains(board_aid->underlineAppName + current)) {
 			current.clear();
 		}
 	}
@@ -118,7 +118,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	QCoreApplication::installTranslator(&qt_translator);
 
 	static QTranslator translator;
-	translator.load(board_aid->appName + current, AppPath);
+	translator.load(board_aid->underlineAppName + current, AppPath);
 	QCoreApplication::installTranslator(&translator);
 }
 //-----------------------------------------------------------------------------
@@ -172,6 +172,6 @@ void Preferences::accept()
 	boardAid->boardFont.fontName = ui->fontComboBox->currentText();
 	boardAid->boardFont.fontSize = ui->fontSizeComboBox->currentIndex();
 	boardAid->boardSounds.setVolume(ui->volumeVerticalSlider->value());
-	boardAid->indicator.setShowColors(ui->showColorsCheckBox->isChecked());
-	boardAid->indicator.setIndicatorType(ui->digitRadioButton->isChecked() ? IndicatorType::Digit : IndicatorType::Character);
+	boardAid->indicator.showColors = ui->showColorsCheckBox->isChecked();
+	boardAid->indicator.indicatorType = ui->digitRadioButton->isChecked() ? IndicatorType::Digit : IndicatorType::Character;
 }

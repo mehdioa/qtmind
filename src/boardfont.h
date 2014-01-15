@@ -22,13 +22,19 @@
 
 #include <QString>
 
-struct BoardFont
+class BoardFont
 {
 	BoardFont();
 	~BoardFont();
 
+private:
 	QString fontName;
 	int fontSize;
+
+	friend class Button;
+	friend class Message;
+	friend class BoardAid;
+	friend class Preferences;
 };
 
 

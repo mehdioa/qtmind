@@ -101,8 +101,8 @@ void Peg::setColor(int color_number)
 		setBrush(gradient);
 	}
 
-	indicatorText->setText(OrderedChars[(int)indicator->getIndicatorType()][color]);
-	indicatorText->setVisible(indicator->getShowIndicators());
+	indicatorText->setText(OrderedChars[(int)indicator->indicatorType][color]);
+	indicatorText->setVisible(indicator->showIndicators);
 }
 //-----------------------------------------------------------------------------
 

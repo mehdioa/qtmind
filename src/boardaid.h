@@ -25,18 +25,23 @@
 #include "boardfont.h"
 #include <QLocale>
 
-struct BoardAid
+class BoardAid
 {
 	BoardAid();
 	~BoardAid();
 
-	static const QString appName;
+private:
+	static const QString underlineAppName;
 	bool autoPutPins;
 	bool autoCloseRows;
 	Indicator indicator;
 	QLocale locale;
 	BoardFont boardFont;
 	BoardSounds boardSounds;
+
+	friend class MainWindow;
+	friend class Preferences;
+	friend class Game;
 };
 
 #endif // BOARDAID_H

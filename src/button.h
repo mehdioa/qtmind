@@ -35,7 +35,6 @@ class Button : public QObject, public QGraphicsItem
 
 public:
 	explicit Button(const BoardFont &board_font, const int &buttonWidth = 152, const QString &str = "");
-	void fakeButtonPress(){emit buttonPressed();}
 	void setLabel(QString label_s){label = label_s;}
 
 protected:

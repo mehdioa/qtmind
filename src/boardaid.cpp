@@ -18,9 +18,10 @@
  ***********************************************************************/
 
 #include "boardaid.h"
+#include "appinfo.h"
 #include "QSettings"
 
-const QString BoardAid::appName = "QtMind_";
+const QString BoardAid::underlineAppName = APP_NAME + "_";	//	QtMind_
 
 BoardAid::BoardAid():
 	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),

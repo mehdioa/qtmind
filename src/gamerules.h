@@ -28,16 +28,21 @@ enum class GameMode {
 	HVM		//HUMAN BREAKS THE HIDDEN CODE
 };
 
-struct GameRules
+class GameRules
 {
 	GameRules();
 	~GameRules();
 
+private:
 	int pegNumber;
 	int colorNumber;
 	bool sameColorAllowed;
 	Algorithm algorithm;
 	GameMode gameMode;
+
+	friend class MainWindow;
+	friend class Solver;
+	friend class Game;
 };
 
 #endif // GAMERULES_H
