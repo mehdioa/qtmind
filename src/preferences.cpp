@@ -83,7 +83,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	QStringList paths;
 	paths.append("assets:/translations");// Android
 	paths.append(appdir + "/translations/");// Windows
-	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");// *nix
+	paths.append(appdir + "/../share/" + QCoreApplication::applicationName() + "/translations/");// *nix
 	paths.append(appdir + "/../Resources/translations");// Mac
 	foreach(QString path, paths)
 	{
