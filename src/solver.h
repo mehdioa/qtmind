@@ -23,7 +23,7 @@
 #include <QList>
 #include <QThread>
 
-/*	The class Solver is the engine of the mastermind game. It contains all the solving
+/*	The class Solver is the solving engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
  *	response and so on. The response is stored this way:
  *	example: p := peg number = 4

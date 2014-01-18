@@ -26,16 +26,15 @@
 
 enum class PegState
 {
-	Initial,
+	Initial,	//	Right source pegs
 	Visible,
 	Invisible,
-	Underneath,
-	Plain
+	Underneath,	//	Pegs under Initial right pegs
+	Plain		//	Just circle is visible
 };
 
 class QGraphicsSimpleTextItem;
 class Indicator;
-
 
 class Peg : public QObject, public QGraphicsEllipseItem
 {

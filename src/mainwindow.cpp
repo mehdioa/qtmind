@@ -120,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContextMenu(QPoint)));
 	onNewGame();
-	resetActionsText();
+	retranslate();
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
 }
 //-----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ MainWindow::~MainWindow()
 }
 //-----------------------------------------------------------------------------
 
-void MainWindow::resetActionsText()
+void MainWindow::retranslate()
 {
 	setWindowTitle(tr("QtMind"));
 	ui->menuGame->setTitle(tr("&Game"));
@@ -228,7 +228,7 @@ void MainWindow::onPreferences()
 	onIndicatorChanged();
 	Preferences::loadTranslation(&boardAid);
 	setLayoutDirection(boardAid.locale.textDirection());
-	resetActionsText();
+	retranslate();
 
 }
 //-----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ void MainWindow::onAbout()
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("QtMind"), localized_app_version,
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
-			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(boardAid.locale.toString(2013)),
+			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(boardAid.locale.toString(2014)),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\"")));
 }
 //-----------------------------------------------------------------------------

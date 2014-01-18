@@ -81,7 +81,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 
 	// Find translator path
 	QStringList paths;
-	paths.append("assets:/qtmind/translations");// Android
+	paths.append("assets:/translations");// Android
 	paths.append(appdir + "/translations/");// Windows
 	paths.append(appdir + "/../share/" + QCoreApplication::applicationName().toLower() + "/translations/");// *nix
 	paths.append(appdir + "/../Resources/translations");// Mac

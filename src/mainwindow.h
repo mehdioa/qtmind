@@ -26,10 +26,6 @@
 #include "boardaid.h"
 #include "game.h"
 
-class QMenu;
-class QAction;
-class QToolBar;
-class QActionGroup;
 class QComboBox;
 class Game;
 
@@ -63,7 +59,7 @@ private slots:
 private:
 	bool quitUnfinishedGame();
 	void updateGameRules();
-	void resetActionsText();
+	void retranslate();
 	GameMode getGameMode();
 
 	Ui::MainWindow *ui;

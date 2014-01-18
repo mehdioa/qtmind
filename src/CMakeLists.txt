@@ -1,9 +1,3 @@
-
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra")
-# 
-# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}  -std=c++0x")
-
  include_directories(
 # 	${CMAKE_SOURCE_DIR} 
  	${CMAKE_CURRENT_BINARY_DIR} 
@@ -98,4 +92,3 @@ install( TARGETS qtmind DESTINATION /usr/bin/ )
 
 # -- install translations files
 #install(FILES ${QTMIND_QM} DESTINATION /usr/share/qtmind/)
-  

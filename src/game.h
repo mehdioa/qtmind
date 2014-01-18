@@ -109,9 +109,9 @@ private:
 	Player winner() const;
 
 private:
-	QList<PinBox *> pinBoxes;	//	black-white pins
-	QList<PegBox *> pegBoxes;	//	right boxes that contains color-pegs to put on codeboxes
-	QList<PegBox *> codeBoxes;	//	middle boxes that is filled by a player
+	QList<PinBox *> pinBoxes;		//	black-white pins
+	QList<PegBox *> pegBoxes;		//	right boxes that contains color-pegs to put on codeboxes
+	QList<PegBox *> codeBoxes;		//	middle boxes that is filled by a player
 	QList<PegBox *> currentBoxes;	//	the active row of codeboxes
 	QList<PegBox *> masterBoxes;	//	the mastercode boxes
 

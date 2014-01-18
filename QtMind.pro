@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT	   += core gui
 
 QMAKE_CXXFLAGS += -std=c++0x
 
@@ -16,7 +16,7 @@ MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
 
-VERSION = 0.7.1
+VERSION = 0.7.2
 DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 #unix: !macx {
@@ -33,46 +33,46 @@ SOURCES += src/main.cpp\
 	src/peg.cpp \
 	src/button.cpp \
 	src/pegbox.cpp \
-    src/emptybox.cpp \
-    src/message.cpp \
-    src/pinbox.cpp \
-    src/pin.cpp \
-    src/preferences.cpp \
-    src/solver.cpp \
-    src/game.cpp \
-    src/gamerules.cpp \
-    src/indicator.cpp \
-    src/guesselement.cpp \
-    src/boardaid.cpp \
-    src/boardsounds.cpp \
-    src/boardfont.cpp
+	src/emptybox.cpp \
+	src/message.cpp \
+	src/pinbox.cpp \
+	src/pin.cpp \
+	src/preferences.cpp \
+	src/solver.cpp \
+	src/game.cpp \
+	src/gamerules.cpp \
+	src/indicator.cpp \
+	src/guesselement.cpp \
+	src/boardaid.cpp \
+	src/boardsounds.cpp \
+	src/boardfont.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
 	src/constants.h \
 	src/button.h \
 	src/pegbox.h \
-    src/emptybox.h \
-    src/message.h \
-    src/pinbox.h \
-    src/pin.h \
-    src/preferences.h \
-    src/solver.h \
-    src/game.h \
-    src/appinfo.h \
-    src/gamerules.h \
-    src/indicator.h \
-    src/guesselement.h \
-    src/boardaid.h \
-    src/boardsounds.h \
-    src/boardfont.h
+	src/emptybox.h \
+	src/message.h \
+	src/pinbox.h \
+	src/pin.h \
+	src/preferences.h \
+	src/solver.h \
+	src/game.h \
+	src/appinfo.h \
+	src/gamerules.h \
+	src/indicator.h \
+	src/guesselement.h \
+	src/boardaid.h \
+	src/boardsounds.h \
+	src/boardfont.h
 
-FORMS    += \
-    src/preferences.ui \
-    src/mainwindow.ui
+FORMS	+= \
+	src/preferences.ui \
+	src/mainwindow.ui
 
 RESOURCES += \
-    resource.qrc
+	resource.qrc
 
 TRANSLATIONS = translations/QtMind_ara.ts \
 	translations/QtMind_af.ts \
@@ -99,7 +99,7 @@ TRANSLATIONS = translations/QtMind_ara.ts \
 
 OTHER_FILES += \
 	QtMind.desktop \
-    android/AndroidManifest.xml \
+	android/AndroidManifest.xml \
 	icons/hicolor/16x16/QtMind.png \
 	icons/hicolor/32x32/QtMind.png \
 	icons/hicolor/36x36/QtMind.png \
@@ -111,8 +111,11 @@ OTHER_FILES += \
 	icons/hicolor/256x256/QtMind.png \
 	icons/hicolor/512x512/QtMind.png \
 	icons/hicolor/scalable/QtMind.svg \
-    icons/hicolor/scalable/twoPegs.svg \
-    icons/hicolor/scalable/logo.svg
+	icons/hicolor/scalable/twoPegs.svg \
+	icons/hicolor/scalable/logo.svg \
+	QtMind.pbs \
+    QtMind.qbs \
+    src/src.qbs
 
 unix:!macx { # installation on Unix-ish platforms
 	isEmpty(INSTALL_PREFIX):INSTALL_PREFIX = /usr
