@@ -16,8 +16,8 @@ MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
 
-VERSION = 0.7.2
-DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
+#VERSION = 0.7.3
+#DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
 
 #unix: !macx {
 #	TARGET = qtmind

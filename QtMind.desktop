@@ -3,9 +3,9 @@
 Categories=Qt;Game;BoardGame;
 Comment=Mastermind Game
 comment[fa]=بازی فکر بکر
-Exec=qtmind %F
+Exec=QtMind %F
 GenericName=Mastermind Game
-Icon=/usr/share/pixmaps/qtmind.png
+Icon=/usr/share/pixmaps/QtMind.png
 MimeType=
 Name=QtMind
 Name[fa]=کیوت‌مایند
