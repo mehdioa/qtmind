@@ -15,9 +15,9 @@ string(REGEX MATCH "([0-9]+)" qtmind_VER_PATCH ${qtmind_VER_PATCH})
 SET(QTMIND_VERSION ${qtmind_VER_MAJOR}.${qtmind_VER_MINOR}.${qtmind_VER_PATCH})
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -m64 -pipe -march=native -mtune=generic -O2 -pipe -fstack-protector --param=ssp-buffer-size=4 -Wall -W -D_REENTRANT -fPIE")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra")
 #
- set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}  -std=c++0x -m64 -pipe -march=native -mtune=generic -O2 -pipe -fstack-protector --param=ssp-buffer-size=4 -Wall -W -D_REENTRANT -fPIE")
+ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}  -std=c++0x -Wall -Wextra")
 
 # if(${CMAKE_BUILD_TYPE} MATCHES "Release")
 #   add_definitions(-DQT_NO_DEBUG)

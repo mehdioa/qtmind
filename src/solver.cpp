@@ -146,7 +146,7 @@ QString Solver::shuffle(QString m_string) const
 
 void Solver::permute(QString &m_code) const
 {
-	/*	This funstion shuffle the code and do a permutation on the characters */
+	/*	This funstion shuffle colors and do a permutation on m_code */
 	QString shuffled_colors = shuffle(QString("0123456789").left(gameRules->colorNumber));
 	m_code = shuffle(m_code);
 

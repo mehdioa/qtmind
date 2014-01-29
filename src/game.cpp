@@ -34,13 +34,6 @@ inline void setStateOfList(QList<PegBox *> *boxlist, const BoxState &state_t)
 }
 //-----------------------------------------------------------------------------
 
-//inline void setStateOfList(QList<PinBox *> *boxlist, const BoxState &state_t)
-//{
-//	for (PinBox *box : *boxlist)
-//		box->setState(state_t);
-//}
-//-----------------------------------------------------------------------------
-
 Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
 	QGraphicsView(parent),
 	gameState(GameState::None),
@@ -143,7 +136,7 @@ void Game::createBoxes()
 			codeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
 		}
 
-		position.setX(276);	//go to right corner for the peg boxes
+		position.setX(277);	//go to right corner for the peg boxes
 
 		PegBox *pegbox = createPegBox(position);
 		pegBoxes.append(pegbox);
@@ -208,7 +201,7 @@ Peg *Game::createPeg(PegBox *m_box, const int &m_color)
 }
 //-----------------------------------------------------------------------------
 
-void Game::freezeAllLists()
+void Game::freezeScene()
 {
 	setStateOfList(&masterBoxes, BoxState::Past);
 	setStateOfList(&currentBoxes, BoxState::Past);
@@ -367,11 +360,11 @@ void Game::onPinBoxPressed()
 	switch (winner()) {
 	case Player::CodeBreaker:
 		gameState = GameState::Win;
-		freezeAllLists();
+		freezeScene();
 		break;
 	case Player::CodeMaker:
 		gameState = GameState::Lose;
-		freezeAllLists();
+		freezeScene();
 		break;
 	default:
 		++playedMoves;
@@ -417,10 +410,8 @@ bool Game::isRunning()
 	case GameState::WaittingHiddenCodeFill:
 	case GameState::WaittingDoneButtonPress:
 		return false;
-		break;
 	default:
 		return true;
-		break;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -454,7 +445,7 @@ void Game::onResigned()
 	{
 		gameState = GameState::Resign;
 		showMessage();
-		freezeAllLists();
+		freezeScene();
 	}
 }
 //-----------------------------------------------------------------------------
@@ -475,11 +466,11 @@ void Game::onOkButtonPressed()
 	switch (winner()) {
 	case Player::CodeBreaker:
 		gameState = GameState::Win;
-		freezeAllLists();
+		freezeScene();
 		break;
 	case Player::CodeMaker:
 		gameState = GameState::Lose;
-		freezeAllLists();
+		freezeScene();
 		break;
 	default:
 		++playedMoves;
@@ -735,12 +726,7 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->drawRect(QRect(4, 128, 318, 1));
 
 	painter->setPen(Qt::NoPen);
-
-	QLinearGradient rowgrad(4, 129, 4, 169);
-	rowgrad.setColorAt(0.0, QColor(154, 154, 154));
-	rowgrad.setColorAt(1.0, QColor(143, 143, 143));
-	rowgrad.setSpread(QGradient::RepeatSpread);
-	painter->setBrush(QBrush(rowgrad));
+	painter->setBrush(QBrush(QColor(154, 154, 154)));
 	painter->drawRect(QRectF(4, 129, 318, 400));
 
 	painter->setPen(QColor(135, 135, 135));

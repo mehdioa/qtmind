@@ -69,7 +69,7 @@ private:
 	QPointF position;
 	Indicator *indicator;
 
-	/*	pressed shadow - the ellipse item takes ownership of
+	/*	pressedEffect - the ellipse item takes ownership of
 	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect *pressedEffect;
 	QGraphicsSimpleTextItem *indicatorText;

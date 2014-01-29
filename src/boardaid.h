@@ -32,6 +32,7 @@ class BoardAid
 
 private:
 	static const QString underlineAppName;
+	static const bool isAndroid;
 	bool autoPutPins;
 	bool autoCloseRows;
 	Indicator indicator;

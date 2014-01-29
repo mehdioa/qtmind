@@ -103,7 +103,7 @@ private:
 	void showInformation();
 	void showMessage();
 	void initializeScene();
-	void freezeAllLists();
+	void freezeScene();
 	void setNextRowInAction();
 	void getNextGuess();
 	Player winner() const;

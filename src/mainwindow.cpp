@@ -210,7 +210,7 @@ bool MainWindow::quitUnfinishedGame()
 	if (!game->isRunning())
 		return true;
 	int new_game_accept = QMessageBox::warning(this,
-								  tr("New Game"), QString("<p align='center'>%1</p>"
+								  tr("New Game"), QString(boardAid.isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
 													"<p align='center'>%2</p>")
 												.arg(tr("An unfinished game is in progress."))
 												.arg(tr("Do you want to start a new game?")),
@@ -249,7 +249,7 @@ void MainWindow::onAbout()
 		localized_app_version.append(boardAid.locale.decimalPoint());
 	}
 	localized_app_version.chop(1);
-	QMessageBox::about(this, tr("About QtMind"), QString(
+	QMessageBox::about(this, tr("About QtMind"), QString(boardAid.isAndroid ? "%1 %2\n%3\n\n%4\n%5" :
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("QtMind"), localized_app_version,
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),

@@ -17,6 +17,8 @@
 *.txt.user
 *.txt.user.*
 
+*.kdev4
+
 moc_*.cpp
 qrc_*.cpp
 Makefile

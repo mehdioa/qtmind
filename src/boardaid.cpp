@@ -23,6 +23,12 @@
 
 const QString BoardAid::underlineAppName = APP_NAME + "_";	//	QtMind_
 
+#ifdef Q_OS_ANDROID
+const bool BoardAid::isAndroid = true;
+#else
+const bool BoardAid::isAndroid = false;
+#endif
+
 BoardAid::BoardAid():
 	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),
 	autoCloseRows(QSettings().value("AutoCloseRows", false).toBool()),
