@@ -31,7 +31,6 @@ class BoardAid
 	~BoardAid();
 
 private:
-	static const QString appName;
 	static const bool isAndroid;
 	bool autoPutPins;
 	bool autoCloseRows;

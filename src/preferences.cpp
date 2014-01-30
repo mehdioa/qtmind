@@ -54,10 +54,11 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QStringList translations = findTranslations();
-	translations = translations.filter(boardAid->appName+"_");
+	QString app_name_ = QApplication::applicationName().toLower()+"_";
+	translations = translations.filter(app_name_);
 	foreach(QString translation, translations)
 	{
-		translation.remove(boardAid->appName+"_");
+		translation.remove(app_name_);
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
 	int index = qMax(0, ui->languageComboBox->findData(boardAid->locale.name().left(2)));
@@ -78,12 +79,12 @@ Preferences::~Preferences()
 void Preferences::loadTranslation(BoardAid *board_aid)
 {
 	QString appdir = QCoreApplication::applicationDirPath();
-
+	QString app_name_ = QApplication::applicationName().toLower()+"_";
 	// Find translator path
 	QStringList paths;
 	paths.append("assets:/translations");// Android
 	paths.append(appdir + "/translations/");// Windows
-	paths.append(appdir + "/../share/" + board_aid->appName + "/translations/");// *nix
+	paths.append(appdir + "/../share/" + QApplication::applicationName().toLower() + "/translations/");// *nix
 	paths.append(appdir + "/../Resources/translations");// Mac
 	foreach(QString path, paths)
 	{
@@ -96,9 +97,10 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	// Find current locale
 	QString current = board_aid->locale.name();
 	QStringList translations = findTranslations();
-	if (!translations.contains(board_aid->appName + "_" + current)) {
+	if (!translations.contains(app_name_ + current)) {
 		current = current.left(2);
-		if (!translations.contains(board_aid->appName + "_" + current)) {
+		if (!translations.contains(app_name_
+								   + current)) {
 			current.clear();
 		}
 	}
@@ -118,7 +120,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	QCoreApplication::installTranslator(&qt_translator);
 
 	static QTranslator translator;
-	translator.load(board_aid->appName + "_" + current, AppPath);
+	translator.load(app_name_ + current, AppPath);
 	QCoreApplication::installTranslator(&translator);
 }
 //-----------------------------------------------------------------------------
