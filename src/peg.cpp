@@ -74,6 +74,7 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 void Peg::setColor(int color_number)
 {
 	color = (-1 < color_number && color_number < 10) ? color_number : 0;
+	update();
 }
 //-----------------------------------------------------------------------------
 

@@ -8,7 +8,6 @@ QT	   += core gui
 
 QMAKE_CXXFLAGS += -std=c++0x
 
-TEMPLATE = app
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
@@ -26,7 +25,7 @@ RCC_DIR = build
 #}
 
 TEMPLATE = app
-
+#TARGET = QtMind
 
 SOURCES += src/main.cpp\
 	src/mainwindow.cpp \
@@ -113,7 +112,6 @@ OTHER_FILES += \
 	icons/hicolor/scalable/qtmind.svg \
 	icons/hicolor/scalable/twoPegs.svg \
 	icons/hicolor/scalable/logo.svg \
-	qtmind.pbs \
 	qtmind.qbs \
     src/src.qbs
 
