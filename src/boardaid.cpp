@@ -21,7 +21,7 @@
 #include "appinfo.h"
 #include "QSettings"
 
-const QString BoardAid::underlineAppName = APP_NAME + "_";	//	QtMind_
+const QString BoardAid::appName = QString(APP_NAME).toLower();	//	qtmind
 
 #ifdef Q_OS_ANDROID
 const bool BoardAid::isAndroid = true;

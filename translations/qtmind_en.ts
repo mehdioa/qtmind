@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.1" language="en_US">
 <context>
     <name>Game</name>
     <message>
-        <location filename="../src/game.cpp" line="702"/>
+        <location filename="../src/game.cpp" line="693"/>
         <source>Press The Pin Box</source>
         <translation>Press The Pin Box</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="705"/>
+        <location filename="../src/game.cpp" line="696"/>
         <source>Please Put Your Pins And Press OK</source>
         <translation>Please Put Your Pins And Press OK</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="708"/>
+        <location filename="../src/game.cpp" line="699"/>
         <source>Press Done</source>
         <translation>Press Done</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="260"/>
-        <location filename="../src/game.cpp" line="396"/>
+        <location filename="../src/game.cpp" line="253"/>
+        <location filename="../src/game.cpp" line="389"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="267"/>
-        <location filename="../src/game.cpp" line="401"/>
+        <location filename="../src/game.cpp" line="260"/>
+        <location filename="../src/game.cpp" line="394"/>
         <source>Done</source>
         <translation>Done</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/game.cpp" line="672"/>
+        <location filename="../src/game.cpp" line="663"/>
         <source>Slots</source>
         <translation>
             <numerusform>Slot</numerusform>
@@ -39,7 +39,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/game.cpp" line="673"/>
+        <location filename="../src/game.cpp" line="664"/>
         <source>Colors</source>
         <translation>
             <numerusform>Color</numerusform>
@@ -47,90 +47,90 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="675"/>
+        <location filename="../src/game.cpp" line="666"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="675"/>
+        <location filename="../src/game.cpp" line="666"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="685"/>
+        <location filename="../src/game.cpp" line="676"/>
         <source>Success! I Win</source>
         <translation>Success! I Win</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="687"/>
+        <location filename="../src/game.cpp" line="678"/>
         <source>Success! You Win</source>
         <translation>Success! You Win</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="691"/>
+        <location filename="../src/game.cpp" line="682"/>
         <source>Game Over! I Failed</source>
         <translation>Game Over! I Failed</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="711"/>
+        <location filename="../src/game.cpp" line="702"/>
         <source>Place Your Pegs</source>
         <translation>Place Your Pegs</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="693"/>
+        <location filename="../src/game.cpp" line="684"/>
         <source>Game Over! You Failed</source>
         <translation>Game Over! You Failed</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="674"/>
+        <location filename="../src/game.cpp" line="665"/>
         <source>Same Colors</source>
         <translation>Same Colors</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="696"/>
+        <location filename="../src/game.cpp" line="687"/>
         <source>You Resign</source>
         <translation>You Resign</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="467"/>
+        <location filename="../src/game.cpp" line="458"/>
         <source>Not Possible, Try Again</source>
         <translation>Not Possible, Try Again</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="699"/>
+        <location filename="../src/game.cpp" line="690"/>
         <source>Let Me Think</source>
         <translation>Let Me Think</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="642"/>
+        <location filename="../src/game.cpp" line="633"/>
         <source>The Code Is Cracked!</source>
         <translation>The Code Is Cracked!</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="646"/>
+        <location filename="../src/game.cpp" line="637"/>
         <source>Random Guess</source>
         <translation>Random Guess</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="647"/>
-        <location filename="../src/game.cpp" line="654"/>
-        <location filename="../src/game.cpp" line="659"/>
-        <location filename="../src/game.cpp" line="664"/>
+        <location filename="../src/game.cpp" line="638"/>
+        <location filename="../src/game.cpp" line="645"/>
+        <location filename="../src/game.cpp" line="650"/>
+        <location filename="../src/game.cpp" line="655"/>
         <source>Remaining</source>
         <translation>Remaining</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="653"/>
+        <location filename="../src/game.cpp" line="644"/>
         <source>Most Parts</source>
         <translation>Most Parts</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="658"/>
+        <location filename="../src/game.cpp" line="649"/>
         <source>Worst Case</source>
         <translation>Worst Case</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="663"/>
+        <location filename="../src/game.cpp" line="654"/>
         <source>Expected Size</source>
         <translation>Expected Size</translation>
     </message>

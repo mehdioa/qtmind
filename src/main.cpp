@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	app.setOrganizationDomain(ORG_DOMAIN);
 
 	MainWindow w;
-	w.setWindowIcon(QIcon("://icons/hicolor/64x64/QtMind.png"));
+	w.setWindowIcon(QIcon("://icons/hicolor/64x64/qtmind.png"));
 	w.show();
 
 	return app.exec();

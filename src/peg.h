@@ -20,8 +20,7 @@
 #ifndef PEG_H
 #define PEG_H
 
-#include <QGraphicsDropShadowEffect>
-#include <QGraphicsEllipseItem>
+#include <QGraphicsObject>
 #include "constants.h"
 
 enum class PegState
@@ -33,17 +32,19 @@ enum class PegState
 	Plain		//	Just circle is visible
 };
 
-class QGraphicsSimpleTextItem;
 class Indicator;
+class QGestureEvent;
+class QGraphicsDropShadowEffect;
 
-class Peg : public QObject, public QGraphicsEllipseItem
+class Peg : public QGraphicsObject
 {
 	Q_OBJECT
-	Q_INTERFACES(QGraphicsItem)
 
 public:
 	static const QColor PegColors[MAX_COLOR_NUMBER][2];
 	static const QString OrderedChars[3];
+	static const QFont font;
+	static QFont setFont();
 
 	explicit Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent = 0);
 	void setColor(int color_number);
@@ -57,6 +58,11 @@ protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem*,
+			   QWidget*);
+	QRectF boundingRect() const;
+	bool event(QEvent *event);
+	bool gestureEvent(QGestureEvent *event);
 
 signals:
 	void mouseReleaseSignal(Peg *);
@@ -69,11 +75,9 @@ private:
 	QPointF position;
 	Indicator *indicator;
 
-	/*	pressedEffect - the ellipse item takes ownership of
+	/*	pressedEffect - the QGraphicsObject takes ownership of
 	 *	the effect, so no need to delete the pointer in the destructor*/
 	QGraphicsDropShadowEffect *pressedEffect;
-	QGraphicsSimpleTextItem *indicatorText;
-	QGraphicsEllipseItem *gloss;
 	QGraphicsEllipseItem *circle;
 
 	PegState pegState;

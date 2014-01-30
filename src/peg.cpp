@@ -19,12 +19,12 @@
 
 #include "peg.h"
 #include "indicator.h"
-#include <QPen>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
-#include <QGraphicsSimpleTextItem>
-#include <QFont>
+#include <QPainter>
+#include <QTapAndHoldGesture>
+#include <QGestureEvent>
 
 const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFFF80"), QColor("#C05800")},
@@ -41,31 +41,19 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 
 const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
 
+const QFont Peg::font = Peg::setFont();
+
 Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent):
-	QGraphicsEllipseItem(2.5, 2.5, 34, 34, parent),
+	QGraphicsObject(parent),
 	position(m_position),
 	indicator(indicator_s),
 	isActive(false)
 {
-	setPen(Qt::NoPen);
 	pressedEffect = new QGraphicsDropShadowEffect;
 	pressedEffect->setBlurRadius(10);
 	pressedEffect->setXOffset(5);
 	setGraphicsEffect(pressedEffect);
 	pressedEffect->setEnabled(false);
-
-	gloss = new QGraphicsEllipseItem(7, 4, 24, 20, this);
-	QLinearGradient lgrad(25, 0, 25, 21);
-	lgrad.setColorAt(0, QColor(255, 255, 255, 180));
-	lgrad.setColorAt(1, QColor(255, 255, 255, 0));
-	gloss->setBrush(lgrad);
-	gloss->setPen(Qt::NoPen);
-
-	indicatorText = new QGraphicsSimpleTextItem(this);
-	QFont font("Monospace", 15, QFont::Bold, false);
-	font.setStyleHint(QFont::Monospace);
-	indicatorText->setFont(font);
-	indicatorText->setPos(14,8);
 
 	QLinearGradient cgrad(2, 2, 35, 35);
 	cgrad.setColorAt(0.0, QColor(80, 80, 80));
@@ -86,23 +74,6 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 void Peg::setColor(int color_number)
 {
 	color = (-1 < color_number && color_number < 10) ? color_number : 0;
-	if (indicator->forceColor())
-	{
-		QRadialGradient gradient(20, 0, 60, 20, 0);
-		gradient.setColorAt(0, PegColors[color][0]);
-		gradient.setColorAt(1, PegColors[color][1]);
-		setBrush(gradient);
-	}
-	else
-	{
-		QRadialGradient gradient(20, 0, 60, 20, 0);
-		gradient.setColorAt(0, PegColors[3][0]);
-		gradient.setColorAt(1, PegColors[3][1]);
-		setBrush(gradient);
-	}
-
-	indicatorText->setText(OrderedChars[(int)indicator->indicatorType][color]);
-	indicatorText->setVisible(indicator->showIndicators);
 }
 //-----------------------------------------------------------------------------
 
@@ -113,6 +84,7 @@ void Peg::setMovable(bool enabled)
 	setCursor(isActive ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setAcceptedMouseButtons(isActive ? Qt::LeftButton : Qt::NoButton);
 	setZValue(1+enabled);
+	enabled ? grabGesture(Qt::TapAndHoldGesture) : ungrabGesture(Qt::TapAndHoldGesture);
 }
 //-----------------------------------------------------------------------------
 
@@ -132,9 +104,6 @@ void Peg::setState(const PegState &m_state)
 		setVisible(true);
 		setMovable(false);
 		circle->setVisible(true);
-		indicatorText->setVisible(false);
-		gloss->setBrush(Qt::NoBrush);
-		setBrush(Qt::NoBrush);
 		break;
 	default:// PegState::Initial and PegState::Visible
 		setVisible(true);
@@ -146,7 +115,7 @@ void Peg::setState(const PegState &m_state)
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	QGraphicsEllipseItem::mousePressEvent(event);
+	QGraphicsItem::mousePressEvent(event);
 
 	if (event->button() == Qt::LeftButton && isActive)
 	{
@@ -160,7 +129,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	QGraphicsEllipseItem::mouseReleaseEvent(event);
+	QGraphicsItem::mouseReleaseEvent(event);
 
 	if (event->button() == Qt::LeftButton && isActive)
 	{
@@ -184,7 +153,7 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (isActive)
 	{
-		QGraphicsEllipseItem::mouseDoubleClickEvent(event);
+		QGraphicsItem::mouseDoubleClickEvent(event);
 		if (pegState == PegState::Initial)
 		{
 			emit mouseDoubleClickSignal(this);
@@ -197,7 +166,79 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
+void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+	painter->setPen(Qt::NoPen);
+	int virtual_color = indicator->forceColor() ? color : 3;
+
+	if (pegState != PegState::Plain)
+	{
+		QRadialGradient gradient(20, 0, 60, 20, 0);
+		gradient.setColorAt(0, PegColors[virtual_color][0]);
+		gradient.setColorAt(1, PegColors[virtual_color][1]);
+		painter->setBrush(gradient);
+		painter->drawEllipse(2.5, 2.5, 34, 34);
+
+		QLinearGradient lgrad(25, 0, 25, 21);
+		lgrad.setColorAt(0, QColor(255, 255, 255, 180));
+		lgrad.setColorAt(1, QColor(255, 255, 255, 0));
+		painter->setPen(Qt::NoPen);
+		painter->setBrush(lgrad);
+		painter->drawEllipse(7, 4, 24, 20);
+	}
+	else
+	{
+		painter->setBrush(Qt::NoBrush);
+		painter->drawEllipse(2.5, 2.5, 34, 34);
+		painter->drawEllipse(7, 4, 24, 20);
+	}
+
+	if (indicator->showIndicators && pegState != PegState::Plain)
+	{
+
+		painter->setRenderHint(QPainter::TextAntialiasing, true);
+		painter->setPen(QPen(Qt::black));
+		painter->setFont(font);
+		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)indicator->indicatorType][color]);
+	}
+}
+//-----------------------------------------------------------------------------
+
+QRectF Peg::boundingRect() const
+{
+	return QRectF(2.5, 2.5, 34, 34);
+}
+//-----------------------------------------------------------------------------
+
+bool Peg::event(QEvent *event)
+{
+	if (event->type() == QEvent::Gesture)
+		return gestureEvent(static_cast<QGestureEvent*>(event));
+	return QGraphicsObject::event(event);
+
+}
+//-----------------------------------------------------------------------------
+
+bool Peg::gestureEvent(QGestureEvent *event)
+{
+	if (event->gesture(Qt::TapAndHoldGesture))
+	{
+		emit mouseDoubleClickSignal(this);
+	}
+	return true;
+}
+//-----------------------------------------------------------------------------
+
+QFont Peg::setFont()
+{
+	QFont m_font = QFont("Monospace", 15, QFont::Bold, false);
+	m_font.setStyleHint(QFont::Monospace);
+	m_font.setStyleStrategy(QFont::PreferAntialias);
+	return m_font;
+}
+//-----------------------------------------------------------------------------
+
 void Peg::onShowIndicators()
 {
-	setColor(color);
+	update();
 }

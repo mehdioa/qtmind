@@ -54,10 +54,10 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->languageComboBox->addItem(tr("<System Language>"));
 
 	QStringList translations = findTranslations();
-	translations = translations.filter(boardAid->underlineAppName);
+	translations = translations.filter(boardAid->appName+"_");
 	foreach(QString translation, translations)
 	{
-		translation.remove(boardAid->underlineAppName);
+		translation.remove(boardAid->appName+"_");
 		ui->languageComboBox->addItem(languageName(translation), translation);
 	}
 	int index = qMax(0, ui->languageComboBox->findData(boardAid->locale.name().left(2)));
@@ -83,7 +83,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	QStringList paths;
 	paths.append("assets:/translations");// Android
 	paths.append(appdir + "/translations/");// Windows
-	paths.append(appdir + "/../share/" + QCoreApplication::applicationName() + "/translations/");// *nix
+	paths.append(appdir + "/../share/" + board_aid->appName + "/translations/");// *nix
 	paths.append(appdir + "/../Resources/translations");// Mac
 	foreach(QString path, paths)
 	{
@@ -96,9 +96,9 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	// Find current locale
 	QString current = board_aid->locale.name();
 	QStringList translations = findTranslations();
-	if (!translations.contains(board_aid->underlineAppName + current)) {
+	if (!translations.contains(board_aid->appName + "_" + current)) {
 		current = current.left(2);
-		if (!translations.contains(board_aid->underlineAppName + current)) {
+		if (!translations.contains(board_aid->appName + "_" + current)) {
 			current.clear();
 		}
 	}
@@ -118,7 +118,7 @@ void Preferences::loadTranslation(BoardAid *board_aid)
 	QCoreApplication::installTranslator(&qt_translator);
 
 	static QTranslator translator;
-	translator.load(board_aid->underlineAppName + current, AppPath);
+	translator.load(board_aid->appName + "_" + current, AppPath);
 	QCoreApplication::installTranslator(&translator);
 }
 //-----------------------------------------------------------------------------
