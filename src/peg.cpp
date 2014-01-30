@@ -178,7 +178,7 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		gradient.setColorAt(0, PegColors[virtual_color][0]);
 		gradient.setColorAt(1, PegColors[virtual_color][1]);
 		painter->setBrush(gradient);
-		painter->drawEllipse(2.5, 2.5, 34, 34);
+		painter->drawEllipse(2.5, 2.5, 35, 35);
 
 		QLinearGradient lgrad(25, 0, 25, 21);
 		lgrad.setColorAt(0, QColor(255, 255, 255, 180));
@@ -207,7 +207,7 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
 QRectF Peg::boundingRect() const
 {
-	return QRectF(2.5, 2.5, 34, 34);
+	return QRectF(2.5, 2.5, 35, 35);
 }
 //-----------------------------------------------------------------------------
 
@@ -222,7 +222,7 @@ bool Peg::event(QEvent *event)
 
 bool Peg::gestureEvent(QGestureEvent *event)
 {
-	if (event->gesture(Qt::TapAndHoldGesture))
+	if (event->gesture(Qt::TapAndHoldGesture) && isActive)
 	{
 		emit mouseDoubleClickSignal(this);
 	}

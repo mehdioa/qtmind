@@ -15,17 +15,7 @@ MOC_DIR = build
 OBJECTS_DIR = build
 RCC_DIR = build
 
-#VERSION = 0.7.3
-#DEFINES += VERSIONSTR=\\\"$${VERSION}\\\"
-
-#unix: !macx {
-#	TARGET = qtmind
-#} else {
-#	TARGET = qtmind
-#}
-
 TEMPLATE = app
-#TARGET = QtMind
 
 SOURCES += src/main.cpp\
 	src/mainwindow.cpp \
