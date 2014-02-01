@@ -35,6 +35,7 @@ enum class PegState
 class Indicator;
 class QGestureEvent;
 class QGraphicsDropShadowEffect;
+class QTapAndHoldGesture;
 
 class Peg : public QGraphicsObject
 {
@@ -62,7 +63,8 @@ protected:
 			   QWidget*);
 	QRectF boundingRect() const;
 	bool event(QEvent *event);
-	bool gestureEvent(QGestureEvent *event);
+	bool gestureEvent( QGestureEvent *event );
+	void tapAndHoldTriggered( QTapAndHoldGesture *gesture );
 
 signals:
 	void mouseReleaseSignal(Peg *);

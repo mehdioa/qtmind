@@ -25,6 +25,10 @@
 #include <QPainter>
 #include <QTapAndHoldGesture>
 #include <QGestureEvent>
+#include <QApplication>
+#include <QGesture>
+#include <QWidget>
+#include <QDebug>
 
 const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFFF80"), QColor("#C05800")},
@@ -167,6 +171,35 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 //-----------------------------------------------------------------------------
 
+bool Peg::event(QEvent *event)
+{
+	if (event->type() == QEvent::Gesture)
+	{
+		return gestureEvent(static_cast<QGestureEvent*>(event));
+	}
+	return QGraphicsObject::event(event);
+
+}
+
+bool Peg::gestureEvent(QGestureEvent *event)
+{
+	if ( QGesture *tapAndHold = event->gesture( Qt::TapAndHoldGesture ) )
+	{
+	  tapAndHoldTriggered( static_cast<QTapAndHoldGesture *>( tapAndHold ) );
+	}
+	return true;
+}
+
+void Peg::tapAndHoldTriggered(QTapAndHoldGesture *gesture)
+{
+	if ( gesture->state() == Qt::GestureFinished )
+	{
+		emit mouseDoubleClickSignal(this);
+		emit mouseReleaseSignal(this);
+	}
+}
+//-----------------------------------------------------------------------------
+
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
@@ -208,25 +241,6 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 QRectF Peg::boundingRect() const
 {
 	return QRectF(2.5, 2.5, 35, 35);
-}
-//-----------------------------------------------------------------------------
-
-bool Peg::event(QEvent *event)
-{
-	if (event->type() == QEvent::Gesture)
-		return gestureEvent(static_cast<QGestureEvent*>(event));
-	return QGraphicsObject::event(event);
-
-}
-//-----------------------------------------------------------------------------
-
-bool Peg::gestureEvent(QGestureEvent *event)
-{
-	if (event->gesture(Qt::TapAndHoldGesture) && isActive)
-	{
-		emit mouseDoubleClickSignal(this);
-	}
-	return true;
 }
 //-----------------------------------------------------------------------------
 

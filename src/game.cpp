@@ -307,11 +307,16 @@ void Game::onPegMouseReleased(Peg *peg)
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
 			dropOnlyOnce = false;
-			boardAid->boardSounds.playPegDropSound();
-			if(box->hasPeg())
-				box->setPegColor(color);
-			else
+			if(!box->hasPeg())
+			{
 				createPegForBox(box, color);
+				boardAid->boardSounds.playPegDropSound();
+			}
+			else if(box->getPegColor() != color)
+			{
+				box->setPegColor(color);
+				boardAid->boardSounds.playPegDropSound();
+			}
 
 			box->setPegState(PegState::Visible);
 		}//	end if
