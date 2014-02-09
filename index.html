@@ -1,39 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QtMind</title>
-    <meta name="Omid Nikta" content="QtMind Mastermind Qt C++">
-    <link rel="icon" type="image/png" href="images/qtmind16.png">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/templatemo_justified.css" rel="stylesheet">
-  </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>QtMind</title>
+<meta name="keywords" content="QtMind Mastermind Qt C++" />
+<meta name="description" content="بی‌تا چهارچوب کیبوردی برای فارسیاست که ارگونومیک است و مسیر پیموده شده را کمینه می‌کند" />
+<link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="icon" type="image/png" href="images/qtmind-ico.png">
+<script type='text/javascript' src='js/jquery.min.js'></script>
+<script type='text/javascript' src='js/jquery.scrollTo-min.js'></script>
+<script type='text/javascript' src='js/jquery.localscroll-min.js'></script>
+<script type="text/javascript">
+$(document).ready(function () {
+$.localScroll();
+});
+</script> 
 
-  <body>
+<link rel="stylesheet" href="css/slimbox2.css" type="text/css" media="screen" /> 
+<script type="text/JavaScript" src="js/slimbox2.js"></script> 
 
-    <div id="container" class="container">
+</head>
 
-        <img src="images/templatemo_header.jpg" alt="Simplex Header" class="img-responsive" />
-		<ul class="nav nav-justified">
-          <li class="active"><a href="index.html">Home</a></li>
-          <li><a href="downloads.html">Downloads</a></li>
-<!--          <li><a href="documentation.html">Documentation</a></li>-->
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="translate.html">Translate</a></li>
-        </ul>
-        
-      <div class="row space30"> <!-- row 1 begins -->
-      
-            <div class="col-md-12">
-              	<h2>The Game</h2>
-              	<img src="images/mastermind1.jpg" alt="Image 1" class="img-responsive img-rounded img_right" />
+<body>
+
+	<div id="background">
+
+		<div id="templatemo_wrapper">
+
+			<div id="templatemo_header">
+				<a href="http://omidnikta.github.io/qtmind/index.html" title="southwest wall papers" class="templatemo_link"  target="_blank"></a>
+				<div id="site_title">
+					<a rel="nofollow" href="http://omidnikta.github.io/qtmind/index.html">Mastermind Board Game</a>
+				</div>		
+			</div> <!-- END of templatemo_header-->
+			
+			<div id="templatmeo_menu">
+				<ul>
+					<li><a href="#home" class="home">Home</a></li>
+					<li><a href="#services" class="services">Screenshots</a></li>
+					<li><a href="#portfolio" class="portfolio">Downlod</a></li>
+					<li><a href="#about" class="about">Translate</a></li>
+		<!--			<li><a href="#contact" class="contact">تماس</a></li>-->
+				</ul>
+			</div> <!-- END of templatmeo_menu-->
+			
+			<div id="templatemo_main">
+				<div id="home" class="main_box">
+				<h1>Mastermind</h1>
+              	<img src="images/mastermind1.jpg" alt="Image 1" class="img_float_r" />
               	<p><a href="http://en.wikipedia.org/wiki/Mastermind_(board_game)">Mastermind</a> is a codebreaking game played by two players. The game starts with the first player, who we call "the codemaker", creates a hidden four digits (colors) code. Then the second player, who we call "the codebreaker", guess a code. The codemaker then evaluate the guess by providing the codebreaker with some black and white pins (plus and minus in the paper version). Based on the evaluation, the codebreaker guess another code and game continues untill either the codebreaker finds (or fails to find) the hidden code within a maximum tries.</p>
               
-              	<h4>Game History</h4>
+              	<h2>Game History</h2>
               	<p>"The modern game with pegs was invented in 1970 by Mordecai Meirowitz, an Israeli postmaster and telecommunications expert. It resembles an earlier pencil and paper game called Bulls and Cows that may date back a century or more." (<a href="http://en.wikipedia.org/wiki/Mastermind_(board_game)">Ref</a>)</p>
     
-              	<h4>Game Rules</h4>
+              	<h2>Game Rules</h2>
               	<ol>
 					<li>If a digit of the guess code is in the hidden code and on the correct place, a black pin (plus) is put.</li>
 					<li>If a digit of the guess code is in the hidden code but not on the correct place, a white pin (minus) is put.</li>
@@ -41,29 +61,74 @@
 					<li>If a peg in the guess can be considered as both a black or a white pin, preference is black.</li>
               	</ol>
               	<p>For example, let the hidden code and the guess be "1124" and "1343", respectively. Then the only '1' in the guess can result in a black pin (with the first '1' in the hidden code) or a white pin (with the second '1' in the hidden code). In such a situation, the codemaker must put a black pin not a white. In this example, the codemaker puts one black pin for '1' and one white pin for '4'.</p>
-            </div>
-        
-            <div class="col-md-12">
-              	<h2>QtMind</h2>
-              	<img src="images/qtmind1.jpg" alt="Image 2" class="img-responsive img-rounded img_left" />
+              	
+              	<h1>QtMind</h1>
+              	<img src="images/qtmind1.jpg" alt="Image 2" class="img_float_l" />
               	<p>QtMind is a free computer clone of the mastermind game written in C++ with the aid of the Qt framework. It is possible to enable/disable same color in codes. You can play codemaker or codebreaker.</p>
               	<p>Currently there are three solving algorithms in the codemaker game mode in QtMind: <a href="http://en.wikipedia.org/wiki/Donald_Knuth">Donald Knuth</a>'s Worst Case (minimax), Most Parts, and Expected Size. The worst case algorithm finds the hidden code at most in five guesses in the classical game with six colors and four slots. The solving algorithm can be changed in the middle of a game.</p>
               	<p>The source code is compatible with any version of Qt greater than or equal to four, but to benefit game sound you should compile QtMind against Qt at least five.</p>
               	<p>The graphical characteristics of QtMind is almost identical to those of <a href="http://colorcode.laebisch.com">ColorCode</a>, another high quality and powerfull clone of the mastermind game, though the coding is different. The result of rewritting is that QtMind is lighter, faster and more efficient than ColorCode. ColorCode only contains an incomplete version of the worst case solving algorithm. </p>
               	<p>QtMind can be translated to any language. If you are interested, help on how to translate QtMind to your language can be found on the <a href="translate.html">tranlate page</a>.</p>
-<!--              	<p><a class="btn btn-primary" href="#">More Info. &raquo;</a></p>-->
-           </div>
-      </div> <!-- /row 1 -->
+					<div class="cleaner"></div>
+					<div class="main_bottom"><a href="#templatemo_header"></a></div>
+				<div class="cleaner"></div>
 
-      <!-- Site footer -->
-      <div class="footer">
-        <p>Copyright © 2013 Omid Nikta | <a href="https://github.com/omidnikta/qtmind" rel="nofollow">QtMind</a> by <a href="https://github.com/omidnikta" target="_parent" rel="nofollow">Omid Nikta</a></p>
-      </div>
+				</div> <!-- END of home -->
 
-    </div> <!-- /container -->
+				<div id="services" class="main_box">
+					<h1> Screenshots</h1>
+					<ul id="gallery">
+						<li><a href="images/qtmind2.jpg" rel="lightbox[portfolio]"><img src="images/qtmind2.jpg" alt="image 1" /></a></li>
+						<li><a href="images/qtmind3.jpg" rel="lightbox[portfolio]"><img src="images/qtmind3.jpg" alt="image 2" /></a></li>
+						<li><a href="images/qtmind4.jpg" rel="lightbox[portfolio]"><img src="images/qtmind4.jpg" alt="image 3" /></a></li>
+					</ul>
+					<div class="cleaner"></div>
+					<div class="main_bottom"><a href="#templatemo_header"></a></div>
+					<div class="cleaner"></div>
+				</div> <!-- END of services --> 
+				
+				<div id="portfolio" class="main_box">
+					<h1> Downlods</h1>
+					<ul id="gallery">
+						<li><a href="Downloads/qtmind-i686.msi"><img src="images/Windows128.jpg" alt="Windows 32" /><footer>Win32</footer></a></li>
+						<li><a href="Downloads/qtmind-x86_64.msi"><img src="images/Windows128.jpg" alt="Windows 64" /><footer>Win64</footer></a></li>
+						<li><a href="https://aur.archlinux.org/packages/qtmind/"><img src="images/Archlinux-logo.jpg" alt="Arch Linux" /><footer>Arch Linux</footer></a></li>
+						<li><a href="https://github.com/omidnikta/qtmind/archive/master.zip"><img src="images/zip.png" alt="Source" /><footer>Source</footer></a></li>
+						<li><a href="Downloads/qtmind.ebuild"><img src="images/gentoo.jpg" alt="Gentoo" /><footer>Gentoo</footer></a></li>
+						<li><a href="Downloads/QtMind.apk"><img src="images/android.jpg" alt="Android" /><footer>Android</footer></a></li>
+						<li><a href="Downloads/qtmind-os2.zip"><img src="images/os2-logo.jpg" alt="OS/2" /><footer>OS/2</footer></a></li>
+					</ul>
+					<div class="cleaner"></div>
+					<div class="main_bottom"><a href="#templatemo_header"></a></div>
+					<div class="cleaner"></div>
+				</div> <!-- END of portfolio --> 
+				
+				<div id="about" class="main_box">
+					<h1>Translate QtMind To Your Language</h1>
+					<p>If you are intersted to translate QtMind interface to your language here you can learn how. You need to have Qt Linguist installed on your system.</p>
+					<p>On the translation directory of the installed QtMind directory (or the source code) you can find the plain tranlation file with extention ts. For example the Czech translation file is qtmind_cs.ts. Open this file in Qt Linguist and translate all the fields. </p>
+					<div align="center">
+						<img src="images/qtlinguist.jpg" alt="Image 2" class="img-responsive img-rounded img_middle" align="center"/>
+					</div>
+					<p>Then from File menu choose "Release" to get the qm file (in this case qtmind_fa.qm). To test your tranlation put this file in the translation directory so that QtMind be able to find it.</p>
+					<p>Please send your translation to omidnikta at gmail.</p>
+					
+					<h1>Singular-Plural Names</h1>
+					<img src="images/singular-plural.jpg" alt="Image 1" class="img_float_r" />
+					<p>Some languages have more than one form of plural names. QtMind can show these plurals correctly if you provide them. For strings that needs singular and plurals, you should provide singular and all plural forms so that QtMind use them correctly.</p>
+					<div class="cleaner"></div>
+					<div class="main_bottom"><a href="#templatemo_header"></a></div>
+					<div class="cleaner"></div>
+				</div> <!-- END of about -->
+			</div>
+			
+			<div id="templatemo_footer">
+				Copyright © 2013 Omid Nikta<br /> <a rel="nofollow" href="https://github.com/omidnikta/qtmind">QtMind</a> By <a href="https://github.com/omidnikta" rel="nofollow" target="_parent" title="free templates">Omid Nikta</a>
+			</div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-  </body>
+		</div>
+
+	</div>
+	<script type='text/javascript' src='js/logging.js'></script>
+</body>
 </html>
