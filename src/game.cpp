@@ -594,10 +594,9 @@ void Game::playHVM()
 	int remainingNumbers = gameRules->colorNumber;
 	qsrand(time(NULL));
 	guessElement.code = "";
-
 	foreach(PegBox *box, masterBoxes) //creating a master code to be guessed
 	{
-		int color = qrand() % remainingNumbers;
+		int color = static_cast<int>(remainingNumbers*(qrand()/(RAND_MAX + 1.0)));
 		int realcolor = digits.at(color).digitValue();
 		guessElement.code.append(QString::number(realcolor));
 		createPegForBox(box, realcolor);

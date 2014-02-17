@@ -25,10 +25,6 @@
 #include <QPainter>
 #include <QTapAndHoldGesture>
 #include <QGestureEvent>
-#include <QApplication>
-#include <QGesture>
-#include <QWidget>
-#include <QDebug>
 
 const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFFF80"), QColor("#C05800")},
@@ -180,6 +176,7 @@ bool Peg::event(QEvent *event)
 	return QGraphicsObject::event(event);
 
 }
+//-----------------------------------------------------------------------------
 
 bool Peg::gestureEvent(QGestureEvent *event)
 {
@@ -189,12 +186,21 @@ bool Peg::gestureEvent(QGestureEvent *event)
 	}
 	return true;
 }
+//-----------------------------------------------------------------------------
 
 void Peg::tapAndHoldTriggered(QTapAndHoldGesture *gesture)
 {
 	if ( gesture->state() == Qt::GestureFinished )
 	{
-		emit mouseDoubleClickSignal(this);
+		if (pegState == PegState::Initial)
+		{
+			emit mouseDoubleClickSignal(this);
+		}
+		else
+		{
+			setPos(position - QPoint(19.5, 60));
+		}
+
 		emit mouseReleaseSignal(this);
 	}
 }

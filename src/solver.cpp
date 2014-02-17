@@ -136,7 +136,7 @@ QString Solver::shuffle(QString m_string) const
 
 	while(m_string.length() > 0)
 	{
-		int j = qrand() % m_string.length();
+		int j = static_cast<int>(m_string.length()*(qrand()/(RAND_MAX + 1.0)));
 		answer.append(m_string.at(j));
 		m_string.remove(j, 1);
 	}
@@ -252,19 +252,19 @@ QString Solver::getFirstGuess() const
 	{
 		switch (gameRules->colorNumber) {
 		case 2:
-			str = (QString) "01010";
+			str = QString::fromUtf8("01010");
 			answer = str.left(gameRules->pegNumber);
 			break;
 		case 3:
-			str = (QString) "01212";
+			str = QString::fromUtf8("01212");
 			answer = str.left(gameRules->pegNumber);
 			break;
 		case 4:
-			str = (QString) "01223";
+			str = QString::fromUtf8("01223");
 			answer = str.left(gameRules->pegNumber);
 			break;
 		default:
-			str = (QString) "01223";
+			str = QString::fromUtf8("01223");
 			answer = str.left(gameRules->pegNumber);
 			break;
 		}
@@ -272,11 +272,11 @@ QString Solver::getFirstGuess() const
 		// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
 
 		if(gameRules->colorNumber == 6 && gameRules->pegNumber == 4 && gameRules->algorithm == Algorithm::WorstCase)
-			answer = (QString) "0011";
+			answer = QString::fromUtf8("0011");
 	}
 	else
 	{
-		QString str = "01234";
+		QString str = QString::fromUtf8("01234");
 		answer = str.left(gameRules->pegNumber);
 	}
 

@@ -1,60 +1,38 @@
 import qbs
+Project {
+    property string project_version_major: '0'
+    property string project_version_minor: '7'
+    property string project_version_release: '6'
+    property string project_version: project_version_major + '.' + project_version_minor + '.' + project_version_release
+    property string project_app_path: qbs.targetOS.contains("osx") ? "" : "bin"
+    property string project_app_target: qbs.targetOS.contains("osx") ? "Qt Mind" : "qtmind"
 
-CppApplication{
-	name: "QtMind"
-	files:[
-		"src/main.cpp",
-		"src/mainwindow.cpp",
-		"src/peg.cpp",
-		"src/button.cpp",
-		"src/pegbox.cpp",
-		"src/emptybox.cpp",
-		"src/message.cpp",
-		"src/pinbox.cpp",
-		"src/pin.cpp",
-		"src/preferences.cpp",
-		"src/solver.cpp",
-		"src/game.cpp",
-		"src/gamerules.cpp",
-		"src/indicator.cpp",
-		"src/guesselement.cpp",
-		"src/boardaid.cpp",
-		"src/boardsounds.cpp",
-		"src/boardfont.cpp",
-		"src/mainwindow.h",
-		"src/peg.h",
-		"src/constants.h",
-		"src/button.h",
-		"src/pegbox.h",
-		"src/emptybox.h",
-		"src/message.h",
-		"src/pinbox.h",
-		"src/pin.h",
-		"src/preferences.h",
-		"src/solver.h",
-		"src/game.h",
-		"src/appinfo.h",
-		"src/gamerules.h",
-		"src/indicator.h",
-		"src/guesselement.h",
-		"src/boardaid.h",
-		"src/boardsounds.h",
-		"src/boardfont.h",
-		"src/preferences.ui",
-		"src/mainwindow.ui",
-		"resource.qrc"
-	]
-	Depends{
-		name: "Qt";
-		property var submodules: {
-			var result = ["core", "gui"];
-			if (qbs.profile.contains("qt5")){
-				result.push("widgets")
-				result.push("multimedia")
-			}
-			return result
-		}
-	}
-	
-	        cpp.cxxFlags: ["-std=c++0x"]
-   }
+//    if (qbs.targetOS.contains("osx")){
+//        property string project_translations_path: project_app_target + ".app/Contents/Resources/translations"
+//        property string project_desktop_path: project_app_target + ".app/Contents/Resources"
+//        property string project_desktop_path: project_app_target + ".app/Contents/Resources"
+//    } else if (qbs.targetOS.contains("windows")) {
+
+//    }
+
+//    property string project_translations_path: {
+//        if (qbs.targetOS.contains("osx"))
+//            return ide_app_target + ".app/Contents/Resources"
+//        else if (qbs.targetOS.contains("windows"))
+//            return project_app_path
+//        else
+//            return "share/qtmind/translations"
+//    }
+//    property string project_desktop_path: {
+//        if (qbs.targetOS.contains("osx"))
+//        return ide_app_target + ".app/Contents/Resources"
+//        else if (qbs.targetOS.contains("windows"))
+//        return project_app_path
+//        else
+//        return "share/qtmind/translations"
+//    }
+
+    references: [
+        "src/src.qbs"
+    ]
+}

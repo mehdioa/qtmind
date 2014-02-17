@@ -286,7 +286,7 @@ void MainWindow::onGameModeChanged(QAction *selectedAction)
 
 void MainWindow::onAlgorithmChanded()
 {
-	gameRules.algorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
+	gameRules.algorithm = static_cast<Algorithm>(solvingAlgorithmsComboBox->currentIndex());
 
 }
 //-----------------------------------------------------------------------------
@@ -308,7 +308,7 @@ void MainWindow::updateGameRules()
 	gameRules.gameMode = getGameMode();
 	gameRules.colorNumber = colorsNumberComboBox->currentIndex() + MIN_COLOR_NUMBER;
 	gameRules.pegNumber = pegsNumberComboBox->currentIndex() + MIN_SLOT_NUMBER;
-	gameRules.algorithm = (Algorithm) solvingAlgorithmsComboBox->currentIndex();
+	gameRules.algorithm = static_cast<Algorithm>(solvingAlgorithmsComboBox->currentIndex());
 	gameRules.sameColorAllowed = (ui->actionAllow_Same_Colors->isChecked()) || (gameRules.pegNumber > gameRules.colorNumber);
 	ui->actionAllow_Same_Colors->setChecked(gameRules.sameColorAllowed);
 	if (gameRules.sameColorAllowed)

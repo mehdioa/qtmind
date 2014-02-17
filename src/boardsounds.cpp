@@ -20,13 +20,13 @@
 #include "boardsounds.h"
 #include "QSettings"
 
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 #include <QtMultimedia/QSoundEffect>
 #endif
 
 BoardSounds::BoardSounds()
 {
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	pegDropSound = new QSoundEffect;
 	pegDropRefuseSound = new QSoundEffect;
 	buttonPressSound = new QSoundEffect;
@@ -40,7 +40,7 @@ BoardSounds::BoardSounds()
 BoardSounds::~BoardSounds()
 {
 	QSettings().setValue("Volume", volume);
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	delete pegDropSound;
 	delete pegDropRefuseSound;
 	delete buttonPressSound;
@@ -49,21 +49,21 @@ BoardSounds::~BoardSounds()
 
 void BoardSounds::playPegDropSound()
 {
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	pegDropSound->play();
 #endif
 }
 
 void BoardSounds::playPegDropRefuseSound()
 {
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	pegDropRefuseSound->play();
 #endif
 }
 
 void BoardSounds::playButtonPressSound()
 {
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	buttonPressSound->play();
 #endif
 }
@@ -72,8 +72,8 @@ void BoardSounds::setVolume(const int &vol)
 {
 	volume = vol;
 
-#if QT_VERSION >= 0x050000
-	qreal real_volume = (qreal) volume/100;
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+	qreal real_volume = static_cast<qreal>(volume/100);
 
 	pegDropSound->setVolume(real_volume);
 	pegDropRefuseSound->setVolume(real_volume);
