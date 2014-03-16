@@ -2,7 +2,7 @@ import qbs
 Project {
     property string project_version_major: '0'
     property string project_version_minor: '7'
-    property string project_version_release: '6'
+    property string project_version_release: '7'
     property string project_version: project_version_major + '.' + project_version_minor + '.' + project_version_release
     property string project_app_path: qbs.targetOS.contains("osx") ? "" : "bin"
     property string project_app_target: qbs.targetOS.contains("osx") ? "Qt Mind" : "qtmind"

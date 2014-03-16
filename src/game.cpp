@@ -50,7 +50,7 @@ Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
 	setFrameStyle(QFrame::NoFrame);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setMinimumSize(320, 560);
+//	setMinimumSize(320, 560);
 }
 //-----------------------------------------------------------------------------
 

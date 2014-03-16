@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	game = new Game(&gameRules, &boardAid, this);
 
-	setLayoutDirection(boardAid.locale.textDirection());
+	QApplication::setLayoutDirection(boardAid.locale.textDirection());
 	setCentralWidget(game);
 	game->changeIndicators();
 
