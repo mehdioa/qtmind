@@ -50,16 +50,29 @@ private slots:
 	void onIndicatorChanged();
 	void onGameModeChanged(QAction*);
 	void onNewGame();
-	void onPreferences();
+	void onFont();
 	void onQtMindHomePage();
 	void onAbout();
 	void onShowContextMenu(const QPoint &position);
 	void onAlgorithmChanded();
+	void onVolumeChanged(QAction* volume_action);
+	void onColorActionChanged(QAction *color_action);
+	void onColorComboChanged(const int &combo_index);
+	void onSlotActionChanged(QAction *slot_action);
+	void onSlotComboChanged(const int &combo_index);
+	void onAlgorithmActionChanged(QAction *algorithm_action);
+	void onAlgorithmComboChanged(const int &combo_index);
+	void onIndicatorTypeChanged(QAction *indic_act);
+	void onLanguageChanged(QAction *language_act);
 
 private:
+	QStringList findTranslations();
+	void loadTranslation();
+	QString languageName(const QString &language);
 	bool quitUnfinishedGame();
 	void updateGameRules();
 	void retranslate();
+	void setPegsNumber(const int &pegs_n);
 	GameMode getGameMode();
 
 	Ui::MainWindow *ui;
@@ -67,10 +80,10 @@ private:
 	QComboBox *colorsNumberComboBox;
 	QComboBox *solvingAlgorithmsComboBox;
 
-private:
 	Game *game;
 	GameRules gameRules;
 	BoardAid boardAid;
+	QString AppPath;
 };
 
 #endif // MAINWINDOW_H

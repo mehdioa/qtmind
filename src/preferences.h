@@ -36,14 +36,8 @@ public:
 	explicit Preferences(BoardAid *board_aid, QWidget *parent = 0);
 	~Preferences();
 
-	static void loadTranslation(BoardAid *board_aid);
-	static QString languageName(const QString &language);
-
 public slots:
 	void accept();
-
-private:
-	static QStringList findTranslations();
 
 private:
 	Ui::Preferences *ui;

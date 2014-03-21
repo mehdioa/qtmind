@@ -25,16 +25,23 @@ class QSoundEffect;
 class BoardSounds
 {
 public:
+	enum Volume{
+		Mute,
+		Low,
+		Medium,
+		High
+	};
+
 	BoardSounds();
 	~BoardSounds();
 	void playPegDropSound();
 	void playPegDropRefuseSound();
 	void playButtonPressSound();
 	void setVolume(const int &vol);
-	int getVolume() const {return volume;}
+	Volume getVolume() const {return volume;}
 
 private:
-	int volume;
+	Volume volume;
 
 	QSoundEffect *pegDropSound;
 	QSoundEffect *pegDropRefuseSound;

@@ -22,8 +22,8 @@
 #include <QString>
 
 static const int VER_MAJOR			= 0;
-static const int VER_MINOR			= 7;
-static const int VER_BUGFIX			= 8;
+static const int VER_MINOR			= 8;
+static const int VER_BUGFIX			= 0;
 static const QString APP_VER = QString("%1.%2.%3")
 		.arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
 

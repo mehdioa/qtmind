@@ -35,6 +35,7 @@ private:
 	friend class Message;
 	friend class BoardAid;
 	friend class Preferences;
+	friend class MainWindow;
 };
 
 

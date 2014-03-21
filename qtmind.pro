@@ -61,7 +61,7 @@ FORMS	+= \
 	src/mainwindow.ui
 
 RESOURCES += \
-	resource.qrc
+    resource.qrc
 
 TRANSLATIONS = translations/qtmind_ara.ts \
 	translations/qtmind_af.ts \

@@ -1,25 +1,40 @@
 <RCC>
-    <qresource prefix="/">
-        <file>icons/same_color_0.png</file>
-        <file>icons/same_color_1.png</file>
-        <file>icons/qt_icon.png</file>
-        <file>sounds/pegdrop.wav</file>
-        <file>sounds/pegrefuse.wav</file>
-        <file>sounds/pin.wav</file>
-        <file>icons/application-exit.png</file>
-        <file>icons/applications-internet.png</file>
-        <file>icons/configure.png</file>
-        <file>icons/cpu.png</file>
-        <file>icons/dialog-information.png</file>
-        <file>icons/emblem-favorite.png</file>
-        <file>icons/layer-visible-on.png</file>
-        <file>icons/list-remove.png</file>
-        <file>icons/system-help.png</file>
-        <file>icons/task-accepted.png</file>
-        <file>icons/task-complete.png</file>
-        <file>icons/list-add.png</file>
-        <file>icons/meeting-chair.png</file>
-        <file>icons/layer-visible-off.png</file>
-        <file>icons/hicolor/64x64/qtmind.png</file>
+    <qresource prefix="/icons">
+        <file>resources/icons/Actions-games-solve-icon.png</file>
+        <file>resources/icons/Actions-player-volume-icon.png</file>
+        <file>resources/icons/application-exit.png</file>
+        <file>resources/icons/applications-internet.png</file>
+        <file>resources/icons/audio_high_volume_icon.png</file>
+        <file>resources/icons/audio_low_speaker_volume_icon.png</file>
+        <file>resources/icons/audio_medium_volume_icon.png</file>
+        <file>resources/icons/audio_muted_volume_icon.png</file>
+        <file>resources/icons/colors.png</file>
+        <file>resources/icons/configure.png</file>
+        <file>resources/icons/cpu.png</file>
+        <file>resources/icons/dialog-information.png</file>
+        <file>resources/icons/emblem-favorite.png</file>
+        <file>resources/icons/fontsizedown_koffice.png</file>
+        <file>resources/icons/layer-visible-off.png</file>
+        <file>resources/icons/layer-visible-on.png</file>
+        <file>resources/icons/list-add.png</file>
+        <file>resources/icons/list-remove.png</file>
+        <file>resources/icons/meeting-chair.png</file>
+        <file>resources/icons/pin.png</file>
+        <file>resources/icons/preferences-desktop-font.png</file>
+        <file>resources/icons/preferences-desktop-locale.png</file>
+        <file>resources/icons/qt_icon.png</file>
+        <file>resources/icons/qtmind.ico</file>
+        <file>resources/icons/rules_of_fight_club.png</file>
+        <file>resources/icons/rules-icon.png</file>
+        <file>resources/icons/same_color_0.png</file>
+        <file>resources/icons/same_color_1.png</file>
+        <file>resources/icons/slots.png</file>
+        <file>resources/icons/system-help.png</file>
+        <file>resources/icons/task-complete.png</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>resources/sounds/pegdrop.wav</file>
+        <file>resources/sounds/pegrefuse.wav</file>
+        <file>resources/sounds/pin.wav</file>
     </qresource>
 </RCC>
