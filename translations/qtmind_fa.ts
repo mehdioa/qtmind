@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fa_IR">
+<TS version="2.0" language="fa_IR">
 <context>
     <name>Game</name>
     <message>
@@ -224,8 +224,9 @@
         <location filename="../src/mainwindow.cpp" line="257"/>
         <location filename="../src/mainwindow.cpp" line="258"/>
         <source>Slot(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translatorcomment>گوی</translatorcomment>
+        <translation>
+            <numerusform>گوی</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -234,8 +235,9 @@
         <location filename="../src/mainwindow.cpp" line="264"/>
         <location filename="../src/mainwindow.cpp" line="265"/>
         <source>Color(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translatorcomment>رنگ</translatorcomment>
+        <translation>
+            <numerusform>رنگ</numerusform>
         </translation>
     </message>
     <message>
