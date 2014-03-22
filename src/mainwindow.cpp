@@ -109,8 +109,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	auto slotActions = new QActionGroup(this);
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
 	{
-		pegsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)));
-		auto slot_act = new QAction(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)), this);
+		pegsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)));
+		auto slot_act = new QAction(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)), this);
 		slot_act->setCheckable(true);
 		slot_act->setData(i);
 		slot_act->setChecked(gameRules.pegNumber == i);
@@ -125,8 +125,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	auto colorActions = new QActionGroup(this);
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
 	{
-		colorsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)));
-		auto color_act = new QAction(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)), this);
+		colorsNumberComboBox->addItem(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)));
+		auto color_act = new QAction(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)), this);
 		color_act->setCheckable(true);
 		color_act->setData(i);
 		color_act->setChecked(gameRules.colorNumber == i);
@@ -254,15 +254,15 @@ void MainWindow::retranslate()
 
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i)
 	{
-		pegsNumberComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)));
-		ui->menuSlots->actions().at(i - MIN_SLOT_NUMBER)->setText(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slots", "", i)));
+		pegsNumberComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)));
+		ui->menuSlots->actions().at(i - MIN_SLOT_NUMBER)->setText(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Slot(s)", "", i)));
 	}
 	pegsNumberComboBox->setToolTip(tr("Choose the numbe of slots"));
 
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i)
 	{
-		colorsNumberComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)));
-		ui->menuColors->actions().at(i - MIN_COLOR_NUMBER)->setText(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Colors", "", i)));
+		colorsNumberComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)));
+		ui->menuColors->actions().at(i - MIN_COLOR_NUMBER)->setText(QString("%1 %2").arg(boardAid.locale.toString(i), tr("Color(s)", "", i)));
 	}
 	colorsNumberComboBox->setToolTip(tr("Choose the number of colors"));
 

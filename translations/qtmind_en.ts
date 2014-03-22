@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.1" language="en_US">
 <context>
     <name>Game</name>
     <message>
@@ -245,28 +245,6 @@
         <source>Same Color Allowed</source>
         <translation>Same Color Allowed</translation>
     </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="112"/>
-        <location filename="../src/mainwindow.cpp" line="113"/>
-        <location filename="../src/mainwindow.cpp" line="257"/>
-        <location filename="../src/mainwindow.cpp" line="258"/>
-        <source>Slots</source>
-        <translation>
-            <numerusform>Slots</numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="128"/>
-        <location filename="../src/mainwindow.cpp" line="129"/>
-        <location filename="../src/mainwindow.cpp" line="264"/>
-        <location filename="../src/mainwindow.cpp" line="265"/>
-        <source>Colors</source>
-        <translation>
-            <numerusform>Colors</numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="233"/>
         <source>&amp;Machine vs Human</source>
@@ -327,6 +305,28 @@
         <location filename="../src/mainwindow.cpp" line="81"/>
         <source>Digits</source>
         <translation>Digits</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="112"/>
+        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="257"/>
+        <location filename="../src/mainwindow.cpp" line="258"/>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="128"/>
+        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="265"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="220"/>

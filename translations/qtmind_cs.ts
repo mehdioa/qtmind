@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ">
+<TS version="2.1" language="cs_CZ">
 <context>
     <name>Game</name>
     <message>
@@ -257,6 +257,30 @@
         <source>Digits</source>
         <translation>Číslice</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="112"/>
+        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="257"/>
+        <location filename="../src/mainwindow.cpp" line="258"/>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="128"/>
+        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="265"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="221"/>
         <source>&amp;Algorithm</source>
@@ -317,30 +341,6 @@
         <location filename="../src/mainwindow.cpp" line="219"/>
         <source>&amp;Game</source>
         <translation>&amp;Hra</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="112"/>
-        <location filename="../src/mainwindow.cpp" line="113"/>
-        <location filename="../src/mainwindow.cpp" line="257"/>
-        <location filename="../src/mainwindow.cpp" line="258"/>
-        <source>Slots</source>
-        <translation>
-            <numerusform>Pole</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="128"/>
-        <location filename="../src/mainwindow.cpp" line="129"/>
-        <location filename="../src/mainwindow.cpp" line="264"/>
-        <location filename="../src/mainwindow.cpp" line="265"/>
-        <source>Colors</source>
-        <translation>
-            <numerusform>Barva</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="220"/>

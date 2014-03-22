@@ -218,6 +218,26 @@
         <source>Digits</source>
         <translation>رقم</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="112"/>
+        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="257"/>
+        <location filename="../src/mainwindow.cpp" line="258"/>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="128"/>
+        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="265"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="219"/>
         <source>&amp;Game</source>
@@ -297,26 +317,6 @@
         <location filename="../src/mainwindow.cpp" line="267"/>
         <source>Choose the number of colors</source>
         <translation>گزیدن شمار رنگ‌ها</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="112"/>
-        <location filename="../src/mainwindow.cpp" line="113"/>
-        <location filename="../src/mainwindow.cpp" line="257"/>
-        <location filename="../src/mainwindow.cpp" line="258"/>
-        <source>Slots</source>
-        <translation>
-            <numerusform>گوی</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="128"/>
-        <location filename="../src/mainwindow.cpp" line="129"/>
-        <location filename="../src/mainwindow.cpp" line="264"/>
-        <location filename="../src/mainwindow.cpp" line="265"/>
-        <source>Colors</source>
-        <translation>
-            <numerusform>رنگ</numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="140"/>

@@ -160,34 +160,10 @@
         <source>Go to QtMind home page</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="112"/>
-        <location filename="../src/mainwindow.cpp" line="113"/>
-        <location filename="../src/mainwindow.cpp" line="257"/>
-        <location filename="../src/mainwindow.cpp" line="258"/>
-        <source>Slots</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="260"/>
         <source>Choose the numbe of slots</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="128"/>
-        <location filename="../src/mainwindow.cpp" line="129"/>
-        <location filename="../src/mainwindow.cpp" line="264"/>
-        <location filename="../src/mainwindow.cpp" line="265"/>
-        <source>Colors</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="267"/>
@@ -199,6 +175,30 @@
         <location filename="../src/mainwindow.cpp" line="275"/>
         <source>Choose the solving algorithm</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="112"/>
+        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="257"/>
+        <location filename="../src/mainwindow.cpp" line="258"/>
+        <source>Slot(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="128"/>
+        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="265"/>
+        <source>Color(s)</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="141"/>
