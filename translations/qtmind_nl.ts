@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="nl_NL">
+<TS version="2.0" language="nl_NL">
 <context>
     <name>Game</name>
     <message>
@@ -172,7 +172,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="243"/>
         <source>&amp;Mute</source>
-        <translation>&amp;Depmen</translation>
+        <translation>&amp;Dempen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="244"/>
@@ -299,7 +299,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="81"/>
         <source>Characters</source>
-        <translation type="unfinished">Letters</translation>
+        <translation>Letters</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="81"/>
@@ -312,9 +312,9 @@
         <location filename="../src/mainwindow.cpp" line="257"/>
         <location filename="../src/mainwindow.cpp" line="258"/>
         <source>Slot(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Blok</numerusform>
+            <numerusform>Blocken</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -323,9 +323,9 @@
         <location filename="../src/mainwindow.cpp" line="264"/>
         <location filename="../src/mainwindow.cpp" line="265"/>
         <source>Color(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Kleur</numerusform>
+            <numerusform>Kleuren</numerusform>
         </translation>
     </message>
     <message>
@@ -336,7 +336,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="221"/>
         <source>&amp;Algorithm</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Algoritme</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="227"/>
@@ -376,7 +376,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="241"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Taal</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="249"/>
