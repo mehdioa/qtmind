@@ -2,6 +2,15 @@
 
 cd ../pkgbuild
 
+mkdir -p arch
+cp -u ../QtMind/PKGBUILD arch/
+cp -u ../QtMind/qtmind.install arch/
+cd arch
+find . -name qtmind\*.xz -delete
+makepkg -s
+linux32 makepkg -src --config ~/.makepkg.i686.conf
+cd ../
+
 mkdir -p win64/qtmind-build
 cd win64/qtmind-build
 x86_64-w64-mingw32-qmake ../../../QtMind

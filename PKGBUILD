@@ -1,0 +1,58 @@
+# Maintainer:  Omid Nikta <omidnikta@gmail.com>
+# Contributor: Omid Nikta <omidnikta@gmail.com>
+ 
+pkgname=qtmind
+pkgver=0.8.0
+pkgrel=1
+pkgdesc="A Mastermind Game With Built-in Solver. Included Solving Algorithms: Most Parts, Worst Case, Expected Size."
+arch=('i686' 'x86_64')
+url="http://omidnikta.github.io/qtmind/"
+license=('GPL3')
+depends=('qt4')
+makedepends=('git')
+optdepends=('pulseaudio: for game sound')
+provides=('qtmind')
+install=qtmind.install
+url="http://omidnikta.github.io/qtmind/"
+_gitroot='git://github.com/omidnikta/qtmind.git'
+_gitname="master"
+ 
+
+build() {
+	cd ${srcdir}
+	
+	msg "Connecting to the GIT server...."
+	if [ -d ${_gitname} ] ; then
+		cd ${_gitname} && git pull origin master && cd ..
+		msg "The local files are updated."
+	else
+		git clone ${_gitroot} --single-branch ${_gitname}
+	fi
+
+	msg "Starting make..."
+
+	qmake-qt4 ${srcdir}/${_gitname}
+	make clean
+	make
+}
+
+package() {
+	# binary
+	install -D -m755 ${srcdir}/${pkgname} ${pkgdir}/usr/bin/${pkgname}
+
+	cd ${srcdir}/${_gitname}
+
+	# translations
+	install -d ${pkgdir}/usr/share/${pkgname}
+	cp -r translations/ ${pkgdir}/usr/share/${pkgname}/
+
+	# icon
+	install -D -m644 resources/icons/hicolor/128x128/${pkgname}.png \
+		${pkgdir}/usr/share/pixmaps/${pkgname}.png
+
+	# desktop
+	install -D -m644 ${pkgname}.desktop \
+		${pkgdir}/usr/share/applications/${pkgname}.desktop
+}
+ 
+# vim: set ft=sh ts=2 sw=2 et:
