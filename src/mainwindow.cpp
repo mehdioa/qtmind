@@ -75,13 +75,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionAllow_Same_Colors->setChecked(gameRules.sameColorAllowed);
 
 	ui->menuIndicators->actions().at(0)->setChecked(boardAid.indicator.showIndicators);
+	ui->menuIndicators->actions().at(1)->setChecked(boardAid.indicator.showColors);
 	auto indicator_types = new QActionGroup(this);
 	for(int i = 0; i < 2; i++)
 	{
-		ui->menuIndicators->actions().at(i+2)->setText((i == 0) ? tr("Characters"): tr("Digits"));
-		ui->menuIndicators->actions().at(i+2)->setData(i);
-		ui->menuIndicators->actions().at(i+2)->setChecked(boardAid.indicator.indicatorType == ((i == 0) ?  IndicatorType::Character : IndicatorType::Digit));
-		indicator_types->addAction(ui->menuIndicators->actions().at(i+2));
+		ui->menuIndicators->actions().at(i+3)->setText((i == 0) ? tr("Characters"): tr("Digits"));
+		ui->menuIndicators->actions().at(i+3)->setData(i);
+		ui->menuIndicators->actions().at(i+3)->setChecked(boardAid.indicator.indicatorType == ((i == 0) ?  IndicatorType::Character : IndicatorType::Digit));
+		indicator_types->addAction(ui->menuIndicators->actions().at(i+3));
 	}
 	indicator_types->setExclusive(true);
 
@@ -175,6 +176,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->menuAlgorithm, SIGNAL(triggered(QAction*)), this, SLOT(onAlgorithmActionChanged(QAction*)));
 	connect(solvingAlgorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmComboChanged(int)));
 	connect(ui->menuIndicators->actions().at(0), SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
+	connect(ui->menuIndicators->actions().at(1), SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
 	connect(ui->actionAllow_Same_Colors, SIGNAL(triggered()), this, SLOT(onNewGame()));
 	connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoPutPins()));
 	connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onAutoCloseRows()));
@@ -234,8 +236,9 @@ void MainWindow::retranslate()
 	ui->actionGameMode_HVM->setText(tr("&Human vs Machine"));
 	ui->menuIndicators->setTitle(tr("&Indicators"));
 	ui->menuIndicators->actions().at(0)->setText(tr("&Show"));
-	ui->menuIndicators->actions().at(2)->setText(tr("&Characters"));
-	ui->menuIndicators->actions().at(3)->setText(tr("&Digits"));
+	ui->menuIndicators->actions().at(1)->setText(tr("Show &Colors"));
+	ui->menuIndicators->actions().at(3)->setText(tr("&Characters"));
+	ui->menuIndicators->actions().at(4)->setText(tr("&Digits"));
 	ui->actionAuto_Close_Rows->setText(tr("Auto Close &Rows"));
 	ui->actionAuto_Set_Pins->setText(tr("Auto Put &Pins"));
 	ui->menuLanguage->setTitle(tr("&Language"));
@@ -371,6 +374,7 @@ void MainWindow::onAutoCloseRows()
 void MainWindow::onIndicatorChanged()
 {
 	boardAid.indicator.showIndicators = ui->menuIndicators->actions().at(0)->isChecked();
+	boardAid.indicator.showColors = ui->menuIndicators->actions().at(1)->isChecked();
 	game->changeIndicators();
 }
 //-----------------------------------------------------------------------------

@@ -751,7 +751,7 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	frame_grad.setColorAt(0.49, QColor(240, 240, 240));
 	frame_grad.setColorAt(0.50, QColor(80, 80, 80));
 	frame_grad.setColorAt(1.0, QColor(80, 80, 80));
-	QPen frame_pen = QPen(QBrush(frame_grad), 1);
+	QPen frame_pen = QPen(QBrush(frame_grad), 1.5);
 	QRectF right_shadow(3.5, 3.5, 313, 553);
 	painter->setBrush(Qt::NoBrush);
 	painter->setPen(frame_pen);

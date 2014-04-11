@@ -86,13 +86,12 @@ private:
 	GameRules *gameRules;
 	GuessElement *guessElement;
 	int responseSpaceSize;
-	int allCodesSize;									//	the size of the complete code space, 6^4 = 1296
+	int allCodesSize;						//	the size of the complete code space, 6^4 = 1296
 	volatile bool interupt;
-
-	int **allCodes;										//	all indexes of codes (0...1295)
-	int *firstPossibleCodes;							//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
+	int **allCodes;							//	all indexes of codes (0...1295)
+	int *firstPossibleCodes;				//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
 	int firstPossibleCodesSize;
-	QList<int> possibleCodes;							//	list of all possibles
+	QList<int> possibleCodes;				//	list of all possibles
 };
 
 #endif // SOLVER_H
