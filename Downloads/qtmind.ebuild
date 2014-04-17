@@ -29,7 +29,7 @@ src_configure(){
     #kde4-base_src_configure
     #cmake .
     #make 
-    eqmake4 ${PN}.pro
+    eqmake4 ${PN}.pro 
     #make clean && make QMAKE=qmake-qt4
     #./configure.sh --prefix=/usr && make QMAKE=qmake-qt4
     #sed -i "9s|Application;||g" "${S}"/build/hotshots.desktop || die "sed failed"
