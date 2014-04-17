@@ -25,22 +25,13 @@
 
 class Pin;
 
-class PinBox : public QObject, public EmptyBox
+class PinBox : public EmptyBox
 {
-	Q_OBJECT
-	Q_INTERFACES(QGraphicsItem)
-
 public:
 	explicit PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent = 0);
 	int getValue() const;
 	void setPins(const QString &codeA, const QString &codeB, const int &color_n);
 	void setState(const BoxState &m_state = BoxState::Future);
-
-protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *);
-
-signals:
-	void pinBoxPressSignal();
 
 private:
 	static const int PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2];

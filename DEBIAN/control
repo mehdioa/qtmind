@@ -1,0 +1,12 @@
+Package: qtmind
+Priority: extra
+Section: Qt,Game,BoardGame
+Installed-Size: 520
+Maintainer: omidnikta@gmail.com
+Architecture: amd64
+Version: 0.8.1-1
+Depends: libqtgui4
+Provides: qtmind
+Conflicts: 
+Replaces: 
+Description: A Mastermind game in Qt, with built in solver. Most of the major solving algorithms are integrated in QtMind.

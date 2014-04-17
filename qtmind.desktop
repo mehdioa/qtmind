@@ -1,12 +1,13 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
 Categories=Qt;Game;BoardGame;
+Comment[en_US]=Mastermind Game
 Comment=Mastermind Game
-comment[fa]=بازی فکر بکر
 Exec=qtmind %F
+GenericName[en_US]=Mastermind Game
 GenericName=Mastermind Game
 Icon=/usr/share/pixmaps/qtmind.png
 MimeType=
+Name[en_US]=QtMind
 Name=QtMind
 Name[fa]=کیوت‌مایند
 Path=
@@ -18,3 +19,4 @@ X-DBUS-ServiceName=
 X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
 X-KDE-Username=
+comment[fa]=بازی فکر بکر

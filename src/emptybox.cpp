@@ -24,7 +24,7 @@
 
 const int EmptyBox::BoxAlphas[4] =
 {
-	160, 255, 50, 160
+	210, 255, 80, 210
 };
 
 EmptyBox::EmptyBox(const QPoint &position, QGraphicsItem *parent):
@@ -47,10 +47,7 @@ void EmptyBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 {
 	painter->setPen(Qt::NoPen);
 
-//	QRadialGradient grad(QPoint(10, 10), 100);
-//	grad.setColorAt(0, QColor(204, 204, 204, BoxAlphas[(int)state]));
-//	grad.setColorAt(1, QColor(252, 252, 252, BoxAlphas[(int)state]));
-	painter->setBrush(QBrush(QColor(220, 220, 220, BoxAlphas[(int)state])));
+	painter->setBrush(QBrush(QColor(225, 225, 225, BoxAlphas[(int)state])));
 	painter->drawRect(0, 0, 39, 39);
 
 	painter->setPen(QPen(QBrush(QColor(236, 236, 236, BoxAlphas[(int)state])),1));
@@ -59,7 +56,7 @@ void EmptyBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 	painter->drawLine(0, .5, 39, .5);
 	painter->drawLine(.5, 0, .5, 39);
 
-	painter->setPen(QPen(QBrush(QColor(100, 100, 100, BoxAlphas[(int)state])),1));
+	painter->setPen(QPen(QBrush(QColor(80, 80, 80, BoxAlphas[(int)state])),1));
 	painter->drawLine(39, 0, 39, 39);
 	painter->drawLine(0, 39, 39, 39);
 	painter->drawLine(39.5, 0, 39.5, 39);

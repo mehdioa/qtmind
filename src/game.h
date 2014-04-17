@@ -86,7 +86,6 @@ private slots:
 	void onPegMouseDoubleClicked(Peg *);
 	void onOkButtonPressed();
 	void onDoneButtonPressed();
-	void onPinBoxPressed();
 	void onRevealOnePeg();
 	void onResigned();
 	void onGuessReady();

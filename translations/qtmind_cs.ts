@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="cs_CZ">
+<TS version="2.0" language="cs_CZ">
 <context>
     <name>Game</name>
     <message>
-        <location filename="../src/game.cpp" line="697"/>
         <source>Press The Pin Box</source>
         <translation>Stiskněte pole s kamenem</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="700"/>
+        <location filename="../src/game.cpp" line="742"/>
         <source>Please Put Your Pins And Press OK</source>
         <translation>Umístěte, prosím, kameny a stiskněte OK</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="703"/>
+        <location filename="../src/game.cpp" line="745"/>
         <source>Press Done</source>
         <translation>Stiskněte Hotovo</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="253"/>
-        <location filename="../src/game.cpp" line="394"/>
+        <location filename="../src/game.cpp" line="257"/>
+        <location filename="../src/game.cpp" line="399"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="260"/>
-        <location filename="../src/game.cpp" line="399"/>
+        <location filename="../src/game.cpp" line="264"/>
+        <location filename="../src/game.cpp" line="404"/>
         <source>Done</source>
         <translation>Hotovo</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/game.cpp" line="667"/>
+        <location filename="../src/game.cpp" line="709"/>
         <source>Slots</source>
         <translation>
             <numerusform>Pole</numerusform>
@@ -40,7 +39,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/game.cpp" line="668"/>
+        <location filename="../src/game.cpp" line="710"/>
         <source>Colors</source>
         <translation>
             <numerusform>Barva</numerusform>
@@ -49,90 +48,95 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="670"/>
+        <location filename="../src/game.cpp" line="712"/>
         <source>Yes</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="670"/>
+        <location filename="../src/game.cpp" line="712"/>
         <source>No</source>
         <translation>Ne</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="680"/>
+        <location filename="../src/game.cpp" line="722"/>
         <source>Success! I Win</source>
         <translation>Úspěch! Vyhrála jsem</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="682"/>
+        <location filename="../src/game.cpp" line="724"/>
         <source>Success! You Win</source>
         <translation>Úspěch! Vyhrál jste</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="686"/>
+        <location filename="../src/game.cpp" line="728"/>
         <source>Game Over! I Failed</source>
         <translation>Hra skončila! Zklamal jsem</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="706"/>
+        <location filename="../src/game.cpp" line="739"/>
+        <source>Press OK</source>
+        <translation>Stiskněte OK</translation>
+    </message>
+    <message>
+        <location filename="../src/game.cpp" line="748"/>
         <source>Place Your Pegs</source>
         <translation>Umístěte své kameny</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="688"/>
+        <location filename="../src/game.cpp" line="730"/>
         <source>Game Over! You Failed</source>
         <translation>Hra skončila! Nepodařilo se</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="669"/>
+        <location filename="../src/game.cpp" line="711"/>
         <source>Same Colors</source>
         <translation>Stejná barvy</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="691"/>
+        <location filename="../src/game.cpp" line="733"/>
         <source>You Resign</source>
         <translation>Vzdáváte</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="463"/>
+        <location filename="../src/game.cpp" line="470"/>
         <source>Not Possible, Try Again</source>
         <translation>To není možné. Zkuste to znovu</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="694"/>
+        <location filename="../src/game.cpp" line="736"/>
         <source>Let Me Think</source>
         <translation>Nech mě přemýšlet</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="637"/>
+        <location filename="../src/game.cpp" line="679"/>
         <source>The Code Is Cracked!</source>
         <translation>Kód je rozluštěn!</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="641"/>
+        <location filename="../src/game.cpp" line="683"/>
         <source>Random Guess</source>
         <translation>Náhodný předpoklad</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="642"/>
-        <location filename="../src/game.cpp" line="649"/>
-        <location filename="../src/game.cpp" line="654"/>
-        <location filename="../src/game.cpp" line="659"/>
+        <location filename="../src/game.cpp" line="684"/>
+        <location filename="../src/game.cpp" line="691"/>
+        <location filename="../src/game.cpp" line="696"/>
+        <location filename="../src/game.cpp" line="701"/>
         <source>Remaining</source>
         <translation>Zůstává</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="648"/>
+        <location filename="../src/game.cpp" line="690"/>
         <source>Most Parts</source>
         <translation>Většina částí</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="653"/>
+        <location filename="../src/game.cpp" line="695"/>
         <source>Worst Case</source>
         <translation>Nejhorší případ</translation>
     </message>
     <message>
-        <location filename="../src/game.cpp" line="658"/>
+        <location filename="../src/game.cpp" line="700"/>
         <source>Expected Size</source>
         <translation>Očekávaná velikost</translation>
     </message>
@@ -265,8 +269,6 @@
         <source>Slot(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -276,8 +278,6 @@
         <location filename="../src/mainwindow.cpp" line="268"/>
         <source>Color(s)</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>

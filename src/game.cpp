@@ -50,7 +50,6 @@ Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
 	setFrameStyle(QFrame::NoFrame);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//	setMinimumSize(320, 560);
 }
 //-----------------------------------------------------------------------------
 
@@ -74,16 +73,18 @@ void Game::codeRowFilled(const bool &m_filled)
 	{
 		if (m_filled)
 		{
-			pinBoxes.at(playedMoves)->setState(BoxState::Current);
+			okButton->setVisible(true);
+			okButton->setEnabled(true);
 			gameState = GameState::WaittingPinboxPress;
 			showMessage();
 
 			if (boardAid->autoCloseRows)
-				onPinBoxPressed();
+				onOkButtonPressed();
 		}
 		else
 		{
-			pinBoxes.at(playedMoves)->setState(BoxState::Future);
+			okButton->setVisible(false);
+			okButton->setEnabled(false);
 
 			if (playedMoves == 0)
 				gameState = GameState::WaittingFirstRowFill;
@@ -127,7 +128,6 @@ void Game::createBoxes()
 		auto pinbox = new PinBox(gameRules->pegNumber, position);
 		scene()->addItem(pinbox);
 		pinBoxes.append(pinbox);
-		connect(pinbox, SIGNAL(pinBoxPressSignal()), this, SLOT(onPinBoxPressed()));
 
 		position.setX(160-20*gameRules->pegNumber);
 
@@ -307,16 +307,8 @@ void Game::onPegMouseReleased(Peg *peg)
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
 		{
 			dropOnlyOnce = false;
-			if(!box->hasPeg())
-			{
-				createPegForBox(box, color);
-				boardAid->boardSounds.playPegDropSound();
-			}
-			else if(box->getPegColor() != color)
-			{
-				box->setPegColor(color);
-				boardAid->boardSounds.playPegDropSound();
-			}
+			createPegForBox(box, color);
+			boardAid->boardSounds.playPegDropSound();
 
 			box->setPegState(PegState::Visible);
 		}//	end if
@@ -344,40 +336,6 @@ void Game::onPegMouseDoubleClicked(Peg *peg)
 			break;
 		}
 	}
-}
-//-----------------------------------------------------------------------------
-
-void Game::onPinBoxPressed()
-{
-	boardAid->boardSounds.playButtonPressSound();
-	gameState = GameState::Running;
-
-	guessElement.guess = "";
-	for(int i = 0; i < gameRules->pegNumber; ++i)
-		guessElement.guess.append(QString::number(currentBoxes.at(i)->getPegColor()));
-
-	pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
-	pinBoxes.at(playedMoves)->setState(BoxState::Past);
-
-	setStateOfList(&currentBoxes, BoxState::Past);
-	currentBoxes.clear();
-
-	switch (winner()) {
-	case Player::CodeBreaker:
-		gameState = GameState::Win;
-		freezeScene();
-		break;
-	case Player::CodeMaker:
-		gameState = GameState::Lose;
-		freezeScene();
-		break;
-	default:
-		++playedMoves;
-		setNextRowInAction();
-		break;
-	}
-
-	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -457,33 +415,69 @@ void Game::onResigned()
 
 void Game::onOkButtonPressed()
 {
-	int resp = pinBoxes.at(playedMoves)->getValue();
-	if(!solver->setResponse(resp))
+	if(gameRules->gameMode == GameMode::MVH)
 	{
-		message->setText(tr("Not Possible, Try Again"));
-		return;
+		int resp = pinBoxes.at(playedMoves)->getValue();
+		if(!solver->setResponse(resp))
+		{
+			message->setText(tr("Not Possible, Try Again"));
+			return;
+		}
+		boardAid->boardSounds.playButtonPressSound();
+		okButton->setVisible(false);
+
+		pinBoxes.at(playedMoves)->setState(BoxState::Past);
+
+		switch (winner()) {
+		case Player::CodeBreaker:
+			gameState = GameState::Win;
+			freezeScene();
+			break;
+		case Player::CodeMaker:
+			gameState = GameState::Lose;
+			freezeScene();
+			break;
+		default:
+			++playedMoves;
+			getNextGuess();
+			break;
+		}
+
+		showMessage();
+	} else
+	{
+		boardAid->boardSounds.playButtonPressSound();
+		gameState = GameState::Running;
+
+		guessElement.guess = "";
+		for(int i = 0; i < gameRules->pegNumber; ++i)
+			guessElement.guess.append(QString::number(currentBoxes.at(i)->getPegColor()));
+
+		pinBoxes.at(playedMoves)->setPins(guessElement.code, guessElement.guess, gameRules->colorNumber);
+		pinBoxes.at(playedMoves)->setState(BoxState::Past);
+
+		setStateOfList(&currentBoxes, BoxState::Past);
+		currentBoxes.clear();
+
+		switch (winner()) {
+		case Player::CodeBreaker:
+			gameState = GameState::Win;
+			freezeScene();
+			break;
+		case Player::CodeMaker:
+			gameState = GameState::Lose;
+			freezeScene();
+			break;
+		default:
+			++playedMoves;
+			setNextRowInAction();
+			break;
+		}
+
+		showMessage();
+		okButton->setVisible(false);
+		okButton->setPos(pinBoxes.at(playedMoves)->pos() + QPoint(0, 1));
 	}
-	boardAid->boardSounds.playButtonPressSound();
-	okButton->setVisible(false);
-
-	pinBoxes.at(playedMoves)->setState(BoxState::Past);
-
-	switch (winner()) {
-	case Player::CodeBreaker:
-		gameState = GameState::Win;
-		freezeScene();
-		break;
-	case Player::CodeMaker:
-		gameState = GameState::Lose;
-		freezeScene();
-		break;
-	default:
-		++playedMoves;
-		getNextGuess();
-		break;
-	}
-
-	showMessage();
 }
 //-----------------------------------------------------------------------------
 
@@ -610,6 +604,7 @@ void Game::playHVM()
 	setNextRowInAction();
 	showMessage();
 	gameState = GameState::WaittingFirstRowFill;
+	okButton->setPos(pinBoxes.at(playedMoves)->pos() + QPoint(0, 1));
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
 }
 //-----------------------------------------------------------------------------
@@ -694,7 +689,7 @@ void Game::showMessage()
 		message->setText(tr("Let Me Think"));
 		break;
 	case GameState::WaittingPinboxPress:
-		message->setText(tr("Press The Pin Box"));
+		message->setText(tr("Press OK"));
 		break;
 	case GameState::WaittingOkButtonPress:
 		message->setText(tr("Please Put Your Pins And Press OK"));
@@ -711,7 +706,7 @@ void Game::showMessage()
 
 void Game::drawBackground(QPainter *painter, const QRectF &rect)
 {
-	painter->fillRect(rect, QColor(182, 182, 182));// set scene background color
+	painter->fillRect(rect, QColor(200, 200, 200));// set scene background color
 	painter->setPen(Qt::NoPen);
 
 	QRectF cr(3, 3, 314, 554);
@@ -730,19 +725,19 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->drawRect(QRect(4, 128, 318, 1));
 
 	painter->setPen(Qt::NoPen);
-	painter->setBrush(QBrush(QColor(154, 154, 154)));
+	painter->setBrush(QBrush(QColor(150, 150, 150)));
 	painter->drawRect(QRectF(4, 129, 318, 400));
 
-	painter->setPen(QColor(135, 135, 135));
-	for(int i = 0; i < 11; ++i)
-		painter->drawLine(5, 128+i*40, 321, 128+i*40);
+//	painter->setPen(QColor(130, 130, 130));
+//	for(int i = 0; i < 11; ++i)
+//		painter->drawLine(5, 128+i*40, 321, 128+i*40);
 
 	QLinearGradient bot_grad(0, 530, 0, 557);
 	bot_grad.setColorAt(0.0, QColor(204, 204, 204));
 	bot_grad.setColorAt(0.3, QColor(206, 206, 206));
 	bot_grad.setColorAt(1.0, QColor(180, 180, 180));
 	painter->setBrush(QBrush(bot_grad));
-	painter->drawRect(QRect(1, 528, 318, 28));
+	painter->drawRect(QRect(1, 529, 318, 28));
 	painter->setBrush(QBrush(QColor(239, 239, 239)));
 	painter->setClipping(false);
 
@@ -757,24 +752,18 @@ void Game::drawBackground(QPainter *painter, const QRectF &rect)
 	painter->setPen(frame_pen);
 	painter->drawRoundedRect(right_shadow, 9.8, 9.8);
 
-	QLinearGradient sol_grad(50, 70, 50, 108);
-	sol_grad.setColorAt(0.0, QColor(154, 154, 154));
-	sol_grad.setColorAt(1.0, QColor(148, 148, 148));
-	QBrush solBgBrush(sol_grad);
-
 	QLinearGradient sol_frame_grad = QLinearGradient(50, 70, 50, 110);
-	sol_frame_grad.setColorAt(0.0, QColor(78, 78, 78));
-	sol_frame_grad.setColorAt(1.0, QColor(235, 235, 235));
+	sol_frame_grad.setColorAt(0.0, QColor(80, 80, 80));
+	sol_frame_grad.setColorAt(1.0, QColor(255, 255, 255));
 	QPen sol_frame_pen(QBrush(sol_frame_grad), 1);
 
-	painter->setBrush(solBgBrush);
 	painter->setPen(sol_frame_pen);
 
 	QRectF sol_container(41, 68, 235, 42);
 	QRectF sol_frame(42, 69, 235, 41.5);
 
 	painter->drawRoundedRect(sol_container, 21,21);
-	painter->setBrush(sol_grad);
+	painter->setBrush(QColor(150, 150, 150));
 	painter->drawRoundedRect(sol_frame, 20, 20);
 	painter->setRenderHint(QPainter::TextAntialiasing, true);
 }

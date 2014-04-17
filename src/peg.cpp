@@ -23,20 +23,21 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
 #include <QPainter>
-#include <QTapAndHoldGesture>
+#include <QTapGesture>
 #include <QGestureEvent>
+#include <QDebug>
 
 const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
-	{QColor("#FFFF80"), QColor("#C05800")},
-	{QColor("#FF3300"), QColor("#400040")},
-	{QColor("#33CCFF"), QColor("#000080")},
-	{QColor("#ffffff"), QColor("#666666")},
+	{QColor("#FFFF80"), QColor("#E47A00")},
+	{QColor("#FF3300"), QColor("#AF0707")},
+	{QColor("#33CCFF"), QColor("#031CFF")},
+	{QColor("#ffffff"), QColor("#999999")},
 	{QColor("#808080"), QColor("#000000")},
-	{QColor("#66FF33"), QColor("#385009")},
-	{QColor("#FF9900"), QColor("#A82A00")},
-	{QColor("#BA88FF"), QColor("#38005D")},
-	{QColor("#00FFFF"), QColor("#004040")},
-	{QColor("#FFC0FF"), QColor("#800080")}
+	{QColor("#66FF33"), QColor("#597F0E")},
+	{QColor("#FF9900"), QColor("#DB5000")},
+	{QColor("#BA88FF"), QColor("#6300A5")},
+	{QColor("#00FFFF"), QColor("#007A7A")},
+	{QColor("#FFC0FF"), QColor("#AB00AB")}
 };
 
 const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
@@ -51,13 +52,13 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 {
 	pressedEffect = new QGraphicsDropShadowEffect;
 	pressedEffect->setBlurRadius(10);
-	pressedEffect->setXOffset(5);
+	pressedEffect->setXOffset(2);
 	setGraphicsEffect(pressedEffect);
 	pressedEffect->setEnabled(false);
 
-	QLinearGradient cgrad(2, 2, 35, 35);
-	cgrad.setColorAt(0.0, QColor(80, 80, 80));
-	cgrad.setColorAt(1.0, QColor(220, 220, 220));
+	QLinearGradient cgrad(2, 2, 2, 35);
+	cgrad.setColorAt(0.0, QColor(50, 50, 50));
+	cgrad.setColorAt(1.0, QColor(240, 240, 240));
 
 	circle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
 	circle->setPen(QPen(QBrush(cgrad), 1));
@@ -68,6 +69,7 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 	setMovable(true);
 	setAcceptDrops(true);
 	setState(PegState::Visible);
+	grabGesture(Qt::TapGesture);
 }
 //-----------------------------------------------------------------------------
 
@@ -85,7 +87,7 @@ void Peg::setMovable(bool enabled)
 	setCursor(isActive ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setAcceptedMouseButtons(isActive ? Qt::LeftButton : Qt::NoButton);
 	setZValue(1+enabled);
-	enabled ? grabGesture(Qt::TapAndHoldGesture) : ungrabGesture(Qt::TapAndHoldGesture);
+	enabled ? grabGesture(Qt::TapGesture) : ungrabGesture(Qt::TapGesture);
 }
 //-----------------------------------------------------------------------------
 
@@ -158,8 +160,8 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 		if (pegState == PegState::Initial)
 		{
 			emit mouseDoubleClickSignal(this);
-			emit mouseReleaseSignal(this);
-			setPos(position - QPoint(19.5, 19.5));
+//			emit mouseReleaseSignal(this);
+//			setPos(position - QPoint(19.5, 19.5));
 		}
 		else
 			setPos(position - QPoint(19.5, 60));
@@ -169,7 +171,7 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 bool Peg::event(QEvent *event)
 {
-	if (event->type() == QEvent::Gesture)
+	if (event->type() == QEvent::Gesture && isMovable())
 	{
 		return gestureEvent(static_cast<QGestureEvent*>(event));
 	}
@@ -180,17 +182,17 @@ bool Peg::event(QEvent *event)
 
 bool Peg::gestureEvent(QGestureEvent *event)
 {
-	if ( QGesture *tapAndHold = event->gesture( Qt::TapAndHoldGesture ) )
+	if ( QGesture *tap_gesture = event->gesture( Qt::TapGesture ) )
 	{
-	  tapAndHoldTriggered( static_cast<QTapAndHoldGesture *>( tapAndHold ) );
+	  tapGestureTriggered(static_cast<QTapGesture *>( tap_gesture ) );
 	}
 	return true;
 }
 //-----------------------------------------------------------------------------
 
-void Peg::tapAndHoldTriggered(QTapAndHoldGesture *gesture)
+void Peg::tapGestureTriggered(QTapGesture *gesture)
 {
-	if ( gesture->state() == Qt::GestureFinished )
+	if ( gesture->state() == Qt::GestureFinished)
 	{
 		if (pegState == PegState::Initial)
 		{
@@ -200,8 +202,6 @@ void Peg::tapAndHoldTriggered(QTapAndHoldGesture *gesture)
 		{
 			setPos(position - QPoint(19.5, 60));
 		}
-
-		emit mouseReleaseSignal(this);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -213,18 +213,19 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
 	if (pegState != PegState::Plain)
 	{
-		QRadialGradient gradient(20, 0, 60, 20, 0);
+		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
 		gradient.setColorAt(0, PegColors[virtual_color][0]);
 		gradient.setColorAt(1, PegColors[virtual_color][1]);
 		painter->setBrush(gradient);
 		painter->drawEllipse(2.5, 2.5, 35, 35);
 
 		QLinearGradient lgrad(25, 0, 25, 21);
-		lgrad.setColorAt(0, QColor(255, 255, 255, 180));
+		lgrad.setColorAt(0, QColor(255, 255, 255, 220));
+		lgrad.setColorAt(0.5, QColor(255,255,255,80));
 		lgrad.setColorAt(1, QColor(255, 255, 255, 0));
 		painter->setPen(Qt::NoPen);
 		painter->setBrush(lgrad);
-		painter->drawEllipse(7, 4, 24, 20);
+		painter->drawEllipse(7, 3, 24, 20);
 	}
 	else
 	{

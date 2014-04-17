@@ -23,7 +23,7 @@
 
 static const int VER_MAJOR			= 0;
 static const int VER_MINOR			= 8;
-static const int VER_BUGFIX			= 1;
+static const int VER_BUGFIX			= 2;
 static const QString APP_VER = QString("%1.%2.%3")
 		.arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
 

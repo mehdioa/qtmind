@@ -114,7 +114,7 @@ unix:!macx { # installation on Unix-ish platforms
 	isEmpty(TRANSLATIONS_DIR):TRANSLATIONS_DIR = $$DATA_DIR/qtmind/translations
 
 	target.path = $$BIN_DIR
-	icon.files = icons/hicolor/128x128/qtmind.png
+	icon.files = resources/icons/hicolor/128x128/qtmind.png
 	icon.path = $$ICON_DIR
 	desktop.files = qtmind.desktop
 	desktop.path = $$DESKTOP_DIR
