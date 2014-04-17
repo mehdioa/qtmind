@@ -178,22 +178,22 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="246"/>
         <source>&amp;Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Němý</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="247"/>
         <source>&amp;Low</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nízký</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="248"/>
         <source>&amp;Medium</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Střední</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="249"/>
         <source>&amp;High</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vysoký</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="227"/>
@@ -208,17 +208,17 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="245"/>
         <source>&amp;Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Hlasitost</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="237"/>
         <source>&amp;Indicators</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ukazatel</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="238"/>
         <source>&amp;Show</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ukázat</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="240"/>
@@ -267,8 +267,10 @@
         <location filename="../src/mainwindow.cpp" line="260"/>
         <location filename="../src/mainwindow.cpp" line="261"/>
         <source>Slot(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Pole</numerusform>
+            <numerusform>Pole</numerusform>
+            <numerusform>Polí</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -277,14 +279,16 @@
         <location filename="../src/mainwindow.cpp" line="267"/>
         <location filename="../src/mainwindow.cpp" line="268"/>
         <source>Color(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Barva</numerusform>
+            <numerusform>Barvy</numerusform>
+            <numerusform>Barev</numerusform>
         </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="223"/>
         <source>&amp;Algorithm</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Algoritmus</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="235"/>
@@ -299,12 +303,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="239"/>
         <source>Show &amp;Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat &amp;barvy</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="244"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Jazyk</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="250"/>

@@ -25,7 +25,6 @@
 #include <QPainter>
 #include <QTapGesture>
 #include <QGestureEvent>
-#include <QDebug>
 
 const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFFF80"), QColor("#E47A00")},
