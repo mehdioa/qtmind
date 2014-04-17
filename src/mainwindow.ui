@@ -277,7 +277,7 @@
   <action name="actionAbout_QtMind">
    <property name="icon">
     <iconset resource="../resource.qrc">
-     <normaloff>:/icons/resources/icons/qtmind.ico</normaloff>:/icons/resources/icons/qtmind.ico</iconset>
+     <normaloff>:/icons/resources/icons/qtmind.png</normaloff>:/icons/resources/icons/qtmind.png</iconset>
    </property>
    <property name="text">
     <string notr="true">About QtMind</string>

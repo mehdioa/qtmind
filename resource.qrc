@@ -31,6 +31,7 @@
         <file>resources/icons/slots.png</file>
         <file>resources/icons/system-help.png</file>
         <file>resources/icons/task-complete.png</file>
+        <file>resources/icons/qtmind.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>resources/sounds/pegdrop.wav</file>
