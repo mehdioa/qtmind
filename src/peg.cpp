@@ -218,13 +218,13 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->setBrush(gradient);
 		painter->drawEllipse(2.5, 2.5, 35, 35);
 
-		QLinearGradient lgrad(25, 0, 25, 21);
+		QLinearGradient lgrad(25, 0, 25, 15);
 		lgrad.setColorAt(0, QColor(255, 255, 255, 220));
 		lgrad.setColorAt(0.5, QColor(255,255,255,80));
 		lgrad.setColorAt(1, QColor(255, 255, 255, 0));
 		painter->setPen(Qt::NoPen);
 		painter->setBrush(lgrad);
-		painter->drawEllipse(7, 3, 24, 20);
+		painter->drawEllipse(9, 3, 21, 15);
 	}
 	else
 	{
