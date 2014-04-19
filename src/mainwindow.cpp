@@ -30,6 +30,7 @@
 #include <QLibraryInfo>
 #include <QDir>
 #include <QTranslator>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -291,8 +292,21 @@ void MainWindow::setPegsNumber(const int &pegs_n)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-	QSettings().setValue("Geometry", saveGeometry());
-	QMainWindow::closeEvent(event);
+	if (game->isRunning() && QMessageBox::No == QMessageBox::warning(this,
+																	   tr("Quit"), QString(boardAid.isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
+																						 "<p align='center'>%2</p>")
+																					 .arg(tr("An unfinished game is in progress."))
+																					 .arg(tr("Do you want to quit?")),
+																	   QMessageBox::Yes | QMessageBox::No))
+	{
+		event->ignore();
+	}
+	else
+	{
+		game->stop();
+		QSettings().setValue("Geometry", saveGeometry());
+		QMainWindow::closeEvent(event);
+	}
 }
 //-----------------------------------------------------------------------------
 
