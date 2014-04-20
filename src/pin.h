@@ -22,8 +22,7 @@
 
 #include <QGraphicsEllipseItem>
 
-enum class PinColor
-{
+enum class PinColor {
 	White,
 	Black,
 	None,

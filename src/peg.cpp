@@ -119,8 +119,7 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsItem::mousePressEvent(event);
 
-	if (event->button() == Qt::LeftButton && isActive)
-	{
+	if (event->button() == Qt::LeftButton && isActive) {
 		circle->setVisible(false);
 		pressedEffect->setEnabled(true);
 		setZValue(3);
@@ -133,15 +132,14 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsItem::mouseReleaseEvent(event);
 
-	if (event->button() == Qt::LeftButton && isActive)
-	{
+	if (event->button() == Qt::LeftButton && isActive) {
 		circle->setVisible(true);
 		pressedEffect->setEnabled(false);
 		setZValue(2);
 		setCursor(Qt::OpenHandCursor);
 
-		if (!sceneBoundingRect().contains(position))//	droped out of its own box,
-		{
+		//	droped out of its own box,
+		if (!sceneBoundingRect().contains(position)) {
 			if (pegState != PegState::Initial)
 				setState(PegState::Invisible);
 			emit mouseReleaseSignal(this);
@@ -156,33 +154,29 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 	if (isActive)
 	{
 		QGraphicsItem::mouseDoubleClickEvent(event);
-		if (pegState == PegState::Initial)
-		{
+		if (pegState == PegState::Initial){
 			emit mouseDoubleClickSignal(this);
 //			emit mouseReleaseSignal(this);
 //			setPos(position - QPoint(19.5, 19.5));
-		}
-		else
+		} else {
 			setPos(position - QPoint(19.5, 60));
+		}
 	}
 }
 //-----------------------------------------------------------------------------
 
 bool Peg::event(QEvent *event)
 {
-	if (event->type() == QEvent::Gesture && isMovable())
-	{
+	if (event->type() == QEvent::Gesture && isMovable()) {
 		return gestureEvent(static_cast<QGestureEvent*>(event));
 	}
 	return QGraphicsObject::event(event);
-
 }
 //-----------------------------------------------------------------------------
 
 bool Peg::gestureEvent(QGestureEvent *event)
 {
-	if ( QGesture *tap_gesture = event->gesture( Qt::TapGesture ) )
-	{
+	if ( QGesture *tap_gesture = event->gesture( Qt::TapGesture ) ) {
 	  tapGestureTriggered(static_cast<QTapGesture *>( tap_gesture ) );
 	}
 	return true;
@@ -191,14 +185,10 @@ bool Peg::gestureEvent(QGestureEvent *event)
 
 void Peg::tapGestureTriggered(QTapGesture *gesture)
 {
-	if ( gesture->state() == Qt::GestureFinished)
-	{
-		if (pegState == PegState::Initial)
-		{
+	if ( gesture->state() == Qt::GestureFinished) {
+		if (pegState == PegState::Initial) {
 			emit mouseDoubleClickSignal(this);
-		}
-		else
-		{
+		} else {
 			setPos(position - QPoint(19.5, 60));
 		}
 	}
@@ -210,8 +200,7 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 	painter->setPen(Qt::NoPen);
 	int virtual_color = indicator->forceColor() ? color : 3;
 
-	if (pegState != PegState::Plain)
-	{
+	if (pegState != PegState::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
 		gradient.setColorAt(0, PegColors[virtual_color][0]);
 		gradient.setColorAt(1, PegColors[virtual_color][1]);
@@ -224,16 +213,13 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->setPen(Qt::NoPen);
 		painter->setBrush(lgrad);
 		painter->drawEllipse(6, 4, 27, 20);
-	}
-	else
-	{
+	} else {
 		painter->setBrush(Qt::NoBrush);
 		painter->drawEllipse(2.5, 2.5, 34, 34);
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-	if (indicator->showIndicators && pegState != PegState::Plain)
-	{
+	if (indicator->showIndicators && pegState != PegState::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));

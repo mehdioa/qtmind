@@ -24,8 +24,7 @@
 #include "guesselement.h"
 #include <QGraphicsView>
 
-enum class GameState
-{
+enum class GameState {
 	None,
 	Running,
 	Win,
@@ -40,8 +39,7 @@ enum class GameState
 	WaittingDoneButtonPress
 };
 
-enum class Player
-{
+enum class Player {
 	CodeMaker,
 	CodeBreaker,
 	None

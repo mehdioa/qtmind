@@ -20,8 +20,7 @@
 #ifndef INDICATOR_H
 #define INDICATOR_H
 
-enum class IndicatorType
-{
+enum class IndicatorType {
 	Character,
 	Digit
 };

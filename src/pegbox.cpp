@@ -57,8 +57,7 @@ void PegBox::setState(const BoxState &m_state)
 {
 	state = m_state;
 
-	if (peg)
-	{
+	if (peg) {
 		switch (state) {
 		case BoxState::Past:
 			peg->setState(PegState::Underneath);

@@ -39,8 +39,7 @@ Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
 	ui->setupUi(this);
 	setLayoutDirection(boardAid->locale.textDirection());
 
-	for(int i = 10; i < 21; ++i)
-	{
+	for(int i = 10; i < 21; ++i) {
 		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(boardAid->locale.toString(i)).arg(tr("Point(s)", "", i)));
 	}
 	ui->fontComboBox->setCurrentFont(boardAid->boardFont.fontName);

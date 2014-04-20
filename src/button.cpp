@@ -72,8 +72,7 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 	painter->setBrush(QBrush(framegrad));
 	painter->drawRoundedRect(boundingRect(), 20, 20);
 
-	if (label != "")
-	{
+	if (label != "") {
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(QColor("#303030")));
 		painter->setFont(font);

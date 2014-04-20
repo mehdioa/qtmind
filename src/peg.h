@@ -23,8 +23,7 @@
 #include <QGraphicsObject>
 #include "constants.h"
 
-enum class PegState
-{
+enum class PegState {
 	Initial,	//	Right source pegs
 	Visible,
 	Invisible,

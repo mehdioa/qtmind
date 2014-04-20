@@ -22,8 +22,7 @@
 
 #include <QGraphicsRectItem>
 
-enum class BoxState
-{
+enum class BoxState {
 	Past,
 	Current,
 	Future,

@@ -55,8 +55,7 @@ Game::Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent):
 
 Game::~Game()
 {
-	if (solver)
-	{
+	if (solver) {
 		emit interuptSignal();
 		solver->quit();
 		solver->wait();
@@ -69,10 +68,8 @@ Game::~Game()
 
 void Game::codeRowFilled(const bool &m_filled)
 {
-	if(gameRules->gameMode == GameMode::HVM)
-	{
-		if (m_filled)
-		{
+	if(gameRules->gameMode == GameMode::HVM) {
+		if (m_filled) {
 			okButton->setVisible(true);
 			okButton->setEnabled(true);
 			gameState = GameState::WaittingPinboxPress;
@@ -80,9 +77,7 @@ void Game::codeRowFilled(const bool &m_filled)
 
 			if (boardAid->autoCloseRows)
 				onOkButtonPressed();
-		}
-		else
-		{
+		} else {
 			okButton->setVisible(false);
 			okButton->setEnabled(false);
 
@@ -93,9 +88,7 @@ void Game::codeRowFilled(const bool &m_filled)
 
 			showMessage();
 		}
-	}
-	else	//gameRules->gameMode == GameMode::MVH
-	{
+	} else {	//gameRules->gameMode == GameMode::MVH
 		doneButton->setVisible(m_filled);
 
 		if (m_filled)//the user is not done putting the master code
@@ -121,8 +114,7 @@ void Game::createBoxes()
 
 	QPoint left_bottom_corner(4, 489);
 
-	for (int i = 0; i < MAX_COLOR_NUMBER; ++i)
-	{
+	for (int i = 0; i < MAX_COLOR_NUMBER; ++i) {
 		QPoint position = left_bottom_corner - QPoint(0, i*40);
 
 		auto pinbox = new PinBox(gameRules->pegNumber, position);
@@ -131,8 +123,7 @@ void Game::createBoxes()
 
 		position.setX(160-20*gameRules->pegNumber);
 
-		for (int j = 0; j < gameRules->pegNumber; ++j)
-		{
+		for (int j = 0; j < gameRules->pegNumber; ++j) {
 			codeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
 		}
 
@@ -140,23 +131,20 @@ void Game::createBoxes()
 
 		PegBox *pegbox = createPegBox(position);
 		pegBoxes.append(pegbox);
-		if (i < gameRules->colorNumber)
-		{
+		if (i < gameRules->colorNumber) {
 			Peg *peg;
 			peg = createPeg(pegbox, i);
 			peg->setState(PegState::Underneath);
 			connect(this, SIGNAL(showIndicatorsSignal()), peg, SLOT(onShowIndicators()));
 			createPegForBox(pegbox, i);
 			pegbox->setPegState(PegState::Initial);
-		}
-		else
-		{
+		} else {
 			createPeg(pegbox, i)->setState(PegState::Plain);
 		}
 	}
 
-	for (int i = 0; i < gameRules->pegNumber; ++i)// the last code boxes are for the master code
-	{
+	// the last code boxes are for the master code
+	for (int i = 0; i < gameRules->pegNumber; ++i) {
 		masterBoxes.append(createPegBox(QPoint(160-20*gameRules->pegNumber+i*40, 70)));
 	}
 }
@@ -165,11 +153,9 @@ void Game::createBoxes()
 void Game::createPegForBox(PegBox *m_box, int m_color)
 {
 	QPointF pos = m_box->sceneBoundingRect().center();
-	if (m_box->hasPeg())
-	{
+	if (m_box->hasPeg()) {
 		m_box->setPegColor(m_color);
-	} else
-	{
+	} else {
 		Peg *peg = createPeg(pos, m_color);
 		m_box->setPeg(peg);
 		connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
@@ -283,13 +269,10 @@ void Game::onPegMouseReleased(Peg *peg)
 	QPointF position = peg->sceneBoundingRect().center();
 	int color = peg->getColor();
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
-	if(!gameRules->sameColorAllowed)
-	{
-		foreach(PegBox *box, currentBoxes)
-		{
+	if(!gameRules->sameColorAllowed) {
+		foreach(PegBox *box, currentBoxes) {
 			if(!box->sceneBoundingRect().contains(position) &&
-					box->isPegVisible() && box->getPegColor() == color)
-			{
+					box->isPegVisible() && box->getPegColor() == color) {
 				boardAid->boardSounds.playPegDropRefuseSound();
 				return;
 			}
@@ -302,10 +285,8 @@ void Game::onPegMouseReleased(Peg *peg)
 	// conversion from float to integer may cause double drop on middle. Flag to do it just once
 	bool dropOnlyOnce = true;
 
-	foreach(PegBox *box, currentBoxes)
-	{
-		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce)
-		{
+	foreach(PegBox *box, currentBoxes) {
+		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce) {
 			dropOnlyOnce = false;
 			createPegForBox(box, color);
 			boardAid->boardSounds.playPegDropSound();
@@ -318,8 +299,7 @@ void Game::onPegMouseReleased(Peg *peg)
 	} //	end for
 
 	//	if (master) code row state changed, go to codeRowFilled
-	if (newRowFillState != rowFillState)
-	{
+	if (newRowFillState != rowFillState) {
 		rowFillState = newRowFillState;
 		codeRowFilled(rowFillState);
 	}
@@ -328,10 +308,8 @@ void Game::onPegMouseReleased(Peg *peg)
 
 void Game::onPegMouseDoubleClicked(Peg *peg)
 {
-	foreach(PegBox *box, currentBoxes)
-	{
-		if (!box->hasPeg() || box->getPegState() == PegState::Invisible)
-		{
+	foreach(PegBox *box, currentBoxes) {
+		if (!box->hasPeg() || box->getPegState() == PegState::Invisible) {
 			peg->setPos(box->sceneBoundingRect().topLeft());
 			break;
 		}
@@ -347,13 +325,11 @@ void Game::changeIndicators()
 
 void Game::retranslateTexts()
 {
-	if(okButton)
-	{
+	if(okButton) {
 		okButton->setLabel(tr("OK"));
 		okButton->update();
 	}
-	if (doneButton)
-	{
+	if (doneButton) {
 		doneButton->setLabel(tr("Done"));
 		doneButton->update();
 	}
@@ -381,18 +357,12 @@ bool Game::isRunning()
 
 void Game::onRevealOnePeg()
 {
-	if (gameRules->gameMode == GameMode::HVM && isRunning())
-	{
-		foreach(PegBox *box, masterBoxes)
-		{
-			if(box->getState() != BoxState::Past)
-			{
-				if (box == masterBoxes.last())
-				{
+	if (gameRules->gameMode == GameMode::HVM && isRunning()) {
+		foreach(PegBox *box, masterBoxes) {
+			if(box->getState() != BoxState::Past) {
+				if (box == masterBoxes.last()) {
 					onResigned();
-				}
-				else
-				{
+				} else {
 					box->setState(BoxState::Past);
 					return;
 				}
@@ -404,8 +374,7 @@ void Game::onRevealOnePeg()
 
 void Game::onResigned()
 {
-	if (gameRules->gameMode == GameMode::HVM && isRunning())
-	{
+	if (gameRules->gameMode == GameMode::HVM && isRunning()) {
 		gameState = GameState::Resign;
 		showMessage();
 		freezeScene();
@@ -415,11 +384,9 @@ void Game::onResigned()
 
 void Game::onOkButtonPressed()
 {
-	if(gameRules->gameMode == GameMode::MVH)
-	{
+	if(gameRules->gameMode == GameMode::MVH) {
 		int resp = pinBoxes.at(playedMoves)->getValue();
-		if(!solver->setResponse(resp))
-		{
+		if(!solver->setResponse(resp)) {
 			message->setText(tr("Not Possible, Try Again"));
 			return;
 		}
@@ -444,8 +411,7 @@ void Game::onOkButtonPressed()
 		}
 
 		showMessage();
-	} else
-	{
+	} else {
 		boardAid->boardSounds.playButtonPressSound();
 		gameState = GameState::Running;
 
@@ -508,8 +474,7 @@ void Game::onGuessReady()
 	showInformation();
 
 	int box_index = playedMoves*gameRules->pegNumber;
-	for(int i = 0; i < gameRules->pegNumber; ++i)
-	{
+	for(int i = 0; i < gameRules->pegNumber; ++i) {
 		createPegForBox(codeBoxes.at(box_index + i), guessElement.guess[i].digitValue());
 		codeBoxes.at(box_index + i)->setState(BoxState::Past);
 	}
@@ -538,8 +503,7 @@ void Game::play()
 
 void Game::stop()
 {
-	if (solver)
-	{
+	if (solver) {
 		emit interuptSignal();
 		solver->quit();
 		solver->wait();
@@ -555,8 +519,7 @@ void Game::playMVH()
 	doneButton->setVisible(false);
 	doneButton->setEnabled(true);
 
-	if (!solver)
-	{
+	if (!solver) {
 		solver = new Solver(gameRules, &guessElement, this);
 		connect(solver, SIGNAL(guessDoneSignal()), this, SLOT(onGuessReady()));
 		connect(this, SIGNAL(startGuessingSignal()), solver, SLOT(onStartGuessing()));
@@ -568,8 +531,9 @@ void Game::playMVH()
 
 	gameState = GameState::WaittingHiddenCodeFill;
 	showMessage();
-	for(int i = 0; i < gameRules->pegNumber; ++i) //initializing currentrow
-	{
+
+	//initializing currentrow
+	for(int i = 0; i < gameRules->pegNumber; ++i) {
 		currentBoxes.append(masterBoxes.at(i));
 		masterBoxes.at(i)->setState(BoxState::Current);
 	}
@@ -588,15 +552,15 @@ void Game::playHVM()
 	int remainingNumbers = gameRules->colorNumber;
 	qsrand(time(NULL));
 	guessElement.code = "";
-	foreach(PegBox *box, masterBoxes) //creating a master code to be guessed
-	{
+
+	//creating a master code to be guessed
+	foreach(PegBox *box, masterBoxes) {
 		int color = static_cast<int>(remainingNumbers*(qrand()/(RAND_MAX + 1.0)));
 		int realcolor = digits.at(color).digitValue();
 		guessElement.code.append(QString::number(realcolor));
 		createPegForBox(box, realcolor);
 		box->setState(BoxState::None);
-		if(!gameRules->sameColorAllowed)
-		{
+		if(!gameRules->sameColorAllowed) {
 			digits.remove(color, 1);
 			--remainingNumbers;
 		}
@@ -625,19 +589,14 @@ void Game::setAlgorithm(const Algorithm &algorithm_n)
 
 void Game::showInformation()
 {
-	if (gameRules->gameMode == GameMode::MVH)
-	{
+	if (gameRules->gameMode == GameMode::MVH) {
 		if (guessElement.possibles == 1)
 		{
 			information->setText(tr("The Code Is Cracked!"));
-		}
-		else if (guessElement.possibles > 10000)
-		{
+		} else if (guessElement.possibles > 10000) {
 			information->setText(QString("%1    %2: %3").arg(tr("Random Guess")).
 								  arg(tr("Remaining")).arg(boardAid->locale.toString(guessElement.possibles)));
-		}
-		else
-		{
+		} else {
 			switch (guessElement.algorithm) {
 			case Algorithm::MostParts:
 				information->setText(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
@@ -657,12 +616,12 @@ void Game::showInformation()
 			}
 
 		}
-	}
-	else
+	} else {
 		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", gameRules->pegNumber)).
 								  arg(boardAid->locale.toString(gameRules->pegNumber)).arg(tr("Colors", "", gameRules->colorNumber)).
 								  arg(boardAid->locale.toString(gameRules->colorNumber)).arg(tr("Same Colors")).
 							 arg(gameRules->sameColorAllowed ? tr("Yes"): tr("No")));
+	}
 }
 //-----------------------------------------------------------------------------
 

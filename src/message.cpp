@@ -48,8 +48,7 @@ void Message::setText(const QString m_text)
 	textLayout.beginLayout();
 
 	QTextLine line = textLayout.createLine();
-	while (line.isValid())
-	{
+	while (line.isValid()) {
 		line.setLineWidth(280);
 		height += leading;
 		line.setPosition(QPointF(0, height));

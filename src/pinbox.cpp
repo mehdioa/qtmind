@@ -35,8 +35,7 @@ const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] =
 PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent):
 	EmptyBox(m_position, parent)
 {
-	for(int i = 0; i < pin_number; ++i)
-	{
+	for(int i = 0; i < pin_number; ++i) {
 		auto pin = new Pin(this);
 		pins.append(pin);
 		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
@@ -49,8 +48,7 @@ int PinBox::getValue() const
 {
 	int blacks = 0;
 	int whites = 0;
-	foreach(Pin *pin, pins)
-	{
+	foreach(Pin *pin, pins) {
 		switch (pin->getColor()) {
 		case PinColor::White:
 			++whites;

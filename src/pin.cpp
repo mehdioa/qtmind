@@ -87,7 +87,7 @@ void Pin::setColor(const PinColor &m_color)
 void Pin::setActivity(const bool &b)
 {
 	activity = b;
-	if (activity){
+	if (activity) {
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 	} else {

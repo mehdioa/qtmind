@@ -64,12 +64,9 @@ bool Solver::done() const
 
 void Solver::createTables()
 {
-	if (gameRules->sameColorAllowed)
-	{
+	if (gameRules->sameColorAllowed) {
 		allCodesSize = ipow(gameRules->colorNumber, gameRules->pegNumber);
-	}
-	else
-	{
+	} else {
 		allCodesSize = 1;
 		for(int i = 0; i < gameRules->pegNumber; ++i)
 			allCodesSize *= (gameRules->colorNumber - i);
@@ -79,8 +76,7 @@ void Solver::createTables()
 
 	allCodes = new int *[allCodesSize];
 
-	for(int i = 0; i < allCodesSize; ++i)
-	{
+	for(int i = 0; i < allCodesSize; ++i) {
 		allCodes[i] = new int[gameRules->pegNumber];
 		indexToCode(i);
 	}
@@ -93,8 +89,7 @@ void Solver::createTables()
 
 void Solver::deleteTables()
 {
-	if (allCodes)
-	{
+	if (allCodes) {
 		for(int i = 0; i < allCodesSize; ++i)
 			delete[] allCodes[i];
 
@@ -102,8 +97,7 @@ void Solver::deleteTables()
 		allCodes = NULL;
 	}
 
-	if(firstPossibleCodes)
-	{
+	if(firstPossibleCodes) {
 		delete[] firstPossibleCodes;
 		firstPossibleCodes = NULL;
 	}
@@ -134,8 +128,7 @@ QString Solver::shuffle(QString m_string) const
 	qsrand(time(NULL));
 	QString answer = "";
 
-	while(m_string.length() > 0)
-	{
+	while(m_string.length() > 0) {
 		int j = static_cast<int>(m_string.length()*(qrand()/(RAND_MAX + 1.0)));
 		answer.append(m_string.at(j));
 		m_string.remove(j, 1);
@@ -172,8 +165,7 @@ int Solver::compare(const int *codeA, const int *codeB) const
 	std::fill(g, g + gameRules->colorNumber, 0);
 	int blacks = 0;
 
-	for (int i = 0; i < gameRules->pegNumber; ++i)
-	{
+	for (int i = 0; i < gameRules->pegNumber; ++i) {
 		if (codeA[i] == codeB[i])
 			++blacks;
 		++c[codeA[i]];
@@ -197,8 +189,7 @@ bool Solver::setResponse(const int &m_response)
 	int guessArray[gameRules->pegNumber];
 	stringToArray(guessElement->guess, guessArray);
 
-	foreach(int possible, possibleCodes)
-	{
+	foreach(int possible, possibleCodes) {
 		if(compare(guessArray, allCodes[possible]) == m_response)
 			tempPossibleCodes.append(possible);
 	}
@@ -218,15 +209,12 @@ void Solver::setFirstPossibles()
 {
 	if (!firstPossibleCodes)
 	{
-		if (allCodesSize <= 10000)
-		{
+		if (allCodesSize <= 10000) {
 			firstPossibleCodesSize = allCodesSize;
 			firstPossibleCodes = new int[firstPossibleCodesSize];
 			for(int i = 0; i < firstPossibleCodesSize; ++i)
 				firstPossibleCodes[i] = i;
-		}
-		else if (possibleCodes.size() <= 10000)
-		{
+		} else if (possibleCodes.size() <= 10000) {
 			firstPossibleCodesSize = possibleCodes.size();
 			firstPossibleCodes = new int[firstPossibleCodesSize];
 			for(int i = 0; i < firstPossibleCodesSize; ++i)
@@ -248,8 +236,7 @@ QString Solver::getFirstGuess() const
 {
 	QString answer;
 	QString str;
-	if (gameRules->sameColorAllowed)
-	{
+	if (gameRules->sameColorAllowed) {
 		switch (gameRules->colorNumber) {
 		case 2:
 			str = QString::fromUtf8("01010");
@@ -273,9 +260,7 @@ QString Solver::getFirstGuess() const
 
 		if(gameRules->colorNumber == 6 && gameRules->pegNumber == 4 && gameRules->algorithm == Algorithm::WorstCase)
 			answer = QString::fromUtf8("0011");
-	}
-	else
-	{
+	} else {
 		QString str = QString::fromUtf8("01234");
 		answer = str.left(gameRules->pegNumber);
 	}
@@ -291,20 +276,19 @@ void Solver::makeGuess()
 	 *	and guess when there are at least 10000 codes possibles are treated
 	 *	differently.
 	 */
-	if (possibleCodes.size() == allCodesSize)	// The first guess here
-	{
+
+	// The first guess here
+	if (possibleCodes.size() == allCodesSize) {
 		guessElement->guess = getFirstGuess();
 		return;
 	}
 
-	if (possibleCodes.size() == 1)
-	{
+	if (possibleCodes.size() == 1) {
 		guessElement->guess =  arrayToString(allCodes[possibleCodes.first()]);
 		return;
 	}
 
-	if(possibleCodes.size() > 10000)
-	{
+	if(possibleCodes.size() > 10000) {
 		guessElement->guess = arrayToString(allCodes[possibleCodes.at(possibleCodes.size() >> 1)]);
 		return;
 	}
@@ -317,19 +301,16 @@ void Solver::makeGuess()
 	qreal min_code_weight = 1000000000;
 	qreal code_weight;
 
-	for (int code_index = 0; code_index < firstPossibleCodesSize; ++code_index)
-	{
+	for (int code_index = 0; code_index < firstPossibleCodesSize; ++code_index) {
 		if(interupt)
 			return;
 
-		foreach(int possible_index, possibleCodes)
-		{
+		foreach(int possible_index, possibleCodes) {
 			++responsesOfCodes[compare(allCodes[firstPossibleCodes[code_index]], allCodes[possible_index])];
 		}
 		code_weight = computeWeight(responsesOfCodes);
 
-		if (code_weight < min_code_weight)
-		{
+		if (code_weight < min_code_weight) {
 			answer_index = code_index;
 			min_code_weight = code_weight;
 		}
@@ -350,22 +331,19 @@ qreal Solver::computeWeight(int *m_responses) const
 
 	switch (guessElement->algorithm) {
 	case Algorithm::ExpectedSize:
-		for(int i = 0; i < responseSpaceSize-2; ++i)
-		{
+		for(int i = 0; i < responseSpaceSize-2; ++i) {
 			answer += ipow(m_responses[i], 2);
 			m_responses[i] = 0;
 		}
 		break;
 	case Algorithm::WorstCase:
-		for(int i = 0; i < responseSpaceSize-2; ++i)
-		{
+		for(int i = 0; i < responseSpaceSize-2; ++i) {
 			answer = qMax((qreal)m_responses[i], answer);
 			m_responses[i] = 0;
 		}
 		break;
 	default:	//	Most Parts
-		for(int i = 0; i < responseSpaceSize-2; ++i)
-		{
+		for(int i = 0; i < responseSpaceSize-2; ++i) {
 			if (m_responses[i] == 0)
 				++answer;
 			else
@@ -375,8 +353,7 @@ qreal Solver::computeWeight(int *m_responses) const
 	}
 
 	// This little trick will prefer possibles in tie
-	if (m_responses[responseSpaceSize - 1] != 0)
-	{
+	if (m_responses[responseSpaceSize - 1] != 0) {
 		answer -= 0.5;
 		if (guessElement->algorithm == Algorithm::MostParts)
 			--answer;
@@ -393,21 +370,16 @@ qreal Solver::computeWeight(int *m_responses) const
 void Solver::indexToCode(const int &number)
 {
 	int m_number = number;
-	if(gameRules->sameColorAllowed)
-	{
-		for(int i = 0; i < gameRules->pegNumber; ++i)
-		{
+	if(gameRules->sameColorAllowed) {
+		for(int i = 0; i < gameRules->pegNumber; ++i) {
 			allCodes[number][i] = m_number % gameRules->colorNumber;
 			m_number /= gameRules->colorNumber;
 		}
-	}
-	else
-	{
+	} else {
 		QString NUMS = "0123456789"; // Characters that may be used
 
 		int max_digits = allCodesSize;
-		for(int i = 0; i < gameRules->pegNumber; ++i)
-		{
+		for(int i = 0; i < gameRules->pegNumber; ++i) {
 			max_digits /= gameRules->colorNumber - i;
 			int temp = m_number / max_digits;
 			allCodes[number][i] = NUMS[temp].digitValue();
