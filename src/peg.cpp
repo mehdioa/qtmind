@@ -156,8 +156,6 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 		QGraphicsItem::mouseDoubleClickEvent(event);
 		if (pegState == PegState::Initial){
 			emit mouseDoubleClickSignal(this);
-//			emit mouseReleaseSignal(this);
-//			setPos(position - QPoint(19.5, 19.5));
 		} else {
 			setPos(position - QPoint(19.5, 60));
 		}

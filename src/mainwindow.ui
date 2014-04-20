@@ -89,7 +89,7 @@
      </property>
      <property name="icon">
       <iconset resource="../resource.qrc">
-       <normaloff>:/icons/resources/icons/emblem-favorite.png</normaloff>:/icons/resources/icons/emblem-favorite.png</iconset>
+       <normaloff>:/icons/resources/icons/system-switch-user.png</normaloff>:/icons/resources/icons/system-switch-user.png</iconset>
      </property>
      <property name="separatorsCollapsible">
       <bool>true</bool>

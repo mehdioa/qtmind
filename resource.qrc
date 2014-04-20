@@ -12,7 +12,6 @@
         <file>resources/icons/configure.png</file>
         <file>resources/icons/cpu.png</file>
         <file>resources/icons/dialog-information.png</file>
-        <file>resources/icons/emblem-favorite.png</file>
         <file>resources/icons/fontsizedown_koffice.png</file>
         <file>resources/icons/layer-visible-off.png</file>
         <file>resources/icons/layer-visible-on.png</file>
@@ -32,6 +31,7 @@
         <file>resources/icons/system-help.png</file>
         <file>resources/icons/task-complete.png</file>
         <file>resources/icons/qtmind.png</file>
+        <file>resources/icons/system-switch-user.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>resources/sounds/pegdrop.wav</file>
