@@ -531,6 +531,7 @@ void Game::playMVH()
 
 	gameState = GameState::WaittingHiddenCodeFill;
 	showMessage();
+	showInformation();
 
 	//initializing currentrow
 	for(int i = 0; i < gameRules->pegNumber; ++i) {
@@ -567,6 +568,7 @@ void Game::playHVM()
 	}
 	setNextRowInAction();
 	showMessage();
+	showInformation();
 	gameState = GameState::WaittingFirstRowFill;
 	okButton->setPos(pinBoxes.at(playedMoves)->pos() + QPoint(0, 1));
 	// from now on the onPinBoxPushed function continue the game, after the code row is filled
