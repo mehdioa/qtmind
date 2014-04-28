@@ -157,7 +157,7 @@ void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 		if (pegState == PegState::Initial){
 			emit mouseDoubleClickSignal(this);
 		} else {
-			setPos(position - QPoint(19.5, 60));
+			setPos(position - QPoint(19, 60));
 		}
 	}
 }
@@ -187,7 +187,7 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 		if (pegState == PegState::Initial) {
 			emit mouseDoubleClickSignal(this);
 		} else {
-			setPos(position - QPoint(19.5, 60));
+			setPos(position - QPoint(19, 60));
 		}
 	}
 }
@@ -203,7 +203,7 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		gradient.setColorAt(0, PegColors[virtual_color][0]);
 		gradient.setColorAt(1, PegColors[virtual_color][1]);
 		painter->setBrush(gradient);
-		painter->drawEllipse(2.5, 2.5, 35, 35);
+		painter->drawEllipse(2, 2, 35, 35);
 
 		QLinearGradient lgrad(0, 0, 0, 20);
 		lgrad.setColorAt(0, QColor(255, 255, 255, 180));
@@ -213,7 +213,7 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(6, 4, 27, 20);
 	} else {
 		painter->setBrush(Qt::NoBrush);
-		painter->drawEllipse(2.5, 2.5, 34, 34);
+		painter->drawEllipse(2, 2, 34, 34);
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 

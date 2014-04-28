@@ -47,7 +47,7 @@ Product {
         condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
         qbs.install: true
         qbs.installDir: "share/share/pixmaps"
-        files: ["../icons/hicolor/128x128/qtmind.png"]
+		files: ["../resources/icons/hicolor/128x128/qtmind.png"]
     }
 
 }

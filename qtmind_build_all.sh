@@ -56,7 +56,7 @@ mkdir -p win64/qtmind-build
 
 cd win64/qtmind-build
 
-x86_64-w64-mingw32-qmake ../../../QtMind
+x86_64-w64-mingw32-qmake-qt5 ../../../QtMind
 
 make clean
 
@@ -72,7 +72,7 @@ mkdir -p win32/qtmind-build
 
 cd win32/qtmind-build
 
-i686-w64-mingw32-qmake ../../../QtMind
+i686-w64-mingw32-qmake-qt5 ../../../QtMind
 
 make clean
 
