@@ -22,6 +22,7 @@
 #include "guesselement.h"
 #include "ctime"
 #include <QtCore/qmath.h>
+#include <stdlib.h>
 
 inline int ipow(int base, int exp)
 {
