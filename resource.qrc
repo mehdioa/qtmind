@@ -9,7 +9,6 @@
         <file>resources/icons/audio_medium_volume_icon.png</file>
         <file>resources/icons/audio_muted_volume_icon.png</file>
         <file>resources/icons/colors.png</file>
-        <file>resources/icons/configure.png</file>
         <file>resources/icons/cpu.png</file>
         <file>resources/icons/dialog-information.png</file>
         <file>resources/icons/layer-visible-off.png</file>
@@ -22,7 +21,6 @@
         <file>resources/icons/preferences-desktop-locale.png</file>
         <file>resources/icons/qt_icon.png</file>
         <file>resources/icons/qtmind.ico</file>
-        <file>resources/icons/rules_of_fight_club.png</file>
         <file>resources/icons/rules-icon.png</file>
         <file>resources/icons/same_color_0.png</file>
         <file>resources/icons/same_color_1.png</file>
