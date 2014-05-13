@@ -113,7 +113,7 @@ OTHER_FILES += \
 
 unix:!macx { # installation on Unix-ish platforms
 	isEmpty(INSTALL_PREFIX):INSTALL_PREFIX = /usr
-	isEmpty(BIN_DIR):BIN_DIR = $$INSTALL_PREFIX/local/bin
+	isEmpty(BIN_DIR):BIN_DIR = $$INSTALL_PREFIX/bin
 	isEmpty(DATA_DIR):DATA_DIR = $$INSTALL_PREFIX/share
 	isEmpty(ICON_DIR):ICON_DIR = $$DATA_DIR/pixmaps
 	isEmpty(DESKTOP_DIR):DESKTOP_DIR = $$DATA_DIR/applications
@@ -127,7 +127,7 @@ unix:!macx { # installation on Unix-ish platforms
 	qm.files = translations/*.qm
 	qm.path = $$TRANSLATIONS_DIR
 
-	INSTALLS = target icon desktop qm
+	INSTALLS += target icon desktop qm
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

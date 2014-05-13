@@ -2,7 +2,7 @@
 # Contributor: Omid Nikta <omidnikta@gmail.com>
  
 pkgname=qtmind
-pkgver=131.18eb194
+pkgver=0.8.2
 pkgrel=1
 pkgdesc="A Mastermind Game With Built-in Solver. Integrated Solving Algorithms: Most Parts, Worst Case, Expected Size."
 arch=('i686' 'x86_64')
@@ -17,10 +17,7 @@ url="http://omidnikta.github.io/qtmind/"
 _gitroot='git://github.com/omidnikta/qtmind.git'
 _gitname="master"
  
-pkgver() {
-  cd ${srcdir}/${_gitname}
-  echo $(git rev-list --count master).$(git rev-parse --short master)
-}
+
 build() {
 	cd ${srcdir}
 	
@@ -39,10 +36,8 @@ build() {
 }
 
 package() {
-
-	cd ${srcdir}/${_gitname}
-	make install
-
+	cd ${srcdir}
+	make INSTALL_ROOT="${pkgdir}/" install
 }
  
 # vim: set ft=sh ts=2 sw=2 et:
