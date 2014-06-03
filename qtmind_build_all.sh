@@ -87,11 +87,11 @@ mkdir -p android
 
 cd android
 
-/opt/android-qt5/5.2.0/bin/qmake ../../QtMind/
+/opt/android-qt5/5.3.0/bin/qmake ../../QtMind/
 
 make install INSTALL_ROOT=android-build/
 
-/opt/android-qt5/5.2.0/bin/androiddeployqt --output android-build/ --sign ../../../android_release.keystore nikta --input android-libqtmind.so-deployment-settings.json
+/opt/android-qt5/5.3.0/bin/androiddeployqt --output android-build/ --sign ../../../android_release.keystore nikta --input android-libqtmind.so-deployment-settings.json
 
 mv -f android-build/bin/QtApp-release.apk ../../../../gh-pages/Downloads/QtMind.apk
 

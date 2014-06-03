@@ -3,7 +3,7 @@
  
 pkgname=qtmind
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A Mastermind Game With Built-in Solver. Integrated Solving Algorithms: Most Parts, Worst Case, Expected Size."
 arch=('i686' 'x86_64')
 url="http://omidnikta.github.io/qtmind/"
