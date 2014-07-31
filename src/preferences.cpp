@@ -19,47 +19,42 @@
 
 #include "preferences.h"
 #include "ui_preferences.h"
-#include "boardaid.h"
+#include "board.h"
 
 #include <QFile>
 #include <QSettings>
 #include <QLibraryInfo>
 #include <QDir>
-#include "constants.h"
 
-QString Preferences::AppPath;
+QString Preferences::AppPath; /**< TODO */
 
-//-----------------------------------------------------------------------------
-
-Preferences::Preferences(BoardAid *board_aid, QWidget *parent) :
+Preferences::Preferences(Board *board_aid, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::Preferences),
-	boardAid(board_aid)
+	board(board_aid)
 {
 	ui->setupUi(this);
-	setLayoutDirection(boardAid->locale.textDirection());
+	setLayoutDirection(board->locale.textDirection());
 
 	for(int i = 10; i < 21; ++i) {
-		ui->fontSizeComboBox->addItem(QString("%1 %2").arg(boardAid->locale.toString(i)).arg(tr("Point(s)", "", i)));
+		ui->sizeComboBox->addItem(QString("%1 %2").arg(board->locale.toString(i)).arg(tr("Point(s)", "", i)));
 	}
-	ui->fontComboBox->setCurrentFont(boardAid->boardFont.fontName);
-	ui->fontSizeComboBox->setCurrentIndex(boardAid->boardFont.fontSize - 10);
+	ui->fontComboBox->setCurrentFont(board->font.name);
+	ui->sizeComboBox->setCurrentIndex(board->font.size - 10);
 
 	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(ui->acceptRejectButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
 }
-//-----------------------------------------------------------------------------
 
 Preferences::~Preferences()
 {
 	delete ui;
 }
-//-----------------------------------------------------------------------------
 
 void Preferences::accept()
 {
 	QDialog::accept();
-	boardAid->boardFont.fontName = ui->fontComboBox->currentText();
-	boardAid->boardFont.fontSize = ui->fontSizeComboBox->currentIndex() + 10;
+	board->font.name = ui->fontComboBox->currentText();
+	board->font.size = ui->sizeComboBox->currentIndex() + 10;
 }

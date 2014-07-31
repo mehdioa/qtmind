@@ -17,35 +17,38 @@
  *
  ***********************************************************************/
 
-#ifndef BOARDSOUNDS_H
-#define BOARDSOUNDS_H
+#ifndef BOARD_H
+#define BOARD_H
 
-class QSoundEffect;
+#include "indicator.h"
+#include "sounds.h"
+#include "font.h"
+#include <QLocale>
 
-class BoardSounds
+/**
+ * @brief A class to represent board tools, like font, locale, indicator.
+ */
+class Board
 {
 public:
-	enum Volume{
-		Mute,
-		Low,
-		Medium,
-		High
-	};
-
-	BoardSounds();
-	~BoardSounds();
-	void playPegDropSound();
-	void playPegDropRefuseSound();
-	void playButtonPressSound();
-	void setVolume(const int &vol);
-	Volume getVolume() const {return volume;}
+	/**
+	 * @brief Creates an object by reading settings.
+	 */
+	Board();
+	~Board();
 
 private:
-	Volume volume;
+	static const bool isAndroid; /**< Is the platform Android? */
+	bool autoPutPins; /**< TODO */
+	bool autoCloseRows; /**< TODO */
+	Indicator indicator; /**< TODO */
+	QLocale locale; /**< TODO */
+	Font font; /**< TODO */
+	Sounds sounds; /**< TODO */
 
-	QSoundEffect *pegDropSound;
-	QSoundEffect *pegDropRefuseSound;
-	QSoundEffect *buttonPressSound;
+	friend class MainWindow;
+	friend class Preferences;
+	friend class Game;
 };
 
-#endif // BOARDSOUNDS_H
+#endif // BOARD_H

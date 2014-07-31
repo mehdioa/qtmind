@@ -18,18 +18,19 @@
  ***********************************************************************/
 
 #include "button.h"
-#include "boardfont.h"
+#include "font.h"
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneEvent>
 #include <QCursor>
 #include <QPainter>
 
-Button::Button(const BoardFont &board_font, const int &buttonWidth, const QString &str)
+Button::Button(const Font &board_font, const int &buttonWidth, const QString &str, QGraphicsItem *parent):
+	QGraphicsObject(parent)
 {
 	width = buttonWidth;
 	label = str;
 
-	font = QFont(board_font.fontName, board_font.fontSize - 1, QFont::Bold, false);
+	font = QFont(board_font.name, board_font.size - 1, QFont::Bold, false);
 	font.setStyleHint(QFont::SansSerif);
 	font.setStyleStrategy(QFont::PreferAntialias);
 
@@ -43,14 +44,12 @@ Button::Button(const BoardFont &board_font, const int &buttonWidth, const QStrin
 	setEnabled(true);
 	setCursor(Qt::PointingHandCursor);
 }
-//-----------------------------------------------------------------------------
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
 	pressedEffect->setOffset(0, 1);
 	moveBy(0, 1);
 }
-//-----------------------------------------------------------------------------
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -59,7 +58,6 @@ void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
 }
-//-----------------------------------------------------------------------------
 
 void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
@@ -79,7 +77,6 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 		painter->drawText(boundingRect(), Qt::AlignCenter, label);
 	}
 }
-//-----------------------------------------------------------------------------
 
 QRectF Button::boundingRect() const
 {

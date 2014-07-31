@@ -17,32 +17,55 @@
  *
  ***********************************************************************/
 
-#ifndef GAMERULES_H
-#define GAMERULES_H
+#ifndef RULES_H
+#define RULES_H
 
-#include "constants.h"
 #include <QLocale>
 
-enum class GameMode {
-	MVH,		//HUMAN MAKE THE HIDDEN CODE
-	HVM		//HUMAN BREAKS THE HIDDEN CODE
-};
-
-class GameRules
+/**
+ * @brief The Rules class represents the rules of the game
+ */
+class Rules
 {
-	GameRules();
-	~GameRules();
+
+public:
+
+	/**
+	 * @brief The Algorithm enum the solving algorithm
+	 */
+	enum class Algorithm
+	{
+		MostParts,
+		WorstCase,
+		ExpectedSize
+	};
+	static const int MIN_COLOR_NUMBER	= 2; /**< The minimum number of colors */
+	static const int MAX_COLOR_NUMBER	= 10; /**< The maximum number of colors */
+
+	static const int MIN_SLOT_NUMBER	= 2; /**< The minimum number of slots */
+	static const int MAX_SLOT_NUMBER	= 5; /**< The maximum number of slots */
+	/**
+	 * @brief Rules
+	 */
+	Rules();
+	~Rules();
 
 private:
-	int pegNumber;
-	int colorNumber;
-	bool sameColorAllowed;
-	Algorithm algorithm;
-	GameMode gameMode;
+
+	enum Mode {
+		MVH,		//HUMAN MAKE THE HIDDEN CODE
+		HVM		    //HUMAN BREAKS THE HIDDEN CODE
+	};
+
+	int pegs; /**< TODO */
+	int colors; /**< TODO */
+	bool same_colors; /**< TODO */
+	Rules::Algorithm algorithm; /**< TODO */
+	Mode mode; /**< TODO */
 
 	friend class MainWindow;
 	friend class Solver;
 	friend class Game;
 };
 
-#endif // GAMERULES_H
+#endif // RULES_H

@@ -17,19 +17,59 @@
  *
  ***********************************************************************/
 
-#include "guesselement.h"
+#ifndef BOARDSOUNDS_H
+#define BOARDSOUNDS_H
 
-GuessElement::GuessElement()
-{
-	reset(Algorithm::MostParts, 0);
-}
+class QSoundEffect;
 
-void GuessElement::reset(const Algorithm &algorithm_m, const int &possibles_m)
+/**
+ * @brief A class to define board sounds. It needs Qt at least 5.0.0 to
+ * work.
+ */
+class Sounds
 {
-	guess = "";
-	code = "";
-	response = 0;
-	algorithm = algorithm_m;
-	possibles = possibles_m;
-	weight = 0;
-}
+public:
+	enum Volume{
+		Mute,
+		Low,
+		Medium,
+		High
+	};
+
+	/**
+	 * @brief Sounds
+	 */
+	Sounds();
+	~Sounds();
+	/**
+	 * @brief playPegDrop
+	 */
+	void playPegDrop();
+	/**
+	 * @brief playPegDropRefuse
+	 */
+	void playPegDropRefuse();
+	/**
+	 * @brief playButtonPress
+	 */
+	void playButtonPress();
+	/**
+	 * @brief setVolume
+	 * @param vol
+	 */
+	void setVolume(const int &vol);
+	/**
+	 * @brief getVolume
+	 * @return
+	 */
+	Volume getVolume() const {return volume;}
+
+private:
+	Volume volume; /**< TODO */
+
+	QSoundEffect *pegDrop; /**< TODO */
+	QSoundEffect *pegDropRefuse; /**< TODO */
+	QSoundEffect *buttonPress; /**< TODO */
+};
+
+#endif // BOARDSOUNDS_H

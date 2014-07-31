@@ -22,18 +22,39 @@
 
 #include <QGraphicsEllipseItem>
 
-enum class PinColor {
-	White,
-	Black,
-	None,
-};
-
+/**
+ * @brief The Pin class represents a pin on the board
+ */
 class Pin : public QGraphicsEllipseItem
 {
 public:
+	/**
+	 * @brief The Color enum represent the color of the pin
+	 */
+	enum class Color {
+		White,
+		Black,
+		None,
+	};
+
 	explicit Pin(QGraphicsItem *parent = 0);
-	PinColor getColor() const {return color;}
-	void setColor(const PinColor &m_color);
+
+	/**
+	 * @brief getColor get the color of the pin
+	 * @return the color of the pin
+	 */
+	Pin::Color getColor() const {return color;}
+
+	/**
+	 * @brief setColor set the color of the pin
+	 * @param m_color the color of the pin
+	 */
+	void setColor(const Pin::Color &m_color);
+
+	/**
+	 * @brief setActivity set activity of the pin
+	 * @param b the activity
+	 */
 	void setActivity(const bool &b);
 
 protected:
@@ -41,11 +62,11 @@ protected:
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
 
 private:
-	PinColor nextPinColor() const;
+	Pin::Color nextPinColor() const;
 
 private:
-	PinColor color;
-	bool activity;
+	Pin::Color color; /**< TODO */
+	bool activity; /**< TODO */
 };
 
 #endif // PIN_H

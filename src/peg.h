@@ -21,38 +21,79 @@
 #define PEG_H
 
 #include <QGraphicsObject>
-#include "constants.h"
-
-enum class PegState {
-	Initial,	//	Right source pegs
-	Visible,
-	Invisible,
-	Underneath,	//	Pegs under Initial right pegs
-	Plain		//	Just circle is visible
-};
+#include "rules.h"
 
 class Indicator;
 class QGestureEvent;
 class QGraphicsDropShadowEffect;
 class QTapGesture;
 
+/**
+ * @brief The Peg class represent a peg on the board
+ */
 class Peg : public QGraphicsObject
 {
 	Q_OBJECT
 
 public:
-	static const QColor PegColors[MAX_COLOR_NUMBER][2];
-	static const QString OrderedChars[3];
-	static const QFont font;
-	static QFont setFont();
 
+	/**
+	 * @brief The State enum represent different states of the peg
+	 */
+	enum class State {
+		Initial,	//	Right source pegs
+		Visible,
+		Invisible,
+		Underneath,	//	Pegs under Initial right pegs
+		Plain		//	Just circle is visible
+	};
 	explicit Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent = 0);
+
+	/**
+	 * @brief setColor set the color of the peg
+	 * @param color_number the color
+	 */
 	void setColor(int color_number);
+
+	/**
+	 * @brief getColor get the color of the peg
+	 * @return the color of the peg
+	 */
 	int getColor() const {return color;}
-	void setMovable(bool );
+
+	/**
+	 * @brief setMovable set the peg movable or not
+	 * @param b the movability
+	 */
+	void setMovable(bool b);
+
+	/**
+	 * @brief isMovable check if the peg is movable
+	 * @return true if the peg is movable, false otherwise
+	 */
 	bool isMovable() const {return isActive;}
-	void setState(const PegState &m_state);
-	PegState getState() const {return pegState;}
+
+	/**
+	 * @brief setState set the state of the peg
+	 * @param m_state the peg state
+	 */
+	void setState(const State &m_state);
+
+	/**
+	 * @brief getState get the peg state
+	 * @return the peg state
+	 */
+	State getState() const {return pegState;}
+
+signals:
+	/**
+	 * @brief mouseReleaseSignal
+	 */
+	void mouseReleaseSignal(Peg *);
+	/**
+	 * @brief mouseDoubleClickSignal
+	 */
+	void mouseDoubleClickSignal(Peg *);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
@@ -65,25 +106,23 @@ protected:
 	bool gestureEvent( QGestureEvent *event );
 	void tapGestureTriggered(QTapGesture *gesture );
 
-signals:
-	void mouseReleaseSignal(Peg *);
-	void mouseDoubleClickSignal(Peg *);
-
 protected slots:
 	void onShowIndicators();
 
 private:
-	QPointF position;
-	Indicator *indicator;
+	static const QColor PegColors[Rules::MAX_COLOR_NUMBER][2]; /**< TODO */
+	static const QString OrderedChars[3]; /**< TODO */
+	static const QFont font; /**< TODO */
+	static QFont setFont();
 
-	/*	pressedEffect - the QGraphicsObject takes ownership of
-	 *	the effect, so no need to delete the pointer in the destructor*/
-	QGraphicsDropShadowEffect *pressedEffect;
-	QGraphicsEllipseItem *circle;
+	QPointF position; /**< TODO */
+	Indicator *indicator; /**< TODO */
+	QGraphicsDropShadowEffect *pressedEffect; /**< TODO */
+	QGraphicsEllipseItem *circle; /**< TODO */
 
-	PegState pegState;
-	int color;
-	bool isActive;
+	State pegState; /**< TODO */
+	int color; /**< TODO */
+	bool isActive; /**< TODO */
 };
 
 #endif // PEG_H

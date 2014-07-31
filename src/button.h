@@ -20,38 +20,71 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 #include <QFont>
 #include <QBrush>
 
 class Board;
-class BoardFont;
+class Font;
 class QGraphicsDropShadowEffect;
 
-class Button : public QObject, public QGraphicsItem
+/**
+ * @brief A class to represent ok and done buttons on the board
+ *
+ */
+class Button : public QGraphicsObject
 {
 	Q_OBJECT
-	Q_INTERFACES(QGraphicsItem)
 
 public:
-	explicit Button(const BoardFont &board_font, const int &buttonWidth = 152, const QString &str = "");
+
+	/**
+	 * @brief Button creates a button
+	 * @param board_font font of the button
+	 * @param buttonWidth width of the button
+	 * @param str label of the button
+	 */
+	explicit Button(const Font &board_font, const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
+
+	/**
+	 * @brief setLabel set the label of the button
+	 * @param label_s the label
+	 */
 	void setLabel(QString label_s){label = label_s;}
 
 protected:
+	/**
+	 * @brief mousePressEvent
+	 */
 	void mousePressEvent(QGraphicsSceneMouseEvent *);
+	/**
+	 * @brief mouseReleaseEvent
+	 * @param event
+	 */
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	/**
+	 * @brief paint
+	 * @param painter
+	 */
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem*,
 			   QWidget*);
+	/**
+	 * @brief boundingRect
+	 * @return
+	 */
 	QRectF boundingRect() const;
 
 signals:
+	/**
+	 * @brief buttonPressed
+	 */
 	void buttonPressed();
 
 private:
-	QString label;
-	QFont font;
-	int width;
-	QGraphicsDropShadowEffect *pressedEffect;
+	QString label; /**< TODO */
+	QFont font; /**< TODO */
+	int width; /**< TODO */
+	QGraphicsDropShadowEffect *pressedEffect; /**< TODO */
 };
 
 #endif // BUTTON_H

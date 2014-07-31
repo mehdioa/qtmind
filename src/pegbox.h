@@ -20,24 +20,65 @@
 #ifndef PEGBOX_H
 #define PEGBOX_H
 
-#include "emptybox.h"
+#include "box.h"
 #include "peg.h"
 
-class PegBox : public EmptyBox
+class PegBox : public Box
 {
 public:
+
 	explicit PegBox(const QPoint &m_position, QGraphicsItem *parent = 0);
+
+	/**
+	 * @brief hasPeg Does this box has a peg?
+	 * @return true if it has a peg, false otherwise
+	 */
 	bool hasPeg() const {return peg != 0;}
+
+	/**
+	 * @brief setPeg set the peg of this box
+	 * @param m_peg the peg of the box
+	 */
 	void setPeg(Peg *m_peg) {peg = m_peg;}
-	void setPegState(const PegState &peg_state);
+
+	/**
+	 * @brief setPegState set the state of the peg of the box
+	 * @param peg_state the peg state
+	 */
+	void setPegState(const Peg::State &peg_state);
+
+	/**
+	 * @brief setPegColor set the peg color
+	 * @param color_number the color number
+	 */
 	void setPegColor(const int &color_number);
+
+	/**
+	 * @brief getPegColor get the color of the peg
+	 * @return the color of the peg of the box
+	 */
 	int getPegColor() const;
-	void setState(const BoxState &m_state);
+
+	/**
+	 * @brief setState set the state of the box
+	 * @param m_state the box state
+	 */
+	void setState(const Box::State &m_state);
+
+	/**
+	 * @brief isPegVisible is the peg visible?
+	 * @return true if the peg is visible, false otherwise
+	 */
 	bool isPegVisible();
-	PegState getPegState() const;
+
+	/**
+	 * @brief getPegState get the state of the peg of the box
+	 * @return the state of the peg of the box
+	 */
+	Peg::State getPegState() const;
 
 private:
-	Peg *peg;
+	Peg *peg; /**< TODO */
 };
 
 #endif // PEGBOX_H

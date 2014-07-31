@@ -17,66 +17,66 @@
  *
  ***********************************************************************/
 
-#include "boardsounds.h"
+#include "sounds.h"
 #include "QSettings"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 #include <QtMultimedia/QSoundEffect>
 #endif
 
-BoardSounds::BoardSounds()
+Sounds::Sounds()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	pegDropSound = new QSoundEffect;
-	pegDropRefuseSound = new QSoundEffect;
-	buttonPressSound = new QSoundEffect;
-	pegDropSound->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
-	pegDropRefuseSound->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
-	buttonPressSound->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
+	pegDrop = new QSoundEffect;
+	pegDropRefuse = new QSoundEffect;
+	buttonPress = new QSoundEffect;
+	pegDrop->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
+	pegDropRefuse->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
+	buttonPress->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
 #endif
 	setVolume(static_cast<Volume>(QSettings().value("Volume", 3).toInt()));
 }
 
-BoardSounds::~BoardSounds()
+Sounds::~Sounds()
 {
 	QSettings().setValue("Volume", static_cast<int>(volume));
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	delete pegDropSound;
-	delete pegDropRefuseSound;
-	delete buttonPressSound;
+	delete pegDrop;
+	delete pegDropRefuse;
+	delete buttonPress;
 #endif
 }
 
-void BoardSounds::playPegDropSound()
+void Sounds::playPegDrop()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	pegDropSound->play();
+	pegDrop->play();
 #endif
 }
 
-void BoardSounds::playPegDropRefuseSound()
+void Sounds::playPegDropRefuse()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	pegDropRefuseSound->play();
+	pegDropRefuse->play();
 #endif
 }
 
-void BoardSounds::playButtonPressSound()
+void Sounds::playButtonPress()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-	buttonPressSound->play();
+	buttonPress->play();
 #endif
 }
 
-void BoardSounds::setVolume(const int &vol)
+void Sounds::setVolume(const int &vol)
 {
 	volume = static_cast<Volume>(vol);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 	qreal real_volume = static_cast<qreal>(volume)/3;
 
-	pegDropSound->setVolume(real_volume);
-	pegDropRefuseSound->setVolume(real_volume);
-	buttonPressSound->setVolume(real_volume);
+	pegDrop->setVolume(real_volume);
+	pegDropRefuse->setVolume(real_volume);
+	buttonPress->setVolume(real_volume);
 #endif
 }

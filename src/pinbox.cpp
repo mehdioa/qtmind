@@ -23,7 +23,7 @@
 #include <QPen>
 #include <QCursor>
 
-const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] =
+const int PinBox::PinPositions[Rules::MAX_SLOT_NUMBER][Rules::MAX_SLOT_NUMBER][2] = /**< TODO */
 {
 	{{4, 13}, {22, 13}, {0, 0}, {0, 0}, {0, 0}},
 	{{4, 6}, {22, 6}, {13, 22}, {0, 0}, {0, 0}},
@@ -31,18 +31,16 @@ const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] =
 	{{2, 2}, {24, 2}, {13, 13}, {2, 24}, {24, 24}}
 };
 
-
 PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent):
-	EmptyBox(m_position, parent)
+	Box(m_position, parent)
 {
 	for(int i = 0; i < pin_number; ++i) {
 		auto pin = new Pin(this);
 		pins.append(pin);
 		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
 	}
-	setState(BoxState::Future);
+	setState(Box::State::Future);
 }
-//-----------------------------------------------------------------------------
 
 int PinBox::getValue() const
 {
@@ -50,10 +48,10 @@ int PinBox::getValue() const
 	int whites = 0;
 	foreach(Pin *pin, pins) {
 		switch (pin->getColor()) {
-		case PinColor::White:
+		case Pin::Color::White:
 			++whites;
 			break;
-		case PinColor::Black:
+		case Pin::Color::Black:
 			++blacks;
 			break;
 		default:
@@ -62,8 +60,6 @@ int PinBox::getValue() const
 	}
 	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
 }
-
-//-----------------------------------------------------------------------------
 
 void PinBox::setPins(const QString &codeA, const QString &codeB, const int &color_n)
 {
@@ -85,17 +81,16 @@ void PinBox::setPins(const QString &codeA, const QString &codeB, const int &colo
 		total += qMin(c[i],g[i]);
 
 	for(int i = 0; i < blacks; ++i)
-		pins.at(i)->setColor(PinColor::Black);
+		pins.at(i)->setColor(Pin::Color::Black);
 
 	for(int i = blacks; i < total; ++i)
-		pins.at(i)->setColor(PinColor::White);
+		pins.at(i)->setColor(Pin::Color::White);
 }
-//-----------------------------------------------------------------------------
 
-void PinBox::setState(const BoxState &m_state)
+void PinBox::setState(const Box::State &m_state)
 {
 	state = m_state;
-	bool pin_activity = (state == BoxState::None);
+	bool pin_activity = (state == Box::State::None);
 	foreach(Pin *pin, pins)
 		pin->setActivity(pin_activity);
 	update();

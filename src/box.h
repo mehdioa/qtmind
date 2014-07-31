@@ -17,36 +17,47 @@
  *
  ***********************************************************************/
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef BOX_H
+#define BOX_H
 
-#include <QGraphicsSimpleTextItem>
-#include <QTextLayout>
-
-class Font;
+#include <QGraphicsRectItem>
 
 /**
- * @brief The Message class The class represent a message on the board.
+ * @brief A class to represent an empty box, used in pinbox and pegbox
+ *
  */
-class Message : public QGraphicsSimpleTextItem
+class Box : public QGraphicsRectItem
 {
 public:
 
 	/**
-	 * @brief Message creates a message
-	 * @param board_font the font
-	 * @param color_name the color
-	 * @param smaller if a smaller font size should be used
-	 * @param parent parent of the object
+	 * @brief The State enum represents different states of	a box
 	 */
-	explicit Message(const Font &board_font, const QString &color_name = "#303133",
-					 const int &smaller = 0, QGraphicsItem *parent = 0);
+	enum State {
+		Past,
+		Current,
+		Future,
+		None
+	};
 
 	/**
-	 * @brief setText set the text of the message
-	 * @param m_text the message text
+	 * @brief creates a box
+	 * @param position the position of the box
+	 * @param parent the parrent of the object
 	 */
-	void setText(const QString m_text);
+	explicit Box(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
+
+	/**
+	 * @brief sets the state of the box
+	 * @param m_state the state
+	 */
+	virtual void setState(const Box::State &m_state = Box::State::Future);
+
+	/**
+	 * @brief gets the state of the box
+	 * @return Box::State
+	 */
+	Box::State getState() const {return state;}
 
 protected:
 	/**
@@ -54,18 +65,13 @@ protected:
 	 * @param painter
 	 */
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
-	/**
-	 * @brief boundingRect
-	 * @return
-	 */
-	QRectF boundingRect() const;
+	Box::State state; /**< The state of the box */
 
 private:
-	QTextLayout textLayout; /**< TODO */
-	QRectF updateRect; /**< TODO */
-	QColor color; /**< TODO */
-	QString text; /**< TODO */
+	/**
+	 * @brief BoxAlphas different alphas of the box
+	 */
+	static const int BoxAlphas[4];
 };
 
-#endif // MESSAGE_H
+#endif // Box_H

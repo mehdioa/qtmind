@@ -17,30 +17,24 @@
  *
  ***********************************************************************/
 
-#ifndef EmptyBox_H
-#define EmptyBox_H
+#include "rules.h"
+#include <QSettings>
 
-#include <QGraphicsRectItem>
-
-enum class BoxState {
-	Past,
-	Current,
-	Future,
-	None
-};
-
-class EmptyBox : public QGraphicsRectItem
+Rules::Rules():
+	pegs(QSettings().value("Pegs", 4).toInt()),
+	colors(QSettings().value("Colors", 6).toInt()),
+	same_colors(QSettings().value("SameColor", true).toBool()),
+	algorithm((Rules::Algorithm) QSettings().value("Algorithm", 0).toInt()),
+	mode((Mode) QSettings().value("Mode", 1).toInt())
 {
-public:
-	static const int BoxAlphas[4];
 
-	explicit EmptyBox(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
-	virtual void setState(const BoxState &m_state = BoxState::Future);
-	BoxState getState() const {return state;}
+}
 
-protected:
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-	BoxState state;
-};
-
-#endif // EmptyBox_H
+Rules::~Rules()
+{
+	QSettings().setValue("Pegs", pegs);
+	QSettings().setValue("Colors", colors);
+	QSettings().setValue("SameColor", same_colors);
+	QSettings().setValue("Algorithm", (int) algorithm);
+	QSettings().setValue("Mode", (int) mode);
+}

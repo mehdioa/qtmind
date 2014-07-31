@@ -17,18 +17,42 @@
  *
  ***********************************************************************/
 
-#include "boardfont.h"
-#include "QSettings"
+#ifndef GUESS_H
+#define GUESS_H
 
-BoardFont::BoardFont():
-	fontName(QSettings().value("FontName", "SansSerif").toString()),
-	fontSize((QSettings().value("FontSize", 12).toInt()))
+#include "rules.h"
+#include <QString>
+
+/**
+ * @brief A class to represent a guess element.
+ *
+ */
+class Guess
 {
+public:
 
-}
+	/**
+	 * @brief Guess create the guess element
+	 */
+	Guess();
 
-BoardFont::~BoardFont()
-{
-	QSettings().setValue("FontName", fontName);
-	QSettings().setValue("FontSize", fontSize);
-}
+	/**
+	 * @brief reset reset the guess element
+	 * @param algorithm_m the new algorithm
+	 * @param possibles_m the new possibles number
+	 */
+	void reset(const Rules::Algorithm &algorithm_m, const int &possibles_m);
+
+private:
+	QString guess; /**< TODO */
+	QString code; /**< TODO */
+	int response; /**< TODO */
+	Rules::Algorithm algorithm; /**< TODO */
+	int possibles; /**< TODO */
+	qreal weight; /**< TODO */
+
+	friend class Solver;
+	friend class Game;
+};
+
+#endif // GUESS_H

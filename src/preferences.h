@@ -22,28 +22,36 @@
 
 #include <QDialog>
 
-class BoardAid;
+class Board;
 
 namespace Ui {
 class Preferences;
 }
 
+/**
+ * @brief The Preferences class represent the Preferences of the board
+ */
 class Preferences : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit Preferences(BoardAid *board_aid, QWidget *parent = 0);
+	/**
+	 * @brief Preferences
+	 * @param board_aid
+	 * @param parent
+	 */
+	explicit Preferences(Board *board_aid, QWidget *parent = 0);
 	~Preferences();
 
-public slots:
+protected slots:
 	void accept();
 
 private:
-	Ui::Preferences *ui;
+	Ui::Preferences *ui; /**< TODO */
 
-	static QString AppPath; /**< location of translations; found in loadTranslator() */
-	BoardAid *boardAid;
+	static QString AppPath;
+	Board *board; /**< TODO */
 };
 
 #endif // PREFERENCES_H

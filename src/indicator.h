@@ -20,23 +20,37 @@
 #ifndef INDICATOR_H
 #define INDICATOR_H
 
-enum class IndicatorType {
-	Character,
-	Digit
-};
-
-
+/**
+ * @brief A class to represent the indicator of the board
+ *
+ */
 class Indicator
 {
 public:
+	/**
+	 * @brief The Type enum represents the type of the indicator.
+	 */
+	enum Type {
+		Character,
+		Digit
+	};
+
+	/**
+	 * @brief Indicator
+	 */
 	Indicator();
 	~Indicator();
+
+	/**
+	 * @brief forceColor check if color should be used
+	 * @return true if the colors should be used, false otherwise
+	 */
 	bool forceColor() const;
 
 private:
-	bool showColors;
-	bool showIndicators;
-	IndicatorType indicatorType;
+	bool showColors; /**< TODO */
+	bool showIndicators; /**< TODO */
+	Type type; /**< TODO */
 
 	friend class MainWindow;
 	friend class Preferences;

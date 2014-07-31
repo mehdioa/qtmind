@@ -18,14 +18,41 @@
  ***********************************************************************/
 
 #include "solver.h"
-#include "gamerules.h"
-#include "guesselement.h"
+#include "rules.h"
+#include "guess.h"
 #include "ctime"
 #include <QtCore/qmath.h>
 #include <stdlib.h>
 
-inline int ipow(int base, int exp)
-{
+/**
+  * @brief compares two codes A and B, which are two int arrays
+  * C and P are the number of colors and pegs
+  * R is the result
+  *
+  * Interestingly, total can be computed as
+  * f[total := whites + blacks = ( \sum_{i=1}^6 \min(c_i, g_i)) \f]
+  * where c_i is the number of times the color i is in the code and g_i is the number of times it is in the guess. See
+  * http://mathworld.wolfram.com/Mastermind.html
+  * for more information
+  */
+#define compare(A, B, C, P, R) {\
+	int __c[C], __g[C];\
+	std::fill(__c, __c+C, 0);\
+	std::fill(__g, __g+C, 0);\
+	int __blacks = 0;\
+	for (int i = 0; i < P; ++i) {\
+		if (A[i] == B[i])\
+			++__blacks;\
+		++__c[A[i]];\
+		++__g[B[i]];\
+	}\
+	int __total = 0;\
+	for(int i = 0; i < C; ++i)\
+		__total += (__c[i] < __g[i]) ? __c[i] : __g[i];\
+	R = __total*(__total + 1)/2 + __blacks;\
+}
+
+int Solver::ipow(int base, int exp) {
 	int result = 1;
 	while (exp) {
 		if (exp & 1)
@@ -33,197 +60,156 @@ inline int ipow(int base, int exp)
 		exp >>= 1;
 		base *= base;
 	}
-
 	return result;
 }
-//-----------------------------------------------------------------------------
 
-Solver::Solver(GameRules *game_rules, GuessElement *guess_element, QObject *parent):
+Solver::Solver(Rules *game_rules, Guess *guess_element, QObject *parent):
 	QThread(parent),
-	gameRules(game_rules),
-	guessElement(guess_element),
-	interupt(true),
-	allCodes(0),
-	firstPossibleCodes(0)
+	rules(game_rules),
+	guess(guess_element),
+	interupt(true)
 {
-	guessElement->algorithm = gameRules->algorithm;
+	codes.index = NULL;
+	sp.index = NULL;
+
+	guess->algorithm = rules->algorithm;
 	onReset();
 }
-//-----------------------------------------------------------------------------
 
 Solver::~Solver()
 {
 	deleteTables();
 }
-//-----------------------------------------------------------------------------
 
 bool Solver::done() const
 {
-	return (guessElement->response == responseSpaceSize - 1);
+	return (guess->response == max_response - 1);
 }
-//-----------------------------------------------------------------------------
 
 void Solver::createTables()
 {
-	if (gameRules->sameColorAllowed) {
-		allCodesSize = ipow(gameRules->colorNumber, gameRules->pegNumber);
+	if (rules->same_colors) {
+		codes.size = ipow(rules->colors, rules->pegs);
 	} else {
-		allCodesSize = 1;
-		for(int i = 0; i < gameRules->pegNumber; ++i)
-			allCodesSize *= (gameRules->colorNumber - i);
+		codes.size = 1;
+		for(int i = 0; i < rules->pegs; ++i)
+			codes.size *= (rules->colors - i);
 	}
 
-	responseSpaceSize = (gameRules->pegNumber + 1)*(gameRules->pegNumber + 2)/2;
+	max_response = (rules->pegs + 1)*(rules->pegs + 2)/2;
 
-	allCodes = new int *[allCodesSize];
+	codes.index = new int *[codes.size];
 
-	for(int i = 0; i < allCodesSize; ++i) {
-		allCodes[i] = new int[gameRules->pegNumber];
-		indexToCode(i);
+	for(int i = 0; i < codes.size; ++i) {
+		codes.index[i] = new int[rules->pegs];
 	}
 
-	for(int i = 0; i < allCodesSize; ++i)
-		possibleCodes.append(i);
+	if (rules->same_colors) {
+		for (int i = 0; i < codes.size; i++)
+			indexToCodeSameColor(i);
+	} else {
+		for (int i = 0; i < codes.size; i++)
+			indexToCodeDifferentColor(i);
+	}
+
+	for(int i = 0; i < codes.size; ++i)
+		possibles.append(i);
 
 }
-//-----------------------------------------------------------------------------
 
 void Solver::deleteTables()
 {
-	if (allCodes) {
-		for(int i = 0; i < allCodesSize; ++i)
-			delete[] allCodes[i];
+	if (codes.index != NULL) {
+		for(int i = 0; i < codes.size; ++i)
+			delete[] codes.index[i];
 
-		delete[] allCodes;
-		allCodes = NULL;
+		delete[] codes.index;
+		codes.index = NULL;
 	}
 
-	if(firstPossibleCodes) {
-		delete[] firstPossibleCodes;
-		firstPossibleCodes = NULL;
+	if(sp.index) {
+		delete[] sp.index;
+		sp.index = NULL;
 	}
 
-	possibleCodes.clear();
+	possibles.clear();
 }
-//-----------------------------------------------------------------------------
 
 void Solver::onReset()
 {
 	deleteTables();
 	createTables();
-	guessElement->reset(gameRules->algorithm, allCodesSize);
+	guess->reset(rules->algorithm, codes.size);
 }
-//-----------------------------------------------------------------------------
 
 void Solver::onStartGuessing()
 {
 	interupt = false;
-	guessElement->algorithm = gameRules->algorithm;
+	guess->algorithm = rules->algorithm;
 	start(QThread::NormalPriority);
 }
-//-----------------------------------------------------------------------------
 
-QString Solver::shuffle(QString m_string) const
+void Solver::shuffle(QString &m_string) const
 {
-	/*	This function shuffle the characters in a string */
 	qsrand(time(NULL));
-	QString answer = "";
-
-	while(m_string.length() > 0) {
-		int j = static_cast<int>(m_string.length()*(qrand()/(RAND_MAX + 1.0)));
-		answer.append(m_string.at(j));
-		m_string.remove(j, 1);
+	for (int i = 0; i < m_string.length(); i++) {
+		int j = static_cast<int>(i *(qrand()/(RAND_MAX + 1.0)));
+		QChar c = m_string.at(i);
+		m_string.replace(i, 1, m_string.at(j));
+		m_string.replace(j, 1, c);
 	}
-	return answer;
 }
-//-----------------------------------------------------------------------------
 
 void Solver::permute(QString &m_code) const
 {
-	/*	This funstion shuffle colors and do a permutation on m_code */
-	QString shuffled_colors = shuffle(QString("0123456789").left(gameRules->colorNumber));
-	m_code = shuffle(m_code);
+	QString shuffled_colors = QString("0123456789").left(rules->colors);
+	shuffle(shuffled_colors);
+	shuffle(m_code);
 
 	for(int i = 0; i < m_code.length(); ++i)
 		m_code.replace(i, 1, shuffled_colors.at(m_code.at(i).digitValue()));
 }
-//-----------------------------------------------------------------------------
-
-int Solver::compare(const int *codeA, const int *codeB) const
-{
-	/*	Compare codeA to codeB and return the black-white code response.
-	 *	Interestingly,  total can be computed as
-	 *
-	 *	$$ total := whites + blacks = ( \sum_{i=1}^6 \min(c_i, g_i)) $$
-	 *
-	 *	where c_i is the number of times the color i is in the code and
-	 *  g_i is the number of times it is in the guess. See
-	 *	http://mathworld.wolfram.com/Mastermind.html for more information
-	 */
-	int c[gameRules->colorNumber];
-	int g[gameRules->colorNumber];
-	std::fill(c, c + gameRules->colorNumber, 0);
-	std::fill(g, g + gameRules->colorNumber, 0);
-	int blacks = 0;
-
-	for (int i = 0; i < gameRules->pegNumber; ++i) {
-		if (codeA[i] == codeB[i])
-			++blacks;
-		++c[codeA[i]];
-		++g[codeB[i]];
-	}
-
-	int total = 0;//	blacks + whites, since we don't need whites below
-	for(int i = 0; i < gameRules->colorNumber; ++i)
-		total += (c[i] < g[i]) ? c[i] : g[i];
-
-	return total*(total + 1)/2 + blacks;
-}
-//-----------------------------------------------------------------------------
 
 bool Solver::setResponse(const int &m_response)
 {
-	/*	This function is responsible for puting the response and erase the impossibles.
-	 *	It will return false if the response is not possible and do nothing
-	 */
-	QList<int> tempPossibleCodes;
-	int guessArray[gameRules->pegNumber];
-	stringToArray(guessElement->guess, guessArray);
+	QList<int> temppossibles;
+	int guessArray[rules->pegs];
+	stringToArray(guess->guess, guessArray);
 
-	foreach(int possible, possibleCodes) {
-		if(compare(guessArray, allCodes[possible]) == m_response)
-			tempPossibleCodes.append(possible);
+	int cmp;
+	foreach(int possible, possibles) {
+		compare(guessArray, codes.index[possible], rules->colors, rules->pegs, cmp);
+		if( cmp == m_response)
+			temppossibles.append(possible);
 	}
 
-	if (tempPossibleCodes.isEmpty())
+	if (temppossibles.isEmpty())
 		return false;
 
-	possibleCodes = tempPossibleCodes;
-	guessElement->response = m_response;
-	guessElement->possibles = possibleCodes.size();
-	setFirstPossibles();
+	possibles = temppossibles;
+	guess->response = m_response;
+	guess->possibles = possibles.size();
+	setSmallPossibles();
 	return true;
 }
-//-----------------------------------------------------------------------------
 
-void Solver::setFirstPossibles()
+void Solver::setSmallPossibles()
 {
-	if (!firstPossibleCodes)
+	if (!sp.index)
 	{
-		if (allCodesSize <= 10000) {
-			firstPossibleCodesSize = allCodesSize;
-			firstPossibleCodes = new int[firstPossibleCodesSize];
-			for(int i = 0; i < firstPossibleCodesSize; ++i)
-				firstPossibleCodes[i] = i;
-		} else if (possibleCodes.size() <= 10000) {
-			firstPossibleCodesSize = possibleCodes.size();
-			firstPossibleCodes = new int[firstPossibleCodesSize];
-			for(int i = 0; i < firstPossibleCodesSize; ++i)
-				firstPossibleCodes[i] = possibleCodes.at(i);
+		if (codes.size <= 10000) {
+			sp.size = codes.size;
+			sp.index = new int[sp.size];
+			for(int i = 0; i < sp.size; ++i)
+				sp.index[i] = i;
+		} else if (possibles.size() <= 10000) {
+			sp.size = possibles.size();
+			sp.index = new int[sp.size];
+			for(int i = 0; i < sp.size; ++i)
+				sp.index[i] = possibles.at(i);
 		}
 	}
 }
-//-----------------------------------------------------------------------------
 
 void Solver::run()
 {
@@ -231,83 +217,78 @@ void Solver::run()
 	if (!interupt)
 		emit guessDoneSignal();
 }
-//-----------------------------------------------------------------------------
 
 QString Solver::getFirstGuess() const
 {
 	QString answer;
 	QString str;
-	if (gameRules->sameColorAllowed) {
-		switch (gameRules->colorNumber) {
+	if (rules->same_colors) {
+		switch (rules->colors) {
 		case 2:
 			str = QString::fromUtf8("01010");
-			answer = str.left(gameRules->pegNumber);
+			answer = str.left(rules->pegs);
 			break;
 		case 3:
 			str = QString::fromUtf8("01212");
-			answer = str.left(gameRules->pegNumber);
+			answer = str.left(rules->pegs);
 			break;
 		case 4:
 			str = QString::fromUtf8("01223");
-			answer = str.left(gameRules->pegNumber);
+			answer = str.left(rules->pegs);
 			break;
 		default:
 			str = QString::fromUtf8("01223");
-			answer = str.left(gameRules->pegNumber);
+			answer = str.left(rules->pegs);
 			break;
 		}
 
 		// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
 
-		if(gameRules->colorNumber == 6 && gameRules->pegNumber == 4 && gameRules->algorithm == Algorithm::WorstCase)
+		if(rules->colors == 6 && rules->pegs == 4 && rules->algorithm == Rules::Algorithm::WorstCase)
 			answer = QString::fromUtf8("0011");
 	} else {
 		QString str = QString::fromUtf8("01234");
-		answer = str.left(gameRules->pegNumber);
+		answer = str.left(rules->pegs);
 	}
 
 	permute(answer);
 	return answer;
 }
-//-----------------------------------------------------------------------------
 
 void Solver::makeGuess()
 {
-	/*	This function creates a guess based on the algorithm. The first guess
-	 *	and guess when there are at least 10000 codes possibles are treated
-	 *	differently.
-	 */
-
 	// The first guess here
-	if (possibleCodes.size() == allCodesSize) {
-		guessElement->guess = getFirstGuess();
+	if (possibles.size() == codes.size) {
+		guess->guess = getFirstGuess();
 		return;
 	}
 
-	if (possibleCodes.size() == 1) {
-		guessElement->guess =  arrayToString(allCodes[possibleCodes.first()]);
+	if (possibles.size() == 1) {
+		guess->guess =  arrayToString(codes.index[possibles.first()]);
 		return;
 	}
 
-	if(possibleCodes.size() > 10000) {
-		guessElement->guess = arrayToString(allCodes[possibleCodes.at(possibleCodes.size() >> 1)]);
+	if(possibles.size() > 10000) {
+		guess->guess = arrayToString(codes.index[possibles.at(possibles.size() >> 1)]);
 		return;
 	}
 
-	int responsesOfCodes[responseSpaceSize];
-	for(int i = 0; i < responseSpaceSize; ++i)
+	int responsesOfCodes[max_response];
+	for(int i = 0; i < max_response; ++i)
 		responsesOfCodes[i] = 0;
 
 	int answer_index = 0;
 	qreal min_code_weight = 1000000000;
 	qreal code_weight;
 
-	for (int code_index = 0; code_index < firstPossibleCodesSize; ++code_index) {
+	for (int code_index = 0; code_index < sp.size; ++code_index) {
 		if(interupt)
 			return;
 
-		foreach(int possible_index, possibleCodes) {
-			++responsesOfCodes[compare(allCodes[firstPossibleCodes[code_index]], allCodes[possible_index])];
+		int cmp;
+		foreach(int possible_index, possibles) {
+			compare(codes.index[sp.index[code_index]], codes.index[possible_index], rules->colors, rules->pegs, cmp);
+			++responsesOfCodes[cmp];
 		}
 		code_weight = computeWeight(responsesOfCodes);
 
@@ -317,34 +298,33 @@ void Solver::makeGuess()
 		}
 	}
 
-	if(guessElement->algorithm == Algorithm::MostParts)
-		min_code_weight = responseSpaceSize - 2 - min_code_weight;
+	if(guess->algorithm == Rules::Algorithm::MostParts)
+		min_code_weight = max_response - 2 - min_code_weight;
 
-	guessElement->weight = qFloor(min_code_weight);
+	guess->weight = qFloor(min_code_weight);
 
-	guessElement->guess = arrayToString(allCodes[firstPossibleCodes[answer_index]]);
+	guess->guess = arrayToString(codes.index[sp.index[answer_index]]);
 }
-//-----------------------------------------------------------------------------
 
 qreal Solver::computeWeight(int *m_responses) const
 {
 	qreal answer = 0;
 
-	switch (guessElement->algorithm) {
-	case Algorithm::ExpectedSize:
-		for(int i = 0; i < responseSpaceSize-2; ++i) {
+	switch (guess->algorithm) {
+	case Rules::Algorithm::ExpectedSize:
+		for(int i = 0; i < max_response-2; ++i) {
 			answer += ipow(m_responses[i], 2);
 			m_responses[i] = 0;
 		}
 		break;
-	case Algorithm::WorstCase:
-		for(int i = 0; i < responseSpaceSize-2; ++i) {
+	case Rules::Algorithm::WorstCase:
+		for(int i = 0; i < max_response-2; ++i) {
 			answer = qMax((qreal)m_responses[i], answer);
 			m_responses[i] = 0;
 		}
 		break;
 	default:	//	Most Parts
-		for(int i = 0; i < responseSpaceSize-2; ++i) {
+		for(int i = 0; i < max_response-2; ++i) {
 			if (m_responses[i] == 0)
 				++answer;
 			else
@@ -354,54 +334,52 @@ qreal Solver::computeWeight(int *m_responses) const
 	}
 
 	// This little trick will prefer possibles in tie
-	if (m_responses[responseSpaceSize - 1] != 0) {
+	if (m_responses[max_response - 1] != 0) {
 		answer -= 0.5;
-		if (guessElement->algorithm == Algorithm::MostParts)
+		if (guess->algorithm == Rules::Algorithm::MostParts)
 			--answer;
 		else
 			++answer;
 
-		m_responses[responseSpaceSize - 1] = 0;
+		m_responses[max_response - 1] = 0;
 	}
 
 	return answer;
 }
-//-----------------------------------------------------------------------------
 
-void Solver::indexToCode(const int &number)
+void Solver::indexToCodeSameColor(const int &number)
 {
 	int m_number = number;
-	if(gameRules->sameColorAllowed) {
-		for(int i = 0; i < gameRules->pegNumber; ++i) {
-			allCodes[number][i] = m_number % gameRules->colorNumber;
-			m_number /= gameRules->colorNumber;
-		}
-	} else {
-		QString NUMS = "0123456789"; // Characters that may be used
-
-		int max_digits = allCodesSize;
-		for(int i = 0; i < gameRules->pegNumber; ++i) {
-			max_digits /= gameRules->colorNumber - i;
-			int temp = m_number / max_digits;
-			allCodes[number][i] = NUMS[temp].digitValue();
-			NUMS.remove(temp, 1);
-			m_number -= temp*max_digits;
-		}
+	for(int i = 0; i < rules->pegs; ++i) {
+		codes.index[number][i] = m_number % rules->colors;
+		m_number /= rules->colors;
 	}
 }
-//-----------------------------------------------------------------------------
+
+void Solver::indexToCodeDifferentColor(const int &number)
+{
+	QString NUMS = "0123456789"; // Characters that may be used
+	int m_number = number;
+	int max_digits = codes.size;
+	for(int i = 0; i < rules->pegs; ++i) {
+		max_digits /= rules->colors - i;
+		int temp = m_number / max_digits;
+		codes.index[number][i] = NUMS[temp].digitValue();
+		NUMS.remove(temp, 1);
+		m_number -= temp*max_digits;
+	}
+}
 
 QString Solver::arrayToString(const int *m_array) const
 {
 	QString answer = "";
-	for(int i = 0; i < gameRules->pegNumber; ++i)
+	for(int i = 0; i < rules->pegs; ++i)
 		answer.append(QString::number(m_array[i]));
 	return answer;
 }
-//-----------------------------------------------------------------------------
 
 void Solver::stringToArray(const QString &m_string, int *m_array) const
 {
-	for(int i = 0; i < gameRules->pegNumber; ++i)
+	for(int i = 0; i < rules->pegs; ++i)
 		m_array[i] = m_string[i].digitValue();
 }

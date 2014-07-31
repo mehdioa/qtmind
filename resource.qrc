@@ -1,38 +1,38 @@
 <RCC>
-    <qresource prefix="/icons">
-        <file>resources/icons/Actions-games-solve-icon.png</file>
-        <file>resources/icons/Actions-player-volume-icon.png</file>
-        <file>resources/icons/application-exit.png</file>
-        <file>resources/icons/applications-internet.png</file>
-        <file>resources/icons/audio_high_volume_icon.png</file>
-        <file>resources/icons/audio_low_speaker_volume_icon.png</file>
-        <file>resources/icons/audio_medium_volume_icon.png</file>
-        <file>resources/icons/audio_muted_volume_icon.png</file>
-        <file>resources/icons/colors.png</file>
-        <file>resources/icons/cpu.png</file>
-        <file>resources/icons/dialog-information.png</file>
-        <file>resources/icons/layer-visible-off.png</file>
-        <file>resources/icons/layer-visible-on.png</file>
-        <file>resources/icons/list-add.png</file>
-        <file>resources/icons/list-remove.png</file>
-        <file>resources/icons/meeting-chair.png</file>
-        <file>resources/icons/pin.png</file>
-        <file>resources/icons/preferences-desktop-font.png</file>
-        <file>resources/icons/preferences-desktop-locale.png</file>
-        <file>resources/icons/qt_icon.png</file>
-        <file>resources/icons/qtmind.ico</file>
-        <file>resources/icons/rules-icon.png</file>
-        <file>resources/icons/same_color_0.png</file>
-        <file>resources/icons/same_color_1.png</file>
-        <file>resources/icons/slots.png</file>
-        <file>resources/icons/system-help.png</file>
-        <file>resources/icons/task-complete.png</file>
-        <file>resources/icons/qtmind.png</file>
-        <file>resources/icons/system-switch-user.png</file>
-    </qresource>
-    <qresource prefix="/sounds">
-        <file>resources/sounds/pegdrop.wav</file>
-        <file>resources/sounds/pegrefuse.wav</file>
-        <file>resources/sounds/pin.wav</file>
-    </qresource>
+	<qresource prefix="/icons">
+		<file>resources/icons/Actions-games-solve-icon.png</file>
+		<file>resources/icons/Actions-player-volume-icon.png</file>
+		<file>resources/icons/application-exit.png</file>
+		<file>resources/icons/applications-internet.png</file>
+		<file>resources/icons/audio_high_volume_icon.png</file>
+		<file>resources/icons/audio_low_speaker_volume_icon.png</file>
+		<file>resources/icons/audio_medium_volume_icon.png</file>
+		<file>resources/icons/audio_muted_volume_icon.png</file>
+		<file>resources/icons/colors.png</file>
+		<file>resources/icons/cpu.png</file>
+		<file>resources/icons/dialog-information.png</file>
+		<file>resources/icons/layer-visible-off.png</file>
+		<file>resources/icons/layer-visible-on.png</file>
+		<file>resources/icons/list-add.png</file>
+		<file>resources/icons/list-remove.png</file>
+		<file>resources/icons/meeting-chair.png</file>
+		<file>resources/icons/pin.png</file>
+		<file>resources/icons/preferences-desktop-font.png</file>
+		<file>resources/icons/preferences-desktop-locale.png</file>
+		<file>resources/icons/qt_icon.png</file>
+		<file>resources/icons/qtmind.ico</file>
+		<file>resources/icons/rules-icon.png</file>
+		<file>resources/icons/same_color_0.png</file>
+		<file>resources/icons/same_color_1.png</file>
+		<file>resources/icons/slots.png</file>
+		<file>resources/icons/system-help.png</file>
+		<file>resources/icons/task-complete.png</file>
+		<file>resources/icons/qtmind.png</file>
+		<file>resources/icons/system-switch-user.png</file>
+	</qresource>
+	<qresource prefix="/sounds">
+		<file>resources/sounds/pegdrop.wav</file>
+		<file>resources/sounds/pegrefuse.wav</file>
+		<file>resources/sounds/pin.wav</file>
+	</qresource>
 </RCC>

@@ -17,33 +17,31 @@
  *
  ***********************************************************************/
 
-#include "emptybox.h"
+#include "box.h"
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
 
-const int EmptyBox::BoxAlphas[4] =
+const int Box::BoxAlphas[4] =
 {
 	210, 255, 80, 210
 };
 
-EmptyBox::EmptyBox(const QPoint &position, QGraphicsItem *parent):
+Box::Box(const QPoint &position, QGraphicsItem *parent):
 	QGraphicsRectItem(0, 0, 39, 39, parent),
-	state(BoxState::Future)
+	state(Box::State::Future)
 {
 	setZValue(1);
 	setPos(position);
 	setFlag(QGraphicsItem::ItemIsMovable, false);
 }
-//-----------------------------------------------------------------------------
 
-void EmptyBox::setState(const BoxState &m_state)
+void Box::setState(const Box::State &m_state)
 {
 	state = m_state;
 }
-//-----------------------------------------------------------------------------
 
-void EmptyBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void Box::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
 

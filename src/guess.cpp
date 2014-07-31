@@ -17,26 +17,19 @@
  *
  ***********************************************************************/
 
-#include "boardaid.h"
-#include "appinfo.h"
-#include "QSettings"
+#include "guess.h"
 
-#ifdef Q_OS_ANDROID
-const bool BoardAid::isAndroid = true;
-#else
-const bool BoardAid::isAndroid = false;
-#endif
-
-BoardAid::BoardAid():
-	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),
-	autoCloseRows(QSettings().value("AutoCloseRows", false).toBool()),
-	locale(QSettings().value("Locale/Language", "en").toString().left(5))
+Guess::Guess()
 {
+	reset(Rules::Algorithm::MostParts, 0);
 }
 
-BoardAid::~BoardAid()
+void Guess::reset(const Rules::Algorithm &algorithm_m, const int &possibles_m)
 {
-	QSettings().setValue("AutoPutPins",	autoPutPins);
-	QSettings().setValue("AutoCloseRows", autoCloseRows);
-	QSettings().setValue("Locale/Language", locale.name());
+	guess = "";
+	code = "";
+	response = 0;
+	algorithm = algorithm_m;
+	possibles = possibles_m;
+	weight = 0;
 }

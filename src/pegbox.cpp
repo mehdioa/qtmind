@@ -23,12 +23,11 @@
 #include <QLinearGradient>
 
 PegBox::PegBox(const QPoint &m_position, QGraphicsItem *parent):
-	EmptyBox(m_position, parent),
+	Box(m_position, parent),
 	peg(0)
 {
 
 }
-//-----------------------------------------------------------------------------
 
 int PegBox::getPegColor() const
 {
@@ -38,41 +37,37 @@ int PegBox::getPegColor() const
 	qDebug("getPegColor called with no peg setted.");
 	return -1;
 }
-//-----------------------------------------------------------------------------
 
 bool PegBox::isPegVisible()
 {
 	return peg && peg->isVisible();
 }
-//-----------------------------------------------------------------------------
 
-PegState PegBox::getPegState() const
+Peg::State PegBox::getPegState() const
 {
 	if (peg) return peg->getState();
-	return PegState::Plain;
+	return Peg::State::Plain;
 }
-//-----------------------------------------------------------------------------
 
-void PegBox::setState(const BoxState &m_state)
+void PegBox::setState(const Box::State &m_state)
 {
 	state = m_state;
 
 	if (peg) {
 		switch (state) {
-		case BoxState::Past:
-			peg->setState(PegState::Underneath);
+		case Box::State::Past:
+			peg->setState(Peg::State::Underneath);
 			break;
-		case BoxState::Current:
-			peg->setState(PegState::Visible);
+		case Box::State::Current:
+			peg->setState(Peg::State::Visible);
 			break;
-		default: // BoxState::None, BoxState::Future
-			peg->setState(PegState::Invisible);
+		default: // Box::State::None, Box::State::Future
+			peg->setState(Peg::State::Invisible);
 			break;
 		}
 	}
 	update();
 }
-//-----------------------------------------------------------------------------
 
 void PegBox::setPegColor(const int &color_number)
 {
@@ -81,13 +76,12 @@ void PegBox::setPegColor(const int &color_number)
 	else
 		qDebug("setPegColor called with no peg setted.");
 }
-//-----------------------------------------------------------------------------
 
-void PegBox::setPegState(const PegState &peg_state)
+void PegBox::setPegState(const Peg::State &peg_state)
 {
 	if (peg)
 		peg->setState(peg_state);
 	else
-		qDebug("setPegState called with no peg setted.");
+		qDebug("setState called with no peg setted.");
 
 }

@@ -20,30 +20,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "constants.h"
-#include "guesselement.h"
+#include "guess.h"
 #include <QGraphicsView>
-
-enum class GameState {
-	None,
-	Running,
-	Win,
-	Lose,
-	Resign,
-	Thinking,
-	WaittingFirstRowFill,
-	WaittingCodeRowFill,
-	WaittingHiddenCodeFill,
-	WaittingPinboxPress,
-	WaittingOkButtonPress,
-	WaittingDoneButtonPress
-};
-
-enum class Player {
-	CodeMaker,
-	CodeBreaker,
-	None
-};
 
 class Peg;
 class PinBox;
@@ -51,35 +29,93 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
-class GameRules;
-class BoardAid;
+class Rules;
+class Board;
 
+/**
+ * @brief A class to represent the game logic. It is the heart of the game.
+ * It is responssible for the graphics of the game and is the class that
+ * mainwindow interact with.
+ *
+ */
 class Game: public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	explicit Game(GameRules *game_rules, BoardAid *board_aid, QWidget *parent = 0);
+	/**
+	 * @brief Game create a game with rules and board
+	 * @param game_rules the rules of the game
+	 * @param board_aid the board of the game
+	 * @param parent the parent of the game
+	 */
+	explicit Game(Rules *game_rules, Board *board_aid, QWidget *parent = 0);
 	~Game();
+
+	/**
+	 * @brief play start playing
+	 */
 	void play();
+
+	/**
+	 * @brief stop stop playing
+	 */
 	void stop();
-	GameState getState() const {return gameState;}
-	void setAlgorithm(const Algorithm &algorithm_n);
+
+	/**
+	 * @brief setAlgorithm change algorithm
+	 * @param algorithm_n the algorithm
+	 */
+	void setAlgorithm(const Rules::Algorithm &algorithm_n);
+
+	/**
+	 * @brief changeIndicators change indicators of the pegs
+	 */
 	void changeIndicators();
+
+	/**
+	 * @brief retranslateTexts retranslate the game
+	 */
 	void retranslateTexts();
+
+	/**
+	 * @brief isRunning is the game running?
+	 * @return true if the game is running, false otherwise
+	 */
 	bool isRunning();
 
 protected:
+	/**
+	 * @brief drawBackground
+	 * @param painter
+	 * @param rect
+	 */
 	void drawBackground(QPainter *painter, const QRectF &rect);
+	/**
+	 * @brief resizeEvent
+	 * @param event
+	 */
 	void resizeEvent(QResizeEvent *event);
 
 signals:
+	/**
+	 * @brief showIndicatorsSignal
+	 */
 	void showIndicatorsSignal();
+	/**
+	 * @brief startGuessingSignal
+	 */
 	void startGuessingSignal();
+	/**
+	 * @brief resetGameSignal
+	 */
 	void resetGameSignal();
+	/**
+	 * @brief interuptSignal
+	 */
 	void interuptSignal();
 
-private slots:
+protected slots:
 	void onPegMouseReleased(Peg *);
 	void onPegMouseDoubleClicked(Peg *);
 	void onOkButtonPressed();
@@ -89,6 +125,28 @@ private slots:
 	void onGuessReady();
 
 private:
+
+	enum class Player {
+		CodeMaker,
+		CodeBreaker,
+		None
+	};
+
+	enum class State {
+		None,
+		Running,
+		Win,
+		Lose,
+		Resign,
+		Thinking,
+		WaittingFirstRowFill,
+		WaittingCodeRowFill,
+		WaittingHiddenCodeFill,
+		WaittingPinboxPress,
+		WaittingOkButtonPress,
+		WaittingDoneButtonPress
+	};
+
 	void playMVH();
 	void playHVM();
 	void createBoxes();
@@ -103,25 +161,26 @@ private:
 	void freezeScene();
 	void setNextRowInAction();
 	void getNextGuess();
-	Player winner() const;
+	Game::Player winner() const;
 
 private:
-	QList<PinBox *> pinBoxes;		//	black-white pins
-	QList<PegBox *> pegBoxes;		//	right boxes that contains color-pegs to put on codeboxes
-	QList<PegBox *> codeBoxes;		//	middle boxes that is filled by a player
-	QList<PegBox *> currentBoxes;	//	the active row of codeboxes
-	QList<PegBox *> masterBoxes;	//	the mastercode boxes
 
-	GameState gameState;
-	GameRules *gameRules;
-	BoardAid *boardAid;
-	GuessElement guessElement;
-	Solver *solver;
-	Button *okButton;
-	Button *doneButton;
-	Message *message;
-	Message *information;
-	int playedMoves;
+	QList<PinBox *> pinBoxes;		/**< black-white pins */
+	QList<PegBox *> pegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
+	QList<PegBox *> codeBoxes;	    /**< middle boxes that is filled by a player*/
+	QList<PegBox *> currentBoxes;	/**< the active row of codeboxes */
+	QList<PegBox *> masterBoxes;	/**< the mastercode boxes */
+
+	Game::State state;              /**< TODO */
+	Rules *rules;                   /**< TODO */
+	Board *board;                   /**< TODO */
+	Guess guess;                    /**< TODO */
+	Solver *solver;                 /**< TODO */
+	Button *okButton;               /**< TODO */
+	Button *doneButton;             /**< TODO */
+	Message *message;               /**< TODO */
+	Message *information;			/**< TODO */
+	int playedMoves;                /**< TODO */
 };
 
 #endif // GAME_H

@@ -17,26 +17,18 @@
  *
  ***********************************************************************/
 
-#ifndef BOARDFONT_H
-#define BOARDFONT_H
+#include "font.h"
+#include "QSettings"
 
-#include <QString>
-
-class BoardFont
+Font::Font():
+	name(QSettings().value("FontName", "SansSerif").toString()),
+	size((QSettings().value("FontSize", 12).toInt()))
 {
-	BoardFont();
-	~BoardFont();
 
-private:
-	QString fontName;
-	int fontSize;
+}
 
-	friend class Button;
-	friend class Message;
-	friend class BoardAid;
-	friend class Preferences;
-	friend class MainWindow;
-};
-
-
-#endif // BOARDFONT_H
+Font::~Font()
+{
+	QSettings().setValue("FontName", name);
+	QSettings().setValue("FontSize", size);
+}

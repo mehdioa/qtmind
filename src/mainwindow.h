@@ -21,9 +21,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "constants.h"
-#include "gamerules.h"
-#include "boardaid.h"
+#include "rules.h"
+#include "board.h"
 #include "game.h"
 
 class QComboBox;
@@ -33,22 +32,36 @@ namespace Ui {
 class MainWindow;
 }
 
+
+/**
+ * @brief The MainWindow class is the main window that interacts with the user.
+ * It is the bridge between the user and the game object. It pass every event to
+ * the game object and decide what to do based on what the game replies.
+ */
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
+	/**
+	 * @brief MainWindow Creates the main window.
+	 * @param parent The parent of the window.
+	 */
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 protected:
+	/**
+	 * @brief closeEvent Things to do before exit the game
+	 * @param event
+	 */
 	void closeEvent(QCloseEvent *event);
 
-private slots:
+protected slots:
 	void onAutoPutPins();
 	void onAutoCloseRows();
 	void onIndicatorChanged();
-	void onGameModeChanged(QAction*);
+	void onModeChanged(QAction*);
 	void onNewGame();
 	void onFont();
 	void onQtMindHomePage();
@@ -70,20 +83,20 @@ private:
 	void loadTranslation();
 	QString languageName(const QString &language);
 	bool quitUnfinishedGame();
-	void updateGameRules();
+	void updateRules();
 	void retranslate();
 	void setPegsNumber(const int &pegs_n);
-	GameMode getGameMode();
+	Rules::Mode getMode();
 
-	Ui::MainWindow *ui;
-	QComboBox *pegsNumberComboBox;
-	QComboBox *colorsNumberComboBox;
-	QComboBox *solvingAlgorithmsComboBox;
+	Ui::MainWindow *ui; /**< TODO */
+	QComboBox *pegsComboBox; /**< TODO */
+	QComboBox *colorsComboBox; /**< TODO */
+	QComboBox *algorithmsComboBox; /**< TODO */
 
-	Game *game;
-	GameRules gameRules;
-	BoardAid boardAid;
-	QString AppPath;
+	Game *game; /**< TODO */
+	Rules rules; /**< TODO */
+	Board board; /**< TODO */
+	QString AppPath; /**< TODO */
 };
 
 #endif // MAINWINDOW_H

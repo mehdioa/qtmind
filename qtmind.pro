@@ -28,26 +28,24 @@ SOURCES += src/main.cpp\
 	src/peg.cpp \
 	src/button.cpp \
 	src/pegbox.cpp \
-	src/emptybox.cpp \
 	src/message.cpp \
 	src/pinbox.cpp \
 	src/pin.cpp \
 	src/preferences.cpp \
 	src/solver.cpp \
 	src/game.cpp \
-	src/gamerules.cpp \
 	src/indicator.cpp \
-	src/guesselement.cpp \
-	src/boardaid.cpp \
-	src/boardsounds.cpp \
-	src/boardfont.cpp
+	src/rules.cpp \
+	src/font.cpp \
+	src/guess.cpp \
+	src/box.cpp \
+    src/board.cpp \
+    src/sounds.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
-	src/constants.h \
 	src/button.h \
 	src/pegbox.h \
-	src/emptybox.h \
 	src/message.h \
 	src/pinbox.h \
 	src/pin.h \
@@ -55,19 +53,20 @@ HEADERS  += src/mainwindow.h \
 	src/solver.h \
 	src/game.h \
 	src/appinfo.h \
-	src/gamerules.h \
 	src/indicator.h \
-	src/guesselement.h \
-	src/boardaid.h \
-	src/boardsounds.h \
-	src/boardfont.h
+	src/rules.h \
+	src/font.h \
+	src/guess.h \
+	src/box.h \
+    src/board.h \
+    src/sounds.h
 
 FORMS	+= \
 	src/preferences.ui \
 	src/mainwindow.ui
 
 RESOURCES += \
-    resource.qrc
+	resource.qrc
 
 TRANSLATIONS = translations/qtmind_ara.ts \
 	translations/qtmind_af.ts \
@@ -109,7 +108,7 @@ OTHER_FILES += \
 	icons/hicolor/scalable/twoPegs.svg \
 	icons/hicolor/scalable/logo.svg \
 	qtmind.qbs \
-    src/src.qbs
+	src/src.qbs
 
 unix:!macx { # installation on Unix-ish platforms
 	isEmpty(INSTALL_PREFIX):INSTALL_PREFIX = /usr

@@ -17,31 +17,34 @@
  *
  ***********************************************************************/
 
-#ifndef BOARDAID_H
-#define BOARDAID_H
+#ifndef FONT_H
+#define FONT_H
 
-#include "indicator.h"
-#include "boardsounds.h"
-#include "boardfont.h"
-#include <QLocale>
+#include <QString>
 
-class BoardAid
+/**
+ * @brief The Font class represent the font that will be used in the board
+ */
+class Font
 {
-	BoardAid();
-	~BoardAid();
+public:
+
+	/**
+	 * @brief Font read settings and create a font
+	 */
+	Font();
+	~Font();
 
 private:
-	static const bool isAndroid;
-	bool autoPutPins;
-	bool autoCloseRows;
-	Indicator indicator;
-	QLocale locale;
-	BoardFont boardFont;
-	BoardSounds boardSounds;
+	QString name; /**< TODO */
+	int size; /**< TODO */
 
-	friend class MainWindow;
+	friend class Button;
+	friend class Message;
+	friend class Board;
 	friend class Preferences;
-	friend class Game;
+	friend class MainWindow;
 };
 
-#endif // BOARDAID_H
+
+#endif // FONT_H

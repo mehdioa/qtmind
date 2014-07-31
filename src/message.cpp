@@ -18,22 +18,21 @@
  ***********************************************************************/
 
 #include "message.h"
-#include "boardfont.h"
+#include "font.h"
 #include <QTextLayout>
 #include <QPainter>
 #include <QFont>
 
-Message::Message(const BoardFont &board_font, const QString &color_name,
+Message::Message(const Font &board_font, const QString &color_name,
 				 const int &smaller, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
 	color(QColor(color_name)),
 	text("")
 {
-	textLayout.setFont(QFont(board_font.fontName, board_font.fontSize - smaller, QFont::Bold, false));
+	textLayout.setFont(QFont(board_font.name, board_font.size - smaller, QFont::Bold, false));
 	textLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	updateRect = QRectF(0, 0, 10, 10);
 }
-//-----------------------------------------------------------------------------
 
 void Message::setText(const QString m_text)
 {
@@ -67,13 +66,11 @@ void Message::setText(const QString m_text)
 
 	update();
 }
-//-----------------------------------------------------------------------------
 
 QRectF Message::boundingRect() const
 {
 	return updateRect;
 }
-//-----------------------------------------------------------------------------
 
 void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {

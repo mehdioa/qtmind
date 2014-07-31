@@ -17,25 +17,26 @@
  *
  ***********************************************************************/
 
-#include "gamerules.h"
-#include <QSettings>
+#include "board.h"
+#include "appinfo.h"
+#include "QSettings"
 
-GameRules::GameRules():
-	pegNumber(QSettings().value("Pegs", 4).toInt()),
-	colorNumber(QSettings().value("Colors", 6).toInt()),
-	sameColorAllowed(QSettings().value("SameColor", true).toBool()),
-	algorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
-	gameMode((GameMode) QSettings().value("Mode", 1).toInt())
+#ifdef Q_OS_ANDROID
+const bool Board::isAndroid = true;
+#else
+const bool Board::isAndroid = false;
+#endif
+
+Board::Board():
+	autoPutPins(QSettings().value("AutoPutPins", true).toBool()),
+	autoCloseRows(QSettings().value("AutoCloseRows", false).toBool()),
+	locale(QSettings().value("Locale/Language", "en").toString().left(5))
 {
-
 }
-//-----------------------------------------------------------------------------
 
-GameRules::~GameRules()
+Board::~Board()
 {
-	QSettings().setValue("Pegs", pegNumber);
-	QSettings().setValue("Colors", colorNumber);
-	QSettings().setValue("SameColor", sameColorAllowed);
-	QSettings().setValue("Algorithm", (int) algorithm);
-	QSettings().setValue("Mode", (int) gameMode);
+	QSettings().setValue("AutoPutPins",	autoPutPins);
+	QSettings().setValue("AutoCloseRows", autoCloseRows);
+	QSettings().setValue("Locale/Language", locale.name());
 }

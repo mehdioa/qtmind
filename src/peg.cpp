@@ -26,7 +26,7 @@
 #include <QTapGesture>
 #include <QGestureEvent>
 
-const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
+const QColor Peg::PegColors[Rules::MAX_COLOR_NUMBER][2] = { /**< TODO */
 	{QColor("#FFFF80"), QColor("#E47A00")},
 	{QColor("#FF3300"), QColor("#AF0707")},
 	{QColor("#33CCFF"), QColor("#031CFF")},
@@ -39,9 +39,9 @@ const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = {
 	{QColor("#FFC0FF"), QColor("#AB00AB")}
 };
 
-const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"};
+const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"}; /**< TODO */
 
-const QFont Peg::font = Peg::setFont();
+const QFont Peg::font = Peg::setFont(); /**< TODO */
 
 Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent):
 	QGraphicsObject(parent),
@@ -67,53 +67,49 @@ Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicato
 	setPos(m_position - QPointF(19.5, 19.5));
 	setMovable(true);
 	setAcceptDrops(true);
-	setState(PegState::Visible);
+	setState(State::Visible);
 	grabGesture(Qt::TapGesture);
 }
-//-----------------------------------------------------------------------------
 
 void Peg::setColor(int color_number)
 {
 	color = (-1 < color_number && color_number < 10) ? color_number : 0;
 	update();
 }
-//-----------------------------------------------------------------------------
 
-void Peg::setMovable(bool enabled)
+void Peg::setMovable(bool b)
 {
-	isActive = enabled;
+	isActive = b;
 	setFlag(QGraphicsItem::ItemIsMovable, isActive);
 	setCursor(isActive ? Qt::OpenHandCursor : Qt::ArrowCursor);
 	setAcceptedMouseButtons(isActive ? Qt::LeftButton : Qt::NoButton);
-	setZValue(1+enabled);
-	enabled ? grabGesture(Qt::TapGesture) : ungrabGesture(Qt::TapGesture);
+	setZValue(1+b);
+	b ? grabGesture(Qt::TapGesture) : ungrabGesture(Qt::TapGesture);
 }
-//-----------------------------------------------------------------------------
 
-void Peg::setState(const PegState &m_state)
+void Peg::setState(const State &m_state)
 {
 	pegState = m_state;
 	switch (pegState) {
-	case PegState::Invisible:
+	case State::Invisible:
 		setVisible(false);
 		setMovable(false);
 		break;
-	case PegState::Underneath:
+	case State::Underneath:
 		setVisible(true);
 		setMovable(false);
 		break;
-	case PegState::Plain:
+	case State::Plain:
 		setVisible(true);
 		setMovable(false);
 		circle->setVisible(true);
 		break;
-	default:// PegState::Initial and PegState::Visible
+	default:// State::Initial and State::Visible
 		setVisible(true);
 		setMovable(true);
 		break;
 	}
 }
-//-----------------------------------------------------------------------------
 
 void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -126,7 +122,6 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		setCursor(Qt::ClosedHandCursor);
 	}
 }
-//-----------------------------------------------------------------------------
 
 void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -140,28 +135,26 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		//	droped out of its own box,
 		if (!sceneBoundingRect().contains(position)) {
-			if (pegState != PegState::Initial)
-				setState(PegState::Invisible);
+			if (pegState != State::Initial)
+				setState(State::Invisible);
 			emit mouseReleaseSignal(this);
 		}
 		setPos(position - QPointF(19.5, 19.5));
 	}
 }
-//-----------------------------------------------------------------------------
 
 void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (isActive)
 	{
 		QGraphicsItem::mouseDoubleClickEvent(event);
-		if (pegState == PegState::Initial){
+		if (pegState == State::Initial){
 			emit mouseDoubleClickSignal(this);
 		} else {
 			setPos(position - QPoint(19, 60));
 		}
 	}
 }
-//-----------------------------------------------------------------------------
 
 bool Peg::event(QEvent *event)
 {
@@ -170,7 +163,6 @@ bool Peg::event(QEvent *event)
 	}
 	return QGraphicsObject::event(event);
 }
-//-----------------------------------------------------------------------------
 
 bool Peg::gestureEvent(QGestureEvent *event)
 {
@@ -179,26 +171,24 @@ bool Peg::gestureEvent(QGestureEvent *event)
 	}
 	return true;
 }
-//-----------------------------------------------------------------------------
 
 void Peg::tapGestureTriggered(QTapGesture *gesture)
 {
 	if ( gesture->state() == Qt::GestureFinished) {
-		if (pegState == PegState::Initial) {
+		if (pegState == State::Initial) {
 			emit mouseDoubleClickSignal(this);
 		} else {
 			setPos(position - QPoint(19, 60));
 		}
 	}
 }
-//-----------------------------------------------------------------------------
 
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
 	int virtual_color = indicator->forceColor() ? color : 3;
 
-	if (pegState != PegState::Plain) {
+	if (pegState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
 		gradient.setColorAt(0, PegColors[virtual_color][0]);
 		gradient.setColorAt(1, PegColors[virtual_color][1]);
@@ -217,21 +207,19 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-	if (indicator->showIndicators && pegState != PegState::Plain) {
+	if (indicator->showIndicators && pegState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
 		painter->setFont(font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)indicator->indicatorType][color]);
+		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)indicator->type][color]);
 	}
 }
-//-----------------------------------------------------------------------------
 
 QRectF Peg::boundingRect() const
 {
 	return QRectF(2.5, 2.5, 35, 35);
 }
-//-----------------------------------------------------------------------------
 
 QFont Peg::setFont()
 {
@@ -240,7 +228,6 @@ QFont Peg::setFont()
 	m_font.setStyleStrategy(QFont::PreferAntialias);
 	return m_font;
 }
-//-----------------------------------------------------------------------------
 
 void Peg::onShowIndicators()
 {

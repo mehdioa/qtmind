@@ -21,15 +21,15 @@
 #define APPINFO_H
 #include <QString>
 
-static const int VER_MAJOR			= 0;
-static const int VER_MINOR			= 8;
-static const int VER_BUGFIX			= 3;
-static const QString APP_VER = QString("%1.%2.%3")
+static const int VER_MAJOR			= 0; /**< Applictation Major Version */
+static const int VER_MINOR			= 8; /**< Applictation Minor Version */
+static const int VER_BUGFIX			= 3; /**< Applictation Bugfix Version */
+static const QString APP_VER = QString("%1.%2.%3") /**< Applictation Version */
 		.arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
 
-static const QString APP_NAME		= "QtMind";
-static const QString ORG_NAME		= "QtMind";
-static const QString ORG_DOMAIN		= "http://omidnikta.github.io/qtmind";
-static const QString AUTHOR_NAME	= "Omid Nikta";
+static const QString APP_NAME		= "QtMind"; /**< Applictation Name */
+static const QString ORG_NAME		= "QtMind"; /**< Applictation Organisation */
+static const QString ORG_DOMAIN		= "http://omidnikta.github.io/qtmind"; /**< Organisation Domain */
+static const QString AUTHOR_NAME	= "Omid Nikta"; /**< Applictation Author Name */
 
 #endif // APPINFO_H

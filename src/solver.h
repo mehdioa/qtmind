@@ -23,7 +23,10 @@
 #include <QList>
 #include <QThread>
 
-/*	The class Solver is the solving engine of the mastermind game. It contains all the solving
+class Rules;
+class Guess;
+
+/**	@brief The class Solver is the solving engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
  *	response and so on. The response is stored this way:
  *	example: p := peg number = 4
@@ -39,59 +42,182 @@
  *
  *	(0, 0)	(1, 0)	(2, 0)	(3, 0)	(4, 0)
  *
- *	There are 1+2+...+(p+1) = (p+1)(p+2)/2 couples (including the impossible (3, 1)).
- *	The one-to-one function f: Set of possible couples (black, white) --> [0...(p+1)(p+2)/2 - 1]
- *	including (3, 1) is defined
+ *	There are \f$ 1+2+...+(p+1) = (p+1)(p+2)/2 \f$ couples (including the impossible \f$ (3, 1)=(p-1,1)\f$). If
+ *          \f[ X = \{(b,w): \,\,\, 0 \leq b,\, 0\leq w\,\, \wedge\,\,  b+w\leq p\} \f]
+ *	The one-to-one function \f$ f: X \to [0...(p+1)(p+2)/2 - 1]\f$
+ *	is defined
+ *			\f[ f(b, w) = (b+w)(b+w+1)/2 + b \f]
  *
- *			f(b, w) = (b+w)(b+w+1)/2 + b;
+ *
  */
-
-class GameRules;
-class GuessElement;
-
 class Solver : public QThread
 {
 	Q_OBJECT
 
 public:
-	explicit Solver(GameRules *game_rules, GuessElement *guess_element, QObject *parent = 0);
+	/**
+	 * @brief a helper function to find the power of an integer by another integer
+	 *
+	 * @param base the base of the power base^exp
+	 * @param exp the power
+	 * @return int the power base^exp
+	 */
+	static int ipow(int base, int exp);
+	/**
+	 * @brief Solver
+	 * @param game_rules
+	 * @param guess_element
+	 * @param parent
+	 */
+	explicit Solver(Rules *game_rules, Guess *guess_element, QObject *parent = 0);
 	~Solver();
+
+	/**
+	 * @brief determines if the game is over
+	 * @return bool true if the response is all black, false othewise
+	 */
 	bool done () const;
+
+	/**
+	 * @brief check if the response is valid and remove impossibles
+	 * @param m_response
+	 * @return return true if the response is valid, false otherwise
+	 */
 	bool setResponse(const int &m_response);
+
+	/**
+	 * @brief
+	 *
+	 */
 	void run();
 
 protected slots:
+
+	/**
+	 * @brief
+	 *
+	 */
 	void onInterupt() {interupt = true;}
+
+	/**
+	 * @brief
+	 *
+	 */
 	void onStartGuessing();
+
+	/**
+	 * @brief
+	 *
+	 */
 	void onReset();
 
 signals:
+
+	/**
+	 * @brief
+	 *
+	 */
 	void guessDoneSignal();
 
 private:
+
 	void makeGuess();
 	QString getFirstGuess() const;
-	QString shuffle(QString m_string) const;
+
+	/**
+	 * @brief Use Knuth's shuffling method to shuffle a string
+	 *
+	 * @param m_string the shuffling string
+	 */
+	void shuffle(QString &m_string) const;
+
+	/**
+	 * @brief permute a code
+	 *
+	 * @param m_code permutting code
+	 */
 	void permute(QString &m_code) const;
+
+	/**
+	 * @brief create internal tables
+	 *
+	 */
 	void createTables();
+
+	/**
+	 * @brief delete internal tables and release memory
+	 *
+	 */
 	void deleteTables();
-	int compare (const int *codeA, const int *codeB) const;
+
+	/**
+	 * @brief
+	 *
+	 * @param m_array
+	 * @return QString
+	 */
 	QString arrayToString(const int *m_array) const;
+
+	/**
+	 * @brief
+	 *
+	 * @param m_string
+	 * @param m_array
+	 */
 	void stringToArray(const QString &m_string, int *m_array) const;
+
+	/**
+	 * @brief
+	 *
+	 * @param m_responses
+	 * @return qreal
+	 */
 	qreal computeWeight(int *m_responses) const;
-	void indexToCode(const int &number);
-	void setFirstPossibles();
+
+	/**
+	 * @brief
+	 *
+	 * @param number
+	 */
+	void indexToCodeSameColor(const int &number);
+
+	/**
+	 * @brief indexToCodeDifferentColor
+	 * @param number
+	 */
+	void indexToCodeDifferentColor(const int &number);
+
+	/**
+	 * @brief
+	 *
+	 */
+	void setSmallPossibles();
 
 private:
-	GameRules *gameRules;
-	GuessElement *guessElement;
-	int responseSpaceSize;
-	int allCodesSize;						//	the size of the complete code space, 6^4 = 1296
-	volatile bool interupt;
-	int **allCodes;							//	all indexes of codes (0...1295)
-	int *firstPossibleCodes;				//	Contains the first remaining possibles (in case mAllCodesSize > 10000) or is mAllCodes otherwise
-	int firstPossibleCodesSize;
-	QList<int> possibleCodes;				//	list of all possibles
+
+	/**
+	 * @brief The Codes struct
+	 * All codes
+	 */
+	struct Codes {
+		int size;
+		int **index;
+	} codes;
+
+	/**
+	 * @brief The FirstPossiblesUnder10_000 struct
+	 * The first possibles codes under ten thousands
+	 */
+	struct FirstPossiblesUnder10_000 {
+		int size;
+		int *index;
+	} sp;
+
+	Rules *rules; /**< TODO */
+	Guess *guess; /**< TODO */
+	int max_response; /**< TODO */
+	volatile bool interupt; /**< TODO */
+	QList<int> possibles;   //	list of all possibles
 };
 
 #endif // SOLVER_H
