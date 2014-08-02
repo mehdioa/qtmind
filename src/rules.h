@@ -66,6 +66,7 @@ private:
 	friend class MainWindow;
 	friend class Solver;
 	friend class Game;
+	friend class PinBox;
 };
 
 #endif // RULES_H

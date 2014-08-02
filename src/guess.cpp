@@ -18,6 +18,7 @@
  ***********************************************************************/
 
 #include "guess.h"
+#include <QDebug>
 
 Guess::Guess()
 {
@@ -26,10 +27,23 @@ Guess::Guess()
 
 void Guess::reset(const Rules::Algorithm &algorithm_m, const int &possibles_m)
 {
-	guess = "";
-	code = "";
-	response = 0;
+	std::fill(guess, guess+Rules::MAX_SLOT_NUMBER, 0);
+	std::fill(code, code+Rules::MAX_SLOT_NUMBER, 0);
+	blacks = 0;
+	whites = 0;
 	algorithm = algorithm_m;
 	possibles = possibles_m;
 	weight = 0;
+}
+
+void Guess::setGuess(unsigned char *_guess)
+{
+	for(int i = 0; i < Rules::MAX_SLOT_NUMBER; i++)
+		guess[i] = _guess[i];
+}
+
+void Guess::setCode(unsigned char *_code)
+{
+	for(int i = 0; i < Rules::MAX_SLOT_NUMBER; i++)
+		code[i] = _code[i];
 }

@@ -24,6 +24,33 @@
 #include <QString>
 
 /**
+  * @brief compares two codes A and B, which are two int arrays
+  * C and P are the number of colors and pegs
+  * R is the result
+  *
+  * Interestingly, total can be computed as
+  * f[total := whites + blacks = ( \sum_{i=1}^6 \min(c_i, g_i)) \f]
+  * where c_i is the number of times the color i is in the code and g_i is the number of times it is in the guess. See
+  * http://mathworld.wolfram.com/Mastermind.html
+  * for more information
+  */
+#define COMPARE(A, B, C, P, BL, WT) {\
+	BL = 0;\
+	int __c[C], __g[C];\
+	std::fill(__c, __c+C, 0);\
+	std::fill(__g, __g+C, 0);\
+	for (int i = 0; i < P; ++i) {\
+		if (A[i] == B[i])\
+			++BL;\
+		++__c[A[i]];\
+		++__g[B[i]];\
+	}\
+	WT = (-BL);\
+	for(int i = 0; i < C; ++i)\
+		WT += (__c[i] < __g[i]) ? __c[i] : __g[i];\
+}
+
+/**
  * @brief A class to represent a guess element.
  *
  */
@@ -43,16 +70,31 @@ public:
 	 */
 	void reset(const Rules::Algorithm &algorithm_m, const int &possibles_m);
 
+	/**
+	 * @brief setGuess
+	 * @param _guess
+	 */
+	void setGuess(unsigned char *_guess);
+
+	/**
+	 * @brief setCode
+	 * @param _code
+	 */
+	void setCode(unsigned char *_code);
+
 private:
-	QString guess; /**< TODO */
-	QString code; /**< TODO */
-	int response; /**< TODO */
+	unsigned char guess[Rules::MAX_SLOT_NUMBER]; /**< TODO */
+	unsigned char code[Rules::MAX_SLOT_NUMBER]; /**< TODO */
+	int blacks;
+	int whites;
+//	int response; /**< TODO */
 	Rules::Algorithm algorithm; /**< TODO */
 	int possibles; /**< TODO */
 	qreal weight; /**< TODO */
 
 	friend class Solver;
 	friend class Game;
+	friend class PinBox;
 };
 
 #endif // GUESS_H

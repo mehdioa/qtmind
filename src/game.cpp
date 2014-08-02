@@ -203,7 +203,9 @@ void Game::getNextGuess()
 
 Game::Player Game::winner() const
 {
-	if (pinBoxes.at(playedMoves)->getValue() == (rules->pegs + 1)*(rules->pegs + 2)/2 - 1)
+	int blacks, whites;
+	pinBoxes.at(playedMoves)->getValue(blacks, whites);
+	if (blacks == rules->pegs)
 		return Player::CodeBreaker;
 	else if (playedMoves >= Rules::MAX_COLOR_NUMBER - 1)
 		return Player::CodeMaker;
@@ -364,8 +366,9 @@ void Game::onResigned()
 void Game::onOkButtonPressed()
 {
 	if(rules->mode == Rules::Mode::MVH) {
-		int resp = pinBoxes.at(playedMoves)->getValue();
-		if(!solver->setResponse(resp)) {
+		int blacks, whites;
+		pinBoxes.at(playedMoves)->getValue(blacks, whites);
+		if(!solver->setResponse(blacks, whites)) {
 			message->setText(tr("Not Possible, Try Again"));
 			return;
 		}
@@ -394,11 +397,12 @@ void Game::onOkButtonPressed()
 		board->sounds.playButtonPress();
 		state = State::Running;
 
-		guess.guess = "";
+		unsigned char new_guess[Rules::MAX_SLOT_NUMBER];
 		for(int i = 0; i < rules->pegs; ++i)
-			guess.guess.append(QString::number(currentBoxes.at(i)->getPegColor()));
+			new_guess[i] = currentBoxes.at(i)->getPegColor();
+		guess.setGuess(new_guess);
 
-		pinBoxes.at(playedMoves)->setPins(guess.code, guess.guess, rules->colors);
+		pinBoxes.at(playedMoves)->setPins(guess, rules);
 		pinBoxes.at(playedMoves)->setState(Box::State::Past);
 
 		setStateOfList(&currentBoxes, Box::State::Past);
@@ -436,9 +440,10 @@ void Game::onDoneButtonPressed()
 	setStateOfList(&currentBoxes, Box::State::Past);
 	setStateOfList(&pegBoxes, Box::State::Future);
 
-	guess.code = "";
-	foreach(PegBox *box, currentBoxes)
-		guess.code.append(QString::number(box->getPegColor()));
+	unsigned char new_guess[Rules::MAX_SLOT_NUMBER];
+	for(int i = 0; i < rules->pegs; ++i)
+		new_guess[i] = currentBoxes.at(i)->getPegColor();
+	guess.setCode(new_guess);
 
 	currentBoxes.clear();
 	getNextGuess();
@@ -452,7 +457,7 @@ void Game::onGuessReady()
 
 	int box_index = playedMoves*rules->pegs;
 	for(int i = 0; i < rules->pegs; ++i) {
-		createPegForBox(codeBoxes.at(box_index + i), guess.guess[i].digitValue());
+		createPegForBox(codeBoxes.at(box_index + i), guess.guess[i]);
 		codeBoxes.at(box_index + i)->setState(Box::State::Past);
 	}
 	state = State::WaittingOkButtonPress;
@@ -463,7 +468,7 @@ void Game::onGuessReady()
 	okButton->setPos(pinBoxes.at(playedMoves)->pos()-QPoint(0, 39));
 
 	if (board->autoPutPins)
-		pinBoxes.at(playedMoves)->setPins(guess.code, guess.guess, rules->colors);
+		pinBoxes.at(playedMoves)->setPins(guess, rules);
 }
 
 void Game::play()
@@ -521,24 +526,22 @@ void Game::playMVH()
 
 void Game::playHVM()
 {
-	QString digits = "0123456789";
-	digits.left(rules->colors);
-	int remainingNumbers = rules->colors;
 	qsrand(time(NULL));
-	guess.code = "";
-
-	//creating a master code to be guessed
-	foreach(PegBox *box, masterBoxes) {
-		int color = static_cast<int>(remainingNumbers*(qrand()/(RAND_MAX + 1.0)));
-		int realcolor = digits.at(color).digitValue();
-		guess.code.append(QString::number(realcolor));
-		createPegForBox(box, realcolor);
-		box->setState(Box::State::None);
-		if(!rules->same_colors) {
-			digits.remove(color, 1);
-			--remainingNumbers;
+	int remaining_colors = rules->colors;
+	unsigned char hidden_code[Rules::MAX_SLOT_NUMBER];
+		for(int i = 0; i < rules->pegs; i++) {
+			hidden_code[i] = static_cast<unsigned char>(remaining_colors * (qrand()/(RAND_MAX + 1.0)));
+			if (!rules->same_colors) {
+				for(int j = 0; j < i; j++)
+					if (hidden_code[j] <= hidden_code[i])
+						hidden_code[i]++;
+				remaining_colors--;
+			}
+			createPegForBox(masterBoxes.at(i), hidden_code[i]);
+			masterBoxes.at(i)->setState(Box::State::None);
 		}
-	}
+
+	guess.setCode(hidden_code);
 	setNextRowInAction();
 	showMessage();
 	showInformation();

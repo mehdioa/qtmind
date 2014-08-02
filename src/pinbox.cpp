@@ -42,48 +42,33 @@ PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *p
 	setState(Box::State::Future);
 }
 
-int PinBox::getValue() const
+void PinBox::getValue(int &bl, int &wt) const
 {
-	int blacks = 0;
-	int whites = 0;
+	bl = 0;
+	wt = 0;
 	foreach(Pin *pin, pins) {
 		switch (pin->getColor()) {
 		case Pin::Color::White:
-			++whites;
+			++wt;
 			break;
 		case Pin::Color::Black:
-			++blacks;
+			++bl;
 			break;
 		default:
 			break;
 		}
 	}
-	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
+//	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
 }
 
-void PinBox::setPins(const QString &codeA, const QString &codeB, const int &color_n)
+void PinBox::setPins(const Guess &guess, Rules *rules)
 {
-	int c[color_n];
-	int g[color_n];
-	std::fill(c, c+color_n, 0);
-	std::fill(g, g+color_n, 0);
-
-	int blacks = 0;
-	for (int i = 0; i < pins.size(); ++i) {
-		if (codeA[i] == codeB[i])
-			++blacks;
-		++c[codeA[i].digitValue()];
-		++g[codeB[i].digitValue()];
-	}
-
-	int total = 0;		//	blacks + whites
-	for (int i = 0; i < color_n; ++i)
-		total += qMin(c[i],g[i]);
-
+	int whites, blacks;
+	COMPARE(guess.code, guess.guess, rules->colors, rules->pegs, blacks, whites);
 	for(int i = 0; i < blacks; ++i)
 		pins.at(i)->setColor(Pin::Color::Black);
 
-	for(int i = blacks; i < total; ++i)
+	for(int i = blacks; i < blacks+whites; ++i)
 		pins.at(i)->setColor(Pin::Color::White);
 }
 

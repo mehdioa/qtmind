@@ -22,6 +22,7 @@
 
 #include "box.h"
 #include "rules.h"
+#include "guess.h"
 
 class Pin;
 
@@ -44,7 +45,7 @@ public:
 	 * @return the total value of the pinbox. Look the solver class for the explanation of the
 	 * value.
 	 */
-	int getValue() const;
+	void getValue(int &bl, int &wt) const;
 
 	/**
 	 * @brief setPins set pins of the box
@@ -52,7 +53,7 @@ public:
 	 * @param codeB second code
 	 * @param color_n the number of colors
 	 */
-	void setPins(const QString &codeA, const QString &codeB, const int &color_n);
+	void setPins(const Guess &guess, Rules *rules);
 
 	/**
 	 * @brief setState set the box state

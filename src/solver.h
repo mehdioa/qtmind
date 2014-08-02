@@ -83,7 +83,7 @@ public:
 	 * @param m_response
 	 * @return return true if the response is valid, false otherwise
 	 */
-	bool setResponse(const int &m_response);
+	bool setResponse(const int &blacks, const int &whites);
 
 	/**
 	 * @brief
@@ -122,21 +122,20 @@ signals:
 private:
 
 	void makeGuess();
-	QString getFirstGuess() const;
 
 	/**
 	 * @brief Use Knuth's shuffling method to shuffle a string
 	 *
 	 * @param m_string the shuffling string
 	 */
-	void shuffle(QString &m_string) const;
+	void shuffle(unsigned char *m_string, int len) const;
 
 	/**
 	 * @brief permute a code
 	 *
 	 * @param m_code permutting code
 	 */
-	void permute(QString &m_code) const;
+	void permute(unsigned char *m_code) const;
 
 	/**
 	 * @brief create internal tables
@@ -156,15 +155,7 @@ private:
 	 * @param m_array
 	 * @return QString
 	 */
-	QString arrayToString(const int *m_array) const;
-
-	/**
-	 * @brief
-	 *
-	 * @param m_string
-	 * @param m_array
-	 */
-	void stringToArray(const QString &m_string, int *m_array) const;
+	QString arrayToString(const unsigned char *m_array) const;
 
 	/**
 	 * @brief
@@ -201,7 +192,7 @@ private:
 	 */
 	struct Codes {
 		int size;
-		int **index;
+		unsigned char **index;
 	} codes;
 
 	/**
