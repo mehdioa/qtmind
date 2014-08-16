@@ -21,8 +21,8 @@
 #define PINBOX_H
 
 #include "box.h"
-#include "rules.h"
 #include "guess.h"
+#include "rules.h"
 
 class Pin;
 

@@ -21,8 +21,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "rules.h"
-#include "board.h"
 #include "game.h"
 
 class QComboBox;
@@ -47,7 +45,7 @@ public:
 	 * @brief MainWindow Creates the main window.
 	 * @param parent The parent of the window.
 	 */
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(Game *_game, QWidget *parent = 0);
 	~MainWindow();
 
 protected:
@@ -79,6 +77,8 @@ protected slots:
 	void onLanguageChanged(QAction *language_act);
 
 private:
+	static const bool isAndroid; /**< Is the platform Android? */
+
 	QStringList findTranslations();
 	void loadTranslation();
 	QString languageName(const QString &language);
@@ -94,8 +94,6 @@ private:
 	QComboBox *algorithmsComboBox; /**< TODO */
 
 	Game *game; /**< TODO */
-	Rules rules; /**< TODO */
-	Board board; /**< TODO */
 	QString AppPath; /**< TODO */
 };
 

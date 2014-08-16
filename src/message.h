@@ -23,7 +23,7 @@
 #include <QGraphicsSimpleTextItem>
 #include <QTextLayout>
 
-class Font;
+class Board;
 
 /**
  * @brief The Message class The class represent a message on the board.
@@ -39,7 +39,7 @@ public:
 	 * @param smaller if a smaller font size should be used
 	 * @param parent parent of the object
 	 */
-	explicit Message(const Font &board_font, const QString &color_name = "#303133",
+	explicit Message(Board *board, const QString &color_name = "#303133",
 					 const int &smaller = 0, QGraphicsItem *parent = 0);
 
 	/**

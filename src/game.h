@@ -29,8 +29,8 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
-class Rules;
 class Board;
+class Rules;
 
 /**
  * @brief A class to represent the game logic. It is the heart of the game.
@@ -44,12 +44,11 @@ class Game: public QGraphicsView
 
 public:
 	/**
-	 * @brief Game create a game with rules and board
-	 * @param game_rules the rules of the game
-	 * @param board_aid the board of the game
+	 * @brief Game create a game with board
+	 * @param board the board of the game
 	 * @param parent the parent of the game
 	 */
-	explicit Game(Rules *game_rules, Board *board_aid, QWidget *parent = 0);
+	explicit Game(Rules *_rules, Board *_board);
 	~Game();
 
 	/**
@@ -61,12 +60,6 @@ public:
 	 * @brief stop stop playing
 	 */
 	void stop();
-
-	/**
-	 * @brief setAlgorithm change algorithm
-	 * @param algorithm_n the algorithm
-	 */
-	void setAlgorithm(const Rules::Algorithm &algorithm_n);
 
 	/**
 	 * @brief changeIndicators change indicators of the pegs
@@ -83,6 +76,9 @@ public:
 	 * @return true if the game is running, false otherwise
 	 */
 	bool isRunning();
+
+	Board *getBoard() { return board; }
+	Rules *getRules() { return rules; }
 
 protected:
 	/**
@@ -172,7 +168,7 @@ private:
 	QList<PegBox *> masterBoxes;	/**< the mastercode boxes */
 
 	Game::State state;              /**< TODO */
-	Rules *rules;                   /**< TODO */
+	Rules *rules;
 	Board *board;                   /**< TODO */
 	Guess guess;                    /**< TODO */
 	Solver *solver;                 /**< TODO */

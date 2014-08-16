@@ -20,10 +20,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "indicator.h"
-#include "sounds.h"
-#include "font.h"
 #include <QLocale>
+
+class QSoundEffect;
 
 /**
  * @brief A class to represent board tools, like font, locale, indicator.
@@ -31,24 +30,61 @@
 class Board
 {
 public:
+	enum class Indicator {
+		Character,
+		Digit
+	};
+	enum class Sound {
+		PegDrop,
+		PegDropRefuse,
+		ButtonPress
+	};
+	enum class Volume{
+		Mute,
+		Low,
+		Medium,
+		High
+	};
+
 	/**
 	 * @brief Creates an object by reading settings.
 	 */
 	Board();
 	~Board();
 
+	QString getFontName() const { return fontName; }
+	int getFontSize() const { return fontSize; }
+	bool isAutoPutPins() const { return autoPutPins; }
+	bool isAutoCloseRows() const { return autoCloseRows; }
+	Indicator getIndicator() const { return indicator; }
+	bool getShowIndicators() const { return showIndicators;}
+	QLocale *getLoale() {return &m_locale; }
+	bool getShowColors() const { return showColors; }
+	bool forceColor() const;
+	void play(Sound s) const;
+	void setVolume(const int &vol);
+	Volume getVolume() const {return volume;}
+	QLocale *locale() { return &m_locale; }
+	void setLocale(const QString &name);
+	void setAutoPutPins(const bool &a);
+	void setAutoCloseRows(const bool &a);
+	void setIndicators(const bool &show_indicators, const bool &show_colors);
+	void setIndicator(int a);
+	void setFont(const QString &name, const int &_size);
+
 private:
-	static const bool isAndroid; /**< Is the platform Android? */
 	bool autoPutPins; /**< TODO */
 	bool autoCloseRows; /**< TODO */
+	bool showColors; /**< TODO */
+	bool showIndicators; /**< TODO */
 	Indicator indicator; /**< TODO */
-	QLocale locale; /**< TODO */
-	Font font; /**< TODO */
-	Sounds sounds; /**< TODO */
-
-	friend class MainWindow;
-	friend class Preferences;
-	friend class Game;
+	QLocale m_locale; /**< TODO */
+	QString fontName; /**< TODO */
+	int fontSize; /**< TODO */
+	Volume volume; /**< TODO */
+	QSoundEffect *pegDrop; /**< TODO */
+	QSoundEffect *pegDropRefuse; /**< TODO */
+	QSoundEffect *buttonPress; /**< TODO */
 };
 
 #endif // BOARD_H

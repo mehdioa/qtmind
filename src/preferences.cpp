@@ -34,13 +34,13 @@ Preferences::Preferences(Board *board_aid, QWidget *parent) :
 	board(board_aid)
 {
 	ui->setupUi(this);
-	setLayoutDirection(board->locale.textDirection());
+	setLayoutDirection(board->locale()->textDirection());
 
 	for(int i = 10; i < 21; ++i) {
-		ui->sizeComboBox->addItem(QString("%1 %2").arg(board->locale.toString(i)).arg(tr("Point(s)", "", i)));
+		ui->sizeComboBox->addItem(QString("%1 %2").arg(board->locale()->toString(i)).arg(tr("Point(s)", "", i)));
 	}
-	ui->fontComboBox->setCurrentFont(board->font.name);
-	ui->sizeComboBox->setCurrentIndex(board->font.size - 10);
+	ui->fontComboBox->setCurrentFont(board->getFontName());
+	ui->sizeComboBox->setCurrentIndex(board->getFontSize() - 10);
 
 	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(ui->acceptRejectButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -55,6 +55,6 @@ Preferences::~Preferences()
 void Preferences::accept()
 {
 	QDialog::accept();
-	board->font.name = ui->fontComboBox->currentText();
-	board->font.size = ui->sizeComboBox->currentIndex() + 10;
+	board->setFont(ui->fontComboBox->currentText(),
+				   ui->sizeComboBox->currentIndex() + 10);
 }

@@ -18,8 +18,8 @@
  ***********************************************************************/
 
 #include "solver.h"
-#include "rules.h"
 #include "guess.h"
+#include "rules.h"
 #include "ctime"
 #include <QtCore/qmath.h>
 #include <stdlib.h>
@@ -35,16 +35,16 @@ int Solver::ipow(int base, int exp) {
 	return result;
 }
 
-Solver::Solver(Rules *game_rules, Guess *guess_element, QObject *parent):
+Solver::Solver(Rules *_rules, Guess *guess_element, QObject *parent):
 	QThread(parent),
-	rules(game_rules),
+	rules(_rules),
 	guess(guess_element),
 	interupt(true)
 {
 	codes.index = NULL;
 	sp.index = NULL;
 
-	guess->algorithm = rules->algorithm;
+	guess->algorithm = rules->getAlgorithm();
 	onReset();
 }
 
@@ -53,30 +53,25 @@ Solver::~Solver()
 	deleteTables();
 }
 
-bool Solver::done() const
-{
-	return (guess->blacks == rules->pegs);
-}
-
 void Solver::createTables()
 {
-	if (rules->same_colors) {
-		codes.size = ipow(rules->colors, rules->pegs);
+	if (rules->isSameColor()) {
+		codes.size = ipow(rules->getColors(), rules->getPegs());
 	} else {
 		codes.size = 1;
-		for(int i = 0; i < rules->pegs; ++i)
-			codes.size *= (rules->colors - i);
+		for(int i = 0; i < rules->getPegs(); ++i)
+			codes.size *= (rules->getColors() - i);
 	}
 
-	max_response = (rules->pegs + 1)*(rules->pegs + 2)/2;
+	max_response = (rules->getPegs() + 1)*(rules->getPegs() + 2)/2;
 
 	codes.index = new unsigned char *[codes.size];
 
 	for(int i = 0; i < codes.size; ++i) {
-		codes.index[i] = new unsigned char[rules->pegs];
+		codes.index[i] = new unsigned char[rules->getPegs()];
 	}
 
-	if (rules->same_colors) {
+	if (rules->isSameColor()) {
 		for (int i = 0; i < codes.size; i++)
 			indexToCodeSameColor(i);
 	} else {
@@ -110,13 +105,13 @@ void Solver::onReset()
 {
 	deleteTables();
 	createTables();
-	guess->reset(rules->algorithm, codes.size);
+	guess->reset(rules->getAlgorithm(), codes.size);
 }
 
 void Solver::onStartGuessing()
 {
 	interupt = false;
-	guess->algorithm = rules->algorithm; // to prevent change in algorithm by user in the middle of computation
+	guess->algorithm = rules->getAlgorithm(); // to prevent change in algorithm by user in the middle of computation
 	start(QThread::NormalPriority);
 }
 
@@ -134,10 +129,10 @@ void Solver::shuffle(unsigned char *m_string, int len) const
 void Solver::permute(unsigned char *m_code) const
 {
 	unsigned char shuffled_colors[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255};// QString("0123456789").left(rules->colors);
-	shuffle(shuffled_colors, rules->colors);
-	shuffle(m_code, rules->pegs);
+	shuffle(shuffled_colors, rules->getColors());
+	shuffle(m_code, rules->getPegs());
 
-	for(int i = 0; i < rules->pegs; ++i)
+	for(int i = 0; i < rules->getPegs(); ++i)
 		m_code[i] = shuffled_colors[m_code[i]];
 }
 
@@ -146,7 +141,7 @@ bool Solver::setResponse(const int &blacks, const int &whites)
 	QList<int> temppossibles;
 	int _blacks, _whites;
 	foreach(int possible, possibles) {
-		COMPARE(guess->guess, codes.index[possible], rules->colors, rules->pegs, _blacks, _whites);
+		COMPARE(guess->guess, codes.index[possible], rules->getColors(), rules->getPegs(), _blacks, _whites);
 		if (blacks == _blacks && whites == _whites)
 			temppossibles.append(possible);
 	}
@@ -191,8 +186,8 @@ void Solver::makeGuess()
 	// The first guess here
 	if (possibles.size() == codes.size) {
 		unsigned char answer[] = {0, 1, 2, 3, 4};
-		if (rules->same_colors) {
-			switch (rules->colors) {
+		if (rules->isSameColor()) {
+			switch (rules->getColors()) {
 			case 2:
 				answer[2] = 0;
 				answer[3] = 1;
@@ -208,7 +203,7 @@ void Solver::makeGuess()
 				break;
 			}
 			// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
-			if(rules->colors == 6 && rules->pegs == 4 && rules->algorithm == Rules::Algorithm::WorstCase) {
+			if(rules->getColors() == 6 && rules->getPegs() == 4 && rules->getAlgorithm() == Rules::Algorithm::WorstCase) {
 				answer[2] = 0;
 				answer[3] = 1;
 			}
@@ -242,7 +237,7 @@ void Solver::makeGuess()
 
 		int whites, blacks;
 		foreach(int possible_index, possibles) {
-			COMPARE(codes.index[sp.index[code_index]], codes.index[possible_index], rules->colors, rules->pegs, blacks, whites);
+			COMPARE(codes.index[sp.index[code_index]], codes.index[possible_index], rules->getColors(), rules->getPegs(), blacks, whites);
 			++responsesOfCodes[(blacks+whites)*(blacks+whites+1)/2 + blacks];
 		}
 		code_weight = computeWeight(responsesOfCodes);
@@ -305,9 +300,9 @@ qreal Solver::computeWeight(int *m_responses) const
 void Solver::indexToCodeSameColor(const int &number)
 {
 	int m_number = number;
-	for(int i = 0; i < rules->pegs; ++i) {
-		codes.index[number][i] = static_cast<char>(m_number % rules->colors);
-		m_number /= rules->colors;
+	for(int i = 0; i < rules->getPegs(); ++i) {
+		codes.index[number][i] = static_cast<char>(m_number % rules->getColors());
+		m_number /= rules->getColors();
 	}
 }
 
@@ -316,8 +311,8 @@ void Solver::indexToCodeDifferentColor(const int &number)
 //	unsigned char NUMS[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255};
 	int m_number = number;
 	int max_digits = codes.size;
-	for(int i = 0; i < rules->pegs; ++i) {
-		max_digits /= rules->colors - i;
+	for(int i = 0; i < rules->getPegs(); ++i) {
+		max_digits /= rules->getColors() - i;
 		int temp = m_number / max_digits;
 		m_number -= temp*max_digits;
 		for(int j = 0; j < i; j++)
@@ -330,7 +325,7 @@ void Solver::indexToCodeDifferentColor(const int &number)
 QString Solver::arrayToString(const unsigned char *m_array) const
 {
 	QString answer = "";
-	for(int i = 0; i < rules->pegs; ++i) {
+	for(int i = 0; i < rules->getPegs(); ++i) {
 		answer.append(QString::number(m_array[i]));
 	}
 	return answer;

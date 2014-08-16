@@ -30,15 +30,17 @@ class Rules
 
 public:
 
-	/**
-	 * @brief The Algorithm enum the solving algorithm
-	 */
 	enum class Algorithm
 	{
 		MostParts,
 		WorstCase,
 		ExpectedSize
 	};
+	enum class Mode {
+		MVH,		//HUMAN MAKE THE HIDDEN CODE
+		HVM		    //HUMAN BREAKS THE HIDDEN CODE
+	};
+
 	static const int MIN_COLOR_NUMBER	= 2; /**< The minimum number of colors */
 	static const int MAX_COLOR_NUMBER	= 10; /**< The maximum number of colors */
 
@@ -50,23 +52,20 @@ public:
 	Rules();
 	~Rules();
 
+	void update(int _colors, int _pegs, Algorithm _alg, Mode _mode, bool _same_color);
+	void setAlgorithm(int a);
+	int getPegs() const { return pegs; }
+	int getColors() const { return colors; }
+	Algorithm getAlgorithm() const { return algorithm; }
+	bool isSameColor() const { return same_colors; }
+	Mode getMode() const { return mode;}
+
 private:
-
-	enum Mode {
-		MVH,		//HUMAN MAKE THE HIDDEN CODE
-		HVM		    //HUMAN BREAKS THE HIDDEN CODE
-	};
-
 	int pegs; /**< TODO */
 	int colors; /**< TODO */
 	bool same_colors; /**< TODO */
-	Rules::Algorithm algorithm; /**< TODO */
+	Algorithm algorithm; /**< TODO */
 	Mode mode; /**< TODO */
-
-	friend class MainWindow;
-	friend class Solver;
-	friend class Game;
-	friend class PinBox;
 };
 
 #endif // RULES_H

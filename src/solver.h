@@ -65,18 +65,11 @@ public:
 	static int ipow(int base, int exp);
 	/**
 	 * @brief Solver
-	 * @param game_rules
 	 * @param guess_element
 	 * @param parent
 	 */
-	explicit Solver(Rules *game_rules, Guess *guess_element, QObject *parent = 0);
+	explicit Solver(Rules *_rules, Guess *guess_element, QObject *parent = 0);
 	~Solver();
-
-	/**
-	 * @brief determines if the game is over
-	 * @return bool true if the response is all black, false othewise
-	 */
-	bool done () const;
 
 	/**
 	 * @brief check if the response is valid and remove impossibles

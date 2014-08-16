@@ -18,19 +18,19 @@
  ***********************************************************************/
 
 #include "button.h"
-#include "font.h"
+#include "board.h"
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneEvent>
 #include <QCursor>
 #include <QPainter>
 
-Button::Button(const Font &board_font, const int &buttonWidth, const QString &str, QGraphicsItem *parent):
+Button::Button(Board *board, const int &buttonWidth, const QString &str, QGraphicsItem *parent):
 	QGraphicsObject(parent)
 {
 	width = buttonWidth;
 	label = str;
 
-	font = QFont(board_font.name, board_font.size - 1, QFont::Bold, false);
+	font = QFont(board->getFontName(), board->getFontSize() - 1, QFont::Bold, false);
 	font.setStyleHint(QFont::SansSerif);
 	font.setStyleStrategy(QFont::PreferAntialias);
 

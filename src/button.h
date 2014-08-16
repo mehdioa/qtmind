@@ -25,7 +25,7 @@
 #include <QBrush>
 
 class Board;
-class Font;
+//class Font;
 class QGraphicsDropShadowEffect;
 
 /**
@@ -44,7 +44,7 @@ public:
 	 * @param buttonWidth width of the button
 	 * @param str label of the button
 	 */
-	explicit Button(const Font &board_font, const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
+	explicit Button(Board *board, const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief setLabel set the label of the button

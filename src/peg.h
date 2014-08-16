@@ -20,13 +20,13 @@
 #ifndef PEG_H
 #define PEG_H
 
-#include <QGraphicsObject>
 #include "rules.h"
+#include <QGraphicsObject>
 
-class Indicator;
 class QGestureEvent;
 class QGraphicsDropShadowEffect;
 class QTapGesture;
+class Board;
 
 /**
  * @brief The Peg class represent a peg on the board
@@ -47,7 +47,7 @@ public:
 		Underneath,	//	Pegs under Initial right pegs
 		Plain		//	Just circle is visible
 	};
-	explicit Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent = 0);
+	explicit Peg(const QPointF &m_position, const int &color_number, Board *_board, QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief setColor set the color of the peg
@@ -116,7 +116,7 @@ private:
 	static QFont setFont();
 
 	QPointF position; /**< TODO */
-	Indicator *indicator; /**< TODO */
+	Board *board; /**< TODO */
 	QGraphicsDropShadowEffect *pressedEffect; /**< TODO */
 	QGraphicsEllipseItem *circle; /**< TODO */
 

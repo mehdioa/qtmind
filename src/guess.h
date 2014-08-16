@@ -19,7 +19,6 @@
 
 #ifndef GUESS_H
 #define GUESS_H
-
 #include "rules.h"
 #include <QString>
 
@@ -87,7 +86,6 @@ private:
 	unsigned char code[Rules::MAX_SLOT_NUMBER]; /**< TODO */
 	int blacks;
 	int whites;
-//	int response; /**< TODO */
 	Rules::Algorithm algorithm; /**< TODO */
 	int possibles; /**< TODO */
 	qreal weight; /**< TODO */

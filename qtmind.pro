@@ -34,13 +34,10 @@ SOURCES += src/main.cpp\
 	src/preferences.cpp \
 	src/solver.cpp \
 	src/game.cpp \
-	src/indicator.cpp \
-	src/rules.cpp \
-	src/font.cpp \
 	src/guess.cpp \
 	src/box.cpp \
     src/board.cpp \
-    src/sounds.cpp
+    src/rules.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -53,13 +50,10 @@ HEADERS  += src/mainwindow.h \
 	src/solver.h \
 	src/game.h \
 	src/appinfo.h \
-	src/indicator.h \
-	src/rules.h \
-	src/font.h \
 	src/guess.h \
 	src/box.h \
     src/board.h \
-    src/sounds.h
+    src/rules.h
 
 FORMS	+= \
 	src/preferences.ui \

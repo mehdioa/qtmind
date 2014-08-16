@@ -64,7 +64,7 @@ void PinBox::getValue(int &bl, int &wt) const
 void PinBox::setPins(const Guess &guess, Rules *rules)
 {
 	int whites, blacks;
-	COMPARE(guess.code, guess.guess, rules->colors, rules->pegs, blacks, whites);
+	COMPARE(guess.code, guess.guess, rules->getColors(), rules->getPegs(), blacks, whites);
 	for(int i = 0; i < blacks; ++i)
 		pins.at(i)->setColor(Pin::Color::Black);
 

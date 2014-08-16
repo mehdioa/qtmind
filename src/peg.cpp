@@ -18,7 +18,7 @@
  ***********************************************************************/
 
 #include "peg.h"
-#include "indicator.h"
+#include "board.h"
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
@@ -43,10 +43,10 @@ const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"}; /**< TODO */
 
 const QFont Peg::font = Peg::setFont(); /**< TODO */
 
-Peg::Peg(const QPointF &m_position, const int &color_number, Indicator *indicator_s, QGraphicsItem *parent):
+Peg::Peg(const QPointF &m_position, const int &color_number, Board *_board, QGraphicsItem *parent):
 	QGraphicsObject(parent),
 	position(m_position),
-	indicator(indicator_s),
+	board(_board),
 	isActive(false)
 {
 	pressedEffect = new QGraphicsDropShadowEffect;
@@ -186,7 +186,7 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-	int virtual_color = indicator->forceColor() ? color : 3;
+	int virtual_color = board->forceColor() ? color : 3;
 
 	if (pegState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
@@ -207,12 +207,12 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-	if (indicator->showIndicators && pegState != State::Plain) {
+	if (board->getShowIndicators() && pegState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
 		painter->setFont(font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)indicator->type][color]);
+		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)board->getIndicator()][color]);
 	}
 }
 
