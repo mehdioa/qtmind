@@ -23,6 +23,7 @@
 #include "ctime"
 #include <QtCore/qmath.h>
 #include <stdlib.h>
+#include <QDebug>
 
 
 int Solver::ipow(int base, int exp) {
@@ -49,6 +50,11 @@ Solver::~Solver()
 	deleteTables();
 }
 
+inline static void array_copy(unsigned char *A, unsigned char *B, int N) {
+	for (int i = 0; i < N; i++)
+		B[i] = A[i];
+}
+
 void Solver::createTables()
 {
 	if (Rules::instance()->isSameColor()) {
@@ -71,13 +77,15 @@ void Solver::createTables()
 		for (int i = 0; i < Rules::instance()->getPegs(); i++)
 			codes.index[0][i] = 0;
 		for (int i = 1; i < codes.size; i++) {
-			indexToCodeSameColor(i);
+			array_copy(codes.index[i-1], codes.index[i], Rules::instance()->getPegs());
+			indexToCodeSameColor(codes.index[i]);
 		}
 	} else {
 		for (int i = 0; i < Rules::instance()->getPegs(); i++)
 			codes.index[0][i] = i;
 		for (int i = 1; i < codes.size; i++) {
-			indexToCodeDifferentColor(i);
+			array_copy(codes.index[i-1], codes.index[i], Rules::instance()->getPegs());
+			indexToCodeDifferentColor(codes.index[i]);
 		}
 	}
 
@@ -299,28 +307,24 @@ qreal Solver::computeWeight(int *m_responses) const
 	return answer;
 }
 
-void Solver::indexToCodeSameColor(const int &number)
+void Solver::indexToCodeSameColor(unsigned char *X)
 {
-	for (int i = 0; i < Rules::instance()->getPegs(); i++)
-		codes.index[number][i] = codes.index[number - 1][i];
 	int i = Rules::instance()->getPegs() - 1;
 	int N = Rules::instance()->getColors();
 	N--;
-	while (i >= 0 && codes.index[number][i] >= N)
-		codes.index[number][i--] = 0;
+	while (i >= 0 && X[i] >= N)
+		X[i--] = 0;
 	if (i < 0) return;
-	codes.index[number][i]++;
+	X[i]++;
 }
 
-void Solver::indexToCodeDifferentColor(const int &number)
+void Solver::indexToCodeDifferentColor(unsigned char *X)
 {
-	for (int i = 0; i < Rules::instance()->getPegs(); i++)
-		codes.index[number][i] = codes.index[number - 1][i];
 	int i = Rules::instance()->getPegs();
 	while (--i >= 0) {
-		while (++codes.index[number][i] < Rules::instance()->getColors()) {
+		while (++X[i] < Rules::instance()->getColors()) {
 			int j = 0;
-			while (j < i && codes.index[number][j] != codes.index[number][i])
+			while (j < i && X[j] != X[i])
 				++j;
 			if (j == i) goto mark;
 		}
@@ -328,10 +332,10 @@ void Solver::indexToCodeDifferentColor(const int &number)
 	return;
 mark:
 	while (++i < Rules::instance()->getPegs()) {
-		codes.index[number][i] = -1;
-		while (++codes.index[number][i] < Rules::instance()->getColors()) {
+		X[i] = -1;
+		while (++X[i] < Rules::instance()->getColors()) {
 			int j = 0;
-			while (j < i && codes.index[number][j] != codes.index[number][i])
+			while (j < i && X[j] != X[i])
 				++j;
 			if (j == i) break;
 		}

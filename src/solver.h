@@ -160,13 +160,13 @@ private:
 	 *
 	 * @param number
 	 */
-	void indexToCodeSameColor(const int &number);
+	void indexToCodeSameColor(unsigned char *X);
 
 	/**
 	 * @brief indexToCodeDifferentColor
 	 * @param number
 	 */
-	void indexToCodeDifferentColor(const int &number);
+	void indexToCodeDifferentColor(unsigned char *X);
 
 	/**
 	 * @brief
