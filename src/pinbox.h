@@ -22,7 +22,7 @@
 
 #include "box.h"
 #include "guess.h"
-#include "rules.h"
+#include "appinfo.h"
 
 class Pin;
 
@@ -42,8 +42,6 @@ public:
 
 	/**
 	 * @brief getValue get the value of the box
-	 * @return the total value of the pinbox. Look the solver class for the explanation of the
-	 * value.
 	 */
 	void getValue(int &bl, int &wt) const;
 
@@ -53,7 +51,7 @@ public:
 	 * @param codeB second code
 	 * @param color_n the number of colors
 	 */
-	void setPins(const Guess &guess, Rules *rules);
+	void setPins();
 
 	/**
 	 * @brief setState set the box state
@@ -62,7 +60,7 @@ public:
 	void setState(const Box::State &m_state = Box::State::Future);
 
 private:
-	static const int PinPositions[Rules::MAX_SLOT_NUMBER][Rules::MAX_SLOT_NUMBER][2]; /**< TODO */
+	static const int PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
 	QVector<Pin *> pins; /**< TODO */
 };
 

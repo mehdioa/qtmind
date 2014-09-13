@@ -18,8 +18,8 @@
  ***********************************************************************/
 
 #include "game.h"
-#include "board.h"
 #include "rules.h"
+#include "board.h"
 #include "button.h"
 #include "pegbox.h"
 #include "pinbox.h"
@@ -33,11 +33,9 @@ inline static void setStateOfList(QList<PegBox *> *boxlist, const Box::State &st
 		box->setState(state_t);
 }
 
-Game::Game(Rules *_rules, Board *_board):
+Game::Game():
 	QGraphicsView(),
 	state(State::None),
-	rules(_rules),
-	board(_board),
 	solver(0)
 {
 	auto scene = new QGraphicsScene(this);
@@ -65,19 +63,16 @@ Game::~Game()
 
 void Game::codeRowFilled(const bool &m_filled)
 {
-	if(rules->getMode() == Rules::Mode::HVM) {
+	if(Rules::instance()->getMode() == Mode::HVM) {
+		okButton->setVisible(m_filled);
+		okButton->setEnabled(m_filled);
 		if (m_filled) {
-			okButton->setVisible(true);
-			okButton->setEnabled(true);
 			state = State::WaittingPinboxPress;
 			showMessage();
 
-			if (board->isAutoCloseRows())
+			if (Board::instance()->isAutoCloseRows())
 				onOkButtonPressed();
 		} else {
-			okButton->setVisible(false);
-			okButton->setEnabled(false);
-
 			if (playedMoves == 0)
 				state = State::WaittingFirstRowFill;
 			else
@@ -85,7 +80,7 @@ void Game::codeRowFilled(const bool &m_filled)
 
 			showMessage();
 		}
-	} else {	//rules->getMode() == Rules::Mode::MVH
+	} else {	//Rules::instance()->getMode() == Mode::MVH
 		doneButton->setVisible(m_filled);
 
 		if (m_filled)//the user is not done putting the master code
@@ -110,16 +105,16 @@ void Game::createBoxes()
 
 	QPoint left_bottom_corner(4, 489);
 
-	for (int i = 0; i < Rules::MAX_COLOR_NUMBER; ++i) {
+	for (int i = 0; i < MAX_COLOR_NUMBER; ++i) {
 		QPoint position = left_bottom_corner - QPoint(0, i*40);
 
-		auto pinbox = new PinBox(rules->getPegs(), position);
+		auto pinbox = new PinBox(Rules::instance()->getPegs(), position);
 		scene()->addItem(pinbox);
 		pinBoxes.append(pinbox);
 
-		position.setX(160-20*rules->getPegs());
+		position.setX(160-20*Rules::instance()->getPegs());
 
-		for (int j = 0; j < rules->getPegs(); ++j) {
+		for (int j = 0; j < Rules::instance()->getPegs(); ++j) {
 			codeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
 		}
 
@@ -127,7 +122,7 @@ void Game::createBoxes()
 
 		PegBox *pegbox = createPegBox(position);
 		pegBoxes.append(pegbox);
-		if (i < rules->getColors()) {
+		if (i < Rules::instance()->getColors()) {
 			Peg *peg;
 			peg = createPeg(pegbox, i);
 			peg->setState(Peg::State::Underneath);
@@ -140,8 +135,8 @@ void Game::createBoxes()
 	}
 
 	// the last code boxes are for the master code
-	for (int i = 0; i < rules->getPegs(); ++i) {
-		masterBoxes.append(createPegBox(QPoint(160-20*rules->getPegs()+i*40, 70)));
+	for (int i = 0; i < Rules::instance()->getPegs(); ++i) {
+		masterBoxes.append(createPegBox(QPoint(160-20*Rules::instance()->getPegs()+i*40, 70)));
 	}
 }
 
@@ -168,7 +163,7 @@ PegBox *Game::createPegBox(const QPoint &m_position)
 
 Peg *Game::createPeg(const QPointF &m_position, const int &m_color)
 {
-	auto peg = new Peg(m_position, m_color, board);
+	auto peg = new Peg(m_position, m_color);
 	scene()->addItem(peg);
 	return peg;
 }
@@ -189,7 +184,7 @@ void Game::freezeScene()
 void Game::setNextRowInAction()
 {
 	currentBoxes.clear();
-	for(int i = playedMoves*rules->getPegs(); i < (playedMoves+1)*rules->getPegs(); ++i)
+	for(int i = playedMoves*Rules::instance()->getPegs(); i < (playedMoves+1)*Rules::instance()->getPegs(); ++i)
 		currentBoxes.append(codeBoxes.at(i));
 	setStateOfList(&currentBoxes, Box::State::Current);
 	state = State::WaittingCodeRowFill;
@@ -205,9 +200,9 @@ Game::Player Game::winner() const
 {
 	int blacks, whites;
 	pinBoxes.at(playedMoves)->getValue(blacks, whites);
-	if (blacks == rules->getPegs())
+	if (blacks == Rules::instance()->getPegs())
 		return Player::CodeBreaker;
-	else if (playedMoves >= Rules::MAX_COLOR_NUMBER - 1)
+	else if (playedMoves >= MAX_COLOR_NUMBER - 1)
 		return Player::CodeMaker;
 	else
 		return Player::None;
@@ -225,14 +220,14 @@ void Game::initializeScene()
 	scene()->clear();
 	setInteractive(true);
 
-	okButton = new Button(board, 36, tr("OK"));
+	okButton = new Button(36, tr("OK"));
 	scene()->addItem(okButton);
 	okButton->setZValue(2);
 	connect(okButton, SIGNAL(buttonPressed()), this, SLOT(onOkButtonPressed()));
 	okButton->setEnabled(false);
 	okButton->setVisible(false);
 
-	doneButton = new Button(board, 158, tr("Done"));
+	doneButton = new Button(158, tr("Done"));
 	doneButton->setPos(79, 118);
 	doneButton->setVisible(false);
 	doneButton->setZValue(2);
@@ -240,11 +235,11 @@ void Game::initializeScene()
 	connect(doneButton, SIGNAL(buttonPressed()), this, SLOT(onDoneButtonPressed()));
 	scene()->addItem(doneButton);
 
-	message = new Message(board, "#303030");
+	message = new Message("#303030");
 	scene()->addItem(message);
 	message->setPos(20, 0);
 
-	information = new Message(board, "#808080", 4);
+	information = new Message("#808080", 4);
 	scene()->addItem(information);
 	information->setPos(20, 506);
 	showInformation();
@@ -257,11 +252,11 @@ void Game::onPegMouseReleased(Peg *peg)
 	QPointF position = peg->sceneBoundingRect().center();
 	int color = peg->getColor();
 	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
-	if(!rules->isSameColor()) {
+	if(!Rules::instance()->isSameColor()) {
 		foreach(PegBox *box, currentBoxes) {
 			if(!box->sceneBoundingRect().contains(position) &&
 					box->isPegVisible() && box->getPegColor() == color) {
-				board->play(Board::Sound::PegDropRefuse);
+				Board::instance()->play(Board::Sound::PegDropRefuse);
 				return;
 			}
 		}
@@ -277,7 +272,7 @@ void Game::onPegMouseReleased(Peg *peg)
 		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce) {
 			dropOnlyOnce = false;
 			createPegForBox(box, color);
-			board->play(Board::Sound::PegDrop);
+			Board::instance()->play(Board::Sound::PegDrop);
 
 			box->setPegState(Peg::State::Visible);
 		}//	end if
@@ -340,7 +335,7 @@ bool Game::isRunning()
 
 void Game::onRevealOnePeg()
 {
-	if (rules->getMode() == Rules::Mode::HVM && isRunning()) {
+	if (Rules::instance()->getMode() == Mode::HVM && isRunning()) {
 		foreach(PegBox *box, masterBoxes) {
 			if(box->getState() != Box::State::Past) {
 				if (box == masterBoxes.last()) {
@@ -356,7 +351,7 @@ void Game::onRevealOnePeg()
 
 void Game::onResigned()
 {
-	if (rules->getMode() == Rules::Mode::HVM && isRunning()) {
+	if (Rules::instance()->getMode() == Mode::HVM && isRunning()) {
 		state = State::Resign;
 		showMessage();
 		freezeScene();
@@ -365,14 +360,14 @@ void Game::onResigned()
 
 void Game::onOkButtonPressed()
 {
-	if(rules->getMode() == Rules::Mode::MVH) {
+	if(Rules::instance()->getMode() == Mode::MVH) {
 		int blacks, whites;
 		pinBoxes.at(playedMoves)->getValue(blacks, whites);
 		if(!solver->setResponse(blacks, whites)) {
 			message->setText(tr("Not Possible, Try Again"));
 			return;
 		}
-		board->play(Board::Sound::ButtonPress);
+		Board::instance()->play(Board::Sound::ButtonPress);
 		okButton->setVisible(false);
 
 		pinBoxes.at(playedMoves)->setState(Box::State::Past);
@@ -394,15 +389,15 @@ void Game::onOkButtonPressed()
 
 		showMessage();
 	} else {
-		board->play(Board::Sound::ButtonPress);
+		Board::instance()->play(Board::Sound::ButtonPress);
 		state = State::Running;
 
-		unsigned char new_guess[Rules::MAX_SLOT_NUMBER];
-		for(int i = 0; i < rules->getPegs(); ++i)
+		unsigned char new_guess[MAX_SLOT_NUMBER];
+		for(int i = 0; i < Rules::instance()->getPegs(); ++i)
 			new_guess[i] = currentBoxes.at(i)->getPegColor();
-		guess.setGuess(new_guess);
+		Guess::instance()->setGuess(new_guess);
 
-		pinBoxes.at(playedMoves)->setPins(guess, rules);
+		pinBoxes.at(playedMoves)->setPins();
 		pinBoxes.at(playedMoves)->setState(Box::State::Past);
 
 		setStateOfList(&currentBoxes, Box::State::Past);
@@ -431,7 +426,7 @@ void Game::onOkButtonPressed()
 
 void Game::onDoneButtonPressed()
 {
-	board->play(Board::Sound::ButtonPress);
+	Board::instance()->play(Board::Sound::ButtonPress);
 	state = State::Running;
 
 	doneButton->setVisible(false);
@@ -440,10 +435,10 @@ void Game::onDoneButtonPressed()
 	setStateOfList(&currentBoxes, Box::State::Past);
 	setStateOfList(&pegBoxes, Box::State::Future);
 
-	unsigned char new_guess[Rules::MAX_SLOT_NUMBER];
-	for(int i = 0; i < rules->getPegs(); ++i)
+	unsigned char new_guess[MAX_SLOT_NUMBER];
+	for(int i = 0; i < Rules::instance()->getPegs(); ++i)
 		new_guess[i] = currentBoxes.at(i)->getPegColor();
-	guess.setCode(new_guess);
+	Guess::instance()->setCode(new_guess);
 
 	currentBoxes.clear();
 	getNextGuess();
@@ -455,9 +450,9 @@ void Game::onGuessReady()
 	state = State::Running;
 	showInformation();
 
-	int box_index = playedMoves*rules->getPegs();
-	for(int i = 0; i < rules->getPegs(); ++i) {
-		createPegForBox(codeBoxes.at(box_index + i), guess.guess[i]);
+	int box_index = playedMoves*Rules::instance()->getPegs();
+	for(int i = 0; i < Rules::instance()->getPegs(); ++i) {
+		createPegForBox(codeBoxes.at(box_index + i), Guess::instance()->guess[i]);
 		codeBoxes.at(box_index + i)->setState(Box::State::Past);
 	}
 	state = State::WaittingOkButtonPress;
@@ -467,17 +462,17 @@ void Game::onGuessReady()
 	okButton->setVisible(true);
 	okButton->setPos(pinBoxes.at(playedMoves)->pos()-QPoint(0, 39));
 
-	if (board->isAutoPutPins())
-		pinBoxes.at(playedMoves)->setPins(guess, rules);
+	if (Board::instance()->isAutoPutPins())
+		pinBoxes.at(playedMoves)->setPins();
 }
 
 void Game::play()
 {
 	stop();
 
-	if(rules->getMode() == Rules::Mode::MVH)
+	if(Rules::instance()->getMode() == Mode::MVH)
 		playMVH();
-	else // (rules->getMode() == Rules::Mode::HVM)
+	else // (Rules::instance()->getMode() == Mode::HVM)
 		playHVM();
 }
 
@@ -499,7 +494,7 @@ void Game::playMVH()
 	doneButton->setEnabled(true);
 
 	if (!solver) {
-		solver = new Solver(rules, &guess, this);
+		solver = new Solver(this);
 		connect(solver, SIGNAL(guessDoneSignal()), this, SLOT(onGuessReady()));
 		connect(this, SIGNAL(startGuessingSignal()), solver, SLOT(onStartGuessing()));
 		connect(this, SIGNAL(resetGameSignal()), solver, SLOT(onReset()));
@@ -513,7 +508,7 @@ void Game::playMVH()
 	showInformation();
 
 	//initializing currentrow
-	for(int i = 0; i < rules->getPegs(); ++i) {
+	for(int i = 0; i < Rules::instance()->getPegs(); ++i) {
 		currentBoxes.append(masterBoxes.at(i));
 		masterBoxes.at(i)->setState(Box::State::Current);
 	}
@@ -527,11 +522,11 @@ void Game::playMVH()
 void Game::playHVM()
 {
 	qsrand(time(NULL));
-	int remaining_colors = rules->getColors();
-	unsigned char hidden_code[Rules::MAX_SLOT_NUMBER];
-		for(int i = 0; i < rules->getPegs(); i++) {
+	int remaining_colors = Rules::instance()->getColors();
+	unsigned char hidden_code[MAX_SLOT_NUMBER];
+		for(int i = 0; i < Rules::instance()->getPegs(); i++) {
 			hidden_code[i] = static_cast<unsigned char>(remaining_colors * (qrand()/(RAND_MAX + 1.0)));
-			if (!rules->isSameColor()) {
+			if (!Rules::instance()->isSameColor()) {
 				for(int j = 0; j < i; j++)
 					if (hidden_code[j] <= hidden_code[i])
 						hidden_code[i]++;
@@ -541,13 +536,13 @@ void Game::playHVM()
 			masterBoxes.at(i)->setState(Box::State::None);
 		}
 
-	guess.setCode(hidden_code);
+	Guess::instance()->setCode(hidden_code);
 	setNextRowInAction();
 	showMessage();
 	showInformation();
 	state = State::WaittingFirstRowFill;
 	okButton->setPos(pinBoxes.at(playedMoves)->pos() + QPoint(0, 1));
-	// from now on the onPinBoxPushed function continue the game, after the code row is filled
+	// from now on the onPinBoxPressed function continues the game, after the code row is filled
 }
 
 void Game::resizeEvent(QResizeEvent *event)
@@ -556,51 +551,46 @@ void Game::resizeEvent(QResizeEvent *event)
 	QGraphicsView::resizeEvent(event);
 }
 
-//void Game::setAlgorithm(const Rules::Algorithm &algorithm_n)
-//{
-//	board->algorithm = algorithm_n;
-//}
-
 void Game::showInformation()
 {
-	if (rules->getMode() == Rules::Mode::MVH) {
-		if (guess.possibles == 1)
+	if (Rules::instance()->getMode() == Mode::MVH) {
+		if (Guess::instance()->possibles == 1)
 		{
 			information->setText(tr("The Code Is Cracked!"));
-		} else if (guess.possibles > 10000) {
+		} else if (Guess::instance()->possibles > 10000) {
 			information->setText(QString("%1    %2: %3").arg(tr("Random Guess")).
-								  arg(tr("Remaining")).arg(board->getLoale()->toString(guess.possibles)));
+								  arg(tr("Remaining")).arg(Board::instance()->getLoale()->toString(Guess::instance()->possibles)));
 		} else {
-			switch (guess.algorithm) {
-			case Rules::Algorithm::MostParts:
+			switch (Guess::instance()->algorithm) {
+			case Algorithm::MostParts:
 				information->setText(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
-										  arg(board->getLoale()->toString(guess.weight)).arg(tr("Remaining")).
-										  arg(board->getLoale()->toString(guess.possibles)));
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->weight)).arg(tr("Remaining")).
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->possibles)));
 				break;
-			case Rules::Algorithm::WorstCase:
+			case Algorithm::WorstCase:
 				information->setText(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
-										  arg(board->getLoale()->toString(guess.weight)).arg(tr("Remaining")).
-										  arg(board->getLoale()->toString(guess.possibles)));
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->weight)).arg(tr("Remaining")).
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->possibles)));
 				break;
 			default:
 				information->setText(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
-										  arg(board->getLoale()->toString(guess.weight)).arg(tr("Remaining")).
-										  arg(board->getLoale()->toString(guess.possibles)));
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->weight)).arg(tr("Remaining")).
+										  arg(Board::instance()->getLoale()->toString(Guess::instance()->possibles)));
 				break;
 			}
 
 		}
 	} else {
-		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", rules->getPegs())).
-								  arg(board->getLoale()->toString(rules->getPegs())).arg(tr("Colors", "", rules->getColors())).
-								  arg(board->getLoale()->toString(rules->getColors())).arg(tr("Same Colors")).
-							 arg(rules->isSameColor() ? tr("Yes"): tr("No")));
+		information->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", Rules::instance()->getPegs())).
+								  arg(Board::instance()->getLoale()->toString(Rules::instance()->getPegs())).arg(tr("Colors", "", Rules::instance()->getColors())).
+								  arg(Board::instance()->getLoale()->toString(Rules::instance()->getColors())).arg(tr("Same Colors")).
+							 arg(Rules::instance()->isSameColor() ? tr("Yes"): tr("No")));
 	}
 }
 
 void Game::showMessage()
 {
-	bool is_MVH = (rules->getMode() == Rules::Mode::MVH);
+	bool is_MVH = (Rules::instance()->getMode() == Mode::MVH);
 	switch (state) {
 	case State::Win:
 		if (is_MVH)

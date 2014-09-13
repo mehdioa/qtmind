@@ -19,6 +19,7 @@
 
 #include "peg.h"
 #include "board.h"
+#include "appinfo.h"
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
@@ -26,7 +27,7 @@
 #include <QTapGesture>
 #include <QGestureEvent>
 
-const QColor Peg::PegColors[Rules::MAX_COLOR_NUMBER][2] = { /**< TODO */
+const QColor Peg::PegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
 	{QColor("#FFFF80"), QColor("#E47A00")},
 	{QColor("#FF3300"), QColor("#AF0707")},
 	{QColor("#33CCFF"), QColor("#031CFF")},
@@ -43,10 +44,9 @@ const QString Peg::OrderedChars[3] = {"ABCDEFGHIJ", "0123456789"}; /**< TODO */
 
 const QFont Peg::font = Peg::setFont(); /**< TODO */
 
-Peg::Peg(const QPointF &m_position, const int &color_number, Board *_board, QGraphicsItem *parent):
+Peg::Peg(const QPointF &m_position, const int &color_number, QGraphicsItem *parent):
 	QGraphicsObject(parent),
 	position(m_position),
-	board(_board),
 	isActive(false)
 {
 	pressedEffect = new QGraphicsDropShadowEffect;
@@ -186,7 +186,7 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-	int virtual_color = board->forceColor() ? color : 3;
+	int virtual_color = Board::instance()->forceColor() ? color : 3;
 
 	if (pegState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
@@ -207,12 +207,12 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-	if (board->getShowIndicators() && pegState != State::Plain) {
+	if (Board::instance()->getShowIndicators() && pegState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
 		painter->setFont(font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)board->getIndicator()][color]);
+		painter->drawText(boundingRect(), Qt::AlignCenter, OrderedChars[(int)Board::instance()->getIndicator()][color]);
 	}
 }
 

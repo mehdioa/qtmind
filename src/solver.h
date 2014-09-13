@@ -23,9 +23,6 @@
 #include <QList>
 #include <QThread>
 
-class Rules;
-class Guess;
-
 /**	@brief The class Solver is the solving engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
  *	response and so on. The response is stored this way:
@@ -68,7 +65,7 @@ public:
 	 * @param guess_element
 	 * @param parent
 	 */
-	explicit Solver(Rules *_rules, Guess *guess_element, QObject *parent = 0);
+	explicit Solver(QObject *parent = 0);
 	~Solver();
 
 	/**
@@ -197,8 +194,6 @@ private:
 		int *index;
 	} sp;
 
-	Rules *rules; /**< TODO */
-	Guess *guess; /**< TODO */
 	int max_response; /**< TODO */
 	volatile bool interupt; /**< TODO */
 	QList<int> possibles;   //	list of all possibles

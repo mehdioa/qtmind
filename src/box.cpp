@@ -51,12 +51,12 @@ void Box::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 	painter->setPen(QPen(QBrush(QColor(236, 236, 236, BoxAlphas[(int)state])),1));
 	painter->drawLine(0, 0, 0, 39);
 	painter->drawLine(0, 0, 39, 0);
-	painter->drawLine(0, .5, 39, .5);
-	painter->drawLine(.5, 0, .5, 39);
+	painter->drawLine(QPointF(0, .5), QPointF(39, .5));
+	painter->drawLine(QPointF(.5, 0), QPointF(.5, 39));
 
 	painter->setPen(QPen(QBrush(QColor(80, 80, 80, BoxAlphas[(int)state])),1));
 	painter->drawLine(39, 0, 39, 39);
 	painter->drawLine(0, 39, 39, 39);
-	painter->drawLine(39.5, 0, 39.5, 39);
-	painter->drawLine(0, 39.5, 39, 39.5);
+	painter->drawLine(QPointF(39.5, 0), QPointF(39.5, 39));
+	painter->drawLine(QPointF(0, 39.5), QPointF(39, 39.5));
 }

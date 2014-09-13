@@ -18,7 +18,6 @@
  ***********************************************************************/
 
 #include "board.h"
-#include "appinfo.h"
 #include "QSettings"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
@@ -44,6 +43,12 @@ Board::Board():
 	buttonPress->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
 #endif
 	setVolume(QSettings().value("Volume", 3).toInt());
+}
+
+Board *Board::instance()
+{
+	static Board board;
+	return &board;
 }
 
 Board::~Board()

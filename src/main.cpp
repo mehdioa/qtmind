@@ -19,9 +19,6 @@
 
 #include "mainwindow.h"
 #include "appinfo.h"
-#include "game.h"
-#include "board.h"
-#include "rules.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -32,10 +29,7 @@ int main(int argc, char *argv[])
 	app.setOrganizationName(ORG_NAME);
 	app.setOrganizationDomain(ORG_DOMAIN);
 
-	Board board;
-	Rules rules;
-	Game *game = new Game(&rules, &board);
-	MainWindow w(game);
+	MainWindow w; // MainWindow will delete game
 	w.setWindowIcon(QIcon("://icons/resources/icons/qtmind.png"));
 	w.show();
 	return app.exec();

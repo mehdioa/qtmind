@@ -17,6 +17,7 @@
  *
  ***********************************************************************/
 
+#include "appinfo.h"
 #include "rules.h"
 #include <QSettings>
 
@@ -30,6 +31,12 @@ Rules::Rules():
 
 }
 
+Rules *Rules::instance()
+{
+	static Rules rules;
+	return &rules;
+}
+
 Rules::~Rules()
 {
 	QSettings().setValue("Pegs", pegs);
@@ -39,13 +46,13 @@ Rules::~Rules()
 	QSettings().setValue("Mode", (int) mode);
 }
 
-void Rules::update(int _colors, int _pegs, Rules::Algorithm _alg, Rules::Mode _mode, bool _same_color)
+void Rules::update(int _colors, int _pegs, Algorithm _alg, Mode _mode, bool _same_color)
 {
 	colors = _colors;
 	pegs = _pegs;
 	algorithm = _alg;
 	mode = _mode;
-	same_colors = _same_color;
+	same_colors = _same_color || (pegs > colors);
 
 	// for safety, fallback to standard in out-range inputs
 	if (pegs < MIN_SLOT_NUMBER || pegs > MAX_SLOT_NUMBER ||

@@ -46,10 +46,7 @@ public:
 		High
 	};
 
-	/**
-	 * @brief Creates an object by reading settings.
-	 */
-	Board();
+	static Board *instance();
 	~Board();
 
 	QString getFontName() const { return fontName; }
@@ -71,6 +68,12 @@ public:
 	void setIndicators(const bool &show_indicators, const bool &show_colors);
 	void setIndicator(int a);
 	void setFont(const QString &name, const int &_size);
+
+private:
+	/**
+	 * @brief Creates an object by reading settings.
+	 */
+	Board();
 
 private:
 	bool autoPutPins; /**< TODO */

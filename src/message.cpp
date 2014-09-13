@@ -23,13 +23,13 @@
 #include <QPainter>
 #include <QFont>
 
-Message::Message(Board *board, const QString &color_name,
+Message::Message(const QString &color_name,
 				 const int &smaller, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
 	color(QColor(color_name)),
 	text("")
 {
-	textLayout.setFont(QFont(board->getFontName(), board->getFontSize() - smaller, QFont::Bold, false));
+	textLayout.setFont(QFont(Board::instance()->getFontName(), Board::instance()->getFontSize() - smaller, QFont::Bold, false));
 	textLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	updateRect = QRectF(0, 0, 10, 10);
 }

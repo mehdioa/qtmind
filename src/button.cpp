@@ -24,13 +24,13 @@
 #include <QCursor>
 #include <QPainter>
 
-Button::Button(Board *board, const int &buttonWidth, const QString &str, QGraphicsItem *parent):
+Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent):
 	QGraphicsObject(parent)
 {
 	width = buttonWidth;
 	label = str;
 
-	font = QFont(board->getFontName(), board->getFontSize() - 1, QFont::Bold, false);
+	font = QFont(Board::instance()->getFontName(), Board::instance()->getFontSize() - 1, QFont::Bold, false);
 	font.setStyleHint(QFont::SansSerif);
 	font.setStyleStrategy(QFont::PreferAntialias);
 

@@ -20,8 +20,7 @@
 #ifndef RULES_H
 #define RULES_H
 
-#include <QLocale>
-
+#include "appinfo.h"
 /**
  * @brief The Rules class represents the rules of the game
  */
@@ -30,26 +29,7 @@ class Rules
 
 public:
 
-	enum class Algorithm
-	{
-		MostParts,
-		WorstCase,
-		ExpectedSize
-	};
-	enum class Mode {
-		MVH,		//HUMAN MAKE THE HIDDEN CODE
-		HVM		    //HUMAN BREAKS THE HIDDEN CODE
-	};
-
-	static const int MIN_COLOR_NUMBER	= 2; /**< The minimum number of colors */
-	static const int MAX_COLOR_NUMBER	= 10; /**< The maximum number of colors */
-
-	static const int MIN_SLOT_NUMBER	= 2; /**< The minimum number of slots */
-	static const int MAX_SLOT_NUMBER	= 5; /**< The maximum number of slots */
-	/**
-	 * @brief Rules
-	 */
-	Rules();
+	static Rules *instance();
 	~Rules();
 
 	void update(int _colors, int _pegs, Algorithm _alg, Mode _mode, bool _same_color);
@@ -59,6 +39,8 @@ public:
 	Algorithm getAlgorithm() const { return algorithm; }
 	bool isSameColor() const { return same_colors; }
 	Mode getMode() const { return mode;}
+private:
+	Rules();
 
 private:
 	int pegs; /**< TODO */

@@ -22,8 +22,6 @@
 
 #include <QDialog>
 
-class Board;
-
 namespace Ui {
 class Preferences;
 }
@@ -41,7 +39,7 @@ public:
 	 * @param board_aid
 	 * @param parent
 	 */
-	explicit Preferences(Board *board_aid, QWidget *parent = 0);
+	explicit Preferences(QWidget *parent = 0);
 	~Preferences();
 
 protected slots:
@@ -51,7 +49,6 @@ private:
 	Ui::Preferences *ui; /**< TODO */
 
 	static QString AppPath;
-	Board *board; /**< TODO */
 };
 
 #endif // PREFERENCES_H

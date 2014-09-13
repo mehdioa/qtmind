@@ -23,7 +23,7 @@
 #include <QPen>
 #include <QCursor>
 
-const int PinBox::PinPositions[Rules::MAX_SLOT_NUMBER][Rules::MAX_SLOT_NUMBER][2] = /**< TODO */
+const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] = /**< TODO */
 {
 	{{4, 13}, {22, 13}, {0, 0}, {0, 0}, {0, 0}},
 	{{4, 6}, {22, 6}, {13, 22}, {0, 0}, {0, 0}},
@@ -58,17 +58,14 @@ void PinBox::getValue(int &bl, int &wt) const
 			break;
 		}
 	}
-//	return (blacks + whites)*(blacks + whites + 1) / 2 + blacks;
 }
 
-void PinBox::setPins(const Guess &guess, Rules *rules)
+void PinBox::setPins()
 {
-	int whites, blacks;
-	COMPARE(guess.code, guess.guess, rules->getColors(), rules->getPegs(), blacks, whites);
-	for(int i = 0; i < blacks; ++i)
+	for(int i = 0; i < Guess::instance()->getBlacks(); ++i)
 		pins.at(i)->setColor(Pin::Color::Black);
 
-	for(int i = blacks; i < blacks+whites; ++i)
+	for(int i = Guess::instance()->getBlacks(); i < Guess::instance()->getBlacks()+Guess::instance()->getWhites(); ++i)
 		pins.at(i)->setColor(Pin::Color::White);
 }
 

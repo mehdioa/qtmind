@@ -21,7 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "game.h"
+#include "appinfo.h"
 
 class QComboBox;
 class Game;
@@ -45,7 +45,7 @@ public:
 	 * @brief MainWindow Creates the main window.
 	 * @param parent The parent of the window.
 	 */
-	explicit MainWindow(Game *_game, QWidget *parent = 0);
+	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 protected:
@@ -86,7 +86,7 @@ private:
 	void updateRules();
 	void retranslate();
 	void setPegsNumber(const int &pegs_n);
-	Rules::Mode getMode();
+	Mode getMode();
 
 	Ui::MainWindow *ui; /**< TODO */
 	QComboBox *pegsComboBox; /**< TODO */

@@ -22,28 +22,37 @@
 
 Guess::Guess()
 {
-	reset(Rules::Algorithm::MostParts, 0);
+	reset(0);
 }
 
-void Guess::reset(const Rules::Algorithm &algorithm_m, const int &possibles_m)
+Guess *Guess::instance()
 {
-	std::fill(guess, guess+Rules::MAX_SLOT_NUMBER, 0);
-	std::fill(code, code+Rules::MAX_SLOT_NUMBER, 0);
+	static Guess g;
+	return &g;
+}
+
+void Guess::reset(const int &possibles_m)
+{
+	colors = Rules::instance()->getColors();
+	pegs = Rules::instance()->getPegs();
+	std::fill(guess, guess + MAX_SLOT_NUMBER, 0);
+	std::fill(code, code + MAX_SLOT_NUMBER, 0);
 	blacks = 0;
 	whites = 0;
-	algorithm = algorithm_m;
+	algorithm = Rules::instance()->getAlgorithm();
 	possibles = possibles_m;
 	weight = 0;
 }
 
 void Guess::setGuess(unsigned char *_guess)
 {
-	for(int i = 0; i < Rules::MAX_SLOT_NUMBER; i++)
+	for(int i = 0; i < MAX_SLOT_NUMBER; i++)
 		guess[i] = _guess[i];
+	COMPARE(code, guess, colors, pegs, blacks, whites);
 }
 
 void Guess::setCode(unsigned char *_code)
 {
-	for(int i = 0; i < Rules::MAX_SLOT_NUMBER; i++)
+	for(int i = 0; i < MAX_SLOT_NUMBER; i++)
 		code[i] = _code[i];
 }

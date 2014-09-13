@@ -20,7 +20,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "guess.h"
 #include <QGraphicsView>
 
 class Peg;
@@ -29,8 +28,6 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
-class Board;
-class Rules;
 
 /**
  * @brief A class to represent the game logic. It is the heart of the game.
@@ -45,10 +42,9 @@ class Game: public QGraphicsView
 public:
 	/**
 	 * @brief Game create a game with board
-	 * @param board the board of the game
 	 * @param parent the parent of the game
 	 */
-	explicit Game(Rules *_rules, Board *_board);
+	explicit Game();
 	~Game();
 
 	/**
@@ -76,9 +72,6 @@ public:
 	 * @return true if the game is running, false otherwise
 	 */
 	bool isRunning();
-
-	Board *getBoard() { return board; }
-	Rules *getRules() { return rules; }
 
 protected:
 	/**
@@ -168,9 +161,6 @@ private:
 	QList<PegBox *> masterBoxes;	/**< the mastercode boxes */
 
 	Game::State state;              /**< TODO */
-	Rules *rules;
-	Board *board;                   /**< TODO */
-	Guess guess;                    /**< TODO */
 	Solver *solver;                 /**< TODO */
 	Button *okButton;               /**< TODO */
 	Button *doneButton;             /**< TODO */

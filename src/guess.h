@@ -19,13 +19,13 @@
 
 #ifndef GUESS_H
 #define GUESS_H
+#include "appinfo.h"
 #include "rules.h"
 #include <QString>
 
 /**
   * @brief compares two codes A and B, which are two int arrays
   * C and P are the number of colors and pegs
-  * R is the result
   *
   * Interestingly, total can be computed as
   * f[total := whites + blacks = ( \sum_{i=1}^6 \min(c_i, g_i)) \f]
@@ -57,17 +57,13 @@ class Guess
 {
 public:
 
-	/**
-	 * @brief Guess create the guess element
-	 */
-	Guess();
-
+	static Guess *instance();
 	/**
 	 * @brief reset reset the guess element
 	 * @param algorithm_m the new algorithm
 	 * @param possibles_m the new possibles number
 	 */
-	void reset(const Rules::Algorithm &algorithm_m, const int &possibles_m);
+	void reset(const int &possibles_m);
 
 	/**
 	 * @brief setGuess
@@ -81,18 +77,27 @@ public:
 	 */
 	void setCode(unsigned char *_code);
 
+	int getBlacks() const { return blacks; }
+	int getWhites() const { return whites; }
 private:
-	unsigned char guess[Rules::MAX_SLOT_NUMBER]; /**< TODO */
-	unsigned char code[Rules::MAX_SLOT_NUMBER]; /**< TODO */
+	/**
+	 * @brief Guess create the guess element
+	 */
+	explicit Guess();
+
+private:
+	unsigned char guess[MAX_SLOT_NUMBER]; /**< TODO */
+	unsigned char code[MAX_SLOT_NUMBER]; /**< TODO */
+	int colors;
+	int pegs;
 	int blacks;
 	int whites;
-	Rules::Algorithm algorithm; /**< TODO */
+	Algorithm algorithm; /**< TODO */
 	int possibles; /**< TODO */
 	qreal weight; /**< TODO */
 
 	friend class Solver;
 	friend class Game;
-	friend class PinBox;
 };
 
 #endif // GUESS_H
