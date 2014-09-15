@@ -77,8 +77,6 @@ protected slots:
 	void onLanguageChanged(QAction *language_act);
 
 private:
-	static const bool isAndroid; /**< Is the platform Android? */
-
 	QStringList findTranslations();
 	void loadTranslation();
 	QString languageName(const QString &language);
@@ -88,13 +86,15 @@ private:
 	void setPegsNumber(const int &pegs_n);
 	Mode getMode();
 
+private:
+	static const bool s_isAndroid; /**< Is the platform Android? */
 	Ui::MainWindow *ui; /**< TODO */
-	QComboBox *pegsComboBox; /**< TODO */
-	QComboBox *colorsComboBox; /**< TODO */
-	QComboBox *algorithmsComboBox; /**< TODO */
+	QComboBox *m_pegsComboBox; /**< TODO */
+	QComboBox *m_colorsComboBox; /**< TODO */
+	QComboBox *m_algorithmsComboBox; /**< TODO */
 
-	Game *game; /**< TODO */
-	QString AppPath; /**< TODO */
+	Game *m_game; /**< TODO */
+	QString m_appPath; /**< TODO */
 };
 
 #endif // MAINWINDOW_H

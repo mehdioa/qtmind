@@ -46,19 +46,19 @@ public:
 		Underneath,	//	Pegs under Initial right pegs
 		Plain		//	Just circle is visible
 	};
-	explicit Peg(const QPointF &m_position, const int &color_number, QGraphicsItem *parent = 0);
+	explicit Peg(const QPointF &_position, const int &_color, QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief setColor set the color of the peg
 	 * @param color_number the color
 	 */
-	void setColor(int color_number);
+	void setColor(const int &_color);
 
 	/**
 	 * @brief getColor get the color of the peg
 	 * @return the color of the peg
 	 */
-	int getColor() const {return color;}
+	int getColor() const {return m_color;}
 
 	/**
 	 * @brief setMovable set the peg movable or not
@@ -70,19 +70,19 @@ public:
 	 * @brief isMovable check if the peg is movable
 	 * @return true if the peg is movable, false otherwise
 	 */
-	bool isMovable() const {return isActive;}
+	bool isMovable() const {return m_movable;}
 
 	/**
 	 * @brief setState set the state of the peg
-	 * @param m_state the peg state
+	 * @param _state the peg state
 	 */
-	void setState(const State &m_state);
+	void setState(const State &_state);
 
 	/**
 	 * @brief getState get the peg state
 	 * @return the peg state
 	 */
-	State getState() const {return pegState;}
+	State getState() const {return m_state;}
 
 signals:
 	/**
@@ -109,18 +109,17 @@ protected slots:
 	void onShowIndicators();
 
 private:
-	static const QColor PegColors[MAX_COLOR_NUMBER][2]; /**< TODO */
-	static const QString OrderedChars[3]; /**< TODO */
-	static const QFont font; /**< TODO */
+	static const QColor s_pegColors[MAX_COLOR_NUMBER][2]; /**< TODO */
+	static const QFont s_font; /**< TODO */
 	static QFont setFont();
 
-	QPointF position; /**< TODO */
-	QGraphicsDropShadowEffect *pressedEffect; /**< TODO */
-	QGraphicsEllipseItem *circle; /**< TODO */
+	QPointF m_position; /**< TODO */
+	QGraphicsDropShadowEffect *m_pressedEffect; /**< TODO */
+	QGraphicsEllipseItem *m_circle; /**< TODO */
 
-	State pegState; /**< TODO */
-	int color; /**< TODO */
-	bool isActive; /**< TODO */
+	State m_state; /**< TODO */
+	int m_color; /**< TODO */
+	bool m_movable; /**< TODO */
 };
 
 #endif // PEG_H

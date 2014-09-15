@@ -4,10 +4,10 @@
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>320</width>
-	<height>560</height>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,143 +16,143 @@
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
-	<rect>
-	 <x>0</x>
-	 <y>0</y>
-	 <width>320</width>
-	 <height>23</height>
-	</rect>
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>320</width>
+     <height>26</height>
+    </rect>
    </property>
    <property name="accessibleName">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
    <widget class="QMenu" name="menuGame">
-	<property name="accessibleName">
-	 <string notr="true"/>
-	</property>
-	<property name="title">
-	 <string notr="true">Game</string>
-	</property>
-	<widget class="QMenu" name="menuSlots">
-	 <property name="title">
-	  <string notr="true">Slots</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/slots.png</normaloff>:/icons/resources/icons/slots.png</iconset>
-	 </property>
-	</widget>
-	<widget class="QMenu" name="menuColors">
-	 <property name="title">
-	  <string notr="true">Colors</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/colors.png</normaloff>:/icons/resources/icons/colors.png</iconset>
-	 </property>
-	</widget>
-	<widget class="QMenu" name="menuAlgorithm">
-	 <property name="title">
-	  <string notr="true">Algorithms</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/Actions-games-solve-icon.png</normaloff>:/icons/resources/icons/Actions-games-solve-icon.png</iconset>
-	 </property>
-	</widget>
-	<addaction name="actionNew"/>
-	<addaction name="menuSlots"/>
-	<addaction name="menuColors"/>
-	<addaction name="menuAlgorithm"/>
-	<addaction name="actionAllow_Same_Colors"/>
-	<addaction name="separator"/>
-	<addaction name="actionReveal_One_Peg"/>
-	<addaction name="actionResign"/>
-	<addaction name="actionQuit"/>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string notr="true">&amp;Game</string>
+    </property>
+    <widget class="QMenu" name="menuSlots">
+     <property name="title">
+      <string notr="true">&amp;Slots</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/slots.png</normaloff>:/icons/resources/icons/slots.png</iconset>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuColors">
+     <property name="title">
+      <string notr="true">&amp;Colors</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/colors.png</normaloff>:/icons/resources/icons/colors.png</iconset>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuAlgorithm">
+     <property name="title">
+      <string notr="true">&amp;Algorithms</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/Actions-games-solve-icon.png</normaloff>:/icons/resources/icons/Actions-games-solve-icon.png</iconset>
+     </property>
+    </widget>
+    <addaction name="actionNew"/>
+    <addaction name="menuSlots"/>
+    <addaction name="menuColors"/>
+    <addaction name="menuAlgorithm"/>
+    <addaction name="actionAllow_Same_Colors"/>
+    <addaction name="separator"/>
+    <addaction name="actionReveal_One_Peg"/>
+    <addaction name="actionResign"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
-	<property name="accessibleName">
-	 <string notr="true"/>
-	</property>
-	<property name="title">
-	 <string notr="true">Tools</string>
-	</property>
-	<widget class="QMenu" name="menuMode">
-	 <property name="enabled">
-	  <bool>true</bool>
-	 </property>
-	 <property name="accessibleName">
-	  <string notr="true"/>
-	 </property>
-	 <property name="title">
-	  <string notr="true">Game Mode</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/system-switch-user.png</normaloff>:/icons/resources/icons/system-switch-user.png</iconset>
-	 </property>
-	 <property name="separatorsCollapsible">
-	  <bool>true</bool>
-	 </property>
-	 <addaction name="actionMode_MVH"/>
-	 <addaction name="actionMode_HVM"/>
-	</widget>
-	<widget class="QMenu" name="menuVolume">
-	 <property name="title">
-	  <string notr="true">Volume</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/Actions-player-volume-icon.png</normaloff>:/icons/resources/icons/Actions-player-volume-icon.png</iconset>
-	 </property>
-	 <addaction name="actionMute"/>
-	 <addaction name="actionLow"/>
-	 <addaction name="actionMedium"/>
-	 <addaction name="actionHigh"/>
-	</widget>
-	<widget class="QMenu" name="menuIndicators">
-	 <property name="title">
-	  <string notr="true">Indicators</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/layer-visible-on.png</normaloff>:/icons/resources/icons/layer-visible-on.png</iconset>
-	 </property>
-	 <addaction name="actionShow"/>
-	 <addaction name="actionShow_Colors"/>
-	 <addaction name="separator"/>
-	 <addaction name="actionCharacters"/>
-	 <addaction name="actionDigits"/>
-	</widget>
-	<widget class="QMenu" name="menuLanguage">
-	 <property name="title">
-	  <string notr="true">Language</string>
-	 </property>
-	 <property name="icon">
-	  <iconset resource="../resource.qrc">
-	   <normaloff>:/icons/resources/icons/preferences-desktop-locale.png</normaloff>:/icons/resources/icons/preferences-desktop-locale.png</iconset>
-	 </property>
-	</widget>
-	<addaction name="menuMode"/>
-	<addaction name="separator"/>
-	<addaction name="menuIndicators"/>
-	<addaction name="actionAuto_Set_Pins"/>
-	<addaction name="actionAuto_Close_Rows"/>
-	<addaction name="menuVolume"/>
-	<addaction name="menuLanguage"/>
-	<addaction name="actionFont"/>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string notr="true">Tools</string>
+    </property>
+    <widget class="QMenu" name="menuMode">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="title">
+      <string notr="true">&amp;Game Mode</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/system-switch-user.png</normaloff>:/icons/resources/icons/system-switch-user.png</iconset>
+     </property>
+     <property name="separatorsCollapsible">
+      <bool>true</bool>
+     </property>
+     <addaction name="actionMode_MVH"/>
+     <addaction name="actionMode_HVM"/>
+    </widget>
+    <widget class="QMenu" name="menuVolume">
+     <property name="title">
+      <string notr="true">&amp;Volume</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/Actions-player-volume-icon.png</normaloff>:/icons/resources/icons/Actions-player-volume-icon.png</iconset>
+     </property>
+     <addaction name="actionMute"/>
+     <addaction name="actionLow"/>
+     <addaction name="actionMedium"/>
+     <addaction name="actionHigh"/>
+    </widget>
+    <widget class="QMenu" name="menuIndicators">
+     <property name="title">
+      <string notr="true">&amp;Indicators</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/layer-visible-on.png</normaloff>:/icons/resources/icons/layer-visible-on.png</iconset>
+     </property>
+     <addaction name="actionShow"/>
+     <addaction name="actionShow_Colors"/>
+     <addaction name="separator"/>
+     <addaction name="actionCharacters"/>
+     <addaction name="actionDigits"/>
+    </widget>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string notr="true">&amp;Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resource.qrc">
+       <normaloff>:/icons/resources/icons/preferences-desktop-locale.png</normaloff>:/icons/resources/icons/preferences-desktop-locale.png</iconset>
+     </property>
+    </widget>
+    <addaction name="menuMode"/>
+    <addaction name="separator"/>
+    <addaction name="menuIndicators"/>
+    <addaction name="actionAuto_Set_Pins"/>
+    <addaction name="actionAuto_Close_Rows"/>
+    <addaction name="menuVolume"/>
+    <addaction name="menuLanguage"/>
+    <addaction name="actionFont"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
-	<property name="accessibleName">
-	 <string notr="true"/>
-	</property>
-	<property name="title">
-	 <string notr="true">Help</string>
-	</property>
-	<addaction name="actionQtMind_Home_Page"/>
-	<addaction name="separator"/>
-	<addaction name="actionAbout_QtMind"/>
-	<addaction name="actionAbout_Qt"/>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string notr="true">He&amp;lp</string>
+    </property>
+    <addaction name="actionQtMind_Home_Page"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_QtMind"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <addaction name="menuGame"/>
    <addaction name="menuTools"/>
@@ -160,335 +160,335 @@
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
    <property name="accessibleName">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
    <property name="movable">
-	<bool>false</bool>
+    <bool>false</bool>
    </property>
    <property name="floatable">
-	<bool>false</bool>
+    <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
-	<enum>TopToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-	<bool>false</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <action name="actionNew">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/list-add.png</normaloff>:/icons/resources/icons/list-add.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/list-add.png</normaloff>:/icons/resources/icons/list-add.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">New</string>
+    <string notr="true">&amp;New</string>
    </property>
    <property name="iconText">
-	<string notr="true">New</string>
+    <string notr="true">New</string>
    </property>
    <property name="shortcut">
-	<string notr="true">Ctrl+N</string>
+    <string notr="true">Ctrl+N</string>
    </property>
   </action>
   <action name="actionResign">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/list-remove.png</normaloff>:/icons/resources/icons/list-remove.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/list-remove.png</normaloff>:/icons/resources/icons/list-remove.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Resign</string>
+    <string notr="true">R&amp;esign</string>
    </property>
    <property name="iconText">
-	<string notr="true">Resign</string>
+    <string notr="true">Resign</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionQuit">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/application-exit.png</normaloff>:/icons/resources/icons/application-exit.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/application-exit.png</normaloff>:/icons/resources/icons/application-exit.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Quit</string>
+    <string notr="true">&amp;Quit</string>
    </property>
    <property name="iconText">
-	<string notr="true">Quit</string>
+    <string notr="true">Quit</string>
    </property>
    <property name="shortcut">
-	<string notr="true">Ctrl+Q</string>
+    <string notr="true">Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAuto_Set_Pins">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/pin.png</normaloff>:/icons/resources/icons/pin.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/pin.png</normaloff>:/icons/resources/icons/pin.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Auto Put Pins</string>
+    <string notr="true">&amp;Auto Put Pins</string>
    </property>
    <property name="iconText">
-	<string notr="true">Auto Put Pins</string>
+    <string notr="true">Auto Put Pins</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAuto_Close_Rows">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/task-complete.png</normaloff>:/icons/resources/icons/task-complete.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/task-complete.png</normaloff>:/icons/resources/icons/task-complete.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Auto Close Rows</string>
+    <string notr="true">Auto &amp;Close Rows</string>
    </property>
    <property name="iconText">
-	<string notr="true">Auto Close Rows</string>
+    <string notr="true">Auto Close Rows</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionFont">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/preferences-desktop-font.png</normaloff>:/icons/resources/icons/preferences-desktop-font.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/preferences-desktop-font.png</normaloff>:/icons/resources/icons/preferences-desktop-font.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Font</string>
+    <string notr="true">&amp;Font</string>
    </property>
    <property name="iconText">
-	<string notr="true">Font</string>
+    <string notr="true">Font</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAbout_QtMind">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/qtmind.png</normaloff>:/icons/resources/icons/qtmind.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/qtmind.png</normaloff>:/icons/resources/icons/qtmind.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">About QtMind</string>
+    <string notr="true">&amp;About QtMind</string>
    </property>
    <property name="iconText">
-	<string notr="true">About QtMind</string>
+    <string notr="true">About QtMind</string>
    </property>
    <property name="toolTip">
-	<string>About QtMind</string>
+    <string>About QtMind</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/qt_icon.png</normaloff>:/icons/resources/icons/qt_icon.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/qt_icon.png</normaloff>:/icons/resources/icons/qt_icon.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">About Qt</string>
+    <string notr="true">A&amp;bout Qt</string>
    </property>
    <property name="iconText">
-	<string notr="true">About QtMind</string>
+    <string notr="true">About QtMind</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionMode_MVH">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/cpu.png</normaloff>:/icons/resources/icons/cpu.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/cpu.png</normaloff>:/icons/resources/icons/cpu.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Machine vs Human</string>
+    <string notr="true">&amp;Machine vs Human</string>
    </property>
    <property name="iconText">
-	<string notr="true">Machine vs Human</string>
+    <string notr="true">Machine vs Human</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionMode_HVM">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/meeting-chair.png</normaloff>:/icons/resources/icons/meeting-chair.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/meeting-chair.png</normaloff>:/icons/resources/icons/meeting-chair.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Human vs Machine</string>
+    <string notr="true">&amp;Human vs Machine</string>
    </property>
    <property name="iconText">
-	<string notr="true">Human vs Machine</string>
+    <string notr="true">Human vs Machine</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionReveal_One_Peg">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/system-help.png</normaloff>:/icons/resources/icons/system-help.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/system-help.png</normaloff>:/icons/resources/icons/system-help.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Reveal One Peg</string>
+    <string notr="true">&amp;Reveal One Peg</string>
    </property>
    <property name="iconText">
-	<string notr="true">Reveal One Peg</string>
+    <string notr="true">Reveal One Peg</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionQtMind_Home_Page">
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/applications-internet.png</normaloff>:/icons/resources/icons/applications-internet.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/applications-internet.png</normaloff>:/icons/resources/icons/applications-internet.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">QtMind Home Page</string>
+    <string notr="true">&amp;QtMind Home Page</string>
    </property>
    <property name="iconText">
-	<string notr="true">QtMind Home Page</string>
+    <string notr="true">QtMind Home Page</string>
    </property>
    <property name="toolTip">
-	<string>Go to QtMind home page</string>
+    <string>Go to QtMind home page</string>
    </property>
    <property name="shortcut">
-	<string notr="true"/>
+    <string notr="true"/>
    </property>
   </action>
   <action name="actionAllow_Same_Colors">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-	<string notr="true">Allow Same Colors</string>
+    <string notr="true">A&amp;llow Same Colors</string>
    </property>
    <property name="iconText">
-	<string notr="true">Allow Same Colors</string>
+    <string notr="true">Allow Same Colors</string>
    </property>
   </action>
   <action name="actionMute">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/audio_muted_volume_icon.png</normaloff>:/icons/resources/icons/audio_muted_volume_icon.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/audio_muted_volume_icon.png</normaloff>:/icons/resources/icons/audio_muted_volume_icon.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Mute</string>
+    <string notr="true">&amp;Mute</string>
    </property>
    <property name="iconText">
-	<string notr="true">Mute</string>
+    <string notr="true">Mute</string>
    </property>
   </action>
   <action name="actionLow">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/audio_low_speaker_volume_icon.png</normaloff>:/icons/resources/icons/audio_low_speaker_volume_icon.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/audio_low_speaker_volume_icon.png</normaloff>:/icons/resources/icons/audio_low_speaker_volume_icon.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Low</string>
+    <string notr="true">&amp;Low</string>
    </property>
    <property name="iconText">
-	<string notr="true">Low</string>
+    <string notr="true">Low</string>
    </property>
   </action>
   <action name="actionHigh">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/audio_high_volume_icon.png</normaloff>:/icons/resources/icons/audio_high_volume_icon.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/audio_high_volume_icon.png</normaloff>:/icons/resources/icons/audio_high_volume_icon.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">High</string>
+    <string notr="true">&amp;High</string>
    </property>
    <property name="iconText">
-	<string notr="true">High</string>
+    <string notr="true">High</string>
    </property>
   </action>
   <action name="actionMedium">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
-	<iconset resource="../resource.qrc">
-	 <normaloff>:/icons/resources/icons/audio_medium_volume_icon.png</normaloff>:/icons/resources/icons/audio_medium_volume_icon.png</iconset>
+    <iconset resource="../resource.qrc">
+     <normaloff>:/icons/resources/icons/audio_medium_volume_icon.png</normaloff>:/icons/resources/icons/audio_medium_volume_icon.png</iconset>
    </property>
    <property name="text">
-	<string notr="true">Medium</string>
+    <string notr="true">M&amp;edium</string>
    </property>
    <property name="iconText">
-	<string notr="true">Medium</string>
+    <string notr="true">Medium</string>
    </property>
   </action>
   <action name="actionShow">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-	<string notr="true">Show</string>
+    <string notr="true">&amp;Show</string>
    </property>
    <property name="iconText">
-	<string notr="true">Show</string>
+    <string notr="true">Show</string>
    </property>
   </action>
   <action name="actionCharacters">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-	<string notr="true">Characters</string>
+    <string notr="true">&amp;Characters</string>
    </property>
    <property name="iconText">
-	<string notr="true">Characters</string>
+    <string notr="true">Characters</string>
    </property>
   </action>
   <action name="actionDigits">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-	<string notr="true">Digits</string>
+    <string notr="true">&amp;Digits</string>
    </property>
    <property name="iconText">
-	<string notr="true">Digits</string>
+    <string notr="true">Digits</string>
    </property>
   </action>
   <action name="actionShow_Colors">
    <property name="checkable">
-	<bool>true</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-	<string notr="true">Show Colors</string>
+    <string notr="true">S&amp;how Colors</string>
    </property>
    <property name="iconText">
-	<string notr="true">Show Colors</string>
+    <string notr="true">Show Colors</string>
    </property>
   </action>
  </widget>

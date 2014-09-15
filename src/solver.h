@@ -87,7 +87,7 @@ protected slots:
 	 * @brief
 	 *
 	 */
-	void onInterupt() {interupt = true;}
+	void onInterupt() {m_interupt = true;}
 
 	/**
 	 * @brief
@@ -183,7 +183,7 @@ private:
 	struct Codes {
 		int size;
 		unsigned char **index;
-	} codes;
+	} m_codes;
 
 	/**
 	 * @brief The FirstPossiblesUnder10_000 struct
@@ -192,11 +192,11 @@ private:
 	struct FirstPossiblesUnder10_000 {
 		int size;
 		int *index;
-	} sp;
+	} m_smallPossibles;
 
-	int max_response; /**< TODO */
-	volatile bool interupt; /**< TODO */
-	QList<int> possibles;   //	list of all possibles
+	int m_maxResponse; /**< TODO */
+	volatile bool m_interupt; /**< TODO */
+	QList<int> m_possibles;   //	list of all possibles
 };
 
 #endif // SOLVER_H

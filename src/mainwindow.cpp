@@ -37,23 +37,23 @@
 #include <QCloseEvent>
 
 #ifdef Q_OS_ANDROID
-const bool MainWindow::isAndroid = true;
+const bool MainWindow::s_isAndroid = true;
 #else
-const bool MainWindow::isAndroid = false;
+const bool MainWindow::s_isAndroid = false;
 #endif
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	game(new Game)
+	m_game(new Game)
 {
 	ui->setupUi(this);
 
-	Board::instance()->locale()->setNumberOptions(QLocale::OmitGroupSeparator);
+	Board::instance()->m_locale.setNumberOptions(QLocale::OmitGroupSeparator);
 	loadTranslation();
-	QApplication::setLayoutDirection(Board::instance()->locale()->textDirection());
+	QApplication::setLayoutDirection(Board::instance()->m_locale.textDirection());
 
-	setCentralWidget(game);
+	setCentralWidget(m_game);
 
 	auto modeActions = new QActionGroup(this);
 	modeActions->addAction(ui->actionMode_MVH);
@@ -61,8 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	modeActions->setExclusive(true);
 	ui->actionMode_MVH->setData((int) Mode::MVH);
 	ui->actionMode_HVM->setData((int) Mode::HVM);
-	ui->actionMode_MVH->setChecked(Rules::instance()->getMode() == Mode::MVH);
-	ui->actionMode_HVM->setChecked(Rules::instance()->getMode() == Mode::HVM);
+	ui->actionMode_MVH->setChecked(Rules::instance()->m_mode == Mode::MVH);
+	ui->actionMode_HVM->setChecked(Rules::instance()->m_mode == Mode::HVM);
 
 	auto volumeModeActions = new QActionGroup(this);
 	volumeModeActions->addAction(ui->actionMute);
@@ -74,30 +74,34 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionLow->setData(static_cast<int>(Board::Volume::Low));
 	ui->actionMedium->setData(static_cast<int>(Board::Volume::Medium));
 	ui->actionHigh->setData(static_cast<int>(Board::Volume::High));
-	ui->actionMute->setChecked(Board::instance()->getVolume() == Board::Volume::Mute);
-	ui->actionLow->setChecked(Board::instance()->getVolume() == Board::Volume::Low);
-	ui->actionMedium->setChecked(Board::instance()->getVolume() == Board::Volume::Medium);
-	ui->actionHigh->setChecked(Board::instance()->getVolume() == Board::Volume::High);
+	ui->actionMute->setChecked(Board::instance()->m_volume == Board::Volume::Mute);
+	ui->actionLow->setChecked(Board::instance()->m_volume == Board::Volume::Low);
+	ui->actionMedium->setChecked(Board::instance()->m_volume == Board::Volume::Medium);
+	ui->actionHigh->setChecked(Board::instance()->m_volume == Board::Volume::High);
 
 	QIcon double_icon;
 	double_icon.addPixmap(QPixmap("://icons/resources/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
 	double_icon.addPixmap(QPixmap("://icons/resources/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
 	ui->actionAllow_Same_Colors->setIcon(double_icon);
-	ui->actionAllow_Same_Colors->setChecked(Rules::instance()->isSameColor());
+	ui->actionAllow_Same_Colors->setChecked(Rules::instance()->m_sameColors);
 
-	ui->menuIndicators->actions().at(0)->setChecked(Board::instance()->getShowIndicators());
-	ui->menuIndicators->actions().at(1)->setChecked(Board::instance()->getShowColors());
+	ui->menuIndicators->actions().at(0)->setChecked(Board::instance()->m_showIndicators);
+	ui->menuIndicators->actions().at(1)->setChecked(Board::instance()->m_showColors);
 	auto indicator_types = new QActionGroup(this);
-	for(int i = 0; i < 2; i++) {
-		ui->menuIndicators->actions().at(i+3)->setText((i == 0) ? tr("Characters"): tr("Digits"));
-		ui->menuIndicators->actions().at(i+3)->setData(i);
-		ui->menuIndicators->actions().at(i+3)->setChecked(Board::instance()->getIndicator() == ((i == 0) ?  Board::Indicator::Character : Board::Indicator::Digit));
-		indicator_types->addAction(ui->menuIndicators->actions().at(i+3));
-	}
+	ui->menuIndicators->actions().at(3)->setText(tr("Characters"));
+	ui->menuIndicators->actions().at(3)->setData((int)Board::Indicator::Character);
+	ui->menuIndicators->actions().at(3)->setChecked(Board::instance()->m_indicator == Board::Indicator::Character);
+	indicator_types->addAction(ui->menuIndicators->actions().at(3));
+
+	ui->menuIndicators->actions().at(4)->setText(tr("Digits"));
+	ui->menuIndicators->actions().at(4)->setData((int)Board::Indicator::Digit);
+	ui->menuIndicators->actions().at(4)->setChecked(Board::instance()->m_indicator == Board::Indicator::Digit);
+	indicator_types->addAction(ui->menuIndicators->actions().at(4));
+
 	indicator_types->setExclusive(true);
 
-	ui->actionAuto_Set_Pins->setChecked(Board::instance()->isAutoPutPins());
-	ui->actionAuto_Close_Rows->setChecked(Board::instance()->isAutoCloseRows());
+	ui->actionAuto_Set_Pins->setChecked(Board::instance()->m_autoPutPins);
+	ui->actionAuto_Close_Rows->setChecked(Board::instance()->m_autoCloseRows);
 
 	QStringList translations = findTranslations();
 	QString app_name_ = QApplication::applicationName().toLower()+"_";
@@ -108,55 +112,55 @@ MainWindow::MainWindow(QWidget *parent) :
 		auto language_act = new QAction(languageName(translation), this);
 		language_act->setData(translation);
 		language_act->setCheckable(true);
-		language_act->setChecked(Board::instance()->locale()->name().left(2) == translation);
+		language_act->setChecked(Board::instance()->m_locale.name().left(2) == translation);
 		language_actions->addAction(language_act);
 		ui->menuLanguage->addAction(language_act);
 	}
 	language_actions->setExclusive(true);
 
 
-	pegsComboBox = new QComboBox(this);
+	m_pegsComboBox = new QComboBox(this);
 	auto slotActions = new QActionGroup(this);
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i) {
-		pegsComboBox->addItem(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Slot(s)", "", i)));
-		auto slot_act = new QAction(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Slot(s)", "", i)), this);
+		m_pegsComboBox->addItem(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Slot(s)", "", i)));
+		auto slot_act = new QAction(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Slot(s)", "", i)), this);
 		slot_act->setCheckable(true);
 		slot_act->setData(i);
-		slot_act->setChecked(Rules::instance()->getPegs() == i);
+		slot_act->setChecked(Rules::instance()->m_pegs == i);
 		slotActions->addAction(slot_act);
 		ui->menuSlots->addAction(slot_act);
 	}
 	slotActions->setExclusive(true);
-	pegsComboBox->setCurrentIndex(Rules::instance()->getPegs()- MIN_SLOT_NUMBER);
-	pegsComboBox->setLocale(*Board::instance()->locale());
+	m_pegsComboBox->setCurrentIndex(Rules::instance()->m_pegs - MIN_SLOT_NUMBER);
+	m_pegsComboBox->setLocale(Board::instance()->m_locale);
 
-	colorsComboBox = new QComboBox(this);
+	m_colorsComboBox = new QComboBox(this);
 	auto colorActions = new QActionGroup(this);
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i) {
-		colorsComboBox->addItem(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Color(s)", "", i)));
-		auto color_act = new QAction(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Color(s)", "", i)), this);
+		m_colorsComboBox->addItem(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Color(s)", "", i)));
+		auto color_act = new QAction(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Color(s)", "", i)), this);
 		color_act->setCheckable(true);
 		color_act->setData(i);
-		color_act->setChecked(Rules::instance()->getColors() == i);
+		color_act->setChecked(Rules::instance()->m_colors == i);
 		colorActions->addAction(color_act);
 		ui->menuColors->addAction(color_act);
 	}
 	colorActions->setExclusive(true);
-	colorsComboBox->setCurrentIndex(Rules::instance()->getColors()- MIN_COLOR_NUMBER);
+	m_colorsComboBox->setCurrentIndex(Rules::instance()->m_colors - MIN_COLOR_NUMBER);
 
-	algorithmsComboBox = new QComboBox(this);
-	algorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
-	algorithmsComboBox->addItem(tr("Most Parts"), 0);
-	algorithmsComboBox->addItem(tr("Worst Case"), 1);
-	algorithmsComboBox->addItem(tr("Expected Size"), 2);
-	algorithmsComboBox->setCurrentIndex((int) Rules::instance()->getAlgorithm());
+	m_algorithmsComboBox = new QComboBox(this);
+	m_algorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
+	m_algorithmsComboBox->addItem(tr("Most Parts"), 0);
+	m_algorithmsComboBox->addItem(tr("Worst Case"), 1);
+	m_algorithmsComboBox->addItem(tr("Expected Size"), 2);
+	m_algorithmsComboBox->setCurrentIndex((int) Rules::instance()->m_algorithm);
 
 	auto algorithmActions = new QActionGroup(this);
 	for(int i = 0; i < 3; i++) {
 		auto alg_act = new QAction((i == 0) ? tr("Most Parts") : ((i == 1) ? tr("Worst Case"): tr("Expected Size")), this);
 		alg_act->setCheckable(true);
 		alg_act->setData(i);
-		alg_act->setChecked(Rules::instance()->getAlgorithm() == static_cast<Algorithm>(i));
+		alg_act->setChecked(Rules::instance()->m_algorithm == static_cast<Algorithm>(i));
 		algorithmActions->addAction(alg_act);
 		ui->menuAlgorithm->addAction(alg_act);
 	}
@@ -165,22 +169,22 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->toolBar->addAction(ui->actionNew);
 	ui->toolBar->addAction(ui->actionAllow_Same_Colors);
 	ui->toolBar->addSeparator();
-	ui->toolBar->addWidget(pegsComboBox);
-	ui->toolBar->addWidget(colorsComboBox);
-	ui->toolBar->addWidget(algorithmsComboBox);
+	ui->toolBar->addWidget(m_pegsComboBox);
+	ui->toolBar->addWidget(m_colorsComboBox);
+	ui->toolBar->addWidget(m_algorithmsComboBox);
 
 	connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(onNewGame()));
-	connect(ui->actionReveal_One_Peg, SIGNAL(triggered()), game, SLOT(onRevealOnePeg()));
-	connect(ui->actionResign, SIGNAL(triggered()), game, SLOT(onResigned()));
+	connect(ui->actionReveal_One_Peg, SIGNAL(triggered()), m_game, SLOT(onRevealOnePeg()));
+	connect(ui->actionResign, SIGNAL(triggered()), m_game, SLOT(onResigned()));
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 	connect(modeActions, SIGNAL(triggered(QAction*)), this, SLOT(onModeChanged(QAction*)));
 	connect(volumeModeActions, SIGNAL(triggered(QAction*)), this, SLOT(onVolumeChanged(QAction*)));
 	connect(colorActions, SIGNAL(triggered(QAction*)), this, SLOT(onColorActionChanged(QAction*)));
-	connect(colorsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onColorComboChanged(int)));
+	connect(m_colorsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onColorComboChanged(int)));
 	connect(slotActions, SIGNAL(triggered(QAction*)), this, SLOT(onSlotActionChanged(QAction*)));
-	connect(pegsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onSlotComboChanged(int)));
+	connect(m_pegsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onSlotComboChanged(int)));
 	connect(ui->menuAlgorithm, SIGNAL(triggered(QAction*)), this, SLOT(onAlgorithmActionChanged(QAction*)));
-	connect(algorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmComboChanged(int)));
+	connect(m_algorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmComboChanged(int)));
 	connect(ui->menuIndicators->actions().at(0), SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
 	connect(ui->menuIndicators->actions().at(1), SIGNAL(triggered()), this, SLOT(onIndicatorChanged()));
 	connect(ui->actionAllow_Same_Colors, SIGNAL(triggered()), this, SLOT(onNewGame()));
@@ -190,16 +194,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionQtMind_Home_Page, SIGNAL(triggered()), this, SLOT(onQtMindHomePage()));
 	connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
 	connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-	connect(colorsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
-	connect(pegsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
-	connect(algorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmChanded()));
+	connect(m_colorsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
+	connect(m_pegsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onNewGame()));
+	connect(m_algorithmsComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmChanded()));
 	connect(ui->menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(onLanguageChanged(QAction*)));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContextMenu(QPoint)));
 	connect(indicator_types, SIGNAL(triggered(QAction*)), this, SLOT(onIndicatorTypeChanged(QAction*)));
 	onNewGame();
-	game->changeIndicators();
+	m_game->changeIndicators();
 
 	retranslate();
 	restoreGeometry(QSettings().value("Geometry").toByteArray());
@@ -260,47 +264,47 @@ void MainWindow::retranslate()
 
 
 	for(int i = MIN_SLOT_NUMBER; i <= MAX_SLOT_NUMBER; ++i) {
-		pegsComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Slot(s)", "", i)));
-		ui->menuSlots->actions().at(i - MIN_SLOT_NUMBER)->setText(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Slot(s)", "", i)));
+		m_pegsComboBox->setItemText(i - MIN_SLOT_NUMBER, QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Slot(s)", "", i)));
+		ui->menuSlots->actions().at(i - MIN_SLOT_NUMBER)->setText(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Slot(s)", "", i)));
 	}
-	pegsComboBox->setToolTip(tr("Choose the numbe of slots"));
+	m_pegsComboBox->setToolTip(tr("Choose the numbe of slots"));
 
 	for(int i = MIN_COLOR_NUMBER; i <= MAX_COLOR_NUMBER; ++i) {
-		colorsComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Color(s)", "", i)));
-		ui->menuColors->actions().at(i - MIN_COLOR_NUMBER)->setText(QString("%1 %2").arg(Board::instance()->locale()->toString(i), tr("Color(s)", "", i)));
+		m_colorsComboBox->setItemText(i - MIN_COLOR_NUMBER, QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Color(s)", "", i)));
+		ui->menuColors->actions().at(i - MIN_COLOR_NUMBER)->setText(QString("%1 %2").arg(Board::instance()->m_locale.toString(i), tr("Color(s)", "", i)));
 	}
-	colorsComboBox->setToolTip(tr("Choose the number of colors"));
+	m_colorsComboBox->setToolTip(tr("Choose the number of colors"));
 
 	ui->actionAllow_Same_Colors->setText(tr("&Allow Same Color"));
-	if (Rules::instance()->isSameColor())
+	if (Rules::instance()->m_sameColors)
 		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
 	else
 		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
 
-	algorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
-	algorithmsComboBox->setItemText(0, tr("Most Parts"));
-	algorithmsComboBox->setItemText(1, tr("Worst Case"));
-	algorithmsComboBox->setItemText(2, tr("Expected Size"));
+	m_algorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
+	m_algorithmsComboBox->setItemText(0, tr("Most Parts"));
+	m_algorithmsComboBox->setItemText(1, tr("Worst Case"));
+	m_algorithmsComboBox->setItemText(2, tr("Expected Size"));
 
-	game->retranslateTexts();
+	m_game->retranslateTexts();
 }
 
 void MainWindow::setPegsNumber(const int &pegs_n)
 {
-	pegsComboBox->setCurrentIndex(pegs_n);
+	m_pegsComboBox->setCurrentIndex(pegs_n);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-	if (game->isRunning() && QMessageBox::No == QMessageBox::warning(this,
-																	   tr("Quit"), QString(isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
+	if (m_game->isRunning() && QMessageBox::No == QMessageBox::warning(this,
+																	   tr("Quit"), QString(s_isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
 																						 "<p align='center'>%2</p>")
 																					 .arg(tr("An unfinished game is in progress."))
 																					 .arg(tr("Do you want to quit?")),
 																	   QMessageBox::Yes | QMessageBox::No)) {
 		event->ignore();
 	} else {
-		game->stop();
+		m_game->stop();
 		QSettings().setValue("Geometry", saveGeometry());
 		QMainWindow::closeEvent(event);
 	}
@@ -309,22 +313,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::onNewGame()
 {
 	if (quitUnfinishedGame()) {
-		game->stop();
+		m_game->stop();
 		updateRules();
-		ui->actionResign->setEnabled(Rules::instance()->getMode() == Mode::HVM);
-		ui->actionResign->setVisible(Rules::instance()->getMode() == Mode::HVM);
-		ui->actionReveal_One_Peg->setEnabled(Rules::instance()->getMode() == Mode::HVM);
-		ui->actionReveal_One_Peg->setVisible(Rules::instance()->getMode() == Mode::HVM);
-		game->play();
+		ui->actionResign->setEnabled(Rules::instance()->m_mode == Mode::HVM);
+		ui->actionResign->setVisible(Rules::instance()->m_mode == Mode::HVM);
+		ui->actionReveal_One_Peg->setEnabled(Rules::instance()->m_mode == Mode::HVM);
+		ui->actionReveal_One_Peg->setVisible(Rules::instance()->m_mode == Mode::HVM);
+		m_game->play();
 	}
 }
 
 bool MainWindow::quitUnfinishedGame()
 {
-	if (!game->isRunning())
+	if (!m_game->isRunning())
 		return true;
 	int new_game_accept = QMessageBox::warning(this,
-								  tr("New Game"), QString(isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
+								  tr("New game"), QString(s_isAndroid ? "%1\n%2" : "<p align='center'>%1</p>"
 													"<p align='center'>%2</p>")
 												.arg(tr("An unfinished game is in progress."))
 												.arg(tr("Do you want to start a new game?")),
@@ -350,44 +354,45 @@ void MainWindow::onAbout()
 	QStringList app_version = QCoreApplication::applicationVersion().split('.');
 	QString localized_app_version = "";
 	foreach(QString sub_version_number, app_version) {
-		localized_app_version.append(Board::instance()->locale()->toString(sub_version_number.toInt()));
-		localized_app_version.append(Board::instance()->locale()->decimalPoint());
+		localized_app_version.append(Board::instance()->m_locale.toString(sub_version_number.toInt()));
+		localized_app_version.append(Board::instance()->m_locale.decimalPoint());
 	}
 	localized_app_version.chop(1);
-	QMessageBox::about(this, tr("About QtMind"), QString(isAndroid ? "%1 %2\n%3\n\n%4\n%5" :
+	QMessageBox::about(this, tr("About QtMind"), QString(s_isAndroid ? "%1 %2\n%3\n\n%4\n%5" :
 		"<p align='center'><big><b>%1 %2</b></big><br/>%3<br/><small>%4<br/>%5</small></p>")
 		.arg(tr("QtMind"), localized_app_version,
 			tr("Code Breaking Game, A Clone Of The Mastermind Board Game"),
-			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(Board::instance()->locale()->toString(2014)),
+			tr("Copyright &copy; 2013-%1 Omid Nikta").arg(Board::instance()->m_locale.toString(2014)),
 			tr("Released under the <a href=%1>GPL 3</a> license").arg("\"http://www.gnu.org/licenses/gpl.html\"")));
 }
 
 void MainWindow::onAutoPutPins()
 {
-	Board::instance()->setAutoPutPins(ui->actionAuto_Set_Pins->isChecked());
+	Board::instance()->m_autoPutPins = ui->actionAuto_Set_Pins->isChecked();
 }
 
 void MainWindow::onAutoCloseRows()
 {
-	Board::instance()->setAutoCloseRows(ui->actionAuto_Close_Rows->isChecked());
+	Board::instance()->m_autoCloseRows = ui->actionAuto_Close_Rows->isChecked();
 }
 
 void MainWindow::onIndicatorChanged()
 {
-	Board::instance()->setIndicators(ui->menuIndicators->actions().at(0)->isChecked(), ui->menuIndicators->actions().at(1)->isChecked());
-	game->changeIndicators();
+	Board::instance()->m_showIndicators = ui->menuIndicators->actions().at(0)->isChecked();
+	Board::instance()->m_showColors = ui->menuIndicators->actions().at(1)->isChecked();
+	m_game->changeIndicators();
 }
 
 void MainWindow::onModeChanged(QAction *selectedAction)
 {
 	Q_UNUSED(selectedAction);
-	if (getMode() != Rules::instance()->getMode())
+	if (getMode() != Rules::instance()->m_mode)
 		onNewGame();
 }
 
 void MainWindow::onAlgorithmChanded()
 {
-	Rules::instance()->setAlgorithm(algorithmsComboBox->currentIndex());
+	Rules::instance()->m_algorithm = static_cast<Algorithm>(m_algorithmsComboBox->currentIndex());
 
 }
 
@@ -398,8 +403,8 @@ void MainWindow::onVolumeChanged(QAction *volume_action)
 
 void MainWindow::onColorActionChanged(QAction *color_action)
 {
-	if (colorsComboBox->currentIndex() != color_action->data().toInt() - 2) {
-		colorsComboBox->setCurrentIndex(color_action->data().toInt() - MIN_COLOR_NUMBER);
+	if (m_colorsComboBox->currentIndex() != color_action->data().toInt() - 2) {
+		m_colorsComboBox->setCurrentIndex(color_action->data().toInt() - MIN_COLOR_NUMBER);
 	}
 }
 
@@ -412,8 +417,8 @@ void MainWindow::onColorComboChanged(const int &combo_index)
 
 void MainWindow::onSlotActionChanged(QAction *slot_action)
 {
-	if (pegsComboBox->currentIndex() != slot_action->data().toInt() - 2) {
-		pegsComboBox->setCurrentIndex(slot_action->data().toInt() - MIN_SLOT_NUMBER);
+	if (m_pegsComboBox->currentIndex() != slot_action->data().toInt() - 2) {
+		m_pegsComboBox->setCurrentIndex(slot_action->data().toInt() - MIN_SLOT_NUMBER);
 	}
 }
 
@@ -426,8 +431,8 @@ void MainWindow::onSlotComboChanged(const int &combo_index)
 
 void MainWindow::onAlgorithmActionChanged(QAction *algorithm_action)
 {
-	if (algorithmsComboBox->currentIndex() != algorithm_action->data().toInt()) {
-		algorithmsComboBox->setCurrentIndex(algorithm_action->data().toInt());
+	if (m_algorithmsComboBox->currentIndex() != algorithm_action->data().toInt()) {
+		m_algorithmsComboBox->setCurrentIndex(algorithm_action->data().toInt());
 	}
 }
 
@@ -440,16 +445,17 @@ void MainWindow::onAlgorithmComboChanged(const int &combo_index)
 
 void MainWindow::onIndicatorTypeChanged(QAction *indic_act)
 {
-	Board::instance()->setIndicator(indic_act->data().toInt());
-	game->changeIndicators();
+	Board::instance()->m_indicator = static_cast<Board::Indicator>(indic_act->data().toInt());
+	m_game->changeIndicators();
 }
 
 void MainWindow::onLanguageChanged(QAction *language_act)
 {
-	Board::instance()->setLocale(language_act->data().toString());
-	Board::instance()->locale()->setNumberOptions(QLocale::OmitGroupSeparator);
+	QLocale newLocale(language_act->data().toString());
+	Board::instance()->m_locale = newLocale;
+	Board::instance()->m_locale.setNumberOptions(QLocale::OmitGroupSeparator);
 	loadTranslation();
-	setLayoutDirection(Board::instance()->locale()->textDirection());
+	setLayoutDirection(Board::instance()->m_locale.textDirection());
 	retranslate();
 }
 
@@ -469,14 +475,20 @@ void MainWindow::onShowContextMenu(const QPoint &position)
 
 void MainWindow::updateRules()
 {
-	Rules::instance()->update(colorsComboBox->currentIndex() + MIN_COLOR_NUMBER,
-				 pegsComboBox->currentIndex() + MIN_SLOT_NUMBER,
-				 static_cast<Algorithm>(algorithmsComboBox->currentIndex()),
-				 getMode(),
-				 (ui->actionAllow_Same_Colors->isChecked()));
+	Rules::instance()->m_colors = m_colorsComboBox->currentIndex() + MIN_COLOR_NUMBER;
+	Rules::instance()->m_pegs = m_pegsComboBox->currentIndex() + MIN_SLOT_NUMBER;
+	Rules::instance()->m_algorithm = static_cast<Algorithm>(m_algorithmsComboBox->currentIndex());
+	Rules::instance()->m_mode = getMode();
+	Rules::instance()->m_sameColors = ui->actionAllow_Same_Colors->isChecked();
+	// for safety, fallback to standard in out-range inputs
+	if (Rules::instance()->m_pegs < MIN_SLOT_NUMBER || Rules::instance()->m_pegs > MAX_SLOT_NUMBER ||
+			Rules::instance()->m_colors < MIN_COLOR_NUMBER || Rules::instance()->m_colors > MAX_COLOR_NUMBER) {
+		Rules::instance()->m_pegs = 4;
+		Rules::instance()->m_colors = 6;
+	}
 
-	ui->actionAllow_Same_Colors->setChecked(Rules::instance()->isSameColor());
-	if (Rules::instance()->isSameColor())
+	ui->actionAllow_Same_Colors->setChecked(Rules::instance()->m_sameColors);
+	if (Rules::instance()->m_sameColors)
 		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
 	else
 		ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
@@ -492,7 +504,7 @@ Mode MainWindow::getMode()
 
 QStringList MainWindow::findTranslations()
 {
-	QStringList result = QDir(AppPath, "*.qm").entryList(QDir::Files);
+	QStringList result = QDir(m_appPath, "*.qm").entryList(QDir::Files);
 	result.replaceInStrings(".qm", "");
 	return result;
 }
@@ -510,13 +522,13 @@ void MainWindow::loadTranslation()
 	foreach(QString path, paths)
 	{
 		if (QFile::exists(path)) {
-			AppPath = path;
+			m_appPath = path;
 			break;
 		}
 	}
 
 	// Find current locale
-	QString current = Board::instance()->locale()->name();
+	QString current = Board::instance()->m_locale.name();
 	QStringList translations = findTranslations();
 	if (!translations.contains(app_name_ + current)) {
 		current = current.left(2);
@@ -534,14 +546,14 @@ void MainWindow::loadTranslation()
 	// Load translators
 	static QTranslator qt_translator;
 	if (translations.contains("qt_" + current) || translations.contains("qt_" + current.left(2))) {
-		qt_translator.load("qt_" + current, AppPath);
+		qt_translator.load("qt_" + current, m_appPath);
 	} else {
 		qt_translator.load("qt_" + current, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	}
 	QCoreApplication::installTranslator(&qt_translator);
 
 	static QTranslator translator;
-	translator.load(app_name_ + current, AppPath);
+	translator.load(app_name_ + current, m_appPath);
 	QCoreApplication::installTranslator(&translator);
 }
 

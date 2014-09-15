@@ -31,8 +31,8 @@ class Board
 {
 public:
 	enum class Indicator {
-		Character,
-		Digit
+		Digit = 48,     // begining of digits in unicode
+		Character = 65, // begining of characters in unicode
 	};
 	enum class Sound {
 		PegDrop,
@@ -49,25 +49,23 @@ public:
 	static Board *instance();
 	~Board();
 
-	QString getFontName() const { return fontName; }
-	int getFontSize() const { return fontSize; }
-	bool isAutoPutPins() const { return autoPutPins; }
-	bool isAutoCloseRows() const { return autoCloseRows; }
-	Indicator getIndicator() const { return indicator; }
-	bool getShowIndicators() const { return showIndicators;}
-	QLocale *getLoale() {return &m_locale; }
-	bool getShowColors() const { return showColors; }
+	/**
+	 * @brief forceColor shows if colors of pegs should be visible
+	 * @return
+	 */
 	bool forceColor() const;
+
+	/**
+	 * @brief play button push or peg drop sound
+	 * @param s
+	 */
 	void play(Sound s) const;
+
+	/**
+	 * @brief setVolume set the volume of the game
+	 * @param vol
+	 */
 	void setVolume(const int &vol);
-	Volume getVolume() const {return volume;}
-	QLocale *locale() { return &m_locale; }
-	void setLocale(const QString &name);
-	void setAutoPutPins(const bool &a);
-	void setAutoCloseRows(const bool &a);
-	void setIndicators(const bool &show_indicators, const bool &show_colors);
-	void setIndicator(int a);
-	void setFont(const QString &name, const int &_size);
 
 private:
 	/**
@@ -75,19 +73,21 @@ private:
 	 */
 	Board();
 
-private:
-	bool autoPutPins; /**< TODO */
-	bool autoCloseRows; /**< TODO */
-	bool showColors; /**< TODO */
-	bool showIndicators; /**< TODO */
-	Indicator indicator; /**< TODO */
+public:
 	QLocale m_locale; /**< TODO */
-	QString fontName; /**< TODO */
-	int fontSize; /**< TODO */
-	Volume volume; /**< TODO */
-	QSoundEffect *pegDrop; /**< TODO */
-	QSoundEffect *pegDropRefuse; /**< TODO */
-	QSoundEffect *buttonPress; /**< TODO */
+	bool m_autoPutPins; /**< TODO */
+	bool m_autoCloseRows; /**< TODO */
+	bool m_showColors; /**< TODO */
+	bool m_showIndicators; /**< TODO */
+	Indicator m_indicator; /**< TODO */
+	QString m_fontName; /**< TODO */
+	int m_fontSize; /**< TODO */
+	Volume m_volume; /**< TODO */
+
+private:
+	QSoundEffect *m_pegDrop; /**< TODO */
+	QSoundEffect *m_pegDropRefuse; /**< TODO */
+	QSoundEffect *m_buttonPress; /**< TODO */
 };
 
 #endif // BOARD_H

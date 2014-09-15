@@ -33,7 +33,7 @@ public:
 	/**
 	 * @brief The State enum represents different states of	a box
 	 */
-	enum State {
+	enum class State {
 		Past,
 		Current,
 		Future,
@@ -49,15 +49,15 @@ public:
 
 	/**
 	 * @brief sets the state of the box
-	 * @param m_state the state
+	 * @param _state the state
 	 */
-	virtual void setState(const Box::State &m_state = Box::State::Future);
+	virtual void setState(const Box::State &_state = Box::State::Future);
 
 	/**
 	 * @brief gets the state of the box
 	 * @return Box::State
 	 */
-	Box::State getState() const {return state;}
+	Box::State getState() const {return m_state;}
 
 protected:
 	/**
@@ -65,13 +65,13 @@ protected:
 	 * @param painter
 	 */
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-	Box::State state; /**< The state of the box */
+	Box::State m_state; /**< The state of the box */
 
 private:
 	/**
 	 * @brief BoxAlphas different alphas of the box
 	 */
-	static const int BoxAlphas[4];
+	static const int s_boxAlphas[4];
 };
 
 #endif // Box_H

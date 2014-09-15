@@ -45,8 +45,8 @@ enum class Algorithm
 	ExpectedSize
 };
 enum class Mode {
-	MVH,		//HUMAN MAKE THE HIDDEN CODE
-	HVM		    //HUMAN BREAKS THE HIDDEN CODE
+	MVH,		//Machine breaks the hidden code
+	HVM		    //Human breaks the hidden code
 };
 
 

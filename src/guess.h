@@ -63,7 +63,7 @@ public:
 	 * @param algorithm_m the new algorithm
 	 * @param possibles_m the new possibles number
 	 */
-	void reset(const int &possibles_m);
+	void reset(const int &_possibles);
 
 	/**
 	 * @brief setGuess
@@ -77,8 +77,8 @@ public:
 	 */
 	void setCode(unsigned char *_code);
 
-	int getBlacks() const { return blacks; }
-	int getWhites() const { return whites; }
+	int getBlacks() const { return m_blacks; }
+	int getWhites() const { return m_whites; }
 private:
 	/**
 	 * @brief Guess create the guess element
@@ -86,15 +86,15 @@ private:
 	explicit Guess();
 
 private:
-	unsigned char guess[MAX_SLOT_NUMBER]; /**< TODO */
-	unsigned char code[MAX_SLOT_NUMBER]; /**< TODO */
-	int colors;
-	int pegs;
-	int blacks;
-	int whites;
-	Algorithm algorithm; /**< TODO */
-	int possibles; /**< TODO */
-	qreal weight; /**< TODO */
+	unsigned char m_guess[MAX_SLOT_NUMBER]; /**< TODO */
+	unsigned char m_code[MAX_SLOT_NUMBER]; /**< TODO */
+	int m_colors;
+	int m_pegs;
+	int m_blacks;
+	int m_whites;
+	Algorithm m_algorithm; /**< TODO */
+	int m_possibles; /**< TODO */
+	qreal m_weight; /**< TODO */
 
 	friend class Solver;
 	friend class Game;

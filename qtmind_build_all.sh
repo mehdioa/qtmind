@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p ../pkgb
 cd ../pkgbuild
 
 mkdir -p arch

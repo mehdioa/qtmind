@@ -36,7 +36,6 @@ class Preferences : public QDialog
 public:
 	/**
 	 * @brief Preferences
-	 * @param board_aid
 	 * @param parent
 	 */
 	explicit Preferences(QWidget *parent = 0);
@@ -47,8 +46,6 @@ protected slots:
 
 private:
 	Ui::Preferences *ui; /**< TODO */
-
-	static QString AppPath;
 };
 
 #endif // PREFERENCES_H

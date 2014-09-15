@@ -38,30 +38,29 @@ public:
 	 * @param m_position
 	 * @param parent
 	 */
-	explicit PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent = 0);
+	explicit PinBox(const int &pin_number, const QPoint &_position, QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief getValue get the value of the box
+	 * @param bl blacks
+	 * @param wt whites
 	 */
 	void getValue(int &bl, int &wt) const;
 
 	/**
 	 * @brief setPins set pins of the box
-	 * @param codeA first code
-	 * @param codeB second code
-	 * @param color_n the number of colors
 	 */
 	void setPins();
 
 	/**
 	 * @brief setState set the box state
-	 * @param m_state the box state
+	 * @param _state the box state
 	 */
-	void setState(const Box::State &m_state = Box::State::Future);
+	void setState(const Box::State &_state = Box::State::Future);
 
 private:
-	static const int PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
-	QVector<Pin *> pins; /**< TODO */
+	static const int s_pinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
+	QVector<Pin *> m_pins; /**< TODO */
 };
 
 #endif // PINBOX_H

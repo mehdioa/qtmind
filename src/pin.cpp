@@ -23,8 +23,8 @@
 
 Pin::Pin(QGraphicsItem *parent) :
 	QGraphicsEllipseItem(0, 0, 13, 13, parent),
-	color(Pin::Color::None),
-	activity(false)
+	m_color(Pin::Color::None),
+	m_enabled(false)
 {
 	QLinearGradient lgrad(0, 0, 0, 13);
 	lgrad.setColorAt(0.0, QColor(50, 50, 50));
@@ -38,7 +38,7 @@ Pin::Pin(QGraphicsItem *parent) :
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsEllipseItem::mousePressEvent(event);
-	if (activity)
+	if (m_enabled)
 		setColor(nextPinColor());
 }
 
@@ -53,7 +53,7 @@ void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 Pin::Color Pin::nextPinColor() const
 {
-	switch (color) {
+	switch (m_color) {
 	case Pin::Color::Black:
 		return Pin::Color::None;
 	case Pin::Color::White:
@@ -63,10 +63,10 @@ Pin::Color Pin::nextPinColor() const
 	}
 }
 
-void Pin::setColor(const Pin::Color &m_color)
+void Pin::setColor(const Pin::Color &_color)
 {
-	color = m_color;
-	switch (color) {
+	m_color = _color;
+	switch (m_color) {
 	case Pin::Color::White:
 		setBrush(Qt::white);
 		break;
@@ -81,8 +81,8 @@ void Pin::setColor(const Pin::Color &m_color)
 
 void Pin::setActivity(const bool &b)
 {
-	activity = b;
-	if (activity) {
+	m_enabled = b;
+	if (m_enabled) {
 		setAcceptedMouseButtons(Qt::LeftButton);
 		setCursor(Qt::PointingHandCursor);
 	} else {

@@ -23,7 +23,7 @@
 #include <QPen>
 #include <QCursor>
 
-const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] = /**< TODO */
+const int PinBox::s_pinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] = /**< TODO */
 {
 	{{4, 13}, {22, 13}, {0, 0}, {0, 0}, {0, 0}},
 	{{4, 6}, {22, 6}, {13, 22}, {0, 0}, {0, 0}},
@@ -31,13 +31,13 @@ const int PinBox::PinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2] = /**< TODO 
 	{{2, 2}, {24, 2}, {13, 13}, {2, 24}, {24, 24}}
 };
 
-PinBox::PinBox(const int &pin_number, const QPoint &m_position, QGraphicsItem *parent):
-	Box(m_position, parent)
+PinBox::PinBox(const int &pin_number, const QPoint &_position, QGraphicsItem *parent):
+	Box(_position, parent)
 {
 	for(int i = 0; i < pin_number; ++i) {
 		auto pin = new Pin(this);
-		pins.append(pin);
-		pin->setPos(PinPositions[pin_number-2][i][0], PinPositions[pin_number-2][i][1]);
+		m_pins.append(pin);
+		pin->setPos(s_pinPositions[pin_number-2][i][0], s_pinPositions[pin_number-2][i][1]);
 	}
 	setState(Box::State::Future);
 }
@@ -46,7 +46,7 @@ void PinBox::getValue(int &bl, int &wt) const
 {
 	bl = 0;
 	wt = 0;
-	foreach(Pin *pin, pins) {
+	foreach(Pin *pin, m_pins) {
 		switch (pin->getColor()) {
 		case Pin::Color::White:
 			++wt;
@@ -63,17 +63,17 @@ void PinBox::getValue(int &bl, int &wt) const
 void PinBox::setPins()
 {
 	for(int i = 0; i < Guess::instance()->getBlacks(); ++i)
-		pins.at(i)->setColor(Pin::Color::Black);
+		m_pins.at(i)->setColor(Pin::Color::Black);
 
 	for(int i = Guess::instance()->getBlacks(); i < Guess::instance()->getBlacks()+Guess::instance()->getWhites(); ++i)
-		pins.at(i)->setColor(Pin::Color::White);
+		m_pins.at(i)->setColor(Pin::Color::White);
 }
 
-void PinBox::setState(const Box::State &m_state)
+void PinBox::setState(const Box::State &_state)
 {
-	state = m_state;
-	bool pin_activity = (state == Box::State::None);
-	foreach(Pin *pin, pins)
+	m_state = _state;
+	bool pin_activity = (m_state == Box::State::None);
+	foreach(Pin *pin, m_pins)
 		pin->setActivity(pin_activity);
 	update();
 }

@@ -22,17 +22,17 @@
 #include <QPen>
 #include <QLinearGradient>
 
-PegBox::PegBox(const QPoint &m_position, QGraphicsItem *parent):
-	Box(m_position, parent),
-	peg(0)
+PegBox::PegBox(const QPoint &_position, QGraphicsItem *parent):
+	Box(_position, parent),
+	m_peg(0)
 {
 
 }
 
 int PegBox::getPegColor() const
 {
-	if (peg)
-		return peg->getColor();
+	if (m_peg)
+		return m_peg->getColor();
 
 	qDebug("getPegColor called with no peg setted.");
 	return -1;
@@ -40,47 +40,47 @@ int PegBox::getPegColor() const
 
 bool PegBox::isPegVisible()
 {
-	return peg && peg->isVisible();
+	return m_peg && m_peg->isVisible();
 }
 
 Peg::State PegBox::getPegState() const
 {
-	if (peg) return peg->getState();
+	if (m_peg) return m_peg->getState();
 	return Peg::State::Plain;
 }
 
-void PegBox::setState(const Box::State &m_state)
+void PegBox::setState(const Box::State &_state)
 {
-	state = m_state;
+	m_state = _state;
 
-	if (peg) {
-		switch (state) {
+	if (m_peg) {
+		switch (m_state) {
 		case Box::State::Past:
-			peg->setState(Peg::State::Underneath);
+			m_peg->setState(Peg::State::Underneath);
 			break;
 		case Box::State::Current:
-			peg->setState(Peg::State::Visible);
+			m_peg->setState(Peg::State::Visible);
 			break;
 		default: // Box::State::None, Box::State::Future
-			peg->setState(Peg::State::Invisible);
+			m_peg->setState(Peg::State::Invisible);
 			break;
 		}
 	}
 	update();
 }
 
-void PegBox::setPegColor(const int &color_number)
+void PegBox::setPegColor(const int &_color)
 {
-	if (peg)
-		peg->setColor(color_number);
+	if (m_peg)
+		m_peg->setColor(_color);
 	else
 		qDebug("setPegColor called with no peg setted.");
 }
 
-void PegBox::setPegState(const Peg::State &peg_state)
+void PegBox::setPegState(const Peg::State &_peg_state)
 {
-	if (peg)
-		peg->setState(peg_state);
+	if (m_peg)
+		m_peg->setState(_peg_state);
 	else
 		qDebug("setState called with no peg setted.");
 

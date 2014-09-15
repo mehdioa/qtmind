@@ -22,11 +22,11 @@
 #include <QSettings>
 
 Rules::Rules():
-	pegs(QSettings().value("Pegs", 4).toInt()),
-	colors(QSettings().value("Colors", 6).toInt()),
-	same_colors(QSettings().value("SameColor", true).toBool()),
-	algorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
-	mode((Mode) QSettings().value("Mode", 1).toInt())
+	m_pegs(QSettings().value("Pegs", 4).toInt()),
+	m_colors(QSettings().value("Colors", 6).toInt()),
+	m_sameColors(QSettings().value("SameColor", true).toBool()),
+	m_algorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
+	m_mode((Mode) QSettings().value("Mode", 1).toInt())
 {
 
 }
@@ -39,30 +39,9 @@ Rules *Rules::instance()
 
 Rules::~Rules()
 {
-	QSettings().setValue("Pegs", pegs);
-	QSettings().setValue("Colors", colors);
-	QSettings().setValue("SameColor", same_colors);
-	QSettings().setValue("Algorithm", (int) algorithm);
-	QSettings().setValue("Mode", (int) mode);
-}
-
-void Rules::update(int _colors, int _pegs, Algorithm _alg, Mode _mode, bool _same_color)
-{
-	colors = _colors;
-	pegs = _pegs;
-	algorithm = _alg;
-	mode = _mode;
-	same_colors = _same_color || (pegs > colors);
-
-	// for safety, fallback to standard in out-range inputs
-	if (pegs < MIN_SLOT_NUMBER || pegs > MAX_SLOT_NUMBER ||
-			colors < MIN_COLOR_NUMBER || colors > MAX_COLOR_NUMBER) {
-		pegs = 4;
-		colors = 6;
-	}
-}
-
-void Rules::setAlgorithm(int a)
-{
-	algorithm = static_cast<Algorithm>(a);
+	QSettings().setValue("Pegs", m_pegs);
+	QSettings().setValue("Colors", m_colors);
+	QSettings().setValue("SameColor", m_sameColors);
+	QSettings().setValue("Algorithm", (int) m_algorithm);
+	QSettings().setValue("Mode", (int) m_mode);
 }

@@ -39,10 +39,10 @@ int Solver::ipow(int base, int exp) {
 
 Solver::Solver(QObject *parent):
 	QThread(parent),
-	interupt(true)
+	m_interupt(true)
 {
-	codes.index = NULL;
-	sp.index = NULL;
+	m_codes.index = NULL;
+	m_smallPossibles.index = NULL;
 }
 
 Solver::~Solver()
@@ -57,71 +57,71 @@ inline static void array_copy(unsigned char *A, unsigned char *B, int N) {
 
 void Solver::createTables()
 {
-	if (Rules::instance()->isSameColor()) {
-		codes.size = ipow(Rules::instance()->getColors(), Rules::instance()->getPegs());
+	if (Rules::instance()->m_sameColors) {
+		m_codes.size = ipow(Rules::instance()->m_colors, Rules::instance()->m_pegs);
 	} else {
-		codes.size = 1;
-		for(int i = 0; i < Rules::instance()->getPegs(); ++i)
-			codes.size *= (Rules::instance()->getColors() - i);
+		m_codes.size = 1;
+		for(int i = 0; i < Rules::instance()->m_pegs; ++i)
+			m_codes.size *= (Rules::instance()->m_colors - i);
 	}
 
-	max_response = (Rules::instance()->getPegs() + 1)*(Rules::instance()->getPegs() + 2)/2;
+	m_maxResponse = (Rules::instance()->m_pegs + 1)*(Rules::instance()->m_pegs + 2)/2;
 
-	codes.index = new unsigned char *[codes.size];
+	m_codes.index = new unsigned char *[m_codes.size];
 
-	for(int i = 0; i < codes.size; ++i) {
-		codes.index[i] = new unsigned char[Rules::instance()->getPegs()];
+	for(int i = 0; i < m_codes.size; ++i) {
+		m_codes.index[i] = new unsigned char[Rules::instance()->m_pegs];
 	}
 
-	if (Rules::instance()->isSameColor()) {
-		for (int i = 0; i < Rules::instance()->getPegs(); i++)
-			codes.index[0][i] = 0;
-		for (int i = 1; i < codes.size; i++) {
-			array_copy(codes.index[i-1], codes.index[i], Rules::instance()->getPegs());
-			indexToCodeSameColor(codes.index[i]);
+	if (Rules::instance()->m_sameColors) {
+		for (int i = 0; i < Rules::instance()->m_pegs; i++)
+			m_codes.index[0][i] = 0;
+		for (int i = 1; i < m_codes.size; i++) {
+			array_copy(m_codes.index[i-1], m_codes.index[i], Rules::instance()->m_pegs);
+			indexToCodeSameColor(m_codes.index[i]);
 		}
 	} else {
-		for (int i = 0; i < Rules::instance()->getPegs(); i++)
-			codes.index[0][i] = i;
-		for (int i = 1; i < codes.size; i++) {
-			array_copy(codes.index[i-1], codes.index[i], Rules::instance()->getPegs());
-			indexToCodeDifferentColor(codes.index[i]);
+		for (int i = 0; i < Rules::instance()->m_pegs; i++)
+			m_codes.index[0][i] = i;
+		for (int i = 1; i < m_codes.size; i++) {
+			array_copy(m_codes.index[i-1], m_codes.index[i], Rules::instance()->m_pegs);
+			indexToCodeDifferentColor(m_codes.index[i]);
 		}
 	}
 
-	for(int i = 0; i < codes.size; ++i)
-		possibles.append(i);
+	for(int i = 0; i < m_codes.size; ++i)
+		m_possibles.append(i);
 }
 
 void Solver::deleteTables()
 {
-	if (codes.index != NULL) {
-		for(int i = 0; i < codes.size; ++i)
-			delete[] codes.index[i];
+	if (m_codes.index != NULL) {
+		for(int i = 0; i < m_codes.size; ++i)
+			delete[] m_codes.index[i];
 
-		delete[] codes.index;
-		codes.index = NULL;
+		delete[] m_codes.index;
+		m_codes.index = NULL;
 	}
 
-	if(sp.index) {
-		delete[] sp.index;
-		sp.index = NULL;
+	if(m_smallPossibles.index) {
+		delete[] m_smallPossibles.index;
+		m_smallPossibles.index = NULL;
 	}
 
-	possibles.clear();
+	m_possibles.clear();
 }
 
 void Solver::onReset()
 {
 	deleteTables();
 	createTables();
-	Guess::instance()->reset(codes.size);
+	Guess::instance()->reset(m_codes.size);
 }
 
 void Solver::onStartGuessing()
 {
-	interupt = false;
-	Guess::instance()->algorithm = Rules::instance()->getAlgorithm(); // to prevent change in algorithm by user in the middle of computation
+	m_interupt = false;
+	Guess::instance()->m_algorithm = Rules::instance()->m_algorithm; // to prevent change in algorithm by user in the middle of computation
 	start(QThread::NormalPriority);
 }
 
@@ -139,10 +139,10 @@ void Solver::shuffle(unsigned char *m_string, int len) const
 void Solver::permute(unsigned char *m_code) const
 {
 	unsigned char shuffled_colors[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255};
-	shuffle(shuffled_colors, Rules::instance()->getColors());
-	shuffle(m_code, Rules::instance()->getPegs());
+	shuffle(shuffled_colors, Rules::instance()->m_colors);
+	shuffle(m_code, Rules::instance()->m_pegs);
 
-	for(int i = 0; i < Rules::instance()->getPegs(); ++i)
+	for(int i = 0; i < Rules::instance()->m_pegs; ++i)
 		m_code[i] = shuffled_colors[m_code[i]];
 }
 
@@ -150,36 +150,36 @@ bool Solver::setResponse(const int &blacks, const int &whites)
 {
 	QList<int> temppossibles;
 	int _blacks, _whites;
-	foreach(int possible, possibles) {
-		COMPARE(Guess::instance()->guess, codes.index[possible], Rules::instance()->getColors(), Rules::instance()->getPegs(), _blacks, _whites);
+	foreach(int possible, m_possibles) {
+		COMPARE(Guess::instance()->m_guess, m_codes.index[possible], Rules::instance()->m_colors, Rules::instance()->m_pegs, _blacks, _whites);
 		if (blacks == _blacks && whites == _whites)
 			temppossibles.append(possible);
 	}
 
 	if (temppossibles.isEmpty())
 		return false;
-	possibles = temppossibles;
-	Guess::instance()->blacks = blacks;
-	Guess::instance()->whites = whites;
-	Guess::instance()->possibles = possibles.size();
+	m_possibles = temppossibles;
+	Guess::instance()->m_blacks = blacks;
+	Guess::instance()->m_whites = whites;
+	Guess::instance()->m_possibles = m_possibles.size();
 	setSmallPossibles();
 	return true;
 }
 
 void Solver::setSmallPossibles()
 {
-	if (!sp.index)
+	if (!m_smallPossibles.index)
 	{
-		if (codes.size <= 10000) {
-			sp.size = codes.size;
-			sp.index = new int[sp.size];
-			for(int i = 0; i < sp.size; ++i)
-				sp.index[i] = i;
-		} else if (possibles.size() <= 10000) {
-			sp.size = possibles.size();
-			sp.index = new int[sp.size];
-			for(int i = 0; i < sp.size; ++i)
-				sp.index[i] = possibles.at(i);
+		if (m_codes.size <= 10000) {
+			m_smallPossibles.size = m_codes.size;
+			m_smallPossibles.index = new int[m_smallPossibles.size];
+			for(int i = 0; i < m_smallPossibles.size; ++i)
+				m_smallPossibles.index[i] = i;
+		} else if (m_possibles.size() <= 10000) {
+			m_smallPossibles.size = m_possibles.size();
+			m_smallPossibles.index = new int[m_smallPossibles.size];
+			for(int i = 0; i < m_smallPossibles.size; ++i)
+				m_smallPossibles.index[i] = m_possibles.at(i);
 		}
 	}
 }
@@ -187,17 +187,17 @@ void Solver::setSmallPossibles()
 void Solver::run()
 {
 	makeGuess();
-	if (!interupt)
+	if (!m_interupt)
 		emit guessDoneSignal();
 }
 
 void Solver::makeGuess()
 {
 	// The first guess here
-	if (possibles.size() == codes.size) {
+	if (m_possibles.size() == m_codes.size) {
 		unsigned char answer[] = {0, 1, 2, 3, 4};
-		if (Rules::instance()->isSameColor()) {
-			switch (Rules::instance()->getColors()) {
+		if (Rules::instance()->m_sameColors) {
+			switch (Rules::instance()->m_colors) {
 			case 2:
 				answer[2] = 0;
 				answer[3] = 1;
@@ -213,7 +213,7 @@ void Solver::makeGuess()
 				break;
 			}
 			// the classic game (c = 6, p = 4) is best with this first guess on Worst Case
-			if(Rules::instance()->getColors() == 6 && Rules::instance()->getPegs() == 4 && Rules::instance()->getAlgorithm() == Algorithm::WorstCase) {
+			if(Rules::instance()->m_colors == 6 && Rules::instance()->m_pegs == 4 && Rules::instance()->m_algorithm == Algorithm::WorstCase) {
 				answer[2] = 0;
 				answer[3] = 1;
 			}
@@ -223,31 +223,31 @@ void Solver::makeGuess()
 		return;
 	}
 
-	if (possibles.size() == 1) {
-		Guess::instance()->setGuess(codes.index[possibles.first()]);
+	if (m_possibles.size() == 1) {
+		Guess::instance()->setGuess(m_codes.index[m_possibles.first()]);
 		return;
 	}
 
-	if(possibles.size() > 10000) {
-		Guess::instance()->setGuess(codes.index[possibles.at(possibles.size() >> 1)]);
+	if(m_possibles.size() > 10000) {
+		Guess::instance()->setGuess(m_codes.index[m_possibles.at(m_possibles.size() >> 1)]);
 		return;
 	}
 
-	int responsesOfCodes[max_response];
-	for(int i = 0; i < max_response; ++i)
+	int responsesOfCodes[m_maxResponse];
+	for(int i = 0; i < m_maxResponse; ++i)
 		responsesOfCodes[i] = 0;
 
 	int answer_index = 0;
 	qreal min_code_weight = 1000000000;
 	qreal code_weight;
 
-	for (int code_index = 0; code_index < sp.size; ++code_index) {
-		if(interupt)
+	for (int code_index = 0; code_index < m_smallPossibles.size; ++code_index) {
+		if(m_interupt)
 			return;
 
 		int whites, blacks;
-		foreach(int possible_index, possibles) {
-			COMPARE(codes.index[sp.index[code_index]], codes.index[possible_index], Rules::instance()->getColors(), Rules::instance()->getPegs(), blacks, whites);
+		foreach(int possible_index, m_possibles) {
+			COMPARE(m_codes.index[m_smallPossibles.index[code_index]], m_codes.index[possible_index], Rules::instance()->m_colors, Rules::instance()->m_pegs, blacks, whites);
 			++responsesOfCodes[(blacks+whites)*(blacks+whites+1)/2 + blacks];
 		}
 		code_weight = computeWeight(responsesOfCodes);
@@ -258,33 +258,33 @@ void Solver::makeGuess()
 		}
 	}
 
-	if(Guess::instance()->algorithm == Algorithm::MostParts)
-		min_code_weight = max_response - 2 - min_code_weight;
+	if(Guess::instance()->m_algorithm == Algorithm::MostParts)
+		min_code_weight = m_maxResponse - 2 - min_code_weight;
 
-	Guess::instance()->weight = qFloor(min_code_weight);
+	Guess::instance()->m_weight = qFloor(min_code_weight);
 
-	Guess::instance()->setGuess(codes.index[sp.index[answer_index]]);
+	Guess::instance()->setGuess(m_codes.index[m_smallPossibles.index[answer_index]]);
 }
 
 qreal Solver::computeWeight(int *m_responses) const
 {
 	qreal answer = 0;
 
-	switch (Guess::instance()->algorithm) {
+	switch (Guess::instance()->m_algorithm) {
 	case Algorithm::ExpectedSize:
-		for(int i = 0; i < max_response-2; ++i) {
+		for(int i = 0; i < m_maxResponse-2; ++i) {
 			answer += ipow(m_responses[i], 2);
 			m_responses[i] = 0;
 		}
 		break;
 	case Algorithm::WorstCase:
-		for(int i = 0; i < max_response-2; ++i) {
+		for(int i = 0; i < m_maxResponse-2; ++i) {
 			answer = qMax((qreal)m_responses[i], answer);
 			m_responses[i] = 0;
 		}
 		break;
 	default:	//	Most Parts
-		for(int i = 0; i < max_response-2; ++i) {
+		for(int i = 0; i < m_maxResponse-2; ++i) {
 			if (m_responses[i] == 0)
 				++answer;
 			else
@@ -294,14 +294,14 @@ qreal Solver::computeWeight(int *m_responses) const
 	}
 
 	// This little trick will prefer possibles in tie
-	if (m_responses[max_response - 1] != 0) {
+	if (m_responses[m_maxResponse - 1] != 0) {
 		answer -= 0.5;
-		if (Guess::instance()->algorithm == Algorithm::MostParts)
+		if (Guess::instance()->m_algorithm == Algorithm::MostParts)
 			--answer;
 		else
 			++answer;
 
-		m_responses[max_response - 1] = 0;
+		m_responses[m_maxResponse - 1] = 0;
 	}
 
 	return answer;
@@ -309,8 +309,8 @@ qreal Solver::computeWeight(int *m_responses) const
 
 void Solver::indexToCodeSameColor(unsigned char *X)
 {
-	int i = Rules::instance()->getPegs() - 1;
-	int N = Rules::instance()->getColors();
+	int i = Rules::instance()->m_pegs - 1;
+	int N = Rules::instance()->m_colors;
 	N--;
 	while (i >= 0 && X[i] >= N)
 		X[i--] = 0;
@@ -320,9 +320,9 @@ void Solver::indexToCodeSameColor(unsigned char *X)
 
 void Solver::indexToCodeDifferentColor(unsigned char *X)
 {
-	int i = Rules::instance()->getPegs();
+	int i = Rules::instance()->m_pegs;
 	while (--i >= 0) {
-		while (++X[i] < Rules::instance()->getColors()) {
+		while (++X[i] < Rules::instance()->m_colors) {
 			int j = 0;
 			while (j < i && X[j] != X[i])
 				++j;
@@ -331,9 +331,9 @@ void Solver::indexToCodeDifferentColor(unsigned char *X)
 	}
 	return;
 mark:
-	while (++i < Rules::instance()->getPegs()) {
+	while (++i < Rules::instance()->m_pegs) {
 		X[i] = -1;
-		while (++X[i] < Rules::instance()->getColors()) {
+		while (++X[i] < Rules::instance()->m_colors) {
 			int j = 0;
 			while (j < i && X[j] != X[i])
 				++j;
@@ -345,7 +345,7 @@ mark:
 QString Solver::arrayToString(const unsigned char *m_array) const
 {
 	QString answer = "";
-	for(int i = 0; i < Rules::instance()->getPegs(); ++i) {
+	for(int i = 0; i < Rules::instance()->m_pegs; ++i) {
 		answer.append(QString::number(m_array[i]));
 	}
 	return answer;

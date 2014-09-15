@@ -27,17 +27,17 @@
 Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent):
 	QGraphicsObject(parent)
 {
-	width = buttonWidth;
-	label = str;
+	m_width = buttonWidth;
+	m_label = str;
 
-	font = QFont(Board::instance()->getFontName(), Board::instance()->getFontSize() - 1, QFont::Bold, false);
-	font.setStyleHint(QFont::SansSerif);
-	font.setStyleStrategy(QFont::PreferAntialias);
+	m_font = QFont(Board::instance()->m_fontName, Board::instance()->m_fontSize - 1, QFont::Bold, false);
+	m_font.setStyleHint(QFont::SansSerif);
+	m_font.setStyleStrategy(QFont::PreferAntialias);
 
-	pressedEffect = new QGraphicsDropShadowEffect;
-	pressedEffect->setOffset(0, 2);
-	setGraphicsEffect(pressedEffect);
-	pressedEffect->setEnabled(true);
+	m_pressedEffect = new QGraphicsDropShadowEffect;
+	m_pressedEffect->setOffset(0, 2);
+	setGraphicsEffect(m_pressedEffect);
+	m_pressedEffect->setEnabled(true);
 
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptHoverEvents (true);
@@ -47,14 +47,14 @@ Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	pressedEffect->setOffset(0, 1);
+	m_pressedEffect->setOffset(0, 1);
 	moveBy(0, 1);
 }
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	moveBy(0, -1);
-	pressedEffect->setOffset(0, 2);
+	m_pressedEffect->setOffset(0, 2);
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
 }
@@ -70,15 +70,15 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 	painter->setBrush(QBrush(framegrad));
 	painter->drawRoundedRect(boundingRect(), 20, 20);
 
-	if (label != "") {
+	if (m_label != "") {
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(QColor("#303030")));
-		painter->setFont(font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, label);
+		painter->setFont(m_font);
+		painter->drawText(boundingRect(), Qt::AlignCenter, m_label);
 	}
 }
 
 QRectF Button::boundingRect() const
 {
-	return QRectF(1, 0, width, 36);
+	return QRectF(1, 0, m_width, 36);
 }

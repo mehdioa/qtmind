@@ -139,11 +139,11 @@ private:
 	void playMVH();
 	void playHVM();
 	void createBoxes();
-	void createPegForBox(PegBox *m_box, int m_color);
-	PegBox *createPegBox(const QPoint &m_position);
-	Peg *createPeg(const QPointF &m_position, const int &m_color);
-	Peg *createPeg(PegBox *m_box, const int &m_color);
-	void codeRowFilled(const bool &m_filled);
+	void createPegForBox(PegBox *_box, int _color);
+	PegBox *createPegBox(const QPoint &_position);
+	Peg *createPeg(const QPointF &_position, const int &_color);
+	Peg *createPeg(PegBox *_box, const int &_color);
+	void codeRowFilled(const bool &_filled);
 	void showInformation();
 	void showMessage();
 	void initializeScene();
@@ -154,19 +154,19 @@ private:
 
 private:
 
-	QList<PinBox *> pinBoxes;		/**< black-white pins */
-	QList<PegBox *> pegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
-	QList<PegBox *> codeBoxes;	    /**< middle boxes that is filled by a player*/
-	QList<PegBox *> currentBoxes;	/**< the active row of codeboxes */
-	QList<PegBox *> masterBoxes;	/**< the mastercode boxes */
+	QList<PinBox *> m_pinBoxes;		/**< black-white pins */
+	QList<PegBox *> m_pegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
+	QList<PegBox *> m_codeBoxes;	    /**< middle boxes that is filled by a player*/
+	QList<PegBox *> m_currentBoxes;	/**< the active row of codeboxes */
+	QList<PegBox *> m_masterBoxes;	/**< the mastercode boxes */
 
-	Game::State state;              /**< TODO */
-	Solver *solver;                 /**< TODO */
-	Button *okButton;               /**< TODO */
-	Button *doneButton;             /**< TODO */
-	Message *message;               /**< TODO */
-	Message *information;			/**< TODO */
-	int playedMoves;                /**< TODO */
+	Game::State m_state;              /**< TODO */
+	Solver *m_solver;                 /**< TODO */
+	Button *m_okButton;               /**< TODO */
+	Button *m_doneButton;             /**< TODO */
+	Message *m_message;               /**< TODO */
+	Message *m_information;			/**< TODO */
+	int m_movesPlayed;                /**< TODO */
 };
 
 #endif // GAME_H

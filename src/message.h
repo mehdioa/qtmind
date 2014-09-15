@@ -42,9 +42,9 @@ public:
 
 	/**
 	 * @brief setText set the text of the message
-	 * @param m_text the message text
+	 * @param _text the message text
 	 */
-	void setText(const QString m_text);
+	void setText(const QString _text);
 
 protected:
 	/**
@@ -60,10 +60,10 @@ protected:
 	QRectF boundingRect() const;
 
 private:
-	QTextLayout textLayout; /**< TODO */
-	QRectF updateRect; /**< TODO */
-	QColor color; /**< TODO */
-	QString text; /**< TODO */
+	QTextLayout m_textLayout; /**< TODO */
+	QRectF m_updateRect; /**< TODO */
+	QColor m_color; /**< TODO */
+	QString m_text; /**< TODO */
 };
 
 #endif // MESSAGE_H

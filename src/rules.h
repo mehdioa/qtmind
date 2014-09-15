@@ -32,22 +32,15 @@ public:
 	static Rules *instance();
 	~Rules();
 
-	void update(int _colors, int _pegs, Algorithm _alg, Mode _mode, bool _same_color);
-	void setAlgorithm(int a);
-	int getPegs() const { return pegs; }
-	int getColors() const { return colors; }
-	Algorithm getAlgorithm() const { return algorithm; }
-	bool isSameColor() const { return same_colors; }
-	Mode getMode() const { return mode;}
 private:
 	Rules();
 
-private:
-	int pegs; /**< TODO */
-	int colors; /**< TODO */
-	bool same_colors; /**< TODO */
-	Algorithm algorithm; /**< TODO */
-	Mode mode; /**< TODO */
+public:
+	int m_pegs; /**< TODO */
+	int m_colors; /**< TODO */
+	bool m_sameColors; /**< TODO */
+	Algorithm m_algorithm; /**< TODO */
+	Mode m_mode; /**< TODO */
 };
 
 #endif // RULES_H
