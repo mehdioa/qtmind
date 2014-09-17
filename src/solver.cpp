@@ -241,13 +241,16 @@ void Solver::makeGuess()
 	qreal min_code_weight = 1000000000;
 	qreal code_weight;
 
+	//cache pegs and colors boost the computation
+	int colors = Rules::instance()->m_colors;
+	int pegs = Rules::instance()->m_pegs;
 	for (int code_index = 0; code_index < m_smallPossibles.size; ++code_index) {
 		if(m_interupt)
 			return;
 
 		int whites, blacks;
 		foreach(int possible_index, m_possibles) {
-			COMPARE(m_codes.index[m_smallPossibles.index[code_index]], m_codes.index[possible_index], Rules::instance()->m_colors, Rules::instance()->m_pegs, blacks, whites);
+			COMPARE(m_codes.index[m_smallPossibles.index[code_index]], m_codes.index[possible_index], colors, pegs, blacks, whites);
 			++responsesOfCodes[(blacks+whites)*(blacks+whites+1)/2 + blacks];
 		}
 		code_weight = computeWeight(responsesOfCodes);

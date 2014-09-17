@@ -31,6 +31,6 @@
 			<!-- Splash screen -->
 		</activity>
 	</application>
-	<uses-sdk android:targetSdkVersion="20" android:minSdkVersion="10"/>
+	<uses-sdk android:targetSdkVersion="19" android:minSdkVersion="10"/>
 	<supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
 </manifest>

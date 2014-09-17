@@ -30,7 +30,7 @@ Board::Board():
 	m_autoCloseRows(QSettings().value("AutoCloseRows", false).toBool()),
 	m_showColors(QSettings().value("ShowColors", 1).toBool()),
 	m_showIndicators(QSettings().value("ShowIndicators", 0).toBool()),
-	m_indicator((Indicator) QSettings().value("Indicator", 0).toInt()),
+	m_indicator((Indicator) QSettings().value("Indicator", 65).toInt()),
 	m_fontName(QSettings().value("FontName", "SansSerif").toString()),
 	m_fontSize((QSettings().value("FontSize", 12).toInt()))
 {
