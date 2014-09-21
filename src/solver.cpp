@@ -111,14 +111,14 @@ void Solver::deleteTables()
 	m_possibles.clear();
 }
 
-void Solver::onReset()
+void Solver::reset()
 {
 	deleteTables();
 	createTables();
 	Guess::instance()->reset(m_codes.size);
 }
 
-void Solver::onStartGuessing()
+void Solver::startGuessing()
 {
 	m_interupt = false;
 	Guess::instance()->m_algorithm = Rules::instance()->m_algorithm; // to prevent change in algorithm by user in the middle of computation

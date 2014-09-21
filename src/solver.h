@@ -80,26 +80,21 @@ public:
 	 *
 	 */
 	void run();
-
-protected slots:
-
 	/**
 	 * @brief
 	 *
 	 */
-	void onInterupt() {m_interupt = true;}
-
+	void interupt() {m_interupt = true;}
 	/**
 	 * @brief
 	 *
 	 */
-	void onStartGuessing();
-
+	void reset();
 	/**
 	 * @brief
 	 *
 	 */
-	void onReset();
+	void startGuessing();
 
 signals:
 

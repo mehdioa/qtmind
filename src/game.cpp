@@ -52,7 +52,7 @@ Game::Game():
 Game::~Game()
 {
 	if (m_solver) {
-		emit interuptSignal();
+		m_solver->interupt();
 		m_solver->quit();
 		m_solver->wait();
 		m_solver->deleteLater();
@@ -193,7 +193,7 @@ void Game::setNextRowInAction()
 void Game::getNextGuess()
 {
 	m_state = State::Thinking;
-	emit startGuessingSignal();
+	m_solver->startGuessing();
 }
 
 Game::Player Game::winner() const
@@ -478,7 +478,7 @@ void Game::play()
 void Game::stop()
 {
 	if (m_solver) {
-		emit interuptSignal();
+		m_solver->interupt();
 		m_solver->quit();
 		m_solver->wait();
 	}
@@ -495,12 +495,10 @@ void Game::playMVH()
 	if (!m_solver) {
 		m_solver = new Solver(this);
 		connect(m_solver, SIGNAL(guessDoneSignal()), this, SLOT(onGuessReady()));
-		connect(this, SIGNAL(startGuessingSignal()), m_solver, SLOT(onStartGuessing()));
-		connect(this, SIGNAL(resetGameSignal()), m_solver, SLOT(onReset()));
-		connect(this, SIGNAL(interuptSignal()), m_solver, SLOT(onInterupt()));
+
 	}
-	emit interuptSignal();
-	emit resetGameSignal();
+	m_solver->interupt();
+	m_solver->reset();
 
 	m_state = State::WaittingHiddenCodeFill;
 	showMessage();

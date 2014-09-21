@@ -30,9 +30,11 @@ class Solver;
 class Message;
 
 /**
- * @brief A class to represent the game logic. It is the heart of the game.
- * It is responssible for the graphics of the game and is the class that
- * mainwindow interact with.
+ * @brief A class to represent the game logic. It is the model in
+ * the MVC pattern of the game. All the classes Peg, Box, PinBox,
+ * Button, Solver, Message, and Guess are parts of this class.
+ * It is the heart of the game. It is responssible for the graphics
+ * of the game and is the class that mainwindow interact with.
  *
  */
 class Game: public QGraphicsView
@@ -91,18 +93,6 @@ signals:
 	 * @brief showIndicatorsSignal
 	 */
 	void showIndicatorsSignal();
-	/**
-	 * @brief startGuessingSignal
-	 */
-	void startGuessingSignal();
-	/**
-	 * @brief resetGameSignal
-	 */
-	void resetGameSignal();
-	/**
-	 * @brief interuptSignal
-	 */
-	void interuptSignal();
 
 protected slots:
 	void onPegMouseReleased(Peg *);
