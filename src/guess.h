@@ -57,39 +57,62 @@ class Guess
 {
 public:
 
-    static Guess &instance();
-	/**
-	 * @brief reset reset the guess element
-	 * @param algorithm_m the new algorithm
-	 * @param possibles_m the new possibles number
-	 */
-	void reset(const int &_possibles);
+    static Guess *instance();
 
-	/**
-	 * @brief setGuess
-	 * @param _guess
-	 */
 	void setGuess(unsigned char *_guess);
 
-	/**
-	 * @brief setCode
-	 * @param _code
-	 */
 	void setCode(unsigned char *_code);
 
-    int getBlacks() const { return mBlacks; }
-    int getWhites() const { return mWhites; }
+    Algorithm algorithm() const;
+
+    void setAlgorithm(const Algorithm &algorithm);
+
+    int blacks() const;
+
+    int whites() const;
+
+    int possibles() const;
+
+    qreal weight() const;
+
+    void setWeight(const qreal &w);
+    /**
+     * @brief guess gets mGuess[index]
+     * @param index the index
+     * @return mGuess[index]
+     */
+    unsigned char guess(const int &index) const;
+    /**
+     * @brief guess gets a pointer to mGuess
+     * @return a pointer to mGuess
+     */
+    const unsigned char *guess() const;
+    /**
+     * @brief update sets mBlacks, mWhites, and mPossibles
+     * @param b mBlacks
+     * @param w mWhites
+     * @param p mPossibles
+     */
+    void update(const int &b, const int &w, const int &p);
+    /**
+     * @brief reset reset the guess element
+     * @param algorithm_m the new algorithm
+     * @param possibles_m the new possibles number
+     */
+    void reset(const int &_possibles);
+
 private:
-	/**
-	 * @brief Guess create the guess element
-	 */
-	explicit Guess();
+    /**
+     * @brief Guess create the guess element
+     */
+    explicit Guess();
     ~Guess(){}
     Guess(const Guess &); // hide copy constructor
     Guess& operator=(const Guess &); // hide assign op
 
 
 private:
+    static Guess *sGuess;
     unsigned char mGuess[MAX_SLOT_NUMBER]; /**< TODO */
     unsigned char mCode[MAX_SLOT_NUMBER]; /**< TODO */
     int mColors;
@@ -99,9 +122,6 @@ private:
     Algorithm mAlgorithm; /**< TODO */
     int mPossibles; /**< TODO */
     qreal mWeight; /**< TODO */
-
-	friend class Solver;
-	friend class Game;
 };
 
 #endif // GUESS_H

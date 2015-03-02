@@ -20,13 +20,34 @@
 #include "board.h"
 #include "appinfo.h"
 #include <QSettings>
+#include <QMutex>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 #include <QtMultimedia/QSoundEffect>
 #endif
 
+Board* Board::sBoard = 0;
+
 Board::Board()
 {
+    QSettings settings;
+    mLocale = settings.value("Locale/Language", "en").toString().left(5);
+    mAutoPutPins = settings.value("AutoPutPins", true).toBool();
+    mAutoCloseRows = settings.value("AutoCloseRows", false).toBool();
+    mShowColors = settings.value("ShowColors", 1).toBool();
+    mShowIndicators = settings.value("ShowIndicators", 0).toBool();
+    mIndicator = (Indicator) settings.value("Indicator", 65).toInt();
+    mFontName = settings.value("FontName", "SansSerif").toString();
+    mFontSize = settings.value("FontSize", 12).toInt();
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+    mPegDrop = new QSoundEffect;
+    mPegDropRefuse = new QSoundEffect;
+    mButtonPress = new QSoundEffect;
+    mPegDrop->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
+    mPegDropRefuse->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
+    mButtonPress->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
+#endif
+    setVolume(settings.value("Volume", 3).toInt());
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
     mPegDrop = new QSoundEffect;
     mPegDropRefuse = new QSoundEffect;
@@ -37,14 +58,31 @@ Board::Board()
 #endif
 }
 
-Board &Board::instance()
+Board *Board::instance()
 {
-    static Board board;
-    return board;
+    static QMutex mutex;
+    if (!sBoard) {
+        mutex.lock();
+        if (!sBoard) {
+            sBoard = new Board;
+        }
+        mutex.unlock();
+    }
+    return sBoard;
 }
 
 Board::~Board()
 {
+    QSettings settings;
+    settings.setValue("AutoPutPins",	mAutoPutPins);
+    settings.setValue("AutoCloseRows", mAutoCloseRows);
+    settings.setValue("FontName", mFontName);
+    settings.setValue("FontSize", mFontSize);
+    settings.setValue("ShowColors", (int) mShowColors);
+    settings.setValue("ShowIndicators", (int) mShowIndicators);
+    settings.setValue("Indicator", (int) mIndicator);
+    settings.setValue("Locale/Language", mLocale.name());
+    settings.setValue("Volume", static_cast<int>(mVolume));
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
     if (mPegDrop)
         delete mPegDrop;
@@ -54,8 +92,28 @@ Board::~Board()
         delete mButtonPress;
 #endif
 }
+Indicator Board::indicator() const
+{
+    return mIndicator;
+}
 
-bool Board::forceColor() const
+//void Board::setIndicator(const Indicator &indicator)
+//{
+//    mIndicator = indicator;
+//}
+
+bool Board::hasShowColors() const
+{
+    return mShowColors;
+}
+
+//void Board::setShowColors(bool showColors)
+//{
+//    mShowColors = showColors;
+//}
+
+
+bool Board::hasForceColor() const
 {
     return mShowColors || !mShowIndicators;
 }
@@ -90,39 +148,7 @@ void Board::setVolume(const int &vol)
 #endif
 }
 
-void Board::readSettings()
+Volume Board::volume() const
 {
-    QSettings settings;
-    mLocale = settings.value("Locale/Language", "en").toString().left(5);
-    mAutoPutPins = settings.value("AutoPutPins", true).toBool();
-    mAutoCloseRows = settings.value("AutoCloseRows", false).toBool();
-    mShowColors = settings.value("ShowColors", 1).toBool();
-    mShowIndicators = settings.value("ShowIndicators", 0).toBool();
-    mIndicator = (Indicator) settings.value("Indicator", 65).toInt();
-    mFontName = settings.value("FontName", "SansSerif").toString();
-    mFontSize = settings.value("FontSize", 12).toInt();
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-    mPegDrop = new QSoundEffect;
-    mPegDropRefuse = new QSoundEffect;
-    mButtonPress = new QSoundEffect;
-    mPegDrop->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
-    mPegDropRefuse->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
-    mButtonPress->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
-#endif
-    setVolume(settings.value("Volume", 3).toInt());
+    return mVolume;
 }
-
-void Board::writeSettings()
-{
-    QSettings settings;
-    settings.setValue("AutoPutPins",	mAutoPutPins);
-    settings.setValue("AutoCloseRows", mAutoCloseRows);
-    settings.setValue("FontName", mFontName);
-    settings.setValue("FontSize", mFontSize);
-    settings.setValue("ShowColors", (int) mShowColors);
-    settings.setValue("ShowIndicators", (int) mShowIndicators);
-    settings.setValue("Indicator", (int) mIndicator);
-    settings.setValue("Locale/Language", mLocale.name());
-    settings.setValue("Volume", static_cast<int>(mVolume));
-}
-

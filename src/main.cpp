@@ -32,15 +32,8 @@ int main(int argc, char *argv[])
     app.setOrganizationName(ORG_NAME);
     app.setOrganizationDomain(ORG_DOMAIN);
 
-//    QSettings settings;
-    Board::instance().readSettings();
-    Rules::instance().readSettings();
-
     MainWindow w; // MainWindow will delete game
     w.setWindowIcon(QIcon("://icons/resources/icons/qtmind.png"));
     w.show();
-    int i = app.exec();
-    Board::instance().writeSettings();
-    Rules::instance().writeSettings();
-    return i;
+    return app.exec();
 }

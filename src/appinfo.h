@@ -55,4 +55,29 @@ enum class Mode {
 	HVM		    //Human breaks the hidden code
 };
 
+
+/**
+ * @brief The Indicator enum
+ */
+enum class Indicator {
+    Digit = 48,     // begining of digits in unicode
+    Character = 65, // begining of characters in unicode
+};
+/**
+ * @brief The Sound enum
+ */
+enum class Sound {
+    PegDrop,
+    PegDropRefuse,
+    ButtonPress
+};
+/**
+ * @brief The Volume enum
+ */
+enum class Volume{
+    Mute,
+    Low,
+    Medium,
+    High
+};
 #endif // APPINFO_H

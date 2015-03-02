@@ -184,7 +184,7 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-    int virtual_color = Board::instance().forceColor() ? mColor : 3;
+    int virtual_color = Board::instance()->hasForceColor() ? mColor : 3;
 
 	if (mState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
@@ -205,12 +205,12 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-    if (Board::instance().showIndicators() && mState != State::Plain) {
+    if (Board::instance()->hasShowIndicators() && mState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
 		painter->setFont(sFont);
-        painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)(Board::instance().getIndicatorIndex()+mColor)));
+        painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)(Board::instance()->indicatorIndex()+mColor)));
 	}
 }
 

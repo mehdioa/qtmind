@@ -20,6 +20,9 @@
 #include "appinfo.h"
 #include "rules.h"
 #include <QSettings>
+#include <QMutex>
+
+Rules* Rules::sRules = 0;
 
 Rules::Rules():
     mPegs(4),
@@ -27,16 +30,6 @@ Rules::Rules():
     mSameColors(true),
     mAlgorithm(Algorithm::MostParts),
     mMode(Mode::HVM)
-{
-}
-
-Rules &Rules::instance()
-{
-	static Rules rules;
-    return rules;
-}
-
-void Rules::readSettings()
 {
     QSettings settings;
     mPegs = settings.value("Pegs", 4).toInt();
@@ -46,7 +39,23 @@ void Rules::readSettings()
     mMode = (Mode) settings.value("Mode", 1).toInt();
 }
 
-void Rules::writeSettings()
+Rules *Rules::instance()
+{
+    static QMutex mutex;
+    if (!sRules)
+    {
+        mutex.lock();
+
+        if (!sRules)
+            sRules = new Rules;
+
+        mutex.unlock();
+    }
+
+    return sRules;
+}
+
+Rules::~Rules()
 {
     QSettings settings;
     settings.setValue("Pegs", mPegs);
@@ -56,7 +65,29 @@ void Rules::writeSettings()
     settings.setValue("Mode", (int) mMode);
 }
 
-Rules::~Rules()
+Mode Rules::mode() const
 {
-
+    return mMode;
 }
+
+Algorithm Rules::algorithm() const
+{
+    return mAlgorithm;
+}
+
+bool Rules::sameColors() const
+{
+    return mSameColors;
+}
+
+int Rules::colors() const
+{
+    return mColors;
+}
+
+int Rules::pegs() const
+{
+    return mPegs;
+}
+
+

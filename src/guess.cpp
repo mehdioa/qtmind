@@ -19,27 +19,91 @@
 
 #include "guess.h"
 #include <QDebug>
+#include <QMutex>
+
+Guess* Guess::sGuess = 0;
 
 Guess::Guess()
 {
 	reset(0);
 }
-
-Guess &Guess::instance()
+qreal Guess::weight() const
 {
-	static Guess g;
-    return g;
+    return mWeight;
+}
+
+void Guess::setWeight(const qreal &w)
+{
+    mWeight = w;
+}
+
+unsigned char Guess::guess(const int &index) const
+{
+    return mGuess[index];
+}
+
+const unsigned char *Guess::guess() const
+{
+    return mGuess;
+}
+
+void Guess::update(const int &b, const int &w, const int &p)
+{
+    mBlacks = b;
+    mWhites = w;
+    mPossibles = p;
+}
+
+int Guess::possibles() const
+{
+    return mPossibles;
+}
+
+int Guess::whites() const
+{
+    return mWhites;
+}
+
+int Guess::blacks() const
+{
+    return mBlacks;
+}
+
+Algorithm Guess::algorithm() const
+{
+    return mAlgorithm;
+}
+
+void Guess::setAlgorithm(const Algorithm &algorithm)
+{
+    mAlgorithm = algorithm;
+}
+
+
+Guess *Guess::instance()
+{
+    static QMutex mutex;
+    if (!sGuess)
+    {
+        mutex.lock();
+
+        if (!sGuess)
+            sGuess = new Guess;
+
+        mutex.unlock();
+    }
+    return sGuess;
 }
 
 void Guess::reset(const int &_possibles)
 {
-    mColors = Rules::instance().mColors;
-    mPegs = Rules::instance().mPegs;
+    mColors = Rules::instance()->colors();
+    mPegs = Rules::instance()->pegs();
     std::fill(mGuess, mGuess + MAX_SLOT_NUMBER, 0);
     std::fill(mCode, mCode + MAX_SLOT_NUMBER, 0);
     mBlacks = 0;
     mWhites = 0;
-    mAlgorithm = Rules::instance().mAlgorithm;
+    mAlgorithm = Rules::instance()->algorithm();
     mPossibles = _possibles;
     mWeight = 0;
 }

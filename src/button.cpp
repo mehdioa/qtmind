@@ -30,7 +30,7 @@ Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent
     mWidth = buttonWidth;
     mLabel = str;
 
-    mFont = QFont(Board::instance().getFontName(), Board::instance().getFontSize() - 1, QFont::Bold, false);
+    mFont = QFont(Board::instance()->fontName(), Board::instance()->fontSize() - 1, QFont::Bold, false);
     mFont.setStyleHint(QFont::SansSerif);
     mFont.setStyleStrategy(QFont::PreferAntialias);
 

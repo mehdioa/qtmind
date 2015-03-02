@@ -21,6 +21,7 @@
 #define BOARD_H
 
 #include <QLocale>
+#include "appinfo.h"
 
 class QSoundEffect;
 class QSettings;
@@ -32,40 +33,16 @@ class Board
 {
 public:
     /**
-     * @brief The Indicator enum
-     */
-	enum class Indicator {
-		Digit = 48,     // begining of digits in unicode
-		Character = 65, // begining of characters in unicode
-	};
-    /**
-     * @brief The Sound enum
-     */
-	enum class Sound {
-		PegDrop,
-		PegDropRefuse,
-		ButtonPress
-	};
-    /**
-     * @brief The Volume enum
-     */
-	enum class Volume{
-		Mute,
-		Low,
-		Medium,
-		High
-	};
-    /**
      * @brief instance static instance of the Board singleton
      * @return the static singleton of the Board singleton
      */
-    static Board &instance();
+    static Board *instance();
 
 	/**
 	 * @brief forceColor shows if colors of pegs should be visible
      * @return true if colors should be enabled, false otherwise
 	 */
-    bool forceColor() const;
+    bool hasForceColor() const;
 
 	/**
 	 * @brief play button push or peg drop sound
@@ -82,27 +59,27 @@ public:
      * @brief showIndicators idicate that if indicators should be enabled
      * @return true if indicators are enabled, false othewise
      */
-    bool showIndicators() {return mShowIndicators; }
+    bool hasShowIndicators() {return mShowIndicators; }
     /**
      * @brief getIndicatorIndex gives the indicator index as an integer
      * @return the index of the indicators
      */
-    int getIndicatorIndex() {return (int)mIndicator; }
+    int indicatorIndex() {return (int)mIndicator; }
     /**
      * @brief getFontName get the font name of the game
      * @return the font name of the game
      */
-    QString getFontName() {return mFontName; }
+    QString fontName() {return mFontName; }
     /**
      * @brief getFontSize get the font size of the game
      * @return the font size
      */
-    int getFontSize() {return mFontSize; }
+    int fontSize() {return mFontSize; }
     /**
      * @brief getLocale get the locale of the game
      * @return the locale of the game
      */
-    QLocale &getLocale() { return mLocale; }
+    QLocale &locale() { return mLocale; }
     /**
      * @brief isAutoCloseRows shows that if auto close rows is enabled
      * @return true if auto close rows is enabled, false otherwise
@@ -113,14 +90,12 @@ public:
      * @return true if auto put pins is enabled, false othewise
      */
     bool isAutoPutPins() { return mAutoPutPins; }
-    /**
-     * @brief readSettings read the settings from the application settings
-     */
-    void readSettings();
-    /**
-     * @brief writeSettings write the application settings to the storage
-     */
-    void writeSettings();
+
+    Volume volume() const;
+
+    bool hasShowColors() const;
+
+    Indicator indicator() const;
 
 private:
     /**
@@ -133,6 +108,7 @@ private:
 
 
 private:
+    static Board *sBoard;
     QLocale mLocale; /**< TODO */
     bool mAutoPutPins; /**< TODO */
     bool mAutoCloseRows; /**< TODO */

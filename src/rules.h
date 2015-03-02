@@ -33,28 +33,36 @@ public:
      * @brief instance singleton instance of the rules
      * @return the only instance of the rules
      */
-    static Rules &instance();
-    /**
-     * @brief readSettings reads the application settings from the storage
-     */
-    void readSettings();
-    /**
-     * @brief writeSettings writes the application settings to the storage
-     */
-    void writeSettings();
+    static Rules *instance();
+
+
+    int pegs() const;
+
+    int colors() const;
+
+    bool sameColors() const;
+
+    Algorithm algorithm() const;
+
+    Mode mode() const;
 
 private:
-	Rules();
+    Rules();
     ~Rules();
     Rules(const Rules &); // hide copy constructor
     Rules& operator=(const Rules &); // hide assign op
 
-public:
+private:
+    static Rules *sRules;
     int mPegs; /**< TODO */
     int mColors; /**< TODO */
     bool mSameColors; /**< TODO */
     Algorithm mAlgorithm; /**< TODO */
     Mode mMode; /**< TODO */
+
+    friend class MainWindow;
+//    friend class Solver;
+//    friend class Game;
 };
 
 #endif // RULES_H
