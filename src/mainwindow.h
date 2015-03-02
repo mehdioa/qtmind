@@ -45,7 +45,7 @@ public:
 	 * @brief MainWindow Creates the main window.
 	 * @param parent The parent of the window.
 	 */
-	explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 protected:
@@ -87,14 +87,14 @@ private:
 	Mode getMode();
 
 private:
-	static const bool s_isAndroid; /**< Is the platform Android? */
+    static const bool sIsAndroid; /**< Is the platform Android? */
 	Ui::MainWindow *ui; /**< TODO */
-	QComboBox *m_pegsComboBox; /**< TODO */
-	QComboBox *m_colorsComboBox; /**< TODO */
-	QComboBox *m_algorithmsComboBox; /**< TODO */
+    QComboBox *mPegsComboBox; /**< TODO */
+    QComboBox *mColorsComboBox; /**< TODO */
+    QComboBox *mAlgorithmsComboBox; /**< TODO */
 
-	Game *m_game; /**< TODO */
-	QString m_appPath; /**< TODO */
+    Game *mGame; /**< TODO */
+    QString mAppPath; /**< TODO */
 };
 
 #endif // MAINWINDOW_H

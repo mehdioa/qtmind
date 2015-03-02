@@ -24,15 +24,15 @@
 
 PegBox::PegBox(const QPoint &_position, QGraphicsItem *parent):
 	Box(_position, parent),
-	m_peg(0)
+	mPeg(0)
 {
 
 }
 
 int PegBox::getPegColor() const
 {
-	if (m_peg)
-		return m_peg->getColor();
+	if (mPeg)
+		return mPeg->getColor();
 
 	qDebug("getPegColor called with no peg setted.");
 	return -1;
@@ -40,29 +40,29 @@ int PegBox::getPegColor() const
 
 bool PegBox::isPegVisible()
 {
-	return m_peg && m_peg->isVisible();
+	return mPeg && mPeg->isVisible();
 }
 
 Peg::State PegBox::getPegState() const
 {
-	if (m_peg) return m_peg->getState();
+	if (mPeg) return mPeg->getState();
 	return Peg::State::Plain;
 }
 
 void PegBox::setState(const Box::State &_state)
 {
-	m_state = _state;
+	mState = _state;
 
-	if (m_peg) {
-		switch (m_state) {
+	if (mPeg) {
+		switch (mState) {
 		case Box::State::Past:
-			m_peg->setState(Peg::State::Underneath);
+			mPeg->setState(Peg::State::Underneath);
 			break;
 		case Box::State::Current:
-			m_peg->setState(Peg::State::Visible);
+			mPeg->setState(Peg::State::Visible);
 			break;
 		default: // Box::State::None, Box::State::Future
-			m_peg->setState(Peg::State::Invisible);
+			mPeg->setState(Peg::State::Invisible);
 			break;
 		}
 	}
@@ -71,16 +71,16 @@ void PegBox::setState(const Box::State &_state)
 
 void PegBox::setPegColor(const int &_color)
 {
-	if (m_peg)
-		m_peg->setColor(_color);
+	if (mPeg)
+		mPeg->setColor(_color);
 	else
 		qDebug("setPegColor called with no peg setted.");
 }
 
 void PegBox::setPegState(const Peg::State &_peg_state)
 {
-	if (m_peg)
-		m_peg->setState(_peg_state);
+	if (mPeg)
+		mPeg->setState(_peg_state);
 	else
 		qDebug("setState called with no peg setted.");
 

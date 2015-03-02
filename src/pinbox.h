@@ -59,8 +59,8 @@ public:
 	void setState(const Box::State &_state = Box::State::Future);
 
 private:
-	static const int s_pinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
-	QVector<Pin *> m_pins; /**< TODO */
+    static const int sPinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
+    QVector<Pin *> mPins; /**< TODO */
 };
 
 #endif // PINBOX_H

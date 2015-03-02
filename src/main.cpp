@@ -19,18 +19,28 @@
 
 #include "mainwindow.h"
 #include "appinfo.h"
+#include "board.h"
+#include "rules.h"
 #include <QApplication>
+#include <QSettings>
 
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
-	app.setApplicationName(APP_NAME);
-	app.setApplicationVersion(APP_VER);
-	app.setOrganizationName(ORG_NAME);
-	app.setOrganizationDomain(ORG_DOMAIN);
+    QApplication app(argc, argv);
+    app.setApplicationName(APP_NAME);
+    app.setApplicationVersion(APP_VER);
+    app.setOrganizationName(ORG_NAME);
+    app.setOrganizationDomain(ORG_DOMAIN);
 
-	MainWindow w; // MainWindow will delete game
-	w.setWindowIcon(QIcon("://icons/resources/icons/qtmind.png"));
-	w.show();
-	return app.exec();
+//    QSettings settings;
+    Board::instance().readSettings();
+    Rules::instance().readSettings();
+
+    MainWindow w; // MainWindow will delete game
+    w.setWindowIcon(QIcon("://icons/resources/icons/qtmind.png"));
+    w.show();
+    int i = app.exec();
+    Board::instance().writeSettings();
+    Rules::instance().writeSettings();
+    return i;
 }

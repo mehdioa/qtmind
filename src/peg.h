@@ -58,7 +58,7 @@ public:
 	 * @brief getColor get the color of the peg
 	 * @return the color of the peg
 	 */
-	int getColor() const {return m_color;}
+    int getColor() const {return mColor;}
 
 	/**
 	 * @brief setMovable set the peg movable or not
@@ -70,7 +70,7 @@ public:
 	 * @brief isMovable check if the peg is movable
 	 * @return true if the peg is movable, false otherwise
 	 */
-	bool isMovable() const {return m_movable;}
+    bool isMovable() const {return mMovable;}
 
 	/**
 	 * @brief setState set the state of the peg
@@ -82,7 +82,7 @@ public:
 	 * @brief getState get the peg state
 	 * @return the peg state
 	 */
-	State getState() const {return m_state;}
+    State getState() const {return mState;}
 
 signals:
 	/**
@@ -109,17 +109,17 @@ protected slots:
 	void onShowIndicators();
 
 private:
-	static const QColor s_pegColors[MAX_COLOR_NUMBER][2]; /**< TODO */
-	static const QFont s_font; /**< TODO */
+    static const QColor sPegColors[MAX_COLOR_NUMBER][2]; /**< TODO */
+    static const QFont sFont; /**< TODO */
 	static QFont setFont();
 
-	QPointF m_position; /**< TODO */
-	QGraphicsDropShadowEffect *m_pressedEffect; /**< TODO */
-	QGraphicsEllipseItem *m_circle; /**< TODO */
+    QPointF mPosition; /**< TODO */
+    QGraphicsDropShadowEffect *mPressedEffect; /**< TODO */
+    QGraphicsEllipseItem *mCircle; /**< TODO */
 
-	State m_state; /**< TODO */
-	int m_color; /**< TODO */
-	bool m_movable; /**< TODO */
+    State mState; /**< TODO */
+    int mColor; /**< TODO */
+    bool mMovable; /**< TODO */
 };
 
 #endif // PEG_H

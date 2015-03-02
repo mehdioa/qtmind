@@ -22,7 +22,6 @@
 #include "board.h"
 
 #include <QFile>
-#include <QSettings>
 #include <QLibraryInfo>
 #include <QDir>
 
@@ -31,13 +30,13 @@ Preferences::Preferences(QWidget *parent) :
 	ui(new Ui::Preferences)
 {
 	ui->setupUi(this);
-	setLayoutDirection(Board::instance()->m_locale.textDirection());
+    setLayoutDirection(Board::instance().getLocale().textDirection());
 
 	for(int i = 10; i < 21; ++i) {
-		ui->sizeComboBox->addItem(QString("%1 %2").arg(Board::instance()->m_locale.toString(i)).arg(tr("Point(s)", "", i)));
+        ui->sizeComboBox->addItem(QString("%1 %2").arg(Board::instance().getLocale().toString(i)).arg(tr("Point(s)", "", i)));
 	}
-	ui->fontComboBox->setCurrentFont(Board::instance()->m_fontName);
-	ui->sizeComboBox->setCurrentIndex(Board::instance()->m_fontSize - 10);
+    ui->fontComboBox->setCurrentFont(Board::instance().getFontName());
+    ui->sizeComboBox->setCurrentIndex(Board::instance().getFontSize() - 10);
 
 	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(ui->acceptRejectButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -52,6 +51,6 @@ Preferences::~Preferences()
 void Preferences::accept()
 {
 	QDialog::accept();
-	Board::instance()->m_fontName = ui->fontComboBox->currentText();
-	Board::instance()->m_fontSize = ui->sizeComboBox->currentIndex() + 10;
+    Board::instance().mFontName = ui->fontComboBox->currentText();
+    Board::instance().mFontSize = ui->sizeComboBox->currentIndex() + 10;
 }

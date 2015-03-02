@@ -27,7 +27,7 @@
 #include <QTapGesture>
 #include <QGestureEvent>
 
-const QColor Peg::s_pegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
+const QColor Peg::sPegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
 	{QColor("#FFFF80"), QColor("#E47A00")},
 	{QColor("#FF3300"), QColor("#AF0707")},
 	{QColor("#33CCFF"), QColor("#031CFF")},
@@ -40,29 +40,29 @@ const QColor Peg::s_pegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
 	{QColor("#FFC0FF"), QColor("#AB00AB")}
 };
 
-const QFont Peg::s_font = Peg::setFont(); /**< TODO */
+const QFont Peg::sFont = Peg::setFont(); /**< TODO */
 
 Peg::Peg(const QPointF &_position, const int &_color, QGraphicsItem *parent):
 	QGraphicsObject(parent),
-	m_position(_position),
-	m_movable(false)
+	mPosition(_position),
+	mMovable(false)
 {
-	m_pressedEffect = new QGraphicsDropShadowEffect;
-	m_pressedEffect->setBlurRadius(10);
-	m_pressedEffect->setXOffset(2);
-	setGraphicsEffect(m_pressedEffect);
-	m_pressedEffect->setEnabled(false);
+	mPressedEffect = new QGraphicsDropShadowEffect;
+	mPressedEffect->setBlurRadius(10);
+	mPressedEffect->setXOffset(2);
+	setGraphicsEffect(mPressedEffect);
+	mPressedEffect->setEnabled(false);
 
 	QLinearGradient cgrad(2, 2, 2, 35);
 	cgrad.setColorAt(0.0, QColor(50, 50, 50));
 	cgrad.setColorAt(1.0, QColor(240, 240, 240));
 
-	m_circle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
-	m_circle->setPen(QPen(QBrush(cgrad), 1));
+	mCircle = new QGraphicsEllipseItem(2, 2, 35, 35, this);
+	mCircle->setPen(QPen(QBrush(cgrad), 1));
 
 	setColor(_color);
 	setZValue(2);
-	setPos(m_position - QPointF(19.5, 19.5));
+	setPos(mPosition - QPointF(19.5, 19.5));
 	setMovable(true);
 	setAcceptDrops(true);
 	setState(State::Visible);
@@ -71,24 +71,24 @@ Peg::Peg(const QPointF &_position, const int &_color, QGraphicsItem *parent):
 
 void Peg::setColor(const int &_color)
 {
-	m_color = (-1 < _color && _color < 10) ? _color : 0;
+	mColor = (-1 < _color && _color < 10) ? _color : 0;
 	update();
 }
 
 void Peg::setMovable(bool b)
 {
-	m_movable = b;
-	setFlag(QGraphicsItem::ItemIsMovable, m_movable);
-	setCursor(m_movable ? Qt::OpenHandCursor : Qt::ArrowCursor);
-	setAcceptedMouseButtons(m_movable ? Qt::LeftButton : Qt::NoButton);
+	mMovable = b;
+	setFlag(QGraphicsItem::ItemIsMovable, mMovable);
+	setCursor(mMovable ? Qt::OpenHandCursor : Qt::ArrowCursor);
+	setAcceptedMouseButtons(mMovable ? Qt::LeftButton : Qt::NoButton);
 	setZValue(1+b);
 	b ? grabGesture(Qt::TapGesture) : ungrabGesture(Qt::TapGesture);
 }
 
 void Peg::setState(const State &_state)
 {
-	m_state = _state;
-	switch (m_state) {
+	mState = _state;
+	switch (mState) {
 	case State::Invisible:
 		setVisible(false);
 		setMovable(false);
@@ -100,7 +100,7 @@ void Peg::setState(const State &_state)
 	case State::Plain:
 		setVisible(true);
 		setMovable(false);
-		m_circle->setVisible(true);
+		mCircle->setVisible(true);
 		break;
 	default:// State::Initial and State::Visible
 		setVisible(true);
@@ -113,9 +113,9 @@ void Peg::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsItem::mousePressEvent(event);
 
-	if (event->button() == Qt::LeftButton && m_movable) {
-		m_circle->setVisible(false);
-		m_pressedEffect->setEnabled(true);
+	if (event->button() == Qt::LeftButton && mMovable) {
+		mCircle->setVisible(false);
+		mPressedEffect->setEnabled(true);
 		setZValue(3);
 		setCursor(Qt::ClosedHandCursor);
 	}
@@ -125,31 +125,31 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	QGraphicsItem::mouseReleaseEvent(event);
 
-	if (event->button() == Qt::LeftButton && m_movable) {
-		m_circle->setVisible(true);
-		m_pressedEffect->setEnabled(false);
+	if (event->button() == Qt::LeftButton && mMovable) {
+		mCircle->setVisible(true);
+		mPressedEffect->setEnabled(false);
 		setZValue(2);
 		setCursor(Qt::OpenHandCursor);
 
 		//	dropped out of its own box,
-		if (!sceneBoundingRect().contains(m_position)) {
-			if (m_state != State::Initial)
+		if (!sceneBoundingRect().contains(mPosition)) {
+			if (mState != State::Initial)
 				setState(State::Invisible);
 			emit mouseReleaseSignal(this);
 		}
-		setPos(m_position - QPointF(19.5, 19.5));
+		setPos(mPosition - QPointF(19.5, 19.5));
 	}
 }
 
 void Peg::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (m_movable)
+	if (mMovable)
 	{
 		QGraphicsItem::mouseDoubleClickEvent(event);
-		if (m_state == State::Initial){
+		if (mState == State::Initial){
 			emit mouseDoubleClickSignal(this);
 		} else {
-			setPos(m_position - QPoint(19, 60));
+			setPos(mPosition - QPoint(19, 60));
 		}
 	}
 }
@@ -173,10 +173,10 @@ bool Peg::gestureEvent(QGestureEvent *event)
 void Peg::tapGestureTriggered(QTapGesture *gesture)
 {
 	if ( gesture->state() == Qt::GestureFinished) {
-		if (m_state == State::Initial) {
+		if (mState == State::Initial) {
 			emit mouseDoubleClickSignal(this);
 		} else {
-			setPos(m_position - QPoint(19, 60));
+			setPos(mPosition - QPoint(19, 60));
 		}
 	}
 }
@@ -184,12 +184,12 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-	int virtual_color = Board::instance()->forceColor() ? m_color : 3;
+    int virtual_color = Board::instance().forceColor() ? mColor : 3;
 
-	if (m_state != State::Plain) {
+	if (mState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
-		gradient.setColorAt(0, s_pegColors[virtual_color][0]);
-		gradient.setColorAt(1, s_pegColors[virtual_color][1]);
+		gradient.setColorAt(0, sPegColors[virtual_color][0]);
+		gradient.setColorAt(1, sPegColors[virtual_color][1]);
 		painter->setBrush(gradient);
 		painter->drawEllipse(2, 2, 35, 35);
 
@@ -205,12 +205,12 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-	if (Board::instance()->m_showIndicators && m_state != State::Plain) {
+    if (Board::instance().showIndicators() && mState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
-		painter->setFont(s_font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)((int)Board::instance()->m_indicator+m_color)));
+		painter->setFont(sFont);
+        painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)(Board::instance().getIndicatorIndex()+mColor)));
 	}
 }
 

@@ -60,10 +60,10 @@ protected:
 	QRectF boundingRect() const;
 
 private:
-	QTextLayout m_textLayout; /**< TODO */
-	QRectF m_updateRect; /**< TODO */
-	QColor m_color; /**< TODO */
-	QString m_text; /**< TODO */
+    QTextLayout mTextLayout; /**< TODO */
+    QRectF mUpdateRect; /**< TODO */
+    QColor mColor; /**< TODO */
+    QString mText; /**< TODO */
 };
 
 #endif // MESSAGE_H

@@ -22,14 +22,14 @@
 #include <QBrush>
 #include <QPainter>
 
-const int Box::s_boxAlphas[4] =
+const int Box::sBoxAlphas[4] =
 {
 	210, 255, 80, 210
 };
 
 Box::Box(const QPoint &position, QGraphicsItem *parent):
 	QGraphicsRectItem(0, 0, 39, 39, parent),
-	m_state(Box::State::Future)
+	mState(Box::State::Future)
 {
 	setZValue(1);
 	setPos(position);
@@ -38,23 +38,23 @@ Box::Box(const QPoint &position, QGraphicsItem *parent):
 
 void Box::setState(const Box::State &_state)
 {
-	m_state = _state;
+	mState = _state;
 }
 
 void Box::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
 
-	painter->setBrush(QBrush(QColor(225, 225, 225, s_boxAlphas[(int)m_state])));
+	painter->setBrush(QBrush(QColor(225, 225, 225, sBoxAlphas[(int)mState])));
 	painter->drawRect(0, 0, 39, 39);
 
-	painter->setPen(QPen(QBrush(QColor(236, 236, 236, s_boxAlphas[(int)m_state])),1));
+	painter->setPen(QPen(QBrush(QColor(236, 236, 236, sBoxAlphas[(int)mState])),1));
 	painter->drawLine(0, 0, 0, 39);
 	painter->drawLine(0, 0, 39, 0);
 	painter->drawLine(QPointF(0, .5), QPointF(39, .5));
 	painter->drawLine(QPointF(.5, 0), QPointF(.5, 39));
 
-	painter->setPen(QPen(QBrush(QColor(80, 80, 80, s_boxAlphas[(int)m_state])),1));
+	painter->setPen(QPen(QBrush(QColor(80, 80, 80, sBoxAlphas[(int)mState])),1));
 	painter->drawLine(39, 0, 39, 39);
 	painter->drawLine(0, 39, 39, 39);
 	painter->drawLine(QPointF(39.5, 0), QPointF(39.5, 39));

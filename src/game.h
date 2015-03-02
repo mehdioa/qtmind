@@ -144,19 +144,19 @@ private:
 
 private:
 
-	QList<PinBox *> m_pinBoxes;		/**< black-white pins */
-	QList<PegBox *> m_pegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
-	QList<PegBox *> m_codeBoxes;	    /**< middle boxes that is filled by a player*/
-	QList<PegBox *> m_currentBoxes;	/**< the active row of codeboxes */
-	QList<PegBox *> m_masterBoxes;	/**< the mastercode boxes */
+    QList<PinBox *> mPinBoxes;		/**< black-white pins */
+    QList<PegBox *> mPegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
+    QList<PegBox *> mCodeBoxes;	    /**< middle boxes that is filled by a player*/
+    QList<PegBox *> mCurrentBoxes;	/**< the active row of codeboxes */
+    QList<PegBox *> mMasterBoxes;	/**< the mastercode boxes */
 
-	Game::State m_state;              /**< TODO */
-	Solver *m_solver;                 /**< TODO */
-	Button *m_okButton;               /**< TODO */
-	Button *m_doneButton;             /**< TODO */
-	Message *m_message;               /**< TODO */
-	Message *m_information;			/**< TODO */
-	int m_movesPlayed;                /**< TODO */
+    Game::State mState;              /**< TODO */
+    Solver *mSolver;                 /**< TODO */
+    Button *mOkButton;               /**< TODO */
+    Button *mDoneButton;             /**< TODO */
+    Message *mMessage;               /**< TODO */
+    Message *mInformation;			/**< TODO */
+    int mMovesPlayed;                /**< TODO */
 };
 
 #endif // GAME_H

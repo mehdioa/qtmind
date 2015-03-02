@@ -57,7 +57,7 @@ class Guess
 {
 public:
 
-	static Guess *instance();
+    static Guess &instance();
 	/**
 	 * @brief reset reset the guess element
 	 * @param algorithm_m the new algorithm
@@ -77,24 +77,28 @@ public:
 	 */
 	void setCode(unsigned char *_code);
 
-	int getBlacks() const { return m_blacks; }
-	int getWhites() const { return m_whites; }
+    int getBlacks() const { return mBlacks; }
+    int getWhites() const { return mWhites; }
 private:
 	/**
 	 * @brief Guess create the guess element
 	 */
 	explicit Guess();
+    ~Guess(){}
+    Guess(const Guess &); // hide copy constructor
+    Guess& operator=(const Guess &); // hide assign op
+
 
 private:
-	unsigned char m_guess[MAX_SLOT_NUMBER]; /**< TODO */
-	unsigned char m_code[MAX_SLOT_NUMBER]; /**< TODO */
-	int m_colors;
-	int m_pegs;
-	int m_blacks;
-	int m_whites;
-	Algorithm m_algorithm; /**< TODO */
-	int m_possibles; /**< TODO */
-	qreal m_weight; /**< TODO */
+    unsigned char mGuess[MAX_SLOT_NUMBER]; /**< TODO */
+    unsigned char mCode[MAX_SLOT_NUMBER]; /**< TODO */
+    int mColors;
+    int mPegs;
+    int mBlacks;
+    int mWhites;
+    Algorithm mAlgorithm; /**< TODO */
+    int mPossibles; /**< TODO */
+    qreal mWeight; /**< TODO */
 
 	friend class Solver;
 	friend class Game;

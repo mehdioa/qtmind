@@ -33,13 +33,13 @@ public:
 	 * @brief hasPeg Does this box has a peg?
 	 * @return true if it has a peg, false otherwise
 	 */
-	bool hasPeg() const {return m_peg != 0;}
+    bool hasPeg() const {return mPeg != 0;}
 
 	/**
 	 * @brief setPeg set the peg of this box
 	 * @param m_peg the peg of the box
 	 */
-	void setPeg(Peg *_peg) {m_peg = _peg;}
+    void setPeg(Peg *_peg) {mPeg = _peg;}
 
 	/**
 	 * @brief setPegState set the state of the peg of the box
@@ -78,7 +78,7 @@ public:
 	Peg::State getPegState() const;
 
 private:
-	Peg *m_peg; /**< TODO */
+    Peg *mPeg; /**< TODO */
 };
 
 #endif // PEGBOX_H

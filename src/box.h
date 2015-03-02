@@ -57,7 +57,7 @@ public:
 	 * @brief gets the state of the box
 	 * @return Box::State
 	 */
-	Box::State getState() const {return m_state;}
+    Box::State getState() const {return mState;}
 
 protected:
 	/**
@@ -65,13 +65,13 @@ protected:
 	 * @param painter
 	 */
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-	Box::State m_state; /**< The state of the box */
+    Box::State mState; /**< The state of the box */
 
 private:
 	/**
 	 * @brief BoxAlphas different alphas of the box
 	 */
-	static const int s_boxAlphas[4];
+    static const int sBoxAlphas[4];
 };
 
 #endif // Box_H

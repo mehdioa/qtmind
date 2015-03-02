@@ -54,117 +54,104 @@ class Solver : public QThread
 public:
 	/**
 	 * @brief a helper function to find the power of an integer by another integer
-	 *
 	 * @param base the base of the power base^exp
 	 * @param exp the power
 	 * @return int the power base^exp
 	 */
 	static int ipow(int base, int exp);
-	/**
-	 * @brief Solver
-	 * @param guess_element
-	 * @param parent
-	 */
-	explicit Solver(QObject *parent = 0);
+
+    explicit Solver(QObject *parent = 0);
 	~Solver();
 
 	/**
 	 * @brief check if the response is valid and remove impossibles
-	 * @param m_response
+     * @param blacks the number of blacks
+     * @param whites the number of whites
 	 * @return return true if the response is valid, false otherwise
 	 */
 	bool setResponse(const int &blacks, const int &whites);
 
 	/**
-	 * @brief
+     * @brief run method of the thread
 	 *
 	 */
 	void run();
 	/**
-	 * @brief
+     * @brief used to interupt the guess process which is running in another thread
 	 *
 	 */
-	void interupt() {m_interupt = true;}
+    void interupt() {mInterupt = true;}
 	/**
-	 * @brief
-	 *
+     * @brief resets the solver
 	 */
 	void reset();
 	/**
-	 * @brief
-	 *
+     * @brief start the guessing process
 	 */
 	void startGuessing();
 
 signals:
 
 	/**
-	 * @brief
-	 *
+     * @brief the guess done signal, to be emited when the process of guessing finished
 	 */
 	void guessDoneSignal();
 
 private:
-
-	void makeGuess();
+    /**
+     * @brief makeGuess make the guess
+     */
+    void makeGuess();
 
 	/**
 	 * @brief Use Knuth's shuffling method to shuffle a string
-	 *
 	 * @param m_string the shuffling string
 	 */
 	void shuffle(unsigned char *m_string, int len) const;
 
 	/**
 	 * @brief permute a code
-	 *
 	 * @param m_code permutting code
 	 */
 	void permute(unsigned char *m_code) const;
 
 	/**
 	 * @brief create internal tables
-	 *
 	 */
 	void createTables();
 
 	/**
 	 * @brief delete internal tables and release memory
-	 *
 	 */
 	void deleteTables();
 
 	/**
-	 * @brief
-	 *
-	 * @param m_array
-	 * @return QString
+     * @brief turn an array of characters to a QString
+     * @param m_array the array of chars
+     * @return QString the QString of the m_array
 	 */
 	QString arrayToString(const unsigned char *m_array) const;
 
 	/**
-	 * @brief
-	 *
-	 * @param m_responses
-	 * @return qreal
+     * @brief compute the weight of a possible response
+     * @param m_responses the response to be weighted
+     * @return qreal the weight of the response
 	 */
 	qreal computeWeight(int *m_responses) const;
 
 	/**
-	 * @brief
-	 *
-	 * @param number
+     * @brief find the next code of a code when same color is allowed
+     * @param X the code
 	 */
-	void indexToCodeSameColor(unsigned char *X);
+    void nextCodeSameColor(unsigned char *X);
+    /**
+     * @brief find the next code of a code when same color is not allowed
+     * @param X the code
+     */
+    void nextCodeDifferentColor(unsigned char *X);
 
 	/**
-	 * @brief indexToCodeDifferentColor
-	 * @param number
-	 */
-	void indexToCodeDifferentColor(unsigned char *X);
-
-	/**
-	 * @brief
+     * @brief set the small set of possibles under 10_000
 	 *
 	 */
 	void setSmallPossibles();
@@ -178,7 +165,7 @@ private:
 	struct Codes {
 		int size;
 		unsigned char **index;
-	} m_codes;
+    } mCodes;
 
 	/**
 	 * @brief The FirstPossiblesUnder10_000 struct
@@ -187,11 +174,11 @@ private:
 	struct FirstPossiblesUnder10_000 {
 		int size;
 		int *index;
-	} m_smallPossibles;
+    } mSmallPossibles;
 
-	int m_maxResponse; /**< TODO */
-	volatile bool m_interupt; /**< TODO */
-	QList<int> m_possibles;   //	list of all possibles
+    int mMaxResponse; /**< maximum number of responses */
+    volatile bool mInterupt; /**< the interupt flag */
+    QList<int> mPossibles;   /**<	list of all possibles */
 };
 
 #endif // SOLVER_H

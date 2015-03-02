@@ -47,7 +47,7 @@ public:
 	 * @brief setLabel set the label of the button
 	 * @param label_s the label
 	 */
-	void setLabel(QString _label){m_label = _label;}
+    void setLabel(QString _label){mLabel = _label;}
 
 protected:
 	/**
@@ -78,10 +78,10 @@ signals:
 	void buttonPressed();
 
 private:
-	QString m_label; /**< TODO */
-	QFont m_font; /**< TODO */
-	int m_width; /**< TODO */
-	QGraphicsDropShadowEffect *m_pressedEffect; /**< TODO */
+    QString mLabel; /**< TODO */
+    QFont mFont; /**< TODO */
+    int mWidth; /**< TODO */
+    QGraphicsDropShadowEffect *mPressedEffect; /**< TODO */
 };
 
 #endif // BUTTON_H

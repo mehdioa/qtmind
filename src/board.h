@@ -23,6 +23,7 @@
 #include <QLocale>
 
 class QSoundEffect;
+class QSettings;
 
 /**
  * @brief A class to represent board tools, like font, locale, indicator.
@@ -30,64 +31,124 @@ class QSoundEffect;
 class Board
 {
 public:
+    /**
+     * @brief The Indicator enum
+     */
 	enum class Indicator {
 		Digit = 48,     // begining of digits in unicode
 		Character = 65, // begining of characters in unicode
 	};
+    /**
+     * @brief The Sound enum
+     */
 	enum class Sound {
 		PegDrop,
 		PegDropRefuse,
 		ButtonPress
 	};
+    /**
+     * @brief The Volume enum
+     */
 	enum class Volume{
 		Mute,
 		Low,
 		Medium,
 		High
 	};
-
-	static Board *instance();
-	~Board();
+    /**
+     * @brief instance static instance of the Board singleton
+     * @return the static singleton of the Board singleton
+     */
+    static Board &instance();
 
 	/**
 	 * @brief forceColor shows if colors of pegs should be visible
-	 * @return
+     * @return true if colors should be enabled, false otherwise
 	 */
-	bool forceColor() const;
+    bool forceColor() const;
 
 	/**
 	 * @brief play button push or peg drop sound
-	 * @param s
+     * @param s the sound to be played
 	 */
-	void play(Sound s) const;
+    void play(const Sound &s) const;
 
 	/**
 	 * @brief setVolume set the volume of the game
-	 * @param vol
+     * @param vol the new volume
 	 */
-	void setVolume(const int &vol);
+    void setVolume(const int &vol);
+    /**
+     * @brief showIndicators idicate that if indicators should be enabled
+     * @return true if indicators are enabled, false othewise
+     */
+    bool showIndicators() {return mShowIndicators; }
+    /**
+     * @brief getIndicatorIndex gives the indicator index as an integer
+     * @return the index of the indicators
+     */
+    int getIndicatorIndex() {return (int)mIndicator; }
+    /**
+     * @brief getFontName get the font name of the game
+     * @return the font name of the game
+     */
+    QString getFontName() {return mFontName; }
+    /**
+     * @brief getFontSize get the font size of the game
+     * @return the font size
+     */
+    int getFontSize() {return mFontSize; }
+    /**
+     * @brief getLocale get the locale of the game
+     * @return the locale of the game
+     */
+    QLocale &getLocale() { return mLocale; }
+    /**
+     * @brief isAutoCloseRows shows that if auto close rows is enabled
+     * @return true if auto close rows is enabled, false otherwise
+     */
+    bool isAutoCloseRows() { return mAutoCloseRows; }
+    /**
+     * @brief isAutoPutPins shows that if auto put pins is enabled
+     * @return true if auto put pins is enabled, false othewise
+     */
+    bool isAutoPutPins() { return mAutoPutPins; }
+    /**
+     * @brief readSettings read the settings from the application settings
+     */
+    void readSettings();
+    /**
+     * @brief writeSettings write the application settings to the storage
+     */
+    void writeSettings();
 
 private:
-	/**
-	 * @brief Creates an object by reading settings.
-	 */
-	Board();
+    /**
+     * @brief Creates an object by reading settings->
+     */
+    Board();
+    ~Board();	// hide destructor
+    Board(const Board &); // hide copy constructor
+    Board& operator=(const Board &); // hide assign op
 
-public:
-	QLocale m_locale; /**< TODO */
-	bool m_autoPutPins; /**< TODO */
-	bool m_autoCloseRows; /**< TODO */
-	bool m_showColors; /**< TODO */
-	bool m_showIndicators; /**< TODO */
-	Indicator m_indicator; /**< TODO */
-	QString m_fontName; /**< TODO */
-	int m_fontSize; /**< TODO */
-	Volume m_volume; /**< TODO */
 
 private:
-	QSoundEffect *m_pegDrop; /**< TODO */
-	QSoundEffect *m_pegDropRefuse; /**< TODO */
-	QSoundEffect *m_buttonPress; /**< TODO */
+    QLocale mLocale; /**< TODO */
+    bool mAutoPutPins; /**< TODO */
+    bool mAutoCloseRows; /**< TODO */
+    bool mShowColors; /**< TODO */
+    bool mShowIndicators; /**< TODO */
+    Indicator mIndicator; /**< TODO */
+    QString mFontName; /**< TODO */
+    int mFontSize; /**< TODO */
+    Volume mVolume; /**< TODO */
+
+    QSoundEffect *mPegDrop; /**< TODO */
+    QSoundEffect *mPegDropRefuse; /**< TODO */
+    QSoundEffect *mButtonPress; /**< TODO */
+
+    friend class MainWindow;
+    friend class Preferences;
 };
 
 #endif // BOARD_H

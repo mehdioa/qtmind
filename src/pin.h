@@ -43,7 +43,7 @@ public:
 	 * @brief getColor get the color of the pin
 	 * @return the color of the pin
 	 */
-	Pin::Color getColor() const {return m_color;}
+    Pin::Color getColor() const {return mColor;}
 
 	/**
 	 * @brief setColor set the color of the pin
@@ -65,8 +65,8 @@ private:
 	Pin::Color nextPinColor() const;
 
 private:
-	Pin::Color m_color; /**< TODO */
-	bool m_enabled; /**< TODO */
+    Pin::Color mColor; /**< TODO */
+    bool mEnabled; /**< TODO */
 };
 
 #endif // PIN_H

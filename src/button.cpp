@@ -27,17 +27,17 @@
 Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent):
 	QGraphicsObject(parent)
 {
-	m_width = buttonWidth;
-	m_label = str;
+    mWidth = buttonWidth;
+    mLabel = str;
 
-	m_font = QFont(Board::instance()->m_fontName, Board::instance()->m_fontSize - 1, QFont::Bold, false);
-	m_font.setStyleHint(QFont::SansSerif);
-	m_font.setStyleStrategy(QFont::PreferAntialias);
+    mFont = QFont(Board::instance().getFontName(), Board::instance().getFontSize() - 1, QFont::Bold, false);
+    mFont.setStyleHint(QFont::SansSerif);
+    mFont.setStyleStrategy(QFont::PreferAntialias);
 
-	m_pressedEffect = new QGraphicsDropShadowEffect;
-	m_pressedEffect->setOffset(0, 2);
-	setGraphicsEffect(m_pressedEffect);
-	m_pressedEffect->setEnabled(true);
+    mPressedEffect = new QGraphicsDropShadowEffect;
+    mPressedEffect->setOffset(0, 2);
+    setGraphicsEffect(mPressedEffect);
+    mPressedEffect->setEnabled(true);
 
 	setAcceptedMouseButtons(Qt::LeftButton);
 	setAcceptHoverEvents (true);
@@ -47,14 +47,14 @@ Button::Button(const int &buttonWidth, const QString &str, QGraphicsItem *parent
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *)
 {
-	m_pressedEffect->setOffset(0, 1);
+    mPressedEffect->setOffset(0, 1);
 	moveBy(0, 1);
 }
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	moveBy(0, -1);
-	m_pressedEffect->setOffset(0, 2);
+    mPressedEffect->setOffset(0, 2);
 	if (boundingRect().contains(event->pos()))
 		emit buttonPressed();
 }
@@ -70,15 +70,15 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 	painter->setBrush(QBrush(framegrad));
 	painter->drawRoundedRect(boundingRect(), 20, 20);
 
-	if (m_label != "") {
+    if (mLabel != "") {
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(QColor("#303030")));
-		painter->setFont(m_font);
-		painter->drawText(boundingRect(), Qt::AlignCenter, m_label);
+        painter->setFont(mFont);
+        painter->drawText(boundingRect(), Qt::AlignCenter, mLabel);
 	}
 }
 
 QRectF Button::boundingRect() const
 {
-	return QRectF(1, 0, m_width, 36);
+    return QRectF(1, 0, mWidth, 36);
 }

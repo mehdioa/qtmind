@@ -21,6 +21,7 @@
 #define RULES_H
 
 #include "appinfo.h"
+
 /**
  * @brief The Rules class represents the rules of the game
  */
@@ -28,19 +29,32 @@ class Rules
 {
 
 public:
-
-	static Rules *instance();
-	~Rules();
+    /**
+     * @brief instance singleton instance of the rules
+     * @return the only instance of the rules
+     */
+    static Rules &instance();
+    /**
+     * @brief readSettings reads the application settings from the storage
+     */
+    void readSettings();
+    /**
+     * @brief writeSettings writes the application settings to the storage
+     */
+    void writeSettings();
 
 private:
 	Rules();
+    ~Rules();
+    Rules(const Rules &); // hide copy constructor
+    Rules& operator=(const Rules &); // hide assign op
 
 public:
-	int m_pegs; /**< TODO */
-	int m_colors; /**< TODO */
-	bool m_sameColors; /**< TODO */
-	Algorithm m_algorithm; /**< TODO */
-	Mode m_mode; /**< TODO */
+    int mPegs; /**< TODO */
+    int mColors; /**< TODO */
+    bool mSameColors; /**< TODO */
+    Algorithm mAlgorithm; /**< TODO */
+    Mode mMode; /**< TODO */
 };
 
 #endif // RULES_H

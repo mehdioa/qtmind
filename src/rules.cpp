@@ -22,26 +22,41 @@
 #include <QSettings>
 
 Rules::Rules():
-	m_pegs(QSettings().value("Pegs", 4).toInt()),
-	m_colors(QSettings().value("Colors", 6).toInt()),
-	m_sameColors(QSettings().value("SameColor", true).toBool()),
-	m_algorithm((Algorithm) QSettings().value("Algorithm", 0).toInt()),
-	m_mode((Mode) QSettings().value("Mode", 1).toInt())
+    mPegs(4),
+    mColors(6),
+    mSameColors(true),
+    mAlgorithm(Algorithm::MostParts),
+    mMode(Mode::HVM)
 {
-
 }
 
-Rules *Rules::instance()
+Rules &Rules::instance()
 {
 	static Rules rules;
-	return &rules;
+    return rules;
+}
+
+void Rules::readSettings()
+{
+    QSettings settings;
+    mPegs = settings.value("Pegs", 4).toInt();
+    mColors = settings.value("Colors", 6).toInt();
+    mSameColors = settings.value("SameColor", true).toBool();
+    mAlgorithm = (Algorithm) settings.value("Algorithm", 0).toInt();
+    mMode = (Mode) settings.value("Mode", 1).toInt();
+}
+
+void Rules::writeSettings()
+{
+    QSettings settings;
+    settings.setValue("Pegs", mPegs);
+    settings.setValue("Colors", mColors);
+    settings.setValue("SameColor", mSameColors);
+    settings.setValue("Algorithm", (int) mAlgorithm);
+    settings.setValue("Mode", (int) mMode);
 }
 
 Rules::~Rules()
 {
-	QSettings().setValue("Pegs", m_pegs);
-	QSettings().setValue("Colors", m_colors);
-	QSettings().setValue("SameColor", m_sameColors);
-	QSettings().setValue("Algorithm", (int) m_algorithm);
-	QSettings().setValue("Mode", (int) m_mode);
+
 }

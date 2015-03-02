@@ -38,16 +38,21 @@ static const int MAX_COLOR_NUMBER	= 10; /**< The maximum number of colors */
 static const int MIN_SLOT_NUMBER	= 2; /**< The minimum number of slots */
 static const int MAX_SLOT_NUMBER	= 5; /**< The maximum number of slots */
 
+/**
+ * @brief The Solving Algorithm enum
+ */
 enum class Algorithm
 {
 	MostParts,
 	WorstCase,
 	ExpectedSize
 };
+/**
+ * @brief The Game Mode enum
+ */
 enum class Mode {
 	MVH,		//Machine breaks the hidden code
 	HVM		    //Human breaks the hidden code
 };
-
 
 #endif // APPINFO_H
