@@ -60,12 +60,12 @@ void PinBox::getValue(int &bl, int &wt) const
 	}
 }
 
-void PinBox::setPins()
+void PinBox::setPins(const int &bl, const int &wt)
 {
-    for(int i = 0; i < Guess::instance()->blacks(); ++i)
+    for(int i = 0; i < bl; ++i)
         mPins.at(i)->setColor(Pin::Color::Black);
 
-    for(int i = Guess::instance()->blacks(); i < Guess::instance()->blacks()+Guess::instance()->whites(); ++i)
+    for(int i = bl; i < bl+wt; ++i)
         mPins.at(i)->setColor(Pin::Color::White);
 }
 

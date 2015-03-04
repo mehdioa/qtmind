@@ -18,18 +18,17 @@
  ***********************************************************************/
 
 #include "message.h"
-#include "board.h"
 #include <QTextLayout>
 #include <QPainter>
 #include <QFont>
 
-Message::Message(const QString &color_name,
-				 const int &smaller, QGraphicsItem *parent):
+Message::Message(const QString &fontName, const int &fontSize, const QString &color_name,
+                 const int &smaller, QGraphicsItem *parent):
 	QGraphicsSimpleTextItem(parent),
 	mColor(QColor(color_name)),
 	mText("")
 {
-    mTextLayout.setFont(QFont(Board::instance()->fontName(), Board::instance()->fontSize()
+    mTextLayout.setFont(QFont(fontName, fontSize
                                - smaller, QFont::Bold, false));
 	mTextLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);

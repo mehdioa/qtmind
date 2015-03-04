@@ -36,8 +36,9 @@ SOURCES += src/main.cpp\
 	src/game.cpp \
 	src/guess.cpp \
 	src/box.cpp \
-    src/board.cpp \
-    src/rules.cpp
+        src/rules.cpp \
+        src/sounds.cpp \
+    src/tools.cpp
 
 HEADERS  += src/mainwindow.h \
 	src/peg.h \
@@ -52,8 +53,9 @@ HEADERS  += src/mainwindow.h \
 	src/appinfo.h \
 	src/guess.h \
 	src/box.h \
-    src/board.h \
-    src/rules.h
+        src/rules.h \
+        src/sounds.h \
+    src/tools.h
 
 FORMS	+= \
 	src/preferences.ui \

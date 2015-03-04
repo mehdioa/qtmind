@@ -16,41 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
-
-#ifndef RULES_H
-#define RULES_H
+#ifndef SOUNDS_H
+#define SOUNDS_H
 
 #include "appinfo.h"
+#include <QObject>
+class QSoundEffect;
 
-/**
- * @brief The Rules class represents the rules of the game. It is a midleman
- * between the user interface and the game logic.
- */
-class Rules
+class Sounds: public QObject
 {
-
+    Q_OBJECT
 public:
-    Rules();
-    ~Rules();
+    explicit Sounds(QObject *parent = 0);
+    ~Sounds();
 
-    int pegs() const;
+    void setVolume(const int &vol);
+    Volume volume() const;
 
-    int colors() const;
-
-    bool sameColors() const;
-
-    Algorithm algorithm() const;
-
-    Mode mode() const;
+public slots:
+    void onPegDroped();
+    void onPegDropRefused();
+    void onButtonPressed();
 
 private:
-    int mPegs; /**< TODO */
-    int mColors; /**< TODO */
-    bool mSameColors; /**< TODO */
-    Algorithm mAlgorithm; /**< TODO */
-    Mode mMode; /**< TODO */
-
-    friend class MainWindow;
+    Volume mVolume; /**< TODO */
+    QSoundEffect *mPegDrop; /**< TODO */
+    QSoundEffect *mPegDropRefuse; /**< TODO */
+    QSoundEffect *mButtonPress; /**< TODO */
 };
 
-#endif // RULES_H
+#endif // SOUNDS_H

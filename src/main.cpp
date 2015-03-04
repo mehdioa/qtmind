@@ -19,8 +19,6 @@
 
 #include "mainwindow.h"
 #include "appinfo.h"
-#include "board.h"
-#include "rules.h"
 #include <QApplication>
 #include <QSettings>
 

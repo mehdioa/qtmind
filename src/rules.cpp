@@ -20,16 +20,8 @@
 #include "appinfo.h"
 #include "rules.h"
 #include <QSettings>
-#include <QMutex>
 
-Rules* Rules::sRules = 0;
-
-Rules::Rules():
-    mPegs(4),
-    mColors(6),
-    mSameColors(true),
-    mAlgorithm(Algorithm::MostParts),
-    mMode(Mode::HVM)
+Rules::Rules()
 {
     QSettings settings;
     mPegs = settings.value("Pegs", 4).toInt();
@@ -37,22 +29,6 @@ Rules::Rules():
     mSameColors = settings.value("SameColor", true).toBool();
     mAlgorithm = (Algorithm) settings.value("Algorithm", 0).toInt();
     mMode = (Mode) settings.value("Mode", 1).toInt();
-}
-
-Rules *Rules::instance()
-{
-    static QMutex mutex;
-    if (!sRules)
-    {
-        mutex.lock();
-
-        if (!sRules)
-            sRules = new Rules;
-
-        mutex.unlock();
-    }
-
-    return sRules;
 }
 
 Rules::~Rules()

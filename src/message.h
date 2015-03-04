@@ -37,7 +37,7 @@ public:
 	 * @param smaller if a smaller font size should be used
 	 * @param parent parent of the object
 	 */
-	explicit Message(const QString &color_name = "#303133",
+    explicit Message(const QString &fontName, const int &fontSize, const QString &color_name = "#303133",
 					 const int &smaller = 0, QGraphicsItem *parent = 0);
 
 	/**

@@ -41,7 +41,7 @@ public:
 	 * @param buttonWidth width of the button
 	 * @param str label of the button
 	 */
-	explicit Button(const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
+    explicit Button(const QString &fontName, const int &fontSize, const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief setLabel set the label of the button

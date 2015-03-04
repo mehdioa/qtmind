@@ -21,6 +21,8 @@
 #define GAME_H
 
 #include <QGraphicsView>
+#include "appinfo.h"
+#include "guess.h"
 
 class Peg;
 class PinBox;
@@ -28,13 +30,16 @@ class PegBox;
 class Button;
 class Solver;
 class Message;
+class QLocale;
+class Tools;
+class Rules;
 
 /**
- * @brief A class to represent the game logic. It is the model in
+ * @brief A class to represent the game logic. It is the controler in
  * the MVC pattern of the game. All the classes Peg, Box, PinBox,
  * Button, Solver, Message, and Guess are parts of this class.
  * It is the heart of the game. It is responssible for the graphics
- * of the game and is the class that mainwindow interact with.
+ * of the game and is the class that mainwindow interacts with.
  *
  */
 class Game: public QGraphicsView
@@ -46,7 +51,7 @@ public:
 	 * @brief Game create a game with board
 	 * @param parent the parent of the game
 	 */
-	explicit Game();
+    explicit Game();
 	~Game();
 
 	/**
@@ -60,11 +65,6 @@ public:
 	void stop();
 
 	/**
-	 * @brief changeIndicators change indicators of the pegs
-	 */
-	void changeIndicators();
-
-	/**
 	 * @brief retranslateTexts retranslate the game
 	 */
 	void retranslateTexts();
@@ -75,11 +75,27 @@ public:
 	 */
 	bool isRunning();
 
+    void setRules(Rules *rules);
+
+    void setTools(Tools *tools);
+
+public slots:
+    /**
+     * @brief onFontChanged set the new font and redraw everything
+     * @param font_name the font name
+     * @param font_size the font size
+     */
+    void onFontChanged(const QString &font_name, const int &font_size);
+    /**
+     * @brief changeIndicators change indicators of the pegs
+     */
+    void onResetIndicators();
+
 protected:
-	/**
-	 * @brief drawBackground
-	 * @param painter
-	 * @param rect
+    /**
+     * @brief drawBackground
+     * @param painter
+     * @param rect
 	 */
 	void drawBackground(QPainter *painter, const QRectF &rect);
 	/**
@@ -89,10 +105,22 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 
 signals:
-	/**
-	 * @brief showIndicatorsSignal
-	 */
-	void showIndicatorsSignal();
+    /**
+     * @brief resetIndicatorsSignal notify all the pegs to change their indicators
+     */
+    void resetIndicatorsSignal();
+    /**
+     * @brief pegDropSignal notify the sounds class to play the peg drop sound
+     */
+    void pegDropSignal();
+    /**
+     * @brief pegDropRefuseSignal notify the sounds class to play the peg drop refuse sound
+     */
+    void pegDropRefuseSignal();
+    /**
+     * @brief buttonClickSignal notify the sounds class to play the button click sound
+     */
+    void buttonClickSignal();
 
 protected slots:
 	void onPegMouseReleased(Peg *);
@@ -140,7 +168,7 @@ private:
 	void freezeScene();
 	void setNextRowInAction();
 	void getNextGuess();
-	Game::Player winner() const;
+    Player winner() const;
 
 private:
 
@@ -157,6 +185,9 @@ private:
     Message *mMessage;               /**< TODO */
     Message *mInformation;			/**< TODO */
     int mMovesPlayed;                /**< TODO */
+    Guess mGuess;
+    Rules *mRules;
+    Tools *mTools;
 };
 
 #endif // GAME_H

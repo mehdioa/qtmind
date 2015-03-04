@@ -46,7 +46,8 @@ public:
 		Underneath,	//	Pegs under Initial right pegs
 		Plain		//	Just circle is visible
 	};
-	explicit Peg(const QPointF &_position, const int &_color, QGraphicsItem *parent = 0);
+    explicit Peg(const QPointF &_position, const int &_color,
+                 QGraphicsItem *parent = 0);
 
 	/**
 	 * @brief setColor set the color of the peg
@@ -84,11 +85,25 @@ public:
 	 */
     State getState() const {return mState;}
 
+    static bool getShowColors();
+    static void setShowColors(bool value);
+
+    static bool getShowIndicators();
+    static void setShowIndicators(bool value);
+
+    static int getIndicatorIndex();
+
+    static Indicator getIndicator();
+    static void setIndicator(const Indicator &value);
+
+public slots:
+    void onResetIndicators();
+
 signals:
-	/**
-	 * @brief mouseReleaseSignal
-	 */
-	void mouseReleaseSignal(Peg *);
+    /**
+     * @brief mouseReleaseSignal
+     */
+    void mouseReleaseSignal(Peg *);
 	/**
 	 * @brief mouseDoubleClickSignal
 	 */
@@ -105,13 +120,13 @@ protected:
 	bool gestureEvent( QGestureEvent *event );
 	void tapGestureTriggered(QTapGesture *gesture );
 
-protected slots:
-	void onShowIndicators();
-
 private:
     static const QColor sPegColors[MAX_COLOR_NUMBER][2]; /**< TODO */
     static const QFont sFont; /**< TODO */
 	static QFont setFont();
+    static Indicator sIndicator;
+    static bool sShowColors;
+    static bool sShowIndicators;
 
     QPointF mPosition; /**< TODO */
     QGraphicsDropShadowEffect *mPressedEffect; /**< TODO */

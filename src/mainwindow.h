@@ -22,9 +22,14 @@
 
 #include <QMainWindow>
 #include "appinfo.h"
+#include "rules.h"
+#include "sounds.h"
+#include "game.h"
+#include "tools.h"
+#include <QLocale>
 
 class QComboBox;
-class Game;
+class Sounds;
 
 namespace Ui {
 class MainWindow;
@@ -93,8 +98,11 @@ private:
     QComboBox *mColorsComboBox; /**< TODO */
     QComboBox *mAlgorithmsComboBox; /**< TODO */
 
-    Game *mGame; /**< TODO */
+    Game mGame; /**< TODO */
+    Sounds mSounds;
     QString mAppPath; /**< TODO */
+    Rules mRules;
+    Tools mTools;
 };
 
 #endif // MAINWINDOW_H

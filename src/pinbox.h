@@ -50,7 +50,7 @@ public:
 	/**
 	 * @brief setPins set pins of the box
 	 */
-	void setPins();
+    void setPins(const int &bl, const int &wt);
 
 	/**
 	 * @brief setState set the box state

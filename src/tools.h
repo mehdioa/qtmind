@@ -16,41 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
+#ifndef TOOLS_H
+#define TOOLS_H
 
-#ifndef RULES_H
-#define RULES_H
-
-#include "appinfo.h"
+#include <QString>
+#include <QLocale>
 
 /**
- * @brief The Rules class represents the rules of the game. It is a midleman
- * between the user interface and the game logic.
+ * @brief The Tools class provides board tools to be used in a game.
  */
-class Rules
+class Tools
 {
-
 public:
-    Rules();
-    ~Rules();
-
-    int pegs() const;
-
-    int colors() const;
-
-    bool sameColors() const;
-
-    Algorithm algorithm() const;
-
-    Mode mode() const;
+    Tools();
+    ~Tools();
 
 private:
-    int mPegs; /**< TODO */
-    int mColors; /**< TODO */
-    bool mSameColors; /**< TODO */
-    Algorithm mAlgorithm; /**< TODO */
-    Mode mMode; /**< TODO */
+    QString mFontName; /**< TODO */
+    int mFontSize; /**< TODO */
+    bool mAutoPutPins; /**< TODO */
+    bool mAutoCloseRows; /**< TODO */
+    QLocale mLocale;
 
+    friend class Game;
     friend class MainWindow;
+    friend class Preferences;
 };
 
-#endif // RULES_H
+#endif // TOOLS_H

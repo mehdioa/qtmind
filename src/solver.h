@@ -22,6 +22,8 @@
 
 #include <QList>
 #include <QThread>
+#include "appinfo.h"
+class Guess;
 
 /**	@brief The class Solver is the solving engine of the mastermind game. It contains all the solving
  *	algorithms and auxiliary functions that provide efficient code guess and handling
@@ -60,8 +62,9 @@ public:
 	 */
 	static int ipow(int base, int exp);
 
-    explicit Solver(QObject *parent = 0);
-	~Solver();
+    explicit Solver(Guess *guess, QObject *parent = 0);
+
+    ~Solver();
 
 	/**
 	 * @brief check if the response is valid and remove impossibles
@@ -69,7 +72,7 @@ public:
      * @param whites the number of whites
 	 * @return return true if the response is valid, false otherwise
 	 */
-	bool setResponse(const int &blacks, const int &whites);
+    bool setResponse(const int &blacks, const int &whites);
 
 	/**
      * @brief run method of the thread
@@ -81,14 +84,19 @@ public:
 	 *
 	 */
     void interupt() {mInterupt = true;}
-	/**
-     * @brief resets the solver
-	 */
-	void reset();
-	/**
-     * @brief start the guessing process
-	 */
-	void startGuessing();
+    /**
+     * @brief reset reset the solver
+     * @param colors the number of colors
+     * @param pegs the number of pegs
+     * @param same_colors same color allowed flag
+     * @return
+     */
+    int reset(const int &colors, const int &pegs, const bool &same_colors);
+    /**
+     * @brief startGuessing start the guessing process
+     * @param alg the guessing algorithm
+     */
+    void startGuessing(const Algorithm &alg);
 
 signals:
 
@@ -102,43 +110,36 @@ private:
      * @brief makeGuess make the guess
      */
     void makeGuess();
-
 	/**
 	 * @brief Use Knuth's shuffling method to shuffle a string
 	 * @param m_string the shuffling string
 	 */
 	void shuffle(unsigned char *m_string, int len) const;
-
 	/**
 	 * @brief permute a code
 	 * @param m_code permutting code
 	 */
 	void permute(unsigned char *m_code) const;
-
 	/**
 	 * @brief create internal tables
 	 */
 	void createTables();
-
 	/**
 	 * @brief delete internal tables and release memory
 	 */
 	void deleteTables();
-
 	/**
      * @brief turn an array of characters to a QString
      * @param m_array the array of chars
      * @return QString the QString of the m_array
 	 */
 	QString arrayToString(const unsigned char *m_array) const;
-
 	/**
      * @brief compute the weight of a possible response
      * @param m_responses the response to be weighted
      * @return qreal the weight of the response
 	 */
 	qreal computeWeight(int *m_responses) const;
-
 	/**
      * @brief find the next code of a code when same color is allowed
      * @param X the code
@@ -149,10 +150,8 @@ private:
      * @param X the code
      */
     void nextCodeDifferentColor(unsigned char *X);
-
 	/**
      * @brief set the small set of possibles under 10_000
-	 *
 	 */
 	void setSmallPossibles();
 
@@ -176,9 +175,14 @@ private:
 		int *index;
     } mSmallPossibles;
 
+    int mPegs; /**< the number of pegs */
+    int mColors; /**< the number of colors */
+    bool mSameColors; /**< same color allowed flag */
+    Algorithm mAlgorithm; /**< the solving algorithm */
     int mMaxResponse; /**< maximum number of responses */
     volatile bool mInterupt; /**< the interupt flag */
     QList<int> mPossibles;   /**<	list of all possibles */
+    Guess *mGuess; /**< the guess element */
 };
 
 #endif // SOLVER_H

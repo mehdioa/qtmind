@@ -20,7 +20,6 @@
 #ifndef GUESS_H
 #define GUESS_H
 #include "appinfo.h"
-#include "rules.h"
 #include <QString>
 
 /**
@@ -57,36 +56,20 @@ class Guess
 {
 public:
 
-    static Guess *instance();
+    explicit Guess();
+    ~Guess(){}
 
-	void setGuess(unsigned char *_guess);
-
-	void setCode(unsigned char *_code);
-
-    Algorithm algorithm() const;
-
-    void setAlgorithm(const Algorithm &algorithm);
-
-    int blacks() const;
-
-    int whites() const;
-
-    int possibles() const;
-
-    qreal weight() const;
-
-    void setWeight(const qreal &w);
+private:
     /**
-     * @brief guess gets mGuess[index]
-     * @param index the index
-     * @return mGuess[index]
+     * @brief setGuess set the guess
+     * @param _guess the guesss
      */
-    unsigned char guess(const int &index) const;
+    void setGuess(unsigned char *_guess);
     /**
-     * @brief guess gets a pointer to mGuess
-     * @return a pointer to mGuess
+     * @brief setCode set the code
+     * @param _code the code
      */
-    const unsigned char *guess() const;
+    void setCode(unsigned char *_code);
     /**
      * @brief update sets mBlacks, mWhites, and mPossibles
      * @param b mBlacks
@@ -99,20 +82,8 @@ public:
      * @param algorithm_m the new algorithm
      * @param possibles_m the new possibles number
      */
-    void reset(const int &_possibles);
-
+    void reset(const int &colors, const int &pegs, const Algorithm &alg, const int &possibles);
 private:
-    /**
-     * @brief Guess create the guess element
-     */
-    explicit Guess();
-    ~Guess(){}
-    Guess(const Guess &); // hide copy constructor
-    Guess& operator=(const Guess &); // hide assign op
-
-
-private:
-    static Guess *sGuess;
     unsigned char mGuess[MAX_SLOT_NUMBER]; /**< TODO */
     unsigned char mCode[MAX_SLOT_NUMBER]; /**< TODO */
     int mColors;
@@ -122,6 +93,9 @@ private:
     Algorithm mAlgorithm; /**< TODO */
     int mPossibles; /**< TODO */
     qreal mWeight; /**< TODO */
+
+    friend class Game;
+    friend class Solver;
 };
 
 #endif // GUESS_H

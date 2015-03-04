@@ -16,41 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
+#include "tools.h"
+#include <QSettings>
 
-#ifndef RULES_H
-#define RULES_H
-
-#include "appinfo.h"
-
-/**
- * @brief The Rules class represents the rules of the game. It is a midleman
- * between the user interface and the game logic.
- */
-class Rules
+Tools::Tools()
 {
+    QSettings settings;
+    mFontName = settings.value("FontName", "SansSerif").toString();
+    mFontSize = settings.value("FontSize", 12).toInt();
+    mAutoPutPins = settings.value("AutoPutPins", true).toBool();
+    mAutoCloseRows = settings.value("AutoCloseRows", false).toBool();
+    mLocale = QLocale(QSettings().value("Locale/Language", "en").toString().left(5));
+    mLocale.setNumberOptions(QLocale::OmitGroupSeparator);
+}
 
-public:
-    Rules();
-    ~Rules();
+Tools::~Tools()
+{
+    QSettings settings;
+    settings.setValue("FontName", mFontName);
+    settings.setValue("FontSize", mFontSize);
+    settings.setValue("AutoPutPins",	mAutoPutPins);
+    settings.setValue("AutoCloseRows", mAutoCloseRows);
+    QSettings().setValue("Locale/Language", mLocale.name());
+}
 
-    int pegs() const;
-
-    int colors() const;
-
-    bool sameColors() const;
-
-    Algorithm algorithm() const;
-
-    Mode mode() const;
-
-private:
-    int mPegs; /**< TODO */
-    int mColors; /**< TODO */
-    bool mSameColors; /**< TODO */
-    Algorithm mAlgorithm; /**< TODO */
-    Mode mMode; /**< TODO */
-
-    friend class MainWindow;
-};
-
-#endif // RULES_H

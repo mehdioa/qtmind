@@ -18,7 +18,6 @@
  ***********************************************************************/
 
 #include "peg.h"
-#include "board.h"
 #include "appinfo.h"
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
@@ -26,6 +25,7 @@
 #include <QPainter>
 #include <QTapGesture>
 #include <QGestureEvent>
+#include <QDebug>
 
 const QColor Peg::sPegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
 	{QColor("#FFFF80"), QColor("#E47A00")},
@@ -42,10 +42,14 @@ const QColor Peg::sPegColors[MAX_COLOR_NUMBER][2] = { /**< TODO */
 
 const QFont Peg::sFont = Peg::setFont(); /**< TODO */
 
+bool Peg::sShowColors = true;
+bool Peg::sShowIndicators = false;
+Indicator Peg::sIndicator = Indicator::Character;
+
 Peg::Peg(const QPointF &_position, const int &_color, QGraphicsItem *parent):
 	QGraphicsObject(parent),
 	mPosition(_position),
-	mMovable(false)
+    mMovable(false)
 {
 	mPressedEffect = new QGraphicsDropShadowEffect;
 	mPressedEffect->setBlurRadius(10);
@@ -184,7 +188,7 @@ void Peg::tapGestureTriggered(QTapGesture *gesture)
 void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	painter->setPen(Qt::NoPen);
-    int virtual_color = Board::instance()->hasForceColor() ? mColor : 3;
+    int virtual_color = (sShowColors || !sShowIndicators) ? mColor : 3;
 
 	if (mState != State::Plain) {
 		QLinearGradient gradient(2.5, 2.5, 2.5, 35);
@@ -205,12 +209,12 @@ void Peg::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 		painter->drawEllipse(7, 4, 24, 20);
 	}
 
-    if (Board::instance()->hasShowIndicators() && mState != State::Plain) {
+    if (sShowIndicators && mState != State::Plain) {
 
 		painter->setRenderHint(QPainter::TextAntialiasing, true);
 		painter->setPen(QPen(Qt::black));
 		painter->setFont(sFont);
-        painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)(Board::instance()->indicatorIndex()+mColor)));
+        painter->drawText(boundingRect(), Qt::AlignCenter, QString((QChar)(static_cast<int>(sIndicator)+mColor)));
 	}
 }
 
@@ -226,8 +230,38 @@ QFont Peg::setFont()
 	m_font.setStyleStrategy(QFont::PreferAntialias);
 	return m_font;
 }
-
-void Peg::onShowIndicators()
+Indicator Peg::getIndicator()
 {
-	update();
+    return sIndicator;
 }
+
+void Peg::setIndicator(const Indicator &value)
+{
+    sIndicator = value;
+}
+
+void Peg::onResetIndicators()
+{
+    update();
+}
+
+bool Peg::getShowIndicators()
+{
+    return sShowIndicators;
+}
+
+void Peg::setShowIndicators(bool value)
+{
+    sShowIndicators = value;
+}
+
+bool Peg::getShowColors()
+{
+    return sShowColors;
+}
+
+void Peg::setShowColors(bool value)
+{
+    sShowColors = value;
+}
+
