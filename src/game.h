@@ -81,15 +81,14 @@ public:
 
 public slots:
     /**
-     * @brief onFontChanged set the new font and redraw everything
-     * @param font_name the font name
-     * @param font_size the font size
-     */
-    void onFontChanged(const QString &font_name, const int &font_size);
-    /**
      * @brief changeIndicators change indicators of the pegs
      */
     void onResetIndicators();
+    /**
+     * @brief onFontChanged this function emit the signal for receivers
+     * to change their font
+     */
+    void onFontChanged();
 
 protected:
     /**
@@ -121,6 +120,12 @@ signals:
      * @brief buttonClickSignal notify the sounds class to play the button click sound
      */
     void buttonClickSignal();
+    /**
+     * @brief fontChangedSignal the signal to change the font of the information and message
+     * @param fontName the font name
+     * @param fontSize the font size
+     */
+    void fontChangedSignal(const QString &fontName, const int &fontSize);
 
 protected slots:
 	void onPegMouseReleased(Peg *);

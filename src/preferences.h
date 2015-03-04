@@ -21,9 +21,9 @@
 #define PREFERENCES_H
 
 #include <QDialog>
-#include "tools.h"
 
-class Game;
+
+class Tools;
 
 namespace Ui {
 class Preferences;
@@ -41,17 +41,18 @@ public:
 	 * @brief Preferences
 	 * @param parent
 	 */
-    explicit Preferences(const Tools tools, QWidget *parent = 0);
+    explicit Preferences(Tools *tools, QWidget *parent = 0);
 	~Preferences();
 
 signals:
-    void changeFontSignal(const QString &font_name, const int &font_size);
+    void fontChangedSignal();
 
 protected slots:
 	void accept();
 
 private:
 	Ui::Preferences *ui; /**< TODO */
+    Tools *mTools;
 };
 
 #endif // PREFERENCES_H

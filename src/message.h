@@ -20,14 +20,15 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <QGraphicsSimpleTextItem>
+#include <QGraphicsTextItem>
 #include <QTextLayout>
 
 /**
  * @brief The Message class The class represent a message on the board.
  */
-class Message : public QGraphicsSimpleTextItem
+class Message : public QGraphicsTextItem
 {
+    Q_OBJECT
 public:
 
 	/**
@@ -45,6 +46,14 @@ public:
 	 * @param _text the message text
 	 */
 	void setText(const QString _text);
+
+public slots:
+    /**
+     * @brief onFontChanged changes the font of the message and update it
+     * @param fontName the font name
+     * @param fontSize the font size
+     */
+    void onFontChanged(const QString &fontName, const int &fontSize);
 
 protected:
 	/**
@@ -64,6 +73,7 @@ private:
     QRectF mUpdateRect; /**< TODO */
     QColor mColor; /**< TODO */
     QString mText; /**< TODO */
+    int mFontSizeReduced;
 };
 
 #endif // MESSAGE_H

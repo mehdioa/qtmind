@@ -343,10 +343,10 @@ bool MainWindow::quitUnfinishedGame()
 
 void MainWindow::onFont()
 {
-    auto preferencesWidget = new Preferences(mTools, this);
+    auto preferencesWidget = new Preferences(&mTools, this);
 	preferencesWidget->setModal(true);
 	preferencesWidget->setWindowTitle(tr("Font"));
-    connect(preferencesWidget, SIGNAL(changeFontSignal(QString,int)), &mGame, SLOT(onFontChanged(QString,int)));
+    connect(preferencesWidget, SIGNAL(fontChangedSignal()), &mGame, SLOT(onFontChanged()));
 	preferencesWidget->exec();
 }
 

@@ -253,11 +253,13 @@ void Game::initializeScene()
     mMessage = new Message(mTools->mFontName, mTools->mFontSize, "#303030");
     scene()->addItem(mMessage);
     mMessage->setPos(20, 0);
+    connect(this, SIGNAL(fontChangedSignal(QString,int)), mMessage, SLOT(onFontChanged(QString,int)));
 
     mInformation = new Message(mTools->mFontName, mTools->mFontSize, "#808080", 4);
     scene()->addItem(mInformation);
     mInformation->setPos(20, 506);
-	showInformation();
+    connect(this, SIGNAL(fontChangedSignal(QString,int)), mInformation, SLOT(onFontChanged(QString,int)));
+    showInformation();
 	createBoxes();
 	scene()->update();
 }
@@ -315,6 +317,11 @@ void Game::onPegMouseDoubleClicked(Peg *peg)
 void Game::onResetIndicators()
 {
     emit resetIndicatorsSignal();
+}
+
+void Game::onFontChanged()
+{
+    emit fontChangedSignal(mTools->mFontName, mTools->mFontSize);
 }
 
 void Game::retranslateTexts()
@@ -617,14 +624,6 @@ void Game::setTools(Tools *tools)
 {
     mTools = tools;
 }
-
-void Game::onFontChanged(const QString &font_name, const int &font_size)
-{
-    mTools->mFontName = font_name;
-    mTools->mFontSize = font_size;
-}
-
-
 
 void Game::showMessage()
 {

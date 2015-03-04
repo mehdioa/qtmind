@@ -19,23 +19,25 @@
 
 #include "preferences.h"
 #include "ui_preferences.h"
+#include "tools.h"
 
 #include <QFile>
 #include <QLibraryInfo>
 #include <QDir>
 
-Preferences::Preferences(const Tools tools, QWidget *parent) :
+Preferences::Preferences(Tools *tools, QWidget *parent) :
 	QDialog(parent),
-    ui(new Ui::Preferences)
+    ui(new Ui::Preferences),
+    mTools(tools)
 {
 	ui->setupUi(this);
-    setLayoutDirection(tools.mLocale.textDirection());
+    setLayoutDirection(mTools->mLocale.textDirection());
 
 	for(int i = 10; i < 21; ++i) {
-        ui->sizeComboBox->addItem(QString("%1 %2").arg(tools.mLocale.toString(i)).arg(tr("Point(s)", "", i)));
+        ui->sizeComboBox->addItem(QString("%1 %2").arg(mTools->mLocale.toString(i)).arg(tr("Point(s)", "", i)));
 	}
-    ui->fontComboBox->setCurrentFont(tools.mFontName);
-    ui->sizeComboBox->setCurrentIndex(tools.mFontSize - 10);
+    ui->fontComboBox->setCurrentFont(mTools->mFontName);
+    ui->sizeComboBox->setCurrentIndex(mTools->mFontSize - 10);
 
 	connect(ui->acceptRejectButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(ui->acceptRejectButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -50,5 +52,12 @@ Preferences::~Preferences()
 void Preferences::accept()
 {
 	QDialog::accept();
-    emit changeFontSignal(ui->fontComboBox->currentText(), ui->sizeComboBox->currentIndex() + 10);
+    QString fontName = ui->fontComboBox->currentText();
+    int fontSize = ui->sizeComboBox->currentIndex() + 10;
+    if (mTools->mFontName != fontName ||
+            mTools->mFontSize != fontSize) {
+        mTools->mFontName = fontName;
+        mTools->mFontSize = fontSize;
+        emit fontChangedSignal();
+    }
 }

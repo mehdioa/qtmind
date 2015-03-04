@@ -18,18 +18,20 @@
  ***********************************************************************/
 
 #include "message.h"
+#include "tools.h"
 #include <QTextLayout>
 #include <QPainter>
 #include <QFont>
 
 Message::Message(const QString &fontName, const int &fontSize, const QString &color_name,
                  const int &smaller, QGraphicsItem *parent):
-	QGraphicsSimpleTextItem(parent),
+    QGraphicsTextItem(parent),
 	mColor(QColor(color_name)),
-	mText("")
+    mText(""),
+    mFontSizeReduced(smaller)
 {
     mTextLayout.setFont(QFont(fontName, fontSize
-                               - smaller, QFont::Bold, false));
+                               - mFontSizeReduced, QFont::Bold, false));
 	mTextLayout.setTextOption(QTextOption(Qt::AlignHCenter));
 	mUpdateRect = QRectF(0, 0, 10, 10);
 }
@@ -64,7 +66,14 @@ void Message::setText(const QString _text)
 
 	mUpdateRect = QRectF(0, 0, max_width, max_height + ypos);
 
-	update();
+    update();
+}
+
+void Message::onFontChanged(const QString &fontName, const int &fontSize)
+{
+    mTextLayout.setFont(QFont(fontName, fontSize
+                               - mFontSizeReduced, QFont::Bold, false));
+    setText(mText);
 }
 
 QRectF Message::boundingRect() const
