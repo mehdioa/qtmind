@@ -129,3 +129,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 ANDROID_EXTRA_LIBS = 
 
+DISTFILES += \
+    android/res/values/strings.xml
+

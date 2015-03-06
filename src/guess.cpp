@@ -53,13 +53,13 @@ void Guess::setWeight(const qreal &weight)
 
 void Guess::setGuess(unsigned char* guess)
 {
-    for(int i = 0; i < MAX_SLOT_NUMBER; i++)
+    for(int i = 0; i < mPegs; i++)
         mGuess[i] = guess[i];
     COMPARE(mCode, mGuess, mColors, mPegs, mBlacks, mWhites);
 }
 
 void Guess::setCode(unsigned char* code)
 {
-    for(int i = 0; i < MAX_SLOT_NUMBER; i++)
+    for(int i = 0; i < mPegs; i++)
         mCode[i] = code[i];
 }

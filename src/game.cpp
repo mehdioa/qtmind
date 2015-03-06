@@ -496,6 +496,9 @@ void Game::onGuessReady()
 void Game::play()
 {
     stop();
+    mGuess.mPegs = mRules->pegs();
+    mGuess.mColors = mRules->colors();
+    mGuess.mAlgorithm = mRules->algorithm();
 
     if(mRules->mode() == Mode::MVH)
         playMVH();
