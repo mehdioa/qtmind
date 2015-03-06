@@ -28,14 +28,14 @@
 #include "ctime"
 #include <QSettings>
 
-inline static void setStateOfList(QList<PegBox *> *boxlist, const Box::State &state_t)
+inline static void setStateOfList(QList<PegBox*>* boxlist, const Box::State& state_t)
 {
-	foreach (PegBox *box, *boxlist)
-		box->setState(state_t);
+    foreach (PegBox* box, *boxlist)
+        box->setState(state_t);
 }
 
 Game::Game():
-	QGraphicsView(),
+    QGraphicsView(),
     mState(State::None),
     mSolver(0)
 {
@@ -44,15 +44,15 @@ Game::Game():
     Peg::setShowIndicators(settings.value("ShowIndicators", 0).toBool());
     Peg::setIndicator((Indicator) settings.value("Indicator", 65).toInt());
 
-	auto scene = new QGraphicsScene(this);
-	setScene(scene);
-	scene->setSceneRect(0, 0, 320, 560);
-	fitInView(sceneRect(), Qt::KeepAspectRatio);
-	setCacheMode(QGraphicsView::CacheNone);
-	setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-	setFrameStyle(QFrame::NoFrame);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    auto scene = new QGraphicsScene(this);
+    setScene(scene);
+    scene->setSceneRect(0, 0, 320, 560);
+    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    setCacheMode(QGraphicsView::CacheNone);
+    setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    setFrameStyle(QFrame::NoFrame);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 Game::~Game()
@@ -67,132 +67,132 @@ Game::~Game()
         mSolver->quit();
         mSolver->wait();
         mSolver->deleteLater();
-	}
+    }
 
-	scene()->clear();
+    scene()->clear();
 }
 
-void Game::codeRowFilled(const bool &_filled)
+void Game::codeRowFilled(const bool& filled)
 {
     if(mRules->mode() == Mode::HVM) {
-        mOkButton->setVisible(_filled);
-        mOkButton->setEnabled(_filled);
-		if (_filled) {
+        mOkButton->setVisible(filled);
+        mOkButton->setEnabled(filled);
+        if (filled) {
             mState = State::WaittingPinboxPress;
-			showMessage();
+            showMessage();
 
             if (mTools->mAutoCloseRows)
-				onOkButtonPressed();
-		} else {
+                onOkButtonPressed();
+        } else {
             if (mMovesPlayed == 0)
                 mState = State::WaittingFirstRowFill;
-			else
+            else
                 mState = State::WaittingCodeRowFill;
 
-			showMessage();
-		}
+            showMessage();
+        }
     } else {	//Rules::instance()->m_mode == Mode::MVH
-        mDoneButton->setVisible(_filled);
+        mDoneButton->setVisible(filled);
 
-		if (_filled)//the user is not done putting the master code
+        if (filled)//the user is not done putting the master code
             mState = State::WaittingDoneButtonPress;
-		else
+        else
             mState = State::WaittingHiddenCodeFill;
 
-		showMessage();
-	}
+        showMessage();
+    }
 }
 
 void Game::createBoxes()
 {
-	/*	This function creates boxes and put them in QLists. They are
-	 *	stored in QList from bottom to top and left to right.
-	 */
+    /*	This function creates boxes and put them in QLists. They are
+         *	stored in QList from bottom to top and left to right.
+         */
     mCodeBoxes.clear();
     mPinBoxes.clear();
     mPegBoxes.clear();
     mCurrentBoxes.clear();
     mMasterBoxes.clear();
 
-	QPoint left_bottom_corner(4, 489);
+    QPoint left_bottom_corner(4, 489);
 
     int pegs = mRules->pegs();
     int colors = mRules->colors();
 
-	for (int i = 0; i < MAX_COLOR_NUMBER; ++i) {
-		QPoint position = left_bottom_corner - QPoint(0, i*40);
+    for (int i = 0; i < MAX_COLOR_NUMBER; ++i) {
+        QPoint position = left_bottom_corner - QPoint(0, i*40);
 
         auto pinbox = new PinBox(pegs, position);
-		scene()->addItem(pinbox);
+        scene()->addItem(pinbox);
         mPinBoxes.append(pinbox);
 
         position.setX(160-20*pegs);
 
         for (int j = 0; j < pegs; ++j) {
             mCodeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
-		}
+        }
 
-		position.setX(277);	//go to right corner for the peg boxes
+        position.setX(277);	//go to right corner for the peg boxes
 
-		PegBox *pegbox = createPegBox(position);
+        PegBox* pegbox = createPegBox(position);
         mPegBoxes.append(pegbox);
         if (i < colors) {
-			Peg *peg;
-			peg = createPeg(pegbox, i);
-			peg->setState(Peg::State::Underneath);
+            Peg* peg;
+            peg = createPeg(pegbox, i);
+            peg->setState(Peg::State::UNDERNEATH);
             connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
             createPegForBox(pegbox, i);
-			pegbox->setPegState(Peg::State::Initial);
-		} else {
-			createPeg(pegbox, i)->setState(Peg::State::Plain);
-		}
-	}
+            pegbox->setPegState(Peg::State::INITIAL);
+        } else {
+            createPeg(pegbox, i)->setState(Peg::State::PLAIN);
+        }
+    }
 
-	// the last code boxes are for the master code
+    // the last code boxes are for the master code
     for (int i = 0; i < pegs; ++i) {
         mMasterBoxes.append(createPegBox(QPoint(160-20*pegs+i*40, 70)));
-	}
+    }
 }
 
-void Game::createPegForBox(PegBox *_box, int _color)
+void Game::createPegForBox(PegBox* box, int color)
 {
-	QPointF pos = _box->sceneBoundingRect().center();
-	if (_box->hasPeg()) {
-		_box->setPegColor(_color);
-	} else {
-		Peg *peg = createPeg(pos, _color);
-		_box->setPeg(peg);
-		connect(peg, SIGNAL(mouseReleaseSignal(Peg *)), this, SLOT(onPegMouseReleased(Peg *)));
-		connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
+    QPointF pos = box->sceneBoundingRect().center();
+    if (box->hasPeg()) {
+        box->setPegColor(color);
+    } else {
+        Peg* peg = createPeg(pos, color);
+        box->setPeg(peg);
+        connect(peg, SIGNAL(mouseReleaseSignal(Peg*)), this, SLOT(onPegMouseReleased(Peg*)));
+        connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
         connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
-	}
+    }
 }
 
-PegBox *Game::createPegBox(const QPoint &_position)
+PegBox* Game::createPegBox(const QPoint& position)
 {
-	auto pegbox = new PegBox(_position);
-	scene()->addItem(pegbox);
-	return pegbox;
+    auto pegbox = new PegBox(position);
+    scene()->addItem(pegbox);
+    return pegbox;
 }
 
-Peg *Game::createPeg(const QPointF &_position, const int &_color)
+Peg* Game::createPeg(const QPointF& position, const int& color)
 {
-	auto peg = new Peg(_position, _color);
-	scene()->addItem(peg);
-	return peg;
+    auto peg = new Peg(position, color);
+    scene()->addItem(peg);
+    return peg;
 }
 
-Peg *Game::createPeg(PegBox *_box, const int &_color)
+Peg* Game::createPeg(PegBox* box, const int& color)
 {
-	return createPeg(_box->sceneBoundingRect().center(), _color);
+    return createPeg(box->sceneBoundingRect().center(), color);
 }
 
 void Game::freezeScene()
 {
-    setStateOfList(&mMasterBoxes, Box::State::Past);
-    setStateOfList(&mCurrentBoxes, Box::State::Past);
-    mPinBoxes.at(mMovesPlayed)->setState(Box::State::Past);
-    setStateOfList(&mPegBoxes, Box::State::Future);
+    setStateOfList(&mMasterBoxes, Box::State::PAST);
+    setStateOfList(&mCurrentBoxes, Box::State::PAST);
+    mPinBoxes.at(mMovesPlayed)->setState(Box::State::PAST);
+    setStateOfList(&mPegBoxes, Box::State::FUTURE);
 }
 
 void Game::setNextRowInAction()
@@ -201,7 +201,7 @@ void Game::setNextRowInAction()
     mCurrentBoxes.clear();
     for(int i = mMovesPlayed*pegs; i < (mMovesPlayed+1)*pegs; ++i)
         mCurrentBoxes.append(mCodeBoxes.at(i));
-    setStateOfList(&mCurrentBoxes, Box::State::Current);
+    setStateOfList(&mCurrentBoxes, Box::State::CURRENT);
     mState = State::WaittingCodeRowFill;
 }
 
@@ -213,14 +213,14 @@ void Game::getNextGuess()
 
 Game::Player Game::winner() const
 {
-	int blacks, whites;
+    int blacks, whites;
     mPinBoxes.at(mMovesPlayed)->getValue(blacks, whites);
     if (blacks == mRules->pegs())
-		return Player::CodeBreaker;
+        return Player::CodeBreaker;
     else if (mMovesPlayed >= MAX_COLOR_NUMBER - 1)
-		return Player::CodeMaker;
-	else
-		return Player::None;
+        return Player::CodeMaker;
+    else
+        return Player::None;
 }
 
 void Game::initializeScene()
@@ -232,8 +232,8 @@ void Game::initializeScene()
     mCurrentBoxes.clear();
     mMovesPlayed = 0;
 
-	scene()->clear();
-	setInteractive(true);
+    scene()->clear();
+    setInteractive(true);
 
     mOkButton = new Button(mTools->mFontName, mTools->mFontSize, 36, tr("OK"));
     scene()->addItem(mOkButton);
@@ -260,58 +260,58 @@ void Game::initializeScene()
     mInformation->setPos(20, 506);
     connect(this, SIGNAL(fontChangedSignal(QString,int)), mInformation, SLOT(onFontChanged(QString,int)));
     showInformation();
-	createBoxes();
-	scene()->update();
+    createBoxes();
+    scene()->update();
 }
 
-void Game::onPegMouseReleased(Peg *peg)
+void Game::onPegMouseReleased(Peg* peg)
 {
-	QPointF position = peg->sceneBoundingRect().center();
-	int color = peg->getColor();
-	//if same color is not allowed and there is already a color-peg visible, we just ignore drop
+    QPointF position = peg->sceneBoundingRect().center();
+    int color = peg->getColor();
+    //if same color is not allowed and there is already a color-peg visible, we just ignore drop
     if(!mRules->sameColors()) {
-        foreach(PegBox *box, mCurrentBoxes) {
-			if(!box->sceneBoundingRect().contains(position) &&
-					box->isPegVisible() && box->getPegColor() == color) {
+        foreach(PegBox* box, mCurrentBoxes) {
+            if(!box->sceneBoundingRect().contains(position) &&
+                    box->isPegVisible() && box->getPegColor() == color) {
                 emit pegDropRefuseSignal();
-				return;
-			}
-		}
-	}
+                return;
+            }
+        }
+    }
 
-	static bool rowFillState = false;
-	bool newRowFillState = true;
+    static bool rowFillState = false;
+    bool newRowFillState = true;
 
-	// conversion from float to integer may cause double drop on middle. Flag to do it just once
-	bool dropOnlyOnce = true;
+    // conversion from float to integer may cause double drop on middle. Flag to do it just once
+    bool dropOnlyOnce = true;
 
-    foreach(PegBox *box, mCurrentBoxes) {
-		if (box->sceneBoundingRect().contains(position) && dropOnlyOnce) {
-			dropOnlyOnce = false;
-			createPegForBox(box, color);
+    foreach(PegBox* box, mCurrentBoxes) {
+        if (box->sceneBoundingRect().contains(position) && dropOnlyOnce) {
+            dropOnlyOnce = false;
+            createPegForBox(box, color);
             emit pegDropSignal();
-			box->setPegState(Peg::State::Visible);
-		}//	end if
+            box->setPegState(Peg::State::VISIBLE);
+        }//	end if
 
-		if (box->getPegState() != Peg::State::Visible)
-			newRowFillState = false;
-	} //	end foreach
+        if (box->getPegState() != Peg::State::VISIBLE)
+            newRowFillState = false;
+    } //	end foreach
 
-	//	if (master) code row state changed, go to codeRowFilled
-	if (newRowFillState != rowFillState) {
-		rowFillState = newRowFillState;
-		codeRowFilled(rowFillState);
-	}
+    //	if (master) code row state changed, go to codeRowFilled
+    if (newRowFillState != rowFillState) {
+        rowFillState = newRowFillState;
+        codeRowFilled(rowFillState);
+    }
 }
 
-void Game::onPegMouseDoubleClicked(Peg *peg)
+void Game::onPegMouseDoubleClicked(Peg* peg)
 {
-    foreach(PegBox *box, mCurrentBoxes) {
-		if (!box->hasPeg() || box->getPegState() == Peg::State::Invisible) {
-			peg->setPos(box->sceneBoundingRect().topLeft());
-			break;
-		}
-	}
+    foreach(PegBox* box, mCurrentBoxes) {
+        if (!box->hasPeg() || box->getPegState() == Peg::State::INVISIBLE) {
+            peg->setPos(box->sceneBoundingRect().topLeft());
+            break;
+        }
+    }
 }
 
 void Game::onResetIndicators()
@@ -329,126 +329,126 @@ void Game::retranslateTexts()
     if(mOkButton) {
         mOkButton->setLabel(tr("OK"));
         mOkButton->update();
-	}
+    }
     if (mDoneButton) {
         mDoneButton->setLabel(tr("Done"));
         mDoneButton->update();
-	}
-	showInformation();
-	showMessage();
+    }
+    showInformation();
+    showMessage();
 }
 
 bool Game::isRunning()
 {
     switch (mState) {
-	case State::None:
+    case State::None:
         return false;
-	case State::Win:
+    case State::Win:
         return false;
-	case State::Lose:
+    case State::Lose:
         return false;
-	case State::Resign:
+    case State::Resign:
         return false;
-	case State::WaittingFirstRowFill:
+    case State::WaittingFirstRowFill:
         return false;
-	case State::WaittingHiddenCodeFill:
+    case State::WaittingHiddenCodeFill:
         return false;
-	case State::WaittingDoneButtonPress:
-		return false;
-	default:
-		return true;
-	}
+    case State::WaittingDoneButtonPress:
+        return false;
+    default:
+        return true;
+    }
 }
 
 void Game::onRevealOnePeg()
 {
     if (mRules->mode() == Mode::HVM && isRunning()) {
-        foreach(PegBox *box, mMasterBoxes) {
-			if(box->getState() != Box::State::Past) {
+        foreach(PegBox* box, mMasterBoxes) {
+            if(box->getState() != Box::State::PAST) {
                 if (box == mMasterBoxes.last()) {
-					onResigned();
-				} else {
-					box->setState(Box::State::Past);
-					return;
-				}
-			}
-		}
-	}
+                    onResigned();
+                } else {
+                    box->setState(Box::State::PAST);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void Game::onResigned()
 {
     if (mRules->mode() == Mode::HVM && isRunning()) {
         mState = State::Resign;
-		showMessage();
-		freezeScene();
-	}
+        showMessage();
+        freezeScene();
+    }
 }
 
 void Game::onOkButtonPressed()
 {
     if(mRules->mode() == Mode::MVH) {
-		int blacks, whites;
+        int blacks, whites;
         mPinBoxes.at(mMovesPlayed)->getValue(blacks, whites);
-        if(!mSolver->setResponse(blacks, whites)) {
+        if(!mSolver->setResponse(blacks, whites, mGuess.mGuess)) {
             mMessage->setText(tr("Not Possible, Try Again"));
-			return;
-		}
+            return;
+        }
         emit buttonClickSignal();
         mOkButton->setVisible(false);
 
-        mPinBoxes.at(mMovesPlayed)->setState(Box::State::Past);
+        mPinBoxes.at(mMovesPlayed)->setState(Box::State::PAST);
 
-		switch (winner()) {
-		case Player::CodeBreaker:
+        switch (winner()) {
+        case Player::CodeBreaker:
             mState = State::Win;
-			freezeScene();
-			break;
-		case Player::CodeMaker:
+            freezeScene();
+            break;
+        case Player::CodeMaker:
             mState = State::Lose;
-			freezeScene();
-			break;
-		default:
+            freezeScene();
+            break;
+        default:
             ++mMovesPlayed;
-			getNextGuess();
-			break;
-		}
+            getNextGuess();
+            break;
+        }
 
-		showMessage();
-	} else {
+        showMessage();
+    } else {
         emit buttonClickSignal();
         mState = State::Running;
 
-		unsigned char new_guess[MAX_SLOT_NUMBER];
+        unsigned char new_guess[MAX_SLOT_NUMBER];
         for(int i = 0; i < mRules->pegs(); ++i)
             new_guess[i] = mCurrentBoxes.at(i)->getPegColor();
         mGuess.setGuess(new_guess);
 
         mPinBoxes.at(mMovesPlayed)->setPins(mGuess.mBlacks, mGuess.mWhites);
-        mPinBoxes.at(mMovesPlayed)->setState(Box::State::Past);
+        mPinBoxes.at(mMovesPlayed)->setState(Box::State::PAST);
 
-        setStateOfList(&mCurrentBoxes, Box::State::Past);
+        setStateOfList(&mCurrentBoxes, Box::State::PAST);
         mCurrentBoxes.clear();
 
-		switch (winner()) {
-		case Player::CodeBreaker:
+        switch (winner()) {
+        case Player::CodeBreaker:
             mState = State::Win;
-			freezeScene();
-			break;
-		case Player::CodeMaker:
+            freezeScene();
+            break;
+        case Player::CodeMaker:
             mState = State::Lose;
-			freezeScene();
-			break;
-		default:
+            freezeScene();
+            break;
+        default:
             ++mMovesPlayed;
-			setNextRowInAction();
-			break;
-		}
+            setNextRowInAction();
+            break;
+        }
 
-		showMessage();
+        showMessage();
         mOkButton->setVisible(false);
         mOkButton->setPos(mPinBoxes.at(mMovesPlayed)->pos() + QPoint(0, 1));
-	}
+    }
 }
 
 void Game::onDoneButtonPressed()
@@ -459,32 +459,32 @@ void Game::onDoneButtonPressed()
     mDoneButton->setVisible(false);
     mDoneButton->setEnabled(false);
 
-    setStateOfList(&mCurrentBoxes, Box::State::Past);
-    setStateOfList(&mPegBoxes, Box::State::Future);
+    setStateOfList(&mCurrentBoxes, Box::State::PAST);
+    setStateOfList(&mPegBoxes, Box::State::FUTURE);
 
-	unsigned char new_guess[MAX_SLOT_NUMBER];
+    unsigned char new_guess[MAX_SLOT_NUMBER];
     for(int i = 0; i < mRules->pegs(); ++i)
         new_guess[i] = mCurrentBoxes.at(i)->getPegColor();
     mGuess.setCode(new_guess);
 
     mCurrentBoxes.clear();
-	getNextGuess();
-	showMessage();
+    getNextGuess();
+    showMessage();
 }
 
 void Game::onGuessReady()
 {
     mState = State::Running;
-	showInformation();
+    showInformation();
 
     int box_index = mMovesPlayed*mRules->pegs();
     for(int i = 0; i < mRules->pegs(); ++i) {
         createPegForBox(mCodeBoxes.at(box_index + i), mGuess.mGuess[i]);
-        mCodeBoxes.at(box_index + i)->setState(Box::State::Past);
-	}
+        mCodeBoxes.at(box_index + i)->setState(Box::State::PAST);
+    }
     mState = State::WaittingOkButtonPress;
-	showMessage();
-    mPinBoxes.at(mMovesPlayed)->setState(Box::State::None);
+    showMessage();
+    mPinBoxes.at(mMovesPlayed)->setState(Box::State::NONE);
     mOkButton->setEnabled(true);
     mOkButton->setVisible(true);
     mOkButton->setPos(mPinBoxes.at(mMovesPlayed)->pos()-QPoint(0, 39));
@@ -495,12 +495,12 @@ void Game::onGuessReady()
 
 void Game::play()
 {
-	stop();
+    stop();
 
     if(mRules->mode() == Mode::MVH)
-		playMVH();
-    else // (Rules::instance()->m_mode == Mode::HVM)
-		playHVM();
+        playMVH();
+    else // (mRules->mode == Mode::HVM)
+        playHVM();
 }
 
 void Game::stop()
@@ -509,8 +509,8 @@ void Game::stop()
         mSolver->interupt();
         mSolver->quit();
         mSolver->wait();
-	}
-	initializeScene();
+    }
+    initializeScene();
     mState = State::None;
 }
 
@@ -524,103 +524,103 @@ void Game::playMVH()
         mSolver = new Solver(&mGuess, this);
         connect(mSolver, SIGNAL(guessDoneSignal()), this, SLOT(onGuessReady()));
 
-	}
+    }
     mSolver->interupt();
     mGuess.reset(mRules->colors(), mRules->pegs(), mRules->algorithm(), mSolver->reset(mRules->colors(), mRules->pegs(), mRules->sameColors()));
 
     mState = State::WaittingHiddenCodeFill;
-	showMessage();
-	showInformation();
+    showMessage();
+    showInformation();
 
-	//initializing currentrow
+    //initializing currentrow
     for(int i = 0; i < mRules->pegs(); ++i) {
         mCurrentBoxes.append(mMasterBoxes.at(i));
-        mMasterBoxes.at(i)->setState(Box::State::Current);
-	}
+        mMasterBoxes.at(i)->setState(Box::State::CURRENT);
+    }
 
-	/*	Nothing happening from here till the user fill the master code
-	 *	row and press the done button. After the done button is pressed,
-	 *	the onm_doneButtonPressed is continuing the game
-	 */
+    /*	Nothing happening from here till the user fill the master code
+         *	row and press the done button. After the done button is pressed,
+         *	the onm_doneButtonPressed is continuing the game
+         */
 }
 
 void Game::playHVM()
 {
-	qsrand(time(NULL));
+    qsrand(time(NULL));
     int remaining_colors = mRules->colors();
-	unsigned char hidden_code[MAX_SLOT_NUMBER];
-        for(int i = 0; i < mRules->pegs(); i++) {
-			hidden_code[i] = static_cast<unsigned char>(remaining_colors * (qrand()/(RAND_MAX + 1.0)));
-            if (!mRules->sameColors()) {
-				for(int j = 0; j < i; j++)
-					if (hidden_code[j] <= hidden_code[i])
-						hidden_code[i]++;
-				remaining_colors--;
-			}
-            createPegForBox(mMasterBoxes.at(i), hidden_code[i]);
-            mMasterBoxes.at(i)->setState(Box::State::None);
-		}
+    unsigned char hidden_code[MAX_SLOT_NUMBER];
+    for(int i = 0; i < mRules->pegs(); i++) {
+        hidden_code[i] = static_cast<unsigned char>(remaining_colors * (qrand()/(RAND_MAX + 1.0)));
+        if (!mRules->sameColors()) {
+            for(int j = 0; j < i; j++)
+                if (hidden_code[j] <= hidden_code[i])
+                    hidden_code[i]++;
+            remaining_colors--;
+        }
+        createPegForBox(mMasterBoxes.at(i), hidden_code[i]);
+        mMasterBoxes.at(i)->setState(Box::State::NONE);
+    }
 
     mGuess.setCode(hidden_code);
-	setNextRowInAction();
-	showMessage();
-	showInformation();
+    setNextRowInAction();
+    showMessage();
+    showInformation();
     mState = State::WaittingFirstRowFill;
     mOkButton->setPos(mPinBoxes.at(mMovesPlayed)->pos() + QPoint(0, 1));
-	// from now on the onPinBoxPressed function continues the game, after the code row is filled
+    // from now on the onPinBoxPressed function continues the game, after the code row is filled
 }
 
-void Game::resizeEvent(QResizeEvent *event)
+void Game::resizeEvent(QResizeEvent* event)
 {
-	fitInView(sceneRect(), Qt::KeepAspectRatio);
-	QGraphicsView::resizeEvent(event);
+    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    QGraphicsView::resizeEvent(event);
 }
 
 void Game::showInformation()
 {
-    int &possibles = mGuess.mPossibles;
-    qreal &weight = mGuess.mWeight;
+    int& possibles = mGuess.mPossibles;
+    qreal& weight = mGuess.mWeight;
     if (mRules->mode() == Mode::MVH) {
         if (possibles == 1)
-		{
+        {
             mInformation->setText(tr("The Code Is Cracked!"));
         } else if (possibles > 10000) {
             mInformation->setText(QString("%1    %2: %3").arg(tr("Random Guess")).
                                   arg(tr("Remaining")).arg(mTools->mLocale.toString(possibles)));
-		} else {
+        } else {
             switch (mGuess.mAlgorithm) {
-			case Algorithm::MostParts:
+            case Algorithm::MOST_PARTS:
                 mInformation->setText(QString("%1: %2    %3: %4").arg(tr("Most Parts")).
-                                          arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
-                                          arg(mTools->mLocale.toString(possibles)));
-				break;
-			case Algorithm::WorstCase:
+                                      arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
+                                      arg(mTools->mLocale.toString(possibles)));
+                break;
+            case Algorithm::WORST_CASE:
                 mInformation->setText(QString("%1: %2    %3: %4").arg(tr("Worst Case")).
-                                          arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
-                                          arg(mTools->mLocale.toString(possibles)));
-				break;
-			default:
+                                      arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
+                                      arg(mTools->mLocale.toString(possibles)));
+                break;
+            default:
                 mInformation->setText(QString("%1: %2    %3: %4").arg(tr("Expected Size")).
-                                          arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
-                                          arg(mTools->mLocale.toString(possibles)));
-				break;
-			}
+                                      arg(mTools->mLocale.toString(weight)).arg(tr("Remaining")).
+                                      arg(mTools->mLocale.toString(possibles)));
+                break;
+            }
 
-		}
-	} else {
+        }
+    } else {
         mInformation->setText(QString("%1: %2   %3: %4   %5: %6").arg(tr("Slots", "", mRules->pegs())).
-                                  arg(mTools->mLocale.toString(mRules->pegs())).arg(tr("Colors", "", mRules->colors())).
-                                  arg(mTools->mLocale.toString(mRules->colors())).arg(tr("Same Colors")).
-                             arg(mRules->sameColors() ? tr("Yes"): tr("No")));
-	}
+                              arg(mTools->mLocale.toString(mRules->pegs())).arg(tr("Colors", "", mRules->colors())).
+                              arg(mTools->mLocale.toString(mRules->colors())).arg(tr("Same Colors")).
+                              arg(mRules->sameColors() ? tr("Yes"): tr("No")));
+    }
 }
 
-void Game::setRules(Rules *rules)
+void Game::setRules(Rules* rules)
 {
     mRules = rules;
 }
 
-void Game::setTools(Tools *tools)
+void Game::setTools(Tools* tools)
 {
     mTools = tools;
 }
@@ -629,94 +629,94 @@ void Game::showMessage()
 {
     bool is_MVH = (mRules->mode() == Mode::MVH);
     switch (mState) {
-	case State::Win:
-		if (is_MVH)
+    case State::Win:
+        if (is_MVH)
             mMessage->setText(tr("Success! I Win"));
-		else
+        else
             mMessage->setText(tr("Success! You Win"));
-		break;
-	case State::Lose:
-		if (is_MVH)
+        break;
+    case State::Lose:
+        if (is_MVH)
             mMessage->setText(tr("Game Over! I Failed"));
-		else
+        else
             mMessage->setText(tr("Game Over! You Failed"));
-		break;
-	case State::Resign:
+        break;
+    case State::Resign:
         mMessage->setText(tr("You Resign"));
-		break;
-	case State::Thinking:
+        break;
+    case State::Thinking:
         mMessage->setText(tr("Let Me Think"));
-		break;
-	case State::WaittingPinboxPress:
+        break;
+    case State::WaittingPinboxPress:
         mMessage->setText(tr("Press OK"));
-		break;
-	case State::WaittingOkButtonPress:
+        break;
+    case State::WaittingOkButtonPress:
         mMessage->setText(tr("Please Put Your Pins And Press OK"));
-		break;
-	case State::WaittingDoneButtonPress:
+        break;
+    case State::WaittingDoneButtonPress:
         mMessage->setText(tr("Press Done"));
-		break;
-	default:
+        break;
+    default:
         mMessage->setText(tr("Place Your Pegs"));
-		break;
-	}
+        break;
+    }
 }
-void Game::drawBackground(QPainter *painter, const QRectF &rect)
+void Game::drawBackground(QPainter* painter, const QRectF& rect)
 {
-	painter->fillRect(rect, QColor(200, 200, 200));// set scene background color
-	painter->setPen(Qt::NoPen);
+    painter->fillRect(rect, QColor(200, 200, 200));// set scene background color
+    painter->setPen(Qt::NoPen);
 
-	QRectF cr(3, 3, 314, 554);
-	QPainterPath cpath;
-	cpath.addRoundedRect(cr, 10.1, 10.1);
-	painter->setClipPath(cpath);
-	painter->setClipping(true);
+    QRectF cr(3, 3, 314, 554);
+    QPainterPath cpath;
+    cpath.addRoundedRect(cr, 10.1, 10.1);
+    painter->setClipPath(cpath);
+    painter->setClipping(true);
 
-	QLinearGradient top_grad(0, 16, 0, 129);
-	top_grad.setColorAt(0.0, QColor(248, 248, 248));
-	top_grad.setColorAt(0.6, QColor(184, 184, 184));
-	top_grad.setColorAt(1, QColor(212, 212, 212));
-	painter->setBrush(QBrush(top_grad));
-	painter->drawRect(QRect(4, 4, 312, 125));
-	painter->setBrush(QBrush(QColor(112, 112, 112)));
-	painter->drawRect(QRect(4, 128, 318, 1));
+    QLinearGradient top_grad(0, 16, 0, 129);
+    top_grad.setColorAt(0.0, QColor(248, 248, 248));
+    top_grad.setColorAt(0.6, QColor(184, 184, 184));
+    top_grad.setColorAt(1, QColor(212, 212, 212));
+    painter->setBrush(QBrush(top_grad));
+    painter->drawRect(QRect(4, 4, 312, 125));
+    painter->setBrush(QBrush(QColor(112, 112, 112)));
+    painter->drawRect(QRect(4, 128, 318, 1));
 
-	painter->setPen(Qt::NoPen);
-	painter->setBrush(QBrush(QColor(150, 150, 150)));
-	painter->drawRect(QRectF(4, 129, 318, 400));
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor(150, 150, 150)));
+    painter->drawRect(QRectF(4, 129, 318, 400));
 
-	QLinearGradient bot_grad(0, 530, 0, 557);
-	bot_grad.setColorAt(0.0, QColor(204, 204, 204));
-	bot_grad.setColorAt(0.3, QColor(206, 206, 206));
-	bot_grad.setColorAt(1.0, QColor(180, 180, 180));
-	painter->setBrush(QBrush(bot_grad));
-	painter->drawRect(QRect(1, 529, 318, 28));
-	painter->setBrush(QBrush(QColor(239, 239, 239)));
-	painter->setClipping(false);
+    QLinearGradient bot_grad(0, 530, 0, 557);
+    bot_grad.setColorAt(0.0, QColor(204, 204, 204));
+    bot_grad.setColorAt(0.3, QColor(206, 206, 206));
+    bot_grad.setColorAt(1.0, QColor(180, 180, 180));
+    painter->setBrush(QBrush(bot_grad));
+    painter->drawRect(QRect(1, 529, 318, 28));
+    painter->setBrush(QBrush(QColor(239, 239, 239)));
+    painter->setClipping(false);
 
-	QLinearGradient frame_grad(0, 190, 320, 370);
-	frame_grad.setColorAt(0.0, QColor(240, 240, 240));
-	frame_grad.setColorAt(0.49, QColor(240, 240, 240));
-	frame_grad.setColorAt(0.50, QColor(80, 80, 80));
-	frame_grad.setColorAt(1.0, QColor(80, 80, 80));
-	QPen frame_pen = QPen(QBrush(frame_grad), 1.5);
-	QRectF right_shadow(3.5, 3.5, 313, 553);
-	painter->setBrush(Qt::NoBrush);
-	painter->setPen(frame_pen);
-	painter->drawRoundedRect(right_shadow, 9.8, 9.8);
+    QLinearGradient frame_grad(0, 190, 320, 370);
+    frame_grad.setColorAt(0.0, QColor(240, 240, 240));
+    frame_grad.setColorAt(0.49, QColor(240, 240, 240));
+    frame_grad.setColorAt(0.50, QColor(80, 80, 80));
+    frame_grad.setColorAt(1.0, QColor(80, 80, 80));
+    QPen frame_pen = QPen(QBrush(frame_grad), 1.5);
+    QRectF right_shadow(3.5, 3.5, 313, 553);
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(frame_pen);
+    painter->drawRoundedRect(right_shadow, 9.8, 9.8);
 
-	QLinearGradient sol_frame_grad = QLinearGradient(50, 70, 50, 110);
-	sol_frame_grad.setColorAt(0.0, QColor(80, 80, 80));
-	sol_frame_grad.setColorAt(1.0, QColor(255, 255, 255));
-	QPen sol_frame_pen(QBrush(sol_frame_grad), 1);
+    QLinearGradient sol_frame_grad = QLinearGradient(50, 70, 50, 110);
+    sol_frame_grad.setColorAt(0.0, QColor(80, 80, 80));
+    sol_frame_grad.setColorAt(1.0, QColor(255, 255, 255));
+    QPen sol_frame_pen(QBrush(sol_frame_grad), 1);
 
-	painter->setPen(sol_frame_pen);
+    painter->setPen(sol_frame_pen);
 
-	QRectF sol_container(41, 68, 235, 42);
-	QRectF sol_frame(42, 69, 235, 41.5);
+    QRectF sol_container(41, 68, 235, 42);
+    QRectF sol_frame(42, 69, 235, 41.5);
 
-	painter->drawRoundedRect(sol_container, 21,21);
-	painter->setBrush(QColor(150, 150, 150));
-	painter->drawRoundedRect(sol_frame, 20, 20);
-	painter->setRenderHint(QPainter::TextAntialiasing, true);
+    painter->drawRoundedRect(sol_container, 21,21);
+    painter->setBrush(QColor(150, 150, 150));
+    painter->drawRoundedRect(sol_frame, 20, 20);
+    painter->setRenderHint(QPainter::TextAntialiasing, true);
 }

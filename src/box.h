@@ -31,47 +31,43 @@ class Box : public QGraphicsRectItem
 public:
 
 	/**
-	 * @brief The State enum represents different states of	a box
-	 */
+	* @brief The State enum represents different states of	a box
+	*/
 	enum class State {
-		Past,
-		Current,
-		Future,
-		None
+		PAST,
+		CURRENT,
+		FUTURE,
+		NONE
 	};
 
 	/**
-	 * @brief creates a box
-	 * @param position the position of the box
-	 * @param parent the parrent of the object
-	 */
-	explicit Box(const QPoint &position = QPoint(0, 0), QGraphicsItem *parent = 0);
+	* @brief creates a box
+	* @param position the position of the box
+	* @param parent the parrent of the object
+	*/
+	explicit Box(const QPoint& position = QPoint(0, 0), QGraphicsItem* parent = 0);
 
 	/**
-	 * @brief sets the state of the box
-	 * @param _state the state
-	 */
-	virtual void setState(const Box::State &_state = Box::State::Future);
+	* @brief sets the state of the box
+	* @param _state the state
+	*/
+	virtual void setState(const Box::State& _state = Box::State::FUTURE);
 
 	/**
-	 * @brief gets the state of the box
-	 * @return Box::State
+	 * @brief getState gets the state of the box
+	 * @return  Box::State
 	 */
-    Box::State getState() const {return mState;}
+	Box::State getState() const {return mState;}
 
 protected:
-	/**
-	 * @brief paint
-	 * @param painter
-	 */
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    Box::State mState; /**< The state of the box */
+	void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
+	Box::State mState; /**< The state of the box */
 
 private:
 	/**
-	 * @brief BoxAlphas different alphas of the box
-	 */
-    static const int sBoxAlphas[4];
+	* @brief BoxAlphas different alphas of the box
+	*/
+	static const int sBoxAlphas[4];
 };
 
 #endif // Box_H

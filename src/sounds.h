@@ -21,17 +21,19 @@
 
 #include "appinfo.h"
 #include <QObject>
+#include <QSharedPointer>
+
 class QSoundEffect;
 
 class Sounds: public QObject
 {
     Q_OBJECT
 public:
-    explicit Sounds(QObject *parent = 0);
+    explicit Sounds(QObject* parent = 0);
     ~Sounds();
 
-    void setVolume(const int &vol);
-    Volume volume() const;
+    void setVolume(const int& vol);
+	Volume volume() const;
 
 public slots:
     void onPegDroped();
@@ -40,9 +42,9 @@ public slots:
 
 private:
     Volume mVolume; /**< TODO */
-    QSoundEffect *mPegDrop; /**< TODO */
-    QSoundEffect *mPegDropRefuse; /**< TODO */
-    QSoundEffect *mButtonPress; /**< TODO */
+    QSharedPointer<QSoundEffect> mPegDrop; /**< TODO */
+    QSharedPointer<QSoundEffect> mPegDropRefuse; /**< TODO */
+    QSharedPointer<QSoundEffect> mButtonPress; /**< TODO */
 };
 
 #endif // SOUNDS_H

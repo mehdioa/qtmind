@@ -43,60 +43,52 @@ class MainWindow;
  */
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	/**
-	 * @brief MainWindow Creates the main window.
-	 * @param parent The parent of the window.
-	 */
-    explicit MainWindow(QWidget *parent = 0);
-	~MainWindow();
+    explicit MainWindow(QWidget* parent = 0);
+    ~MainWindow();
 
 protected:
-	/**
-	 * @brief closeEvent Things to do before exit the game
-	 * @param event
-	 */
-	void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
 protected slots:
-	void onAutoPutPins();
-	void onAutoCloseRows();
-	void onIndicatorChanged();
-	void onModeChanged(QAction*);
-	void onNewGame();
-	void onFont();
-	void onQtMindHomePage();
-	void onAbout();
-	void onShowContextMenu(const QPoint &position);
-	void onAlgorithmChanded();
-	void onVolumeChanged(QAction* volume_action);
-	void onColorActionChanged(QAction *color_action);
-	void onColorComboChanged(const int &combo_index);
-	void onSlotActionChanged(QAction *slot_action);
-	void onSlotComboChanged(const int &combo_index);
-	void onAlgorithmActionChanged(QAction *algorithm_action);
-	void onAlgorithmComboChanged(const int &combo_index);
-	void onIndicatorTypeChanged(QAction *indic_act);
-	void onLanguageChanged(QAction *language_act);
+    void onAutoPutPins();
+    void onAutoCloseRows();
+    void onIndicatorChanged();
+    void onModeChanged(QAction*);
+    void onNewGame();
+    void onFont();
+    void onQtMindHomePage();
+    void onAbout();
+    void onShowContextMenu(const QPoint& position);
+    void onAlgorithmChanded();
+    void onVolumeChanged(QAction* volume_action);
+    void onColorActionChanged(QAction* color_action);
+    void onColorComboChanged(const int& combo_index);
+    void onSlotActionChanged(QAction* slot_action);
+    void onSlotComboChanged(const int& combo_index);
+    void onAlgorithmActionChanged(QAction* algorithm_action);
+    void onAlgorithmComboChanged(const int& combo_index);
+    void onIndicatorTypeChanged(QAction* indic_act);
+    void onLanguageChanged(QAction* language_act);
 
 private:
-	QStringList findTranslations();
-	void loadTranslation();
-	QString languageName(const QString &language);
-	bool quitUnfinishedGame();
-	void updateRules();
-	void retranslate();
-	void setPegsNumber(const int &pegs_n);
-	Mode getMode();
+    QStringList findTranslations();
+    void loadTranslation();
+    QString languageName(const QString& language);
+    bool quitUnfinishedGame();
+    void updateRules();
+    void retranslate();
+    void setPegsNumber(const int& pegs_n);
+    Mode getMode();
 
 private:
     static const bool sIsAndroid; /**< Is the platform Android? */
-	Ui::MainWindow *ui; /**< TODO */
-    QComboBox *mPegsComboBox; /**< TODO */
-    QComboBox *mColorsComboBox; /**< TODO */
-    QComboBox *mAlgorithmsComboBox; /**< TODO */
+    Ui::MainWindow* ui; /**< TODO */
+    QComboBox* mPegsComboBox; /**< TODO */
+    QComboBox* mColorsComboBox; /**< TODO */
+    QComboBox* mAlgorithmsComboBox; /**< TODO */
 
     Game mGame; /**< TODO */
     Sounds mSounds;

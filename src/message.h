@@ -30,22 +30,13 @@ class Message : public QGraphicsTextItem
 {
     Q_OBJECT
 public:
-
-	/**
-	 * @brief Message creates a message
-	 * @param board_font the font
-	 * @param color_name the color
-	 * @param smaller if a smaller font size should be used
-	 * @param parent parent of the object
-	 */
-    explicit Message(const QString &fontName, const int &fontSize, const QString &color_name = "#303133",
-					 const int &smaller = 0, QGraphicsItem *parent = 0);
-
-	/**
-	 * @brief setText set the text of the message
-	 * @param _text the message text
-	 */
-	void setText(const QString _text);
+    explicit Message(const QString& fontName, const int& fontSize, const QString& color_name = "#303133",
+                     const int& smaller = 0, QGraphicsItem* parent = 0);
+    /**
+    * @brief setText set the text of the message
+    * @param _text the message text
+    */
+    void setText(const QString _text);
 
 public slots:
     /**
@@ -53,20 +44,11 @@ public slots:
      * @param fontName the font name
      * @param fontSize the font size
      */
-    void onFontChanged(const QString &fontName, const int &fontSize);
+    void onFontChanged(const QString& fontName, const int& fontSize);
 
 protected:
-	/**
-	 * @brief paint
-	 * @param painter
-	 */
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
-	/**
-	 * @brief boundingRect
-	 * @return
-	 */
-	QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
+    QRectF boundingRect() const;
 
 private:
     QTextLayout mTextLayout; /**< TODO */

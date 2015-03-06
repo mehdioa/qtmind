@@ -32,35 +32,35 @@ class Pin;
 class PinBox : public Box
 {
 public:
-	/**
-	 * @brief PinBox
-	 * @param pin_number
-	 * @param m_position
-	 * @param parent
-	 */
-	explicit PinBox(const int &pin_number, const QPoint &_position, QGraphicsItem *parent = 0);
+    /**
+    * @brief PinBox
+    * @param pin_number
+    * @param m_position
+    * @param parent
+    */
+    explicit PinBox(const int& pin_number, const QPoint& _position, QGraphicsItem* parent = 0);
 
-	/**
-	 * @brief getValue get the value of the box
-	 * @param bl blacks
-	 * @param wt whites
-	 */
-	void getValue(int &bl, int &wt) const;
+    /**
+    * @brief getValue get the value of the box
+    * @param bl blacks
+    * @param wt whites
+    */
+    void getValue(int& bl, int& wt) const;
 
-	/**
-	 * @brief setPins set pins of the box
-	 */
-    void setPins(const int &bl, const int &wt);
+    /**
+    * @brief setPins set pins of the box
+    */
+    void setPins(const int& bl, const int& wt);
 
-	/**
-	 * @brief setState set the box state
-	 * @param _state the box state
-	 */
-	void setState(const Box::State &_state = Box::State::Future);
+    /**
+    * @brief setState set the box state
+    * @param _state the box state
+    */
+    void setState(const Box::State& _state = Box::State::FUTURE);
 
 private:
     static const int sPinPositions[MAX_SLOT_NUMBER][MAX_SLOT_NUMBER][2]; /**< TODO */
-    QVector<Pin *> mPins; /**< TODO */
+    QVector<Pin*> mPins; /**< TODO */
 };
 
 #endif // PINBOX_H

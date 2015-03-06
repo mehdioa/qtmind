@@ -34,25 +34,25 @@ class Preferences;
  */
 class Preferences : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	/**
-	 * @brief Preferences
-	 * @param parent
-	 */
-    explicit Preferences(Tools *tools, QWidget *parent = 0);
-	~Preferences();
+    /**
+	* @brief Preferences
+	* @param parent
+	*/
+    explicit Preferences(Tools* tools, QWidget* parent = 0);
+    ~Preferences();
 
 signals:
     void fontChangedSignal();
 
 protected slots:
-	void accept();
+    void accept();
 
 private:
-	Ui::Preferences *ui; /**< TODO */
-    Tools *mTools;
+    Ui::Preferences* ui; /**< TODO */
+    Tools* mTools;
 };
 
 #endif // PREFERENCES_H

@@ -23,68 +23,68 @@
 #include <QPainter>
 #include <QFont>
 
-Message::Message(const QString &fontName, const int &fontSize, const QString &color_name,
-                 const int &smaller, QGraphicsItem *parent):
+Message::Message(const QString& fontName, const int& fontSize, const QString& color_name,
+                 const int& smaller, QGraphicsItem* parent):
     QGraphicsTextItem(parent),
-	mColor(QColor(color_name)),
+    mColor(QColor(color_name)),
     mText(""),
     mFontSizeReduced(smaller)
 {
     mTextLayout.setFont(QFont(fontName, fontSize
-                               - mFontSizeReduced, QFont::Bold, false));
-	mTextLayout.setTextOption(QTextOption(Qt::AlignHCenter));
-	mUpdateRect = QRectF(0, 0, 10, 10);
+                              - mFontSizeReduced, QFont::Bold, false));
+    mTextLayout.setTextOption(QTextOption(Qt::AlignHCenter));
+    mUpdateRect = QRectF(0, 0, 10, 10);
 }
 
 void Message::setText(const QString _text)
 {
-	mText = _text;
-	mUpdateRect = boundingRect();
-	mTextLayout.setText(mText);
+    mText = _text;
+    mUpdateRect = boundingRect();
+    mTextLayout.setText(mText);
 
-	int leading = -3;
-	qreal height = 0;
-	qreal max_width = 0;
-	qreal max_height = 0;
-	mTextLayout.beginLayout();
+    int leading = -3;
+    qreal height = 0;
+    qreal max_width = 0;
+    qreal max_height = 0;
+    mTextLayout.beginLayout();
 
-	QTextLine line = mTextLayout.createLine();
-	while (line.isValid()) {
-		line.setLineWidth(280);
-		height += leading;
-		line.setPosition(QPointF(0, height));
-		height += line.height();
-		max_width = qMax(max_width, line.naturalTextWidth());
-		line = mTextLayout.createLine();
-	}
-	mTextLayout.endLayout();
+    QTextLine line = mTextLayout.createLine();
+    while (line.isValid()) {
+        line.setLineWidth(280);
+        height += leading;
+        line.setPosition(QPointF(0, height));
+        height += line.height();
+        max_width = qMax(max_width, line.naturalTextWidth());
+        line = mTextLayout.createLine();
+    }
+    mTextLayout.endLayout();
 
-	float ypos = 4 + (70 - mTextLayout.boundingRect().height()) / 2;
+    float ypos = 4 + (70 - mTextLayout.boundingRect().height()) / 2;
 
-	max_width = qMax(mUpdateRect.width(), mTextLayout.boundingRect().width());
-	max_height = qMax(mUpdateRect.height(), mTextLayout.boundingRect().height() + ypos);
+    max_width = qMax(mUpdateRect.width(), mTextLayout.boundingRect().width());
+    max_height = qMax(mUpdateRect.height(), mTextLayout.boundingRect().height() + ypos);
 
-	mUpdateRect = QRectF(0, 0, max_width, max_height + ypos);
+    mUpdateRect = QRectF(0, 0, max_width, max_height + ypos);
 
     update();
 }
 
-void Message::onFontChanged(const QString &fontName, const int &fontSize)
+void Message::onFontChanged(const QString& fontName, const int& fontSize)
 {
     mTextLayout.setFont(QFont(fontName, fontSize
-                               - mFontSizeReduced, QFont::Bold, false));
+                              - mFontSizeReduced, QFont::Bold, false));
     setText(mText);
 }
 
 QRectF Message::boundingRect() const
 {
-	return mUpdateRect;
+    return mUpdateRect;
 }
 
-void Message::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-	painter->setRenderHint(QPainter::TextAntialiasing, true);
-	painter->setPen(QPen(mColor));
-	float ypos = 4 + (70 - mTextLayout.boundingRect().height()) / 2;
-	mTextLayout.draw(painter, QPointF(0, ypos));
+    painter->setRenderHint(QPainter::TextAntialiasing, true);
+    painter->setPen(QPen(mColor));
+    float ypos = 4 + (70 - mTextLayout.boundingRect().height()) / 2;
+    mTextLayout.draw(painter, QPointF(0, ypos));
 }

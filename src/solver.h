@@ -51,38 +51,38 @@ class Guess;
  */
 class Solver : public QThread
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	/**
-	 * @brief a helper function to find the power of an integer by another integer
-	 * @param base the base of the power base^exp
-	 * @param exp the power
-	 * @return int the power base^exp
-	 */
-	static int ipow(int base, int exp);
+    /**
+    * @brief a helper function to find the power of an integer by another integer
+    * @param base the base of the power base^exp
+    * @param exp the power
+    * @return int the power base^exp
+    */
+    static int ipow(int base, int exp);
 
-    explicit Solver(Guess *guess, QObject *parent = 0);
+    explicit Solver(Guess* guess, QObject* parent = 0);
 
     ~Solver();
 
-	/**
-	 * @brief check if the response is valid and remove impossibles
+    /**
+    * @brief check if the response is valid and remove impossibles
      * @param blacks the number of blacks
      * @param whites the number of whites
-	 * @return return true if the response is valid, false otherwise
-	 */
-    bool setResponse(const int &blacks, const int &whites);
+     * @return return true if the response is valid, false otherwise
+     */
+    bool setResponse(const int& blacks, const int& whites, const unsigned char* guess);
 
-	/**
+    /**
      * @brief run method of the thread
-	 *
-	 */
-	void run();
-	/**
+     *
+     */
+    void run();
+    /**
      * @brief used to interupt the guess process which is running in another thread
-	 *
-	 */
+     *
+     */
     void interupt() {mInterupt = true;}
     /**
      * @brief reset reset the solver
@@ -91,88 +91,88 @@ public:
      * @param same_colors same color allowed flag
      * @return
      */
-    int reset(const int &colors, const int &pegs, const bool &same_colors);
+    int reset(const int& colors, const int& pegs, const bool& same_colors);
     /**
      * @brief startGuessing start the guessing process
      * @param alg the guessing algorithm
      */
-    void startGuessing(const Algorithm &alg);
+    void startGuessing(const Algorithm& alg);
 
 signals:
 
-	/**
+    /**
      * @brief the guess done signal, to be emited when the process of guessing finished
-	 */
-	void guessDoneSignal();
+     */
+    void guessDoneSignal();
 
 private:
     /**
      * @brief makeGuess make the guess
      */
     void makeGuess();
-	/**
-	 * @brief Use Knuth's shuffling method to shuffle a string
-	 * @param m_string the shuffling string
-	 */
-	void shuffle(unsigned char *m_string, int len) const;
-	/**
-	 * @brief permute a code
-	 * @param m_code permutting code
-	 */
-	void permute(unsigned char *m_code) const;
-	/**
-	 * @brief create internal tables
-	 */
-	void createTables();
-	/**
-	 * @brief delete internal tables and release memory
-	 */
-	void deleteTables();
-	/**
+    /**
+    * @brief Use Knuth's shuffling method to shuffle a string
+    * @param m_string the shuffling string
+    */
+    void shuffle(unsigned char* m_string, int len) const;
+    /**
+    * @brief permute a code
+         * @param m_code permutting code
+         */
+    void permute(unsigned char* m_code) const;
+    /**
+    * @brief create internal tables
+    */
+    void createTables();
+    /**
+    * @brief delete internal tables and release memory
+         */
+    void deleteTables();
+    /**
      * @brief turn an array of characters to a QString
      * @param m_array the array of chars
      * @return QString the QString of the m_array
-	 */
-	QString arrayToString(const unsigned char *m_array) const;
-	/**
+         */
+    QString arrayToString(const unsigned char* m_array) const;
+    /**
      * @brief compute the weight of a possible response
      * @param m_responses the response to be weighted
      * @return qreal the weight of the response
-	 */
-	qreal computeWeight(int *m_responses) const;
-	/**
+         */
+    qreal computeWeight(int* m_responses) const;
+    /**
      * @brief find the next code of a code when same color is allowed
      * @param X the code
-	 */
-    void nextCodeSameColor(unsigned char *X);
+         */
+    void nextCodeSameColor(unsigned char* X);
     /**
      * @brief find the next code of a code when same color is not allowed
      * @param X the code
      */
-    void nextCodeDifferentColor(unsigned char *X);
-	/**
+    void nextCodeDifferentColor(unsigned char* X);
+    /**
      * @brief set the small set of possibles under 10_000
-	 */
-	void setSmallPossibles();
+     */
+    void setSmallPossibles();
 
 private:
 
-	/**
-	 * @brief The Codes struct
-	 * All codes
-	 */
-	struct Codes {
-		int size;
-		unsigned char **index;
+    /**
+    * @brief The Codes struct
+    * All codes
+    */
+    struct Codes {
+        int size;
+        unsigned char** index;
     } mCodes;
 
-	/**
-	 * @brief The FirstPossiblesUnder10_000 struct
-	 * The first possibles codes under ten thousands
-	 */
-	struct FirstPossiblesUnder10_000 {
-		int size;
-		int *index;
+    /**
+    * @brief The FirstPossiblesUnder10_000 struct
+    * The first possibles codes under ten thousands
+    */
+    struct FirstPossiblesUnder10_000 {
+        int size;
+        int* index;
     } mSmallPossibles;
 
     int mPegs; /**< the number of pegs */
@@ -182,7 +182,7 @@ private:
     int mMaxResponse; /**< maximum number of responses */
     volatile bool mInterupt; /**< the interupt flag */
     QList<int> mPossibles;   /**<	list of all possibles */
-    Guess *mGuess; /**< the guess element */
+    Guess* mGuess; /**< the guess element */
 };
 
 #endif // SOLVER_H

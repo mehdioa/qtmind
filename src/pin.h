@@ -28,41 +28,41 @@
 class Pin : public QGraphicsEllipseItem
 {
 public:
-	/**
-	 * @brief The Color enum represent the color of the pin
-	 */
-	enum class Color {
-		White,
-		Black,
-		None,
-	};
+    /**
+    * @brief The Color enum represent the color of the pin
+    */
+    enum class Color {
+        WHITE,
+        BLACK,
+        NONE,
+    };
 
-	explicit Pin(QGraphicsItem *parent = 0);
+    explicit Pin(QGraphicsItem* parent = 0);
 
-	/**
-	 * @brief getColor get the color of the pin
-	 * @return the color of the pin
-	 */
+    /**
+    * @brief getColor get the color of the pin
+    * @return the color of the pin
+    */
     Pin::Color getColor() const {return mColor;}
 
-	/**
-	 * @brief setColor set the color of the pin
-	 * @param m_color the color of the pin
-	 */
-	void setColor(const Pin::Color &_color);
+    /**
+    * @brief setColor set the color of the pin
+    * @param m_color the color of the pin
+    */
+    void setColor(const Pin::Color& _color);
 
-	/**
-	 * @brief setActivity set activity of the pin
-	 * @param b the activity
-	 */
-	void setActivity(const bool &b);
+    /**
+    * @brief setActivity set activity of the pin
+    * @param b the activity
+    */
+    void setActivity(const bool& b);
 
 protected:
-	void mousePressEvent(QGraphicsSceneMouseEvent *);
-	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
+    void mousePressEvent(QGraphicsSceneMouseEvent*);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
 
 private:
-	Pin::Color nextPinColor() const;
+    Pin::Color nextPinColor() const;
 
 private:
     Pin::Color mColor; /**< TODO */

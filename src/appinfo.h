@@ -23,9 +23,9 @@
 
 static const int VER_MAJOR			= 0; /**< Applictation Major Version */
 static const int VER_MINOR			= 8; /**< Applictation Minor Version */
-static const int VER_BUGFIX			= 4; /**< Applictation Bugfix Version */
+static const int VER_BUGFIX			= 5; /**< Applictation Bugfix Version */
 static const QString APP_VER = QString("%1.%2.%3") /**< Applictation Version */
-		.arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
+        .arg(VER_MAJOR).arg(VER_MINOR).arg(VER_BUGFIX);
 
 static const QString APP_NAME		= "QtMind"; /**< Applictation Name */
 static const QString ORG_NAME		= "QtMind"; /**< Applictation Organisation */
@@ -39,20 +39,20 @@ static const int MIN_SLOT_NUMBER	= 2; /**< The minimum number of slots */
 static const int MAX_SLOT_NUMBER	= 5; /**< The maximum number of slots */
 
 /**
- * @brief The Solving Algorithm enum
+ * @brief The Solving Algorithms enum
  */
 enum class Algorithm
 {
-	MostParts,
-	WorstCase,
-	ExpectedSize
+    MOST_PARTS,
+    WORST_CASE,
+    EXPECTED_SIZE
 };
 /**
  * @brief The Game Mode enum
  */
 enum class Mode {
-	MVH,		//Machine breaks the hidden code
-	HVM		    //Human breaks the hidden code
+	MVH,	//Machine breaks the hidden code
+	HVM		//Human breaks the hidden code
 };
 
 
@@ -60,24 +60,24 @@ enum class Mode {
  * @brief The Indicator enum
  */
 enum class Indicator {
-    Digit = 48,     // begining of digits in unicode
-    Character = 65, // begining of characters in unicode
+    DIGIT = 48,     // begining of digits in unicode
+    CHARACTER = 65, // begining of characters in unicode
 };
 /**
  * @brief The Sound enum
  */
 enum class Sound {
-    PegDrop,
-    PegDropRefuse,
-    ButtonPress
+    PEG_DROP,
+    PEG_DROP_REFUSE,
+    BUTTON_PRESS
 };
 /**
  * @brief The Volume enum
  */
 enum class Volume{
-    Mute,
-    Low,
-    Medium,
-    High
+    MUTE,
+    LOW,
+    MEDIUM,
+    HIGH
 };
 #endif // APPINFO_H

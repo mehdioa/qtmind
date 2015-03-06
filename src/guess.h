@@ -33,20 +33,20 @@
   * for more information
   */
 #define COMPARE(A, B, C, P, BL, WT) {\
-	BL = 0;\
-	int __c[C], __g[C];\
-	std::fill(__c, __c+C, 0);\
-	std::fill(__g, __g+C, 0);\
-	for (int i = 0; i < P; ++i) {\
-		if (A[i] == B[i])\
-			++BL;\
-		++__c[A[i]];\
-		++__g[B[i]];\
-	}\
-	WT = (-BL);\
-	for(int i = 0; i < C; ++i)\
-		WT += (__c[i] < __g[i]) ? __c[i] : __g[i];\
-}
+    BL = 0;\
+    int __c[C], __g[C];\
+    std::fill(__c, __c+C, 0);\
+    std::fill(__g, __g+C, 0);\
+    for (int i = 0; i < P; ++i) {\
+    if (A[i] == B[i])\
+    ++BL;\
+    ++__c[A[i]];\
+    ++__g[B[i]];\
+    }\
+    WT = (-BL);\
+    for(int i = 0; i < C; ++i)\
+    WT += (__c[i] < __g[i]) ? __c[i] : __g[i];\
+    }
 
 /**
  * @brief A class to represent a guess element.
@@ -59,30 +59,37 @@ public:
     explicit Guess();
     ~Guess(){}
 
-private:
+public:
     /**
      * @brief setGuess set the guess
      * @param _guess the guesss
      */
-    void setGuess(unsigned char *_guess);
+    void setGuess(unsigned char* guess);
     /**
      * @brief setCode set the code
      * @param _code the code
      */
-    void setCode(unsigned char *_code);
+    void setCode(unsigned char* code);
     /**
      * @brief update sets mBlacks, mWhites, and mPossibles
-     * @param b mBlacks
-     * @param w mWhites
-     * @param p mPossibles
+     * @param b blacks
+     * @param w whites
+     * @param p possibles
      */
-    void update(const int &b, const int &w, const int &p);
+    void update(const int& b, const int& w, const int& p);
     /**
      * @brief reset reset the guess element
-     * @param algorithm_m the new algorithm
-     * @param possibles_m the new possibles number
+     * @param colors the new colors
+     * @param pegs the  new pegs
+     * @param algorithm the new algorithm
+     * @param possibles the new possibles number
      */
-    void reset(const int &colors, const int &pegs, const Algorithm &alg, const int &possibles);
+    void reset(const int& colors, const int& pegs, const Algorithm& algorithm, const int& possibles);
+    /**
+     * @brief setWeight sets the weight
+     * @param weight the new weight
+     */
+    void setWeight(const qreal& weight);
 private:
     unsigned char mGuess[MAX_SLOT_NUMBER]; /**< TODO */
     unsigned char mCode[MAX_SLOT_NUMBER]; /**< TODO */
@@ -95,7 +102,6 @@ private:
     qreal mWeight; /**< TODO */
 
     friend class Game;
-    friend class Solver;
 };
 
 #endif // GUESS_H

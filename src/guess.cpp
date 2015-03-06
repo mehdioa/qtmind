@@ -23,17 +23,17 @@
 
 Guess::Guess()
 {
-    reset(6, 4, Algorithm::MostParts, 1296);
+    reset(6, 4, Algorithm::MOST_PARTS, 1296);
 }
 
-void Guess::update(const int &b, const int &w, const int &p)
+void Guess::update(const int& b, const int& w, const int& p)
 {
     mBlacks = b;
     mWhites = w;
     mPossibles = p;
 }
 
-void Guess::reset(const int &colors, const int &pegs, const Algorithm &alg, const int &possibles)
+void Guess::reset(const int& colors, const int& pegs, const Algorithm& algorithm, const int& possibles)
 {
     mColors = colors;
     mPegs = pegs;
@@ -41,20 +41,25 @@ void Guess::reset(const int &colors, const int &pegs, const Algorithm &alg, cons
     std::fill(mCode, mCode + MAX_SLOT_NUMBER, 0);
     mBlacks = 0;
     mWhites = 0;
-    mAlgorithm = alg;
+    mAlgorithm = algorithm;
     mPossibles = possibles;
     mWeight = 0;
 }
 
-void Guess::setGuess(unsigned char *_guess)
+void Guess::setWeight(const qreal &weight)
 {
-	for(int i = 0; i < MAX_SLOT_NUMBER; i++)
-        mGuess[i] = _guess[i];
+    mWeight = weight;
+}
+
+void Guess::setGuess(unsigned char* guess)
+{
+    for(int i = 0; i < MAX_SLOT_NUMBER; i++)
+        mGuess[i] = guess[i];
     COMPARE(mCode, mGuess, mColors, mPegs, mBlacks, mWhites);
 }
 
-void Guess::setCode(unsigned char *_code)
+void Guess::setCode(unsigned char* code)
 {
-	for(int i = 0; i < MAX_SLOT_NUMBER; i++)
-        mCode[i] = _code[i];
+    for(int i = 0; i < MAX_SLOT_NUMBER; i++)
+        mCode[i] = code[i];
 }

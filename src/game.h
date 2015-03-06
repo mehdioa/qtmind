@@ -44,40 +44,46 @@ class Rules;
  */
 class Game: public QGraphicsView
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	/**
-	 * @brief Game create a game with board
-	 * @param parent the parent of the game
-	 */
+    /**
+    * @brief Game create a game with board
+    * @param parent the parent of the game
+    */
     explicit Game();
-	~Game();
+    ~Game();
 
-	/**
-	 * @brief play start playing
-	 */
-	void play();
+    /**
+     * @brief play starts playing
+     */
+    void play();
 
-	/**
-	 * @brief stop stop playing
-	 */
-	void stop();
+    /**
+     * @brief stop stops playing
+     */
+    void stop();
 
-	/**
-	 * @brief retranslateTexts retranslate the game
-	 */
-	void retranslateTexts();
+    /**
+    * @brief retranslateTexts retranslate the game
+    */
+    void retranslateTexts();
 
-	/**
-	 * @brief isRunning is the game running?
-	 * @return true if the game is running, false otherwise
-	 */
-	bool isRunning();
-
-    void setRules(Rules *rules);
-
-    void setTools(Tools *tools);
+    /**
+    * @brief isRunning is the game running?
+    * @return true if the game is running, false otherwise
+    */
+    bool isRunning();
+    /**
+     * @brief setRules Sets the rules of this game instance
+     * @param rules the rules to be set
+     */
+    void setRules(Rules* rules);
+    /**
+     * @brief setTools Sets the tools of this game
+     * @param tools the tools to be set
+     */
+    void setTools(Tools* tools);
 
 public slots:
     /**
@@ -95,13 +101,13 @@ protected:
      * @brief drawBackground
      * @param painter
      * @param rect
-	 */
-	void drawBackground(QPainter *painter, const QRectF &rect);
-	/**
-	 * @brief resizeEvent
-	 * @param event
-	 */
-	void resizeEvent(QResizeEvent *event);
+         */
+    void drawBackground(QPainter* painter, const QRectF& rect);
+    /**
+     * @brief resizeEvent
+     * @param event
+     */
+    void resizeEvent(QResizeEvent* event);
 
 signals:
     /**
@@ -125,74 +131,74 @@ signals:
      * @param fontName the font name
      * @param fontSize the font size
      */
-    void fontChangedSignal(const QString &fontName, const int &fontSize);
+    void fontChangedSignal(const QString& fontName, const int& fontSize);
 
 protected slots:
-	void onPegMouseReleased(Peg *);
-	void onPegMouseDoubleClicked(Peg *);
-	void onOkButtonPressed();
-	void onDoneButtonPressed();
-	void onRevealOnePeg();
-	void onResigned();
-	void onGuessReady();
+    void onPegMouseReleased(Peg*);
+    void onPegMouseDoubleClicked(Peg*);
+    void onOkButtonPressed();
+    void onDoneButtonPressed();
+    void onRevealOnePeg();
+    void onResigned();
+    void onGuessReady();
 
 private:
 
-	enum class Player {
-		CodeMaker,
-		CodeBreaker,
-		None
-	};
+    enum class Player {
+        CodeMaker,
+        CodeBreaker,
+        None
+    };
 
-	enum class State {
-		None,
-		Running,
-		Win,
-		Lose,
-		Resign,
-		Thinking,
-		WaittingFirstRowFill,
-		WaittingCodeRowFill,
-		WaittingHiddenCodeFill,
-		WaittingPinboxPress,
-		WaittingOkButtonPress,
-		WaittingDoneButtonPress
-	};
+    enum class State {
+        None,
+        Running,
+        Win,
+        Lose,
+        Resign,
+        Thinking,
+        WaittingFirstRowFill,
+        WaittingCodeRowFill,
+        WaittingHiddenCodeFill,
+        WaittingPinboxPress,
+        WaittingOkButtonPress,
+        WaittingDoneButtonPress
+    };
 
-	void playMVH();
-	void playHVM();
-	void createBoxes();
-	void createPegForBox(PegBox *_box, int _color);
-	PegBox *createPegBox(const QPoint &_position);
-	Peg *createPeg(const QPointF &_position, const int &_color);
-	Peg *createPeg(PegBox *_box, const int &_color);
-	void codeRowFilled(const bool &_filled);
-	void showInformation();
-	void showMessage();
-	void initializeScene();
-	void freezeScene();
-	void setNextRowInAction();
-	void getNextGuess();
+    void playMVH();
+    void playHVM();
+    void createBoxes();
+    void createPegForBox(PegBox* box, int color);
+    PegBox* createPegBox(const QPoint& position);
+    Peg* createPeg(const QPointF& position, const int& color);
+    Peg* createPeg(PegBox* box, const int& color);
+    void codeRowFilled(const bool& filled);
+    void showInformation();
+    void showMessage();
+    void initializeScene();
+    void freezeScene();
+    void setNextRowInAction();
+    void getNextGuess();
     Player winner() const;
 
 private:
 
-    QList<PinBox *> mPinBoxes;		/**< black-white pins */
-    QList<PegBox *> mPegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
-    QList<PegBox *> mCodeBoxes;	    /**< middle boxes that is filled by a player*/
-    QList<PegBox *> mCurrentBoxes;	/**< the active row of codeboxes */
-    QList<PegBox *> mMasterBoxes;	/**< the mastercode boxes */
+    QList<PinBox*> mPinBoxes;		/**< black-white pins */
+    QList<PegBox*> mPegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
+    QList<PegBox*> mCodeBoxes;	    /**< middle boxes that is filled by a player*/
+    QList<PegBox*> mCurrentBoxes;	/**< the active row of codeboxes */
+    QList<PegBox*> mMasterBoxes;	/**< the mastercode boxes */
 
     Game::State mState;              /**< TODO */
-    Solver *mSolver;                 /**< TODO */
-    Button *mOkButton;               /**< TODO */
-    Button *mDoneButton;             /**< TODO */
-    Message *mMessage;               /**< TODO */
-    Message *mInformation;			/**< TODO */
+    Solver* mSolver;                 /**< TODO */
+    Button* mOkButton;               /**< TODO */
+    Button* mDoneButton;             /**< TODO */
+    Message* mMessage;               /**< TODO */
+    Message* mInformation;			/**< TODO */
     int mMovesPlayed;                /**< TODO */
     Guess mGuess;
-    Rules *mRules;
-    Tools *mTools;
+    Rules* mRules;
+    Tools* mTools;
 };
 
 #endif // GAME_H

@@ -20,67 +20,58 @@
 #include <QSettings>
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
 #include <QtMultimedia/QSoundEffect>
+#else
+#include <QUrl>
+struct QSoundEffect{
+    void play(){}
+    void setSource(const QUrl &){}
+    void setVolume(const qreal &) {}
+    void deleteLater() {qDebug("QSouldEffect Cleared");}
+};
 #endif
 
-Sounds::Sounds(QObject *parent): QObject(parent)
+Sounds::Sounds(QObject* parent): QObject(parent)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-    mPegDrop = new QSoundEffect;
-    mPegDropRefuse = new QSoundEffect;
-    mButtonPress = new QSoundEffect;
-    mPegDrop->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
-    mPegDropRefuse->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
-    mButtonPress->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
-#endif
+    mPegDrop =  QSharedPointer<QSoundEffect>(new QSoundEffect, &QSoundEffect::deleteLater);
+    mPegDropRefuse =  QSharedPointer<QSoundEffect>(new QSoundEffect, &QSoundEffect::deleteLater);
+    mButtonPress =  QSharedPointer<QSoundEffect>(new QSoundEffect, &QSoundEffect::deleteLater);
+    mPegDrop.data()->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegdrop.wav"));
+    mPegDropRefuse.data()->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pegrefuse.wav"));
+    mButtonPress.data()->setSource(QUrl::fromLocalFile("://sounds/resources/sounds/pin.wav"));
     setVolume(QSettings().value("Volume", 3).toInt());
 }
 
 Sounds::~Sounds()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-    if (mPegDrop)
-        delete mPegDrop;
-    if (mPegDropRefuse)
-        delete mPegDropRefuse;
-    if (mButtonPress)
-        delete mButtonPress;
-#endif
     QSettings().setValue("Volume", (int)mVolume);
 }
 
-void Sounds::setVolume(const int &vol)
+void Sounds::setVolume(const int& vol)
 {
     mVolume = static_cast<Volume>(vol);
-
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
     qreal real_volume = static_cast<qreal>(mVolume)/3;
-
-    mPegDrop->setVolume(real_volume);
-    mPegDropRefuse->setVolume(real_volume);
-    mButtonPress->setVolume(real_volume);
-#endif
+    mPegDrop.data()->setVolume(real_volume);
+    mPegDropRefuse.data()->setVolume(real_volume);
+    mButtonPress.data()->setVolume(real_volume);
 }
 
 Volume Sounds::volume() const
 {
-    return mVolume;
+	return mVolume;
 }
 
 void Sounds::onPegDroped()
 {
-    if (mPegDrop)
-        mPegDrop->play();
+    mPegDrop.data()->play();
 }
 
 void Sounds::onPegDropRefused()
 {
-    if (mPegDropRefuse)
-        mPegDropRefuse->play();
+    mPegDropRefuse.data()->play();
 }
 
 void Sounds::onButtonPressed()
 {
-    if (mButtonPress)
-        mButtonPress->play();
+    mButtonPress.data()->play();
 }
 

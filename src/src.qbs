@@ -3,17 +3,21 @@ import qbs
 Product {
 	type: "application"
 	name: qbs.targetOS.contains("osx") ? "Qt Mind" : "qtmind"
-	version: "0.7.6"
-	files:["*.cpp", "*.h", "*.ui", "../resource.qrc"]
+    version: "0.7.6"
+	files:[
+        "*.cpp",
+        "*.h",
+        "*.ui",
+        "../*.qrc",
+    ]
 
 	cpp.cxxFlags:{
 			var flags = base
-			if(cpp.compilerName.contains("g++"))
+            if(cpp.compilerName.contains("g++") || cpp.compilerName.contains("gcc"))
 				flags = flags.concat(["-std=gnu++11"])
 			return flags
 		}
-//	cpp.cxxFlags: ["-std=c++0x"]
-	cpp.linkerFlags: {
+    cpp.linkerFlags: {
 		if (qbs.buildVariant == "release" && (qbs.toolchain.contains("gcc") || qbs.toolchain.contains("mingw")))
 			return ["-Wl,-s"]
 	}
@@ -33,7 +37,7 @@ Product {
 		condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
 		qbs.install: true
 		qbs.installDir: "share/qtmind/translations"
-		files: ["../translations/*.qm"]
+        files: ["../translations/*.ts"]
 	}
 
 	Group {
@@ -49,6 +53,5 @@ Product {
 		qbs.installDir: "share/share/pixmaps"
 		files: ["../resources/icons/hicolor/128x128/qtmind.png"]
 	}
-
 }
 

@@ -21,72 +21,72 @@
 #include <QPen>
 #include <QCursor>
 
-Pin::Pin(QGraphicsItem *parent) :
-	QGraphicsEllipseItem(0, 0, 13, 13, parent),
-	mColor(Pin::Color::None),
-	mEnabled(false)
+Pin::Pin(QGraphicsItem* parent) :
+    QGraphicsEllipseItem(0, 0, 13, 13, parent),
+    mColor(Pin::Color::NONE),
+    mEnabled(false)
 {
-	QLinearGradient lgrad(0, 0, 0, 13);
-	lgrad.setColorAt(0.0, QColor(50, 50, 50));
-	lgrad.setColorAt(1.0, QColor(220, 220, 220));
-	setPen(QPen(QBrush(lgrad), 1));
+    QLinearGradient lgrad(0, 0, 0, 13);
+    lgrad.setColorAt(0.0, QColor(50, 50, 50));
+    lgrad.setColorAt(1.0, QColor(220, 220, 220));
+    setPen(QPen(QBrush(lgrad), 1));
 
-	setAcceptedMouseButtons(Qt::NoButton);
-	setCursor(Qt::ArrowCursor);
+    setAcceptedMouseButtons(Qt::NoButton);
+    setCursor(Qt::ArrowCursor);
 }
 
-void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void Pin::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-	QGraphicsEllipseItem::mousePressEvent(event);
-	if (mEnabled)
-		setColor(nextPinColor());
+    QGraphicsEllipseItem::mousePressEvent(event);
+    if (mEnabled)
+        setColor(nextPinColor());
 }
 
-void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void Pin::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 #if QT_VERSION < 0x050000
-	QGraphicsEllipseItem::mouseDoubleClickEvent(event);
+    QGraphicsEllipseItem::mouseDoubleClickEvent(event);
 #else
-	Q_UNUSED(event);
+    Q_UNUSED(event);
 #endif
 }
 
 Pin::Color Pin::nextPinColor() const
 {
-	switch (mColor) {
-	case Pin::Color::Black:
-		return Pin::Color::None;
-	case Pin::Color::White:
-		return Pin::Color::Black;
-	default:
-		return Pin::Color::White;
-	}
+    switch (mColor) {
+    case Pin::Color::BLACK:
+        return Pin::Color::NONE;
+    case Pin::Color::WHITE:
+        return Pin::Color::BLACK;
+    default:
+        return Pin::Color::WHITE;
+    }
 }
 
-void Pin::setColor(const Pin::Color &_color)
+void Pin::setColor(const Pin::Color& _color)
 {
-	mColor = _color;
-	switch (mColor) {
-	case Pin::Color::White:
-		setBrush(Qt::white);
-		break;
-	case Pin::Color::Black:
-		setBrush(Qt::black);
-		break;
-	default:
-		setBrush(Qt::NoBrush);
-		break;
-	}
+    mColor = _color;
+    switch (mColor) {
+    case Pin::Color::WHITE:
+        setBrush(Qt::white);
+        break;
+    case Pin::Color::BLACK:
+        setBrush(Qt::black);
+        break;
+    default:
+        setBrush(Qt::NoBrush);
+        break;
+    }
 }
 
-void Pin::setActivity(const bool &b)
+void Pin::setActivity(const bool& b)
 {
-	mEnabled = b;
-	if (mEnabled) {
-		setAcceptedMouseButtons(Qt::LeftButton);
-		setCursor(Qt::PointingHandCursor);
-	} else {
-		setAcceptedMouseButtons(Qt::NoButton);
-		setCursor(Qt::ArrowCursor);
-	}
+    mEnabled = b;
+    if (mEnabled) {
+        setAcceptedMouseButtons(Qt::LeftButton);
+        setCursor(Qt::PointingHandCursor);
+    } else {
+        setAcceptedMouseButtons(Qt::NoButton);
+        setCursor(Qt::ArrowCursor);
+    }
 }

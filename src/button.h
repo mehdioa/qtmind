@@ -31,57 +31,39 @@ class QGraphicsDropShadowEffect;
  */
 class Button : public QGraphicsObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
 
-	/**
-	 * @brief Button creates a button
-	 * @param board_font font of the button
-	 * @param buttonWidth width of the button
-	 * @param str label of the button
-	 */
-    explicit Button(const QString &fontName, const int &fontSize, const int &buttonWidth = 152, const QString &str = "", QGraphicsItem *parent = 0);
+    /**
+    * @brief Button creates a button
+    * @param board_font font of the button
+    * @param buttonWidth width of the button
+    * @param str label of the button
+    */
+    explicit Button(const QString& fontName, const int& fontSize, const int& buttonWidth = 152, const QString& str = "", QGraphicsItem *parent = 0);
 
-	/**
-	 * @brief setLabel set the label of the button
-	 * @param label_s the label
-	 */
+    /**
+    * @brief setLabel set the label of the button
+    * @param label_s the label
+    */
     void setLabel(QString _label){mLabel = _label;}
 
 protected:
-	/**
-	 * @brief mousePressEvent
-	 */
-	void mousePressEvent(QGraphicsSceneMouseEvent *);
-	/**
-	 * @brief mouseReleaseEvent
-	 * @param event
-	 */
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-	/**
-	 * @brief paint
-	 * @param painter
-	 */
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem*,
-			   QWidget*);
-	/**
-	 * @brief boundingRect
-	 * @return
-	 */
-	QRectF boundingRect() const;
+    void mousePressEvent(QGraphicsSceneMouseEvent*);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem*,
+               QWidget*);
+    QRectF boundingRect() const;
 
 signals:
-	/**
-	 * @brief buttonPressed
-	 */
-	void buttonPressed();
+    void buttonPressed();
 
 private:
     QString mLabel; /**< TODO */
     QFont mFont; /**< TODO */
     int mWidth; /**< TODO */
-    QGraphicsDropShadowEffect *mPressedEffect; /**< TODO */
+    QGraphicsDropShadowEffect* mPressedEffect; /**< TODO */
 };
 
 #endif // BUTTON_H
