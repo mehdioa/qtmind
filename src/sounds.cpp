@@ -22,11 +22,11 @@
 #include <QtMultimedia/QSoundEffect>
 #else
 #include <QUrl>
-struct QSoundEffect{
+struct QSoundEffect {
     void play(){}
     void setSource(const QUrl &){}
     void setVolume(const qreal &) {}
-    void deleteLater() {qDebug("QSouldEffect Cleared");}
+	void deleteLater() {qDebug("QSoundEffect Cleared");}
 };
 #endif
 
