@@ -35,7 +35,7 @@ Tools::~Tools()
     QSettings settings;
     settings.setValue("FontName", mFontName);
     settings.setValue("FontSize", mFontSize);
-    settings.setValue("AutoPutPins",	mAutoPutPins);
+    settings.setValue("AutoPutPins",    mAutoPutPins);
     settings.setValue("AutoCloseRows", mAutoCloseRows);
     QSettings().setValue("Locale/Language", mLocale.name());
 }

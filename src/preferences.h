@@ -38,9 +38,9 @@ class Preferences : public QDialog
 
 public:
     /**
-	* @brief Preferences
-	* @param parent
-	*/
+    * @brief Preferences
+    * @param parent
+    */
     explicit Preferences(Tools* tools, QWidget* parent = 0);
     ~Preferences();
 

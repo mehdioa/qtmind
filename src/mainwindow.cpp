@@ -504,7 +504,7 @@ Mode MainWindow::getMode()
 {
     if (ui->actionMode_MVH->isChecked())
         return Mode::MVH;
-    else	//if (ui->actionMode_HVM->isChecked())
+    else    //if (ui->actionMode_HVM->isChecked())
         return Mode::HVM;
 }
 

@@ -39,11 +39,11 @@ public:
     * @brief The State enum represent different states of the peg
     */
     enum class State {
-        INITIAL,	//	Right source pegs
+        INITIAL,    //    Right source pegs
         VISIBLE,
         INVISIBLE,
-        UNDERNEATH,	//	Pegs under Initial right pegs
-        PLAIN		//	Just circle is visible
+        UNDERNEATH,    //    Pegs under Initial right pegs
+        PLAIN        //    Just circle is visible
     };
     explicit Peg(const QPointF& _position, const int& _color,
                  QGraphicsItem* parent = 0);

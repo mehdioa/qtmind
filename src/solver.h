@@ -25,27 +25,27 @@
 #include "appinfo.h"
 class Guess;
 
-/**	@brief The class Solver is the solving engine of the mastermind game. It contains all the solving
- *	algorithms and auxiliary functions that provide efficient code guess and handling
- *	response and so on. The response is stored this way:
- *	example: p := peg number = 4
- *	(black, white)
+/**    @brief The class Solver is the solving engine of the mastermind game. It contains all the solving
+ *    algorithms and auxiliary functions that provide efficient code guess and handling
+ *    response and so on. The response is stored this way:
+ *    example: p := peg number = 4
+ *    (black, white)
  *
- *	(0, 4)
+ *    (0, 4)
  *
- *	(0, 3)	(1, 3)
+ *    (0, 3)    (1, 3)
  *
- *	(0, 2)	(1, 2)	(2, 2)
+ *    (0, 2)    (1, 2)    (2, 2)
  *
- *	(0, 1)	(1, 1)	(2, 1)	(3, 1)
+ *    (0, 1)    (1, 1)    (2, 1)    (3, 1)
  *
- *	(0, 0)	(1, 0)	(2, 0)	(3, 0)	(4, 0)
+ *    (0, 0)    (1, 0)    (2, 0)    (3, 0)    (4, 0)
  *
- *	There are \f$ 1+2+...+(p+1) = (p+1)(p+2)/2 \f$ couples (including the impossible \f$ (3, 1)=(p-1,1)\f$). If
+ *    There are \f$ 1+2+...+(p+1) = (p+1)(p+2)/2 \f$ couples (including the impossible \f$ (3, 1)=(p-1,1)\f$). If
  *          \f[ X = \{(b,w): \,\,\, 0 \leq b,\, 0\leq w\,\, \wedge\,\,  b+w\leq p\} \f]
- *	The one-to-one function \f$ f: X \to [0...(p+1)(p+2)/2 - 1]\f$
- *	is defined
- *			\f[ f(b, w) = (b+w)(b+w+1)/2 + b \f]
+ *    The one-to-one function \f$ f: X \to [0...(p+1)(p+2)/2 - 1]\f$
+ *    is defined
+ *            \f[ f(b, w) = (b+w)(b+w+1)/2 + b \f]
  *
  *
  */
@@ -181,7 +181,7 @@ private:
     Algorithm mAlgorithm; /**< the solving algorithm */
     int mMaxResponse; /**< maximum number of responses */
     volatile bool mInterupt; /**< the interupt flag */
-    QList<int> mPossibles;   /**<	list of all possibles */
+    QList<int> mPossibles;   /**<    list of all possibles */
     Guess* mGuess; /**< the guess element */
 };
 

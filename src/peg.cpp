@@ -136,7 +136,7 @@ void Peg::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         setZValue(2);
         setCursor(Qt::OpenHandCursor);
 
-        //	dropped out of its own box,
+        //    dropped out of its own box,
         if (!sceneBoundingRect().contains(mPosition)) {
             if (mState != State::INITIAL)
                 setState(State::INVISIBLE);

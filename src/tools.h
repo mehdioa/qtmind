@@ -39,7 +39,7 @@ private:
     QLocale mLocale;
 
     friend class Game;
-	friend class MainWindow;
+    friend class MainWindow;
     friend class Preferences;
 };
 

@@ -183,18 +183,18 @@ private:
 
 private:
 
-    QList<PinBox*> mPinBoxes;		/**< black-white pins */
-    QList<PegBox*> mPegBoxes;		/**< right boxes that contains color-pegs to put on codeboxes*/
-    QList<PegBox*> mCodeBoxes;	    /**< middle boxes that is filled by a player*/
-    QList<PegBox*> mCurrentBoxes;	/**< the active row of codeboxes */
-    QList<PegBox*> mMasterBoxes;	/**< the mastercode boxes */
+    QList<PinBox*> mPinBoxes;        /**< black-white pins */
+    QList<PegBox*> mPegBoxes;        /**< right boxes that contains color-pegs to put on codeboxes*/
+    QList<PegBox*> mCodeBoxes;        /**< middle boxes that is filled by a player*/
+    QList<PegBox*> mCurrentBoxes;    /**< the active row of codeboxes */
+    QList<PegBox*> mMasterBoxes;    /**< the mastercode boxes */
 
     Game::State mState;              /**< TODO */
     Solver* mSolver;                 /**< TODO */
     Button* mOkButton;               /**< TODO */
     Button* mDoneButton;             /**< TODO */
     Message* mMessage;               /**< TODO */
-    Message* mInformation;			/**< TODO */
+    Message* mInformation;            /**< TODO */
     int mMovesPlayed;                /**< TODO */
     Guess mGuess;
     Rules* mRules;

@@ -33,7 +33,7 @@ public:
     ~Sounds();
 
     void setVolume(const int& vol);
-	Volume volume() const;
+    Volume volume() const;
 
 public slots:
     void onPegDroped();

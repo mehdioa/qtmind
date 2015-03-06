@@ -26,7 +26,7 @@ struct QSoundEffect {
     void play(){}
     void setSource(const QUrl &){}
     void setVolume(const qreal &) {}
-	void deleteLater() {qDebug("QSoundEffect Cleared");}
+    void deleteLater() {qDebug("QSoundEffect Cleared");}
 };
 #endif
 
@@ -57,7 +57,7 @@ void Sounds::setVolume(const int& vol)
 
 Volume Sounds::volume() const
 {
-	return mVolume;
+    return mVolume;
 }
 
 void Sounds::onPegDroped()

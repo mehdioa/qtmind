@@ -91,7 +91,7 @@ void Game::codeRowFilled(const bool& filled)
 
             showMessage();
         }
-    } else {	//Rules::instance()->m_mode == Mode::MVH
+    } else {    //Rules::instance()->m_mode == Mode::MVH
         mDoneButton->setVisible(filled);
 
         if (filled)//the user is not done putting the master code
@@ -105,8 +105,8 @@ void Game::codeRowFilled(const bool& filled)
 
 void Game::createBoxes()
 {
-    /*	This function creates boxes and put them in QLists. They are
-         *	stored in QList from bottom to top and left to right.
+    /*    This function creates boxes and put them in QLists. They are
+         *    stored in QList from bottom to top and left to right.
          */
     mCodeBoxes.clear();
     mPinBoxes.clear();
@@ -132,7 +132,7 @@ void Game::createBoxes()
             mCodeBoxes.append(createPegBox(position+QPoint(j*40, 0)));
         }
 
-        position.setX(277);	//go to right corner for the peg boxes
+        position.setX(277);    //go to right corner for the peg boxes
 
         PegBox* pegbox = createPegBox(position);
         mPegBoxes.append(pegbox);
@@ -291,13 +291,13 @@ void Game::onPegMouseReleased(Peg* peg)
             createPegForBox(box, color);
             emit pegDropSignal();
             box->setPegState(Peg::State::VISIBLE);
-        }//	end if
+        }//    end if
 
         if (box->getPegState() != Peg::State::VISIBLE)
             newRowFillState = false;
-    } //	end foreach
+    } //    end foreach
 
-    //	if (master) code row state changed, go to codeRowFilled
+    //    if (master) code row state changed, go to codeRowFilled
     if (newRowFillState != rowFillState) {
         rowFillState = newRowFillState;
         codeRowFilled(rowFillState);
@@ -538,9 +538,9 @@ void Game::playMVH()
         mMasterBoxes.at(i)->setState(Box::State::CURRENT);
     }
 
-    /*	Nothing happening from here till the user fill the master code
-         *	row and press the done button. After the done button is pressed,
-         *	the onm_doneButtonPressed is continuing the game
+    /*    Nothing happening from here till the user fill the master code
+         *    row and press the done button. After the done button is pressed,
+         *    the onm_doneButtonPressed is continuing the game
          */
 }
 

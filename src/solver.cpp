@@ -283,7 +283,7 @@ qreal Solver::computeWeight(int* m_responses) const
             m_responses[i] = 0;
         }
         break;
-    default:	//	Most Parts
+    default:    //    Most Parts
         for(int i = 0; i < mMaxResponse-2; ++i) {
             if (m_responses[i] == 0)
                 ++answer;
