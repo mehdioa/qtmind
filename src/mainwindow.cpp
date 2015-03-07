@@ -47,7 +47,6 @@ MainWindow::MainWindow(QWidget* parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-//    mGame.setRules(&mRules);
     mGame.setTools(&mTools);
 
     loadTranslation();

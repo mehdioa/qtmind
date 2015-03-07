@@ -18,7 +18,6 @@
  ***********************************************************************/
 
 #include "game.h"
-#include "rules.h"
 #include "button.h"
 #include "pegbox.h"
 #include "pinbox.h"
@@ -91,7 +90,7 @@ void Game::codeRowFilled(const bool& filled)
 
             showMessage();
         }
-    } else {    //Rules::mode == Mode::MVH
+    } else {    //mode() == Mode::MVH
         mDoneButton->setVisible(filled);
 
         if (filled)//the user is not done putting the master code
@@ -496,7 +495,7 @@ void Game::play()
 
     if(mode() == Mode::MVH)
         playMVH();
-    else // (mRules->mode == Mode::HVM)
+    else // mode() == Mode::HVM)
         playHVM();
 }
 
@@ -611,11 +610,6 @@ void Game::showInformation()
                               arg(isSameColors() ? tr("Yes"): tr("No")));
     }
 }
-
-//void Game::setRules(Rules* rules)
-//{
-//    mRules = rules;
-//}
 
 void Game::setTools(Tools* tools)
 {

@@ -22,7 +22,6 @@
 
 #include <QMainWindow>
 #include "appinfo.h"
-#include "rules.h"
 #include "sounds.h"
 #include "game.h"
 #include "tools.h"
@@ -93,7 +92,6 @@ private:
     Game mGame; /**< TODO */
     Sounds mSounds;
     QString mAppPath; /**< TODO */
-//    Rules mRules;
     Tools mTools;
 };
 

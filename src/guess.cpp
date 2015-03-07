@@ -18,9 +18,7 @@
  ***********************************************************************/
 
 #include "guess.h"
-#include "rules.h"
 #include <QDebug>
-#include <QMutex>
 #include <QSettings>
 
 Guess::Guess()

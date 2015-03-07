@@ -22,8 +22,6 @@
 #include "appinfo.h"
 #include <QString>
 
-class Rules;
-
 /**
   * @brief compares two codes A and B, which are two int arrays
   * C and P are the number of colors and pegs
