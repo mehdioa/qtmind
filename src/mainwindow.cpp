@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget* parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    mGame.setRules(&mRules);
+//    mGame.setRules(&mRules);
     mGame.setTools(&mTools);
 
     loadTranslation();
@@ -61,8 +61,8 @@ MainWindow::MainWindow(QWidget* parent) :
     modeActions->setExclusive(true);
     ui->actionMode_MVH->setData((int) Mode::MVH);
     ui->actionMode_HVM->setData((int) Mode::HVM);
-    ui->actionMode_MVH->setChecked(mRules.mode() == Mode::MVH);
-    ui->actionMode_HVM->setChecked(mRules.mode() == Mode::HVM);
+    ui->actionMode_MVH->setChecked(mGame.mode() == Mode::MVH);
+    ui->actionMode_HVM->setChecked(mGame.mode() == Mode::HVM);
 
     auto volumeModeActions = new QActionGroup(this);
     volumeModeActions->addAction(ui->actionMute);
@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget* parent) :
     double_icon.addPixmap(QPixmap("://icons/resources/icons/same_color_1.png"), QIcon::Normal, QIcon::On);
     double_icon.addPixmap(QPixmap("://icons/resources/icons/same_color_0.png"), QIcon::Normal, QIcon::Off);
     ui->actionAllow_Same_Colors->setIcon(double_icon);
-    ui->actionAllow_Same_Colors->setChecked(mRules.sameColors());
+    ui->actionAllow_Same_Colors->setChecked(mGame.isSameColors());
 
     ui->menuIndicators->actions().at(0)->setChecked(Peg::getShowIndicators());
     ui->menuIndicators->actions().at(1)->setChecked(Peg::getShowColors());
@@ -127,12 +127,12 @@ MainWindow::MainWindow(QWidget* parent) :
         auto slot_act = new QAction(QString("%1 %2").arg(mTools.mLocale.toString(i), tr("Slot(s)", "", i)), this);
         slot_act->setCheckable(true);
         slot_act->setData(i);
-        slot_act->setChecked(mRules.pegs() == i);
+        slot_act->setChecked(mGame.pegs() == i);
         slotActions->addAction(slot_act);
         ui->menuSlots->addAction(slot_act);
     }
     slotActions->setExclusive(true);
-    mPegsComboBox->setCurrentIndex(mRules.pegs() - MIN_SLOT_NUMBER);
+    mPegsComboBox->setCurrentIndex(mGame.pegs() - MIN_SLOT_NUMBER);
     mPegsComboBox->setLocale(mTools.mLocale);
 
     mColorsComboBox = new QComboBox(this);
@@ -142,26 +142,26 @@ MainWindow::MainWindow(QWidget* parent) :
         auto color_act = new QAction(QString("%1 %2").arg(mTools.mLocale.toString(i), tr("Color(s)", "", i)), this);
         color_act->setCheckable(true);
         color_act->setData(i);
-        color_act->setChecked(mRules.colors() == i);
+        color_act->setChecked(mGame.colors() == i);
         colorActions->addAction(color_act);
         ui->menuColors->addAction(color_act);
     }
     colorActions->setExclusive(true);
-    mColorsComboBox->setCurrentIndex(mRules.colors() - MIN_COLOR_NUMBER);
+    mColorsComboBox->setCurrentIndex(mGame.colors() - MIN_COLOR_NUMBER);
 
     mAlgorithmsComboBox = new QComboBox(this);
     mAlgorithmsComboBox->setToolTip(tr("Choose the solving algorithm"));
     mAlgorithmsComboBox->addItem(tr("Most Parts"), 0);
     mAlgorithmsComboBox->addItem(tr("Worst Case"), 1);
     mAlgorithmsComboBox->addItem(tr("Expected Size"), 2);
-    mAlgorithmsComboBox->setCurrentIndex((int) mRules.algorithm());
+    mAlgorithmsComboBox->setCurrentIndex((int) mGame.algorithm());
 
     auto algorithmActions = new QActionGroup(this);
     for(int i = 0; i < 3; i++) {
         auto alg_act = new QAction((i == 0) ? tr("Most Parts") : ((i == 1) ? tr("Worst Case"): tr("Expected Size")), this);
         alg_act->setCheckable(true);
         alg_act->setData(i);
-        alg_act->setChecked(mRules.algorithm() == static_cast<Algorithm>(i));
+        alg_act->setChecked(mGame.algorithm() == static_cast<Algorithm>(i));
         algorithmActions->addAction(alg_act);
         ui->menuAlgorithm->addAction(alg_act);
     }
@@ -280,7 +280,7 @@ void MainWindow::retranslate()
     mColorsComboBox->setToolTip(tr("Choose the number of colors"));
 
     ui->actionAllow_Same_Colors->setText(tr("&Allow Same Color"));
-    if (mRules.sameColors())
+    if (mGame.isSameColors())
         ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
     else
         ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
@@ -321,10 +321,10 @@ void MainWindow::onNewGame()
     if (quitUnfinishedGame()) {
         mGame.stop();
         updateRules();
-        ui->actionResign->setEnabled(mRules.mode() == Mode::HVM);
-        ui->actionResign->setVisible(mRules.mode() == Mode::HVM);
-        ui->actionReveal_One_Peg->setEnabled(mRules.mode() == Mode::HVM);
-        ui->actionReveal_One_Peg->setVisible(mRules.mode() == Mode::HVM);
+        ui->actionResign->setEnabled(mGame.mode() == Mode::HVM);
+        ui->actionResign->setVisible(mGame.mode() == Mode::HVM);
+        ui->actionReveal_One_Peg->setEnabled(mGame.mode() == Mode::HVM);
+        ui->actionReveal_One_Peg->setVisible(mGame.mode() == Mode::HVM);
         mGame.play();
     }
 }
@@ -393,13 +393,13 @@ void MainWindow::onIndicatorChanged()
 void MainWindow::onModeChanged(QAction *selectedAction)
 {
     Q_UNUSED(selectedAction);
-    if (getMode() != mRules.mode())
+    if (getMode() != mGame.mode())
         onNewGame();
 }
 
 void MainWindow::onAlgorithmChanded()
 {
-    mRules.mAlgorithm = static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex());
+    mGame.setAlgorithm(static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex()));
 }
 
 void MainWindow::onVolumeChanged(QAction *volume_action)
@@ -481,20 +481,20 @@ void MainWindow::onShowContextMenu(const QPoint& position)
 
 void MainWindow::updateRules()
 {
-    mRules.mColors = mColorsComboBox->currentIndex() + MIN_COLOR_NUMBER;
-    mRules.mPegs = mPegsComboBox->currentIndex() + MIN_SLOT_NUMBER;
-    mRules.mAlgorithm = static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex());
-    mRules.mMode = getMode();
-    mRules.mSameColors = ui->actionAllow_Same_Colors->isChecked();
+    mGame.setColors(mColorsComboBox->currentIndex() + MIN_COLOR_NUMBER);
+    mGame.setPegs(mPegsComboBox->currentIndex() + MIN_SLOT_NUMBER);
+    mGame.setAlgorithm(static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex()));
+    mGame.setMode(getMode());
+    mGame.setSameColors(ui->actionAllow_Same_Colors->isChecked());
     // for safety, fallback to standard in out-range inputs
-    if (mRules.mPegs < MIN_SLOT_NUMBER || mRules.mPegs > MAX_SLOT_NUMBER ||
-            mRules.mColors < MIN_COLOR_NUMBER || mRules.mColors > MAX_COLOR_NUMBER) {
-        mRules.mPegs = 4;
-        mRules.mColors = 6;
+    if (mGame.pegs() < MIN_SLOT_NUMBER || mGame.pegs() > MAX_SLOT_NUMBER ||
+            mGame.colors() < MIN_COLOR_NUMBER || mGame.colors() > MAX_COLOR_NUMBER) {
+        mGame.setPegs(4);
+        mGame.setColors(6);
     }
 
-    ui->actionAllow_Same_Colors->setChecked(mRules.mSameColors);
-    if (mRules.mSameColors)
+    ui->actionAllow_Same_Colors->setChecked(mGame.isSameColors());
+    if (mGame.isSameColors())
         ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
     else
         ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));

@@ -22,6 +22,8 @@
 #include "appinfo.h"
 #include <QString>
 
+class Rules;
+
 /**
   * @brief compares two codes A and B, which are two int arrays
   * C and P are the number of colors and pegs
@@ -57,7 +59,7 @@ class Guess
 public:
 
     explicit Guess();
-    ~Guess(){}
+    ~Guess();
 
 public:
     /**
@@ -84,7 +86,7 @@ public:
      * @param algorithm the new algorithm
      * @param possibles the new possibles number
      */
-    void reset(const int& colors, const int& pegs, const Algorithm& algorithm, const int& possibles);
+    void reset(const int &pegs, const int &colors, const Algorithm &algorithm, const Mode &mode, const bool &sameColor, const int& possibles);
     /**
      * @brief setWeight sets the weight
      * @param weight the new weight
@@ -97,6 +99,8 @@ private:
     int mPegs;
     int mBlacks;
     int mWhites;
+    Mode mMode;
+    bool mSameColors;
     Algorithm mAlgorithm; /**< TODO */
     int mPossibles; /**< TODO */
     qreal mWeight; /**< TODO */

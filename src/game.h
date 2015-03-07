@@ -78,12 +78,24 @@ public:
      * @brief setRules Sets the rules of this game instance
      * @param rules the rules to be set
      */
-    void setRules(Rules* rules);
+//    void setRules(Rules* rules);
     /**
      * @brief setTools Sets the tools of this game
      * @param tools the tools to be set
      */
     void setTools(Tools* tools);
+
+    int colors() const;
+    int pegs() const;
+    bool isSameColors() const;
+    Algorithm algorithm() const;
+    Mode mode() const;
+
+    void setAlgorithm(const Algorithm& algorithm);
+    void setColors(const int& colors);
+    void setPegs(const int& pegs);
+    void setMode(const Mode& mode);
+    void setSameColors(const bool& sameColors);
 
 public slots:
     /**
@@ -197,7 +209,7 @@ private:
     Message* mInformation;            /**< TODO */
     int mMovesPlayed;                /**< TODO */
     Guess mGuess;
-    Rules* mRules;
+//    Rules* mRules;
     Tools* mTools;
 };
 

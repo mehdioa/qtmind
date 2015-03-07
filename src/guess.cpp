@@ -18,12 +18,29 @@
  ***********************************************************************/
 
 #include "guess.h"
+#include "rules.h"
 #include <QDebug>
 #include <QMutex>
+#include <QSettings>
 
 Guess::Guess()
 {
-    reset(6, 4, Algorithm::MOST_PARTS, 1296);
+    QSettings settings;
+    mPegs = settings.value("Pegs", 4).toInt();
+    mColors = settings.value("Colors", 6).toInt();
+    mSameColors = settings.value("SameColor", true).toBool();
+    mAlgorithm = (Algorithm) settings.value("Algorithm", 0).toInt();
+    mMode = (Mode) settings.value("Mode", 1).toInt();
+}
+
+Guess::~Guess()
+{
+    QSettings settings;
+    settings.setValue("Pegs", mPegs);
+    settings.setValue("Colors", mColors);
+    settings.setValue("SameColor", mSameColors);
+    settings.setValue("Algorithm", (int) mAlgorithm);
+    settings.setValue("Mode", (int) mMode);
 }
 
 void Guess::update(const int& b, const int& w, const int& p)
@@ -33,7 +50,7 @@ void Guess::update(const int& b, const int& w, const int& p)
     mPossibles = p;
 }
 
-void Guess::reset(const int& colors, const int& pegs, const Algorithm& algorithm, const int& possibles)
+void Guess::reset(const int &pegs, const int &colors, const Algorithm &algorithm, const Mode &mode, const bool &sameColor, const int& possibles)
 {
     mColors = colors;
     mPegs = pegs;
@@ -42,6 +59,8 @@ void Guess::reset(const int& colors, const int& pegs, const Algorithm& algorithm
     mBlacks = 0;
     mWhites = 0;
     mAlgorithm = algorithm;
+    mMode = mode;
+    mSameColors = sameColor;
     mPossibles = possibles;
     mWeight = 0;
 }

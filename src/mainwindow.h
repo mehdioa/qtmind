@@ -93,7 +93,7 @@ private:
     Game mGame; /**< TODO */
     Sounds mSounds;
     QString mAppPath; /**< TODO */
-    Rules mRules;
+//    Rules mRules;
     Tools mTools;
 };
 

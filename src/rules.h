@@ -29,7 +29,7 @@
 class Rules
 {
 
-public:
+private:
     Rules();
     ~Rules();
 
@@ -50,7 +50,7 @@ private:
     Algorithm mAlgorithm; /**< TODO */
     Mode mMode; /**< TODO */
 
-    friend class MainWindow;
+//    friend class MainWindow;
 };
 
 #endif // RULES_H
