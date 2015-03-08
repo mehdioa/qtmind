@@ -219,17 +219,17 @@ void Solver::makeGuess()
             }
         }
         permute(answer);
-        mGuess->setGuess(answer);
+        mGuess->setGuess(mPegs, mColors, answer);
         return;
     }
 
     if (mPossibles.size() == 1) {
-        mGuess->setGuess(mCodes.index[mPossibles.first()]);
+        mGuess->setGuess(mPegs, mColors, mCodes.index[mPossibles.first()]);
         return;
     }
 
     if(mPossibles.size() > 10000) {
-        mGuess->setGuess(mCodes.index[mPossibles.at(mPossibles.size() >> 1)]);
+        mGuess->setGuess(mPegs, mColors, mCodes.index[mPossibles.at(mPossibles.size() >> 1)]);
         return;
     }
 
@@ -263,7 +263,7 @@ void Solver::makeGuess()
 
     mGuess->setWeight(qFloor(min_code_weight));
 
-    mGuess->setGuess(mCodes.index[mSmallPossibles.index[answer_index]]);
+    mGuess->setGuess(mPegs, mColors, mCodes.index[mSmallPossibles.index[answer_index]]);
 }
 
 qreal Solver::computeWeight(int* m_responses) const

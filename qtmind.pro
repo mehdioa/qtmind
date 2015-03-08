@@ -53,7 +53,8 @@ HEADERS  += src/mainwindow.h \
 	src/guess.h \
 	src/box.h \
         src/sounds.h \
-    src/tools.h
+    src/tools.h \
+    src/ipegconnector.h
 
 FORMS	+= \
 	src/preferences.ui \

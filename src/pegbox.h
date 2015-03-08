@@ -23,11 +23,14 @@
 #include "box.h"
 #include "peg.h"
 
+//class Game;
+class IPegConnector;
+
 class PegBox : public Box
 {
 public:
 
-    explicit PegBox(const QPoint& _position, QGraphicsItem* parent = 0);
+    explicit PegBox(const QPoint& position, QGraphicsItem* parent = 0);
 
     /**
     * @brief hasPeg Does this box has a peg?
@@ -45,13 +48,13 @@ public:
     * @brief setPegState set the state of the peg of the box
     * @param peg_state the peg state
     */
-    void setPegState(const Peg::State& _peg_state);
+    void setPegState(const Peg::State& peg_state);
 
     /**
     * @brief setPegColor set the peg color
     * @param _color the color number
     */
-    void setPegColor(const int& _color);
+    void setPegColor(const int& color, IPegConnector* peg_connector);
 
     /**
     * @brief getPegColor get the color of the peg
@@ -63,7 +66,7 @@ public:
     * @brief setState set the state of the box
     * @param _state the box state
     */
-    void setState(const Box::State& _state);
+    void setState(const Box::State& state);
 
     /**
     * @brief isPegVisible is the peg visible?
@@ -76,6 +79,15 @@ public:
     * @return the state of the peg of the box
     */
     Peg::State getPegState() const;
+
+    Peg* peg() const;
+
+//    void createPeg(Game* game, const int& color);
+
+//    void createPeg(const QPointF& position, const int& color);
+
+//    void createPeg(const int& color);
+
 
 private:
     Peg* mPeg; /**< TODO */

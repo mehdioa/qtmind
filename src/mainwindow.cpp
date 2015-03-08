@@ -190,7 +190,7 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(ui->actionAllow_Same_Colors, SIGNAL(triggered()), this, SLOT(onNewGame()));
     connect(ui->actionAuto_Set_Pins, SIGNAL(triggered()), this, SLOT(onAutoPutPins()));
     connect(ui->actionAuto_Close_Rows, SIGNAL(triggered()), this, SLOT(onAutoCloseRows()));
-    connect(ui->actionFont, SIGNAL(triggered()), this, SLOT(onFont()));
+    connect(ui->actionFont, SIGNAL(triggered()), this, SLOT(onFontChanged()));
     connect(ui->actionQtMind_Home_Page, SIGNAL(triggered()), this, SLOT(onQtMindHomePage()));
     connect(ui->actionAbout_QtMind, SIGNAL(triggered()), this, SLOT(onAbout()));
     connect(ui->actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -317,15 +317,33 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::onNewGame()
 {
-    if (quitUnfinishedGame()) {
-        mGame.stop();
-        updateRules();
-        ui->actionResign->setEnabled(mGame.mode() == Mode::HVM);
-        ui->actionResign->setVisible(mGame.mode() == Mode::HVM);
-        ui->actionReveal_One_Peg->setEnabled(mGame.mode() == Mode::HVM);
-        ui->actionReveal_One_Peg->setVisible(mGame.mode() == Mode::HVM);
-        mGame.play();
+    if (!quitUnfinishedGame())
+        return;
+
+    mGame.stop();
+    mGame.setColors(mColorsComboBox->currentIndex() + MIN_COLOR_NUMBER);
+    mGame.setPegs(mPegsComboBox->currentIndex() + MIN_SLOT_NUMBER);
+    mGame.setAlgorithm(static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex()));
+    mGame.setMode(getMode());
+    mGame.setSameColors(ui->actionAllow_Same_Colors->isChecked() || mGame.pegs() > mGame.colors());
+
+    // for safety, fallback to standard in out-range inputs
+    if (mGame.pegs() < MIN_SLOT_NUMBER || mGame.pegs() > MAX_SLOT_NUMBER ||
+            mGame.colors() < MIN_COLOR_NUMBER || mGame.colors() > MAX_COLOR_NUMBER) {
+        mGame.setPegs(4);
+        mGame.setColors(6);
     }
+
+    ui->actionAllow_Same_Colors->setChecked(mGame.isSameColors());
+    if (mGame.isSameColors())
+        ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
+    else
+        ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
+    ui->actionResign->setEnabled(mGame.mode() == Mode::HVM);
+    ui->actionResign->setVisible(mGame.mode() == Mode::HVM);
+    ui->actionReveal_One_Peg->setEnabled(mGame.mode() == Mode::HVM);
+    ui->actionReveal_One_Peg->setVisible(mGame.mode() == Mode::HVM);
+    mGame.play();
 }
 
 bool MainWindow::quitUnfinishedGame()
@@ -341,7 +359,7 @@ bool MainWindow::quitUnfinishedGame()
     return (new_game_accept == QMessageBox::Yes);
 }
 
-void MainWindow::onFont()
+void MainWindow::onFontChanged()
 {
     auto preferencesWidget = new Preferences(&mTools, this);
     preferencesWidget->setModal(true);
@@ -459,6 +477,7 @@ void MainWindow::onLanguageChanged(QAction *language_act)
     QLocale newLocale(language_act->data().toString());
     newLocale.setNumberOptions(QLocale::OmitGroupSeparator);
     mTools.mLocale = newLocale;
+    ui->retranslateUi(this);
     loadTranslation();
     setLayoutDirection(newLocale.textDirection());
     retranslate();
@@ -476,27 +495,6 @@ void MainWindow::onShowContextMenu(const QPoint& position)
     contextMenu.addSeparator();
     contextMenu.addMenu(ui->menuMode);
     contextMenu.exec(mapToGlobal(position));
-}
-
-void MainWindow::updateRules()
-{
-    mGame.setColors(mColorsComboBox->currentIndex() + MIN_COLOR_NUMBER);
-    mGame.setPegs(mPegsComboBox->currentIndex() + MIN_SLOT_NUMBER);
-    mGame.setAlgorithm(static_cast<Algorithm>(mAlgorithmsComboBox->currentIndex()));
-    mGame.setMode(getMode());
-    mGame.setSameColors(ui->actionAllow_Same_Colors->isChecked());
-    // for safety, fallback to standard in out-range inputs
-    if (mGame.pegs() < MIN_SLOT_NUMBER || mGame.pegs() > MAX_SLOT_NUMBER ||
-            mGame.colors() < MIN_COLOR_NUMBER || mGame.colors() > MAX_COLOR_NUMBER) {
-        mGame.setPegs(4);
-        mGame.setColors(6);
-    }
-
-    ui->actionAllow_Same_Colors->setChecked(mGame.isSameColors());
-    if (mGame.isSameColors())
-        ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Allowed"));
-    else
-        ui->actionAllow_Same_Colors->setToolTip(tr("Same Color Not Allwed"));
 }
 
 Mode MainWindow::getMode()

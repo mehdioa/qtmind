@@ -57,7 +57,7 @@ protected slots:
     void onIndicatorChanged();
     void onModeChanged(QAction*);
     void onNewGame();
-    void onFont();
+    void onFontChanged();
     void onQtMindHomePage();
     void onAbout();
     void onShowContextMenu(const QPoint& position);
@@ -77,7 +77,6 @@ private:
     void loadTranslation();
     QString languageName(const QString& language);
     bool quitUnfinishedGame();
-    void updateRules();
     void retranslate();
     void setPegsNumber(const int& pegs_n);
     Mode getMode();

@@ -18,12 +18,13 @@
  ***********************************************************************/
 
 #include "pegbox.h"
+#include "ipegconnector.h"
 #include "QGraphicsEllipseItem"
 #include <QPen>
 #include <QLinearGradient>
 
-PegBox::PegBox(const QPoint& _position, QGraphicsItem* parent):
-    Box(_position, parent),
+PegBox::PegBox(const QPoint& position, QGraphicsItem* parent):
+    Box(position, parent),
     mPeg(0)
 {
 
@@ -49,9 +50,40 @@ Peg::State PegBox::getPegState() const
     return Peg::State::PLAIN;
 }
 
-void PegBox::setState(const Box::State& _state)
+Peg *PegBox::peg() const
 {
-    mState = _state;
+    return mPeg;
+}
+
+//void PegBox::createPeg(Game *game, const int &color)
+//{
+//    if (mPeg) {
+//        box->setPegColor(color);
+//    } else {
+//        Peg* peg = createPeg(sceneBoundingRect().center(), color);
+//        box->setPeg(peg);
+//        connect(peg, SIGNAL(mouseReleaseSignal(Peg*)), this, SLOT(onPegMouseReleased(Peg*)));
+//        connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
+//        connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
+//    }
+//}
+
+//void PegBox::createPeg(const QPointF &position, const int &color)
+//{
+//    auto peg = new Peg(position, color);
+//    scene()->addItem(peg);
+//    return peg;
+//}
+
+//void PegBox::createPeg(const int &color)
+//{
+//    createPeg(sceneBoundingRect().center(), color);
+
+//}
+
+void PegBox::setState(const Box::State& state)
+{
+    mState = state;
 
     if (mPeg) {
         switch (mState) {
@@ -69,18 +101,20 @@ void PegBox::setState(const Box::State& _state)
     update();
 }
 
-void PegBox::setPegColor(const int& _color)
+void PegBox::setPegColor(const int& color, IPegConnector *peg_connector)
 {
     if (mPeg)
-        mPeg->setColor(_color);
-    else
-        qDebug("setPegColor called with no peg setted.");
+        mPeg->setColor(color);
+    else {
+        mPeg = new Peg(sceneBoundingRect().center(), color);
+        peg_connector->connectPegToGame(mPeg);
+    }
 }
 
-void PegBox::setPegState(const Peg::State& _peg_state)
+void PegBox::setPegState(const Peg::State& peg_state)
 {
     if (mPeg)
-        mPeg->setState(_peg_state);
+        mPeg->setState(peg_state);
     else
         qDebug("setState called with no peg setted.");
 

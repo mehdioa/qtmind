@@ -24,21 +24,13 @@
 Guess::Guess()
 {
     QSettings settings;
-    mPegs = settings.value("Pegs", 4).toInt();
-    mColors = settings.value("Colors", 6).toInt();
-    mSameColors = settings.value("SameColor", true).toBool();
     mAlgorithm = (Algorithm) settings.value("Algorithm", 0).toInt();
-    mMode = (Mode) settings.value("Mode", 1).toInt();
 }
 
 Guess::~Guess()
 {
     QSettings settings;
-    settings.setValue("Pegs", mPegs);
-    settings.setValue("Colors", mColors);
-    settings.setValue("SameColor", mSameColors);
     settings.setValue("Algorithm", (int) mAlgorithm);
-    settings.setValue("Mode", (int) mMode);
 }
 
 void Guess::update(const int& b, const int& w, const int& p)
@@ -48,17 +40,15 @@ void Guess::update(const int& b, const int& w, const int& p)
     mPossibles = p;
 }
 
-void Guess::reset(const int &pegs, const int &colors, const Algorithm &algorithm, const Mode &mode, const bool &sameColor, const int& possibles)
+void Guess::reset(const Algorithm &algorithm, const int& possibles)
 {
-    mColors = colors;
-    mPegs = pegs;
+//    mColors = colors;
+//    mPegs = pegs;
     std::fill(mGuess, mGuess + MAX_SLOT_NUMBER, 0);
     std::fill(mCode, mCode + MAX_SLOT_NUMBER, 0);
     mBlacks = 0;
     mWhites = 0;
     mAlgorithm = algorithm;
-    mMode = mode;
-    mSameColors = sameColor;
     mPossibles = possibles;
     mWeight = 0;
 }
@@ -68,15 +58,15 @@ void Guess::setWeight(const qreal &weight)
     mWeight = weight;
 }
 
-void Guess::setGuess(unsigned char* guess)
+void Guess::setGuess(const int &pegs, const int &colors, unsigned char* guess)
 {
-    for(int i = 0; i < mPegs; i++)
+    for(int i = 0; i < pegs; i++)
         mGuess[i] = guess[i];
-    COMPARE(mCode, mGuess, mColors, mPegs, mBlacks, mWhites);
+    COMPARE(mCode, mGuess, colors, pegs, mBlacks, mWhites);
 }
 
-void Guess::setCode(unsigned char* code)
+void Guess::setCode(const int &pegs, unsigned char* code)
 {
-    for(int i = 0; i < mPegs; i++)
+    for(int i = 0; i < pegs; i++)
         mCode[i] = code[i];
 }

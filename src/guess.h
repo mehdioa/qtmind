@@ -64,12 +64,12 @@ public:
      * @brief setGuess set the guess
      * @param _guess the guesss
      */
-    void setGuess(unsigned char* guess);
+    void setGuess(const int& pegs, const int& colors, unsigned char* guess);
     /**
      * @brief setCode set the code
      * @param _code the code
      */
-    void setCode(unsigned char* code);
+    void setCode(const int& pegs, unsigned char* code);
     /**
      * @brief update sets mBlacks, mWhites, and mPossibles
      * @param b blacks
@@ -84,7 +84,7 @@ public:
      * @param algorithm the new algorithm
      * @param possibles the new possibles number
      */
-    void reset(const int &pegs, const int &colors, const Algorithm &algorithm, const Mode &mode, const bool &sameColor, const int& possibles);
+    void reset(const Algorithm &algorithm, const int& possibles);
     /**
      * @brief setWeight sets the weight
      * @param weight the new weight
@@ -93,12 +93,8 @@ public:
 private:
     unsigned char mGuess[MAX_SLOT_NUMBER]; /**< TODO */
     unsigned char mCode[MAX_SLOT_NUMBER]; /**< TODO */
-    int mColors;
-    int mPegs;
     int mBlacks;
     int mWhites;
-    Mode mMode;
-    bool mSameColors;
     Algorithm mAlgorithm; /**< TODO */
     int mPossibles; /**< TODO */
     qreal mWeight; /**< TODO */

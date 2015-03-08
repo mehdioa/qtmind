@@ -23,6 +23,7 @@
 #include <QGraphicsView>
 #include "appinfo.h"
 #include "guess.h"
+#include "ipegconnector.h"
 
 class Peg;
 class PinBox;
@@ -41,7 +42,7 @@ class Tools;
  * of the game and is the class that mainwindow interacts with.
  *
  */
-class Game: public QGraphicsView
+class Game: public QGraphicsView, public IPegConnector
 {
     Q_OBJECT
 
@@ -90,6 +91,7 @@ public:
     void setPegs(const int& pegs);
     void setMode(const Mode& mode);
     void setSameColors(const bool& sameColors);
+    void connectPegToGame(Peg* peg);
 
 public slots:
     /**
@@ -174,10 +176,7 @@ private:
     void playMVH();
     void playHVM();
     void createBoxes();
-    void createPegForBox(PegBox* box, int color);
     PegBox* createPegBox(const QPoint& position);
-    Peg* createPeg(const QPointF& position, const int& color);
-    Peg* createPeg(PegBox* box, const int& color);
     void codeRowFilled(const bool& filled);
     void showInformation();
     void showMessage();
@@ -203,6 +202,10 @@ private:
     Message* mInformation;            /**< TODO */
     int mMovesPlayed;                /**< TODO */
     Guess mGuess;
+    Mode mMode;
+    bool mSameColors;
+    int mPegs;
+    int mColors;
     Tools* mTools;
 };
 

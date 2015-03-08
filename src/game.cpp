@@ -42,6 +42,10 @@ Game::Game():
     Peg::setShowColors(settings.value("ShowColors", 1).toBool());
     Peg::setShowIndicators(settings.value("ShowIndicators", 0).toBool());
     Peg::setIndicator((Indicator) settings.value("Indicator", 65).toInt());
+    mMode = (Mode) settings.value("Mode", 1).toInt();
+    mSameColors = settings.value("SameColor", true).toBool();
+    mPegs = settings.value("Pegs", 4).toInt();
+    mColors = settings.value("Colors", 6).toInt();
 
     auto scene = new QGraphicsScene(this);
     setScene(scene);
@@ -60,6 +64,10 @@ Game::~Game()
     settings.setValue("ShowColors", (int) Peg::getShowColors());
     settings.setValue("ShowIndicators", (int) Peg::getShowIndicators());
     settings.setValue("Indicator", (int) Peg::getIndicator());
+    settings.setValue("Mode", (int) mMode);
+    settings.setValue("SameColor", mSameColors);
+    settings.setValue("Pegs", mPegs);
+    settings.setValue("Colors", mColors);
 
     if (mSolver) {
         mSolver->interupt();
@@ -133,34 +141,21 @@ void Game::createBoxes()
         PegBox* pegbox = createPegBox(position);
         mPegBoxes.append(pegbox);
         if (i < colors()) {
-            Peg* peg;
-            peg = createPeg(pegbox, i);
+            Peg* peg = new Peg(pegbox->sceneBoundingRect().center(), i);
+            scene()->addItem(peg);
             peg->setState(Peg::State::UNDERNEATH);
             connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
-            createPegForBox(pegbox, i);
+            pegbox->setPegColor(i, this);
             pegbox->setPegState(Peg::State::INITIAL);
         } else {
-            createPeg(pegbox, i)->setState(Peg::State::PLAIN);
+            pegbox->setPegColor(i, this);
+            pegbox->setPegState(Peg::State::PLAIN);
         }
     }
 
     // the last code boxes are for the master code
     for (int i = 0; i < pegs(); ++i) {
         mMasterBoxes.append(createPegBox(QPoint(160-20*pegs()+i*40, 70)));
-    }
-}
-
-void Game::createPegForBox(PegBox* box, int color)
-{
-    QPointF pos = box->sceneBoundingRect().center();
-    if (box->hasPeg()) {
-        box->setPegColor(color);
-    } else {
-        Peg* peg = createPeg(pos, color);
-        box->setPeg(peg);
-        connect(peg, SIGNAL(mouseReleaseSignal(Peg*)), this, SLOT(onPegMouseReleased(Peg*)));
-        connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
-        connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
     }
 }
 
@@ -171,17 +166,17 @@ PegBox* Game::createPegBox(const QPoint& position)
     return pegbox;
 }
 
-Peg* Game::createPeg(const QPointF& position, const int& color)
-{
-    auto peg = new Peg(position, color);
-    scene()->addItem(peg);
-    return peg;
-}
+//Peg* Game::createPeg(PegBox *box, const int& color)
+//{
+//    auto peg = new Peg(box->sceneBoundingRect().center(), color);
+//    scene()->addItem(peg);
+//    return peg;
+//}
 
-Peg* Game::createPeg(PegBox* box, const int& color)
-{
-    return createPeg(box->sceneBoundingRect().center(), color);
-}
+//Peg* Game::createPeg(PegBox* box, const int& color)
+//{
+//    return createPeg(box->sceneBoundingRect().center(), color);
+//}
 
 void Game::freezeScene()
 {
@@ -216,6 +211,14 @@ Game::Player Game::winner() const
         return Player::CodeMaker;
     else
         return Player::None;
+}
+
+void Game::connectPegToGame(Peg *peg)
+{
+    scene()->addItem(peg);
+    connect(peg, SIGNAL(mouseReleaseSignal(Peg*)), this, SLOT(onPegMouseReleased(Peg*)));
+    connect(peg, SIGNAL(mouseDoubleClickSignal(Peg*)), this, SLOT(onPegMouseDoubleClicked(Peg*)));
+    connect(this, SIGNAL(resetIndicatorsSignal()), peg, SLOT(onResetIndicators()));
 }
 
 void Game::initializeScene()
@@ -283,7 +286,7 @@ void Game::onPegMouseReleased(Peg* peg)
     foreach(PegBox* box, mCurrentBoxes) {
         if (box->sceneBoundingRect().contains(position) && dropOnlyOnce) {
             dropOnlyOnce = false;
-            createPegForBox(box, color);
+            box->setPegColor(color, this);
             emit pegDropSignal();
             box->setPegState(Peg::State::VISIBLE);
         }//    end if
@@ -417,7 +420,7 @@ void Game::onOkButtonPressed()
         unsigned char new_guess[MAX_SLOT_NUMBER];
         for(int i = 0; i < pegs(); ++i)
             new_guess[i] = mCurrentBoxes.at(i)->getPegColor();
-        mGuess.setGuess(new_guess);
+        mGuess.setGuess(mPegs, mColors, new_guess);
 
         mPinBoxes.at(mMovesPlayed)->setPins(mGuess.mBlacks, mGuess.mWhites);
         mPinBoxes.at(mMovesPlayed)->setState(Box::State::PAST);
@@ -460,7 +463,7 @@ void Game::onDoneButtonPressed()
     unsigned char new_guess[MAX_SLOT_NUMBER];
     for(int i = 0; i < pegs(); ++i)
         new_guess[i] = mCurrentBoxes.at(i)->getPegColor();
-    mGuess.setCode(new_guess);
+    mGuess.setCode(mPegs, new_guess);
 
     mCurrentBoxes.clear();
     getNextGuess();
@@ -474,7 +477,7 @@ void Game::onGuessReady()
 
     int box_index = mMovesPlayed*pegs();
     for(int i = 0; i < pegs(); ++i) {
-        createPegForBox(mCodeBoxes.at(box_index + i), mGuess.mGuess[i]);
+        mCodeBoxes.at(box_index + i)->setPegColor(mGuess.mGuess[i], this);
         mCodeBoxes.at(box_index + i)->setState(Box::State::PAST);
     }
     mState = State::WaittingOkButtonPress;
@@ -491,7 +494,7 @@ void Game::onGuessReady()
 void Game::play()
 {
     stop();
-    mGuess.reset(pegs(),colors(), algorithm(), mode(), isSameColors(), 0);
+    mGuess.reset(algorithm(), 0);
 
     if(mode() == Mode::MVH)
         playMVH();
@@ -522,7 +525,7 @@ void Game::playMVH()
 
     }
     mSolver->interupt();
-    mGuess.reset(pegs(),colors(), algorithm(), mode(), isSameColors(), mSolver->reset(colors(), pegs(), isSameColors()));
+    mGuess.reset(algorithm(), mSolver->reset(colors(), pegs(), isSameColors()));
 
     mState = State::WaittingHiddenCodeFill;
     showMessage();
@@ -553,11 +556,11 @@ void Game::playHVM()
                     hidden_code[i]++;
             remaining_colors--;
         }
-        createPegForBox(mMasterBoxes.at(i), hidden_code[i]);
+        mMasterBoxes.at(i)->setPegColor(hidden_code[i], this);
         mMasterBoxes.at(i)->setState(Box::State::NONE);
     }
 
-    mGuess.setCode(hidden_code);
+    mGuess.setCode(mPegs, hidden_code);
     setNextRowInAction();
     showMessage();
     showInformation();
@@ -618,17 +621,17 @@ void Game::setTools(Tools* tools)
 
 int Game::colors() const
 {
-    return mGuess.mColors;
+    return mColors;
 }
 
 int Game::pegs() const
 {
-    return mGuess.mPegs;
+    return mPegs;
 }
 
 bool Game::isSameColors() const
 {
-    return mGuess.mSameColors;
+    return mSameColors;
 }
 
 Algorithm Game::algorithm() const
@@ -638,7 +641,7 @@ Algorithm Game::algorithm() const
 
 Mode Game::mode() const
 {
-    return mGuess.mMode;
+    return mMode;
 }
 
 void Game::setAlgorithm(const Algorithm &algorithm)
@@ -648,22 +651,22 @@ void Game::setAlgorithm(const Algorithm &algorithm)
 
 void Game::setColors(const int &colors)
 {
-    mGuess.mColors = colors;
+    mColors = colors;
 }
 
 void Game::setPegs(const int &pegs)
 {
-    mGuess.mPegs = pegs;
+    mPegs = pegs;
 }
 
 void Game::setMode(const Mode &mode)
 {
-    mGuess.mMode = mode;
+    mMode = mode;
 }
 
 void Game::setSameColors(const bool &sameColors)
 {
-    mGuess.mSameColors = sameColors;
+    mSameColors = sameColors;
 }
 
 void Game::showMessage()
