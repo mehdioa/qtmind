@@ -5,8 +5,8 @@ QtMind is a Mastermid game in Qt, with built in solver. Most of the major solvin
 
 QtMind links:
 
-- http://omidnikta.github.io/qtmind/index.html		-- Home Page
-- http://omidnikta.github.io/qtmind/downloads.html 	-- Binary Downloads
-- http://omidnikta.github.io/qtmind/translate.html	-- Translate QtMind
+- http://mehdioa.github.io/qtmind/index.html		-- Home Page
+- http://mehdioa.github.io/qtmind/downloads.html 	-- Binary Downloads
+- http://mehdioa.github.io/qtmind/translate.html	-- Translate QtMind
 
 
